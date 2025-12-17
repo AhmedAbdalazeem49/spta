@@ -135,7 +135,7 @@ const BranchesSection: React.FC = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Branch Tabs */}
-          <div className="lg:col-span-1" data-aos="fade-right">
+          <div className="lg:col-span-1" data-aos="fade-up">
             <div className="bg-gradient-card rounded-2xl p-6 shadow-lg">
               <h3 className="text-xl font-semibold text-foreground mb-4">
                 {/* {t("branches.selectBranch")} */}
@@ -182,7 +182,7 @@ const BranchesSection: React.FC = () => {
             {/* Map */}
             <div
               className="relative rounded-2xl overflow-hidden shadow-lg group"
-              data-aos="fade-left"
+              data-aos="fade-up"
             >
               <div
                 id="map"
@@ -194,7 +194,7 @@ const BranchesSection: React.FC = () => {
                 // loading="lazy"
                 // referrerPolicy="no-referrer-when-downgrade"
                 className="w-full h-[400px] transition-all duration-500 group-hover:scale-105  relative  rounded-2xl overflow-hidden shadow-lg"
-                data-aos="fade-left"
+                data-aos="fade-up"
                 title={`Map of ${
                   language === "ar" ? activeBranch.nameAr : activeBranch.name
                 }`}
@@ -283,7 +283,7 @@ const BranchesSection: React.FC = () => {
                   >
                     <Phone className="h-4 w-4 mr-2" />
                     {/* {t("branches.callBranch")} */}
-                    call US
+                    call Us
                   </Button>
                 </div>
               </div>
