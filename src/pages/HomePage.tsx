@@ -15,6 +15,7 @@ import hero1 from '@/assets/hero-1.jpg';
 import hero2 from '@/assets/hero-2.jpg';
 import hero3 from '@/assets/hero-3.jpg';
 import hero4 from '@/assets/hero-4.jpg';
+import BranchesSection from '@/components/BranchesSection';
 
 const HomePage = () => {
   const { t, isRTL } = useLanguage();
@@ -22,7 +23,7 @@ const HomePage = () => {
 
   const heroSlides = [
     {
-      image: hero1,
+      image: hero3,
       title: t('الجمعية السعودية للعلاج الطبيعي', 'Saudi Physical Therapy Association'),
       subtitle: t('نحو تطوير مهنة العلاج الطبيعي في المملكة', 'Advancing Physical Therapy in Saudi Arabia'),
       cta: t('انضم إلينا', 'Join Us'),
@@ -250,7 +251,7 @@ const HomePage = () => {
             <div className="relative" data-aos="fade-left" data-aos-delay="200">
               <div className="relative rounded-2xl overflow-hidden shadow-lg">
                 <img 
-                  src={hero1} 
+                  src={hero4} 
                   alt={t('العلاج الطبيعي', 'Physical Therapy')}
                   className="w-full aspect-[4/3] object-cover"
                 />
@@ -506,6 +507,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      <BranchesSection />
 
       {/* Map Section */}
       <section className="section-padding bg-background">
