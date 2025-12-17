@@ -314,7 +314,7 @@ const HomePage = () => {
       <section className="section-padding bg-background">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div data-aos="fade-right">
+            <div data-aos="fade-up">
               <span className="text-accent font-semibold text-lg mb-4 block">
                 {t("من نحن", "About Us")}
               </span>
