@@ -12,6 +12,11 @@ import ResearchPage from "./pages/ResearchPage";
 import LibraryPage from "./pages/LibraryPage";
 import NewsPage from "./pages/NewsPage";
 import NotFound from "./pages/NotFound";
+import DatabasesPage from "./pages/DatabasesPage";
+import ELibraryPage from "./pages/ELibraryPage";
+import BookletsPage from "./pages/BookletsPage";
+import ResearchCenterPage from "./pages/ResearchCenterPage";
+import PreviousBoardsPage from "./pages/PreviousBoardsPage";
 
 const queryClient = new QueryClient();
 
@@ -25,13 +30,18 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/about/previous-boards" element={<PreviousBoardsPage />} />
             <Route path="/about/*" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<LoginPage />} />
             <Route path="/research" element={<ResearchPage />} />
+            <Route path="/research/databases" element={<DatabasesPage />} />
+            <Route path="/research/center" element={<ResearchCenterPage />} />
             <Route path="/research/*" element={<ResearchPage />} />
             <Route path="/library" element={<LibraryPage />} />
+            <Route path="/elibrary" element={<ELibraryPage />} />
+            <Route path="/booklets" element={<BookletsPage />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/news/:id" element={<NewsPage />} />
             <Route path="/app" element={<HomePage />} />
