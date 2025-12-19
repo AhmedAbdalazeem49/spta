@@ -24,6 +24,16 @@ const Navbar = () => {
   const { language, setLanguage, t, isRTL } = useLanguage();
   const location = useLocation();
 
+  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
@@ -279,60 +289,110 @@ const Navbar = () => {
         </nav>
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="lg:hidden bg-background border-t border-border shadow-xl"
-              style={{ minHeight: "100vh" }}
-            >
-              <div className="container-custom py-4 space-y-2">
-                {navItems.map((item) => {
-                  const isActive =
-                    location.pathname === item.path ||
-                    location.pathname.startsWith(item.path + "/");
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 z-40 bg-black lg:hidden"
+              />
 
-                  return (
-                    <div key={item.path} className="space-y-1">
-                      {/* Parent Item */}
-                      <Link
-                        to={item.path}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`flex items-center justify-between px-4 py-3 rounded-lg font-medium transition-all ${
-                          isActive
-                            ? "bg-primary text-primary-foreground"
-                            : "text-foreground hover:bg-secondary"
-                        }`}
-                      >
-                        <span>{item.label}</span>
-                        {item.children && <ChevronDown className="w-4 h-4" />}
-                      </Link>
+              {/* Mobile Menu */}
+              <motion.div
+                initial={{ x: isRTL ? 300 : -300 }}
+                animate={{ x: 0 }}
+                exit={{ x: isRTL ? 300 : -300 }}
+                transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                className={`fixed top-0 ${
+                  isRTL ? "right-0" : "left-0"
+                } z-50 h-screen w-[85%] max-w-sm bg-background shadow-2xl lg:hidden flex flex-col`}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 h-16 border-b border-border">
+                  <span className="text-foreground font-bold text-xl">
+                    S
+                  </span>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
 
-                      {/* Children */}
-                      {item.children && (
-                        <div
-                          className={`pl-4 ${
-                            isRTL ? "border-r pr-4" : "border-l"
-                          } border-border space-y-1`}
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
+                  {navItems.map((item) => {
+                    const isActive =
+                      location.pathname === item.path ||
+                      location.pathname.startsWith(item.path + "/");
+
+                    const isOpen = mobileDropdown === item.path;
+
+                    return (
+                      <div key={item.path} className="space-y-1">
+                        {/* Parent */}
+                        <button
+                          onClick={() =>
+                            item.children
+                              ? setMobileDropdown(isOpen ? null : item.path)
+                              : setIsMobileMenuOpen(false)
+                          }
+                          className={`w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium transition ${
+                            isActive
+                              ? "bg-primary text-primary-foreground"
+                              : "hover:bg-secondary"
+                          }`}
                         >
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.path}
-                              to={child.path}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className="block px-4 py-2 text-sm rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground transition"
+                          <span>{item.label}</span>
+                          {item.children && (
+                            <motion.span
+                              animate={{ rotate: isOpen ? 180 : 0 }}
+                              transition={{ duration: 0.2 }}
                             >
-                              {child.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
+                              <ChevronDown className="w-4 h-4" />
+                            </motion.span>
+                          )}
+                        </button>
+
+                        {/* Dropdown */}
+                        <AnimatePresence>
+                          {item.children && isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25 }}
+                              className="overflow-hidden pl-4"
+                            >
+                              <div
+                                className={`space-y-1 ${
+                                  isRTL ? "border-r pr-4" : "border-l pl-4"
+                                } border-border`}
+                              >
+                                {item.children.map((child) => (
+                                  <Link
+                                    key={child.path}
+                                    to={child.path}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block px-4 py-2 text-sm rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground transition"
+                                  >
+                                    {child.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </div>
