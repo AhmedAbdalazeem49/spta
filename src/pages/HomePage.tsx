@@ -1,4 +1,5 @@
 import BranchesSection from "@/components/BranchesSection";
+import WorkAreasSection from "@/components/WorkAreasSection";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -520,38 +521,8 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Our Paths Section */}
-      <section className="section-padding bg-secondary/30 ">
-        <div className="container-custom">
-          <div className="text-center mb-16" data-aos="fade-up">
-            <span className="text-accent font-semibold text-lg mb-4 block">
-              {t("مساراتنا", "Our Paths")}
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              {t("مجالات عملنا", "Our Areas of Work")}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {paths.map((path, index) => (
-              <motion.div
-                key={index}
-                data-aos="zoom-in"
-                data-aos-delay={index * 50}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-card rounded-2xl p-6 text-center shadow-sm card-hover cursor-pointer group"
-              >
-                <div
-                  className={`w-16 h-16 mx-auto mb-4 rounded-2xl ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
-                >
-                  <path.icon className="w-8 h-8 text-primary-foreground" />
-                </div>
-                <h3 className="font-semibold text-foreground">{path.title}</h3>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Work Areas Section */}
+      <WorkAreasSection />
 
       {/* App Download CTA */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden ">
