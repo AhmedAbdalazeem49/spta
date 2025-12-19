@@ -17,6 +17,19 @@ import ELibraryPage from "./pages/ELibraryPage";
 import BookletsPage from "./pages/BookletsPage";
 import ResearchCenterPage from "./pages/ResearchCenterPage";
 import PreviousBoardsPage from "./pages/PreviousBoardsPage";
+import BrochuresPage from "./pages/BrochuresPage";
+import VideosPage from "./pages/VideosPage";
+import MembershipBenefitsPage from "./pages/MembershipBenefitsPage";
+import MembershipTypesPage from "./pages/MembershipTypesPage";
+import MembersCountPage from "./pages/MembersCountPage";
+import SpecializationsPage from "./pages/SpecializationsPage";
+import WhatIsPTPage from "./pages/WhatIsPTPage";
+import PoliciesPage from "./pages/PoliciesPage";
+import VisionMissionPage from "./pages/VisionMissionPage";
+import InternationalRelationsPage from "./pages/InternationalRelationsPage";
+import CopyrightPage from "./pages/CopyrightPage";
+import PresidentMessagePage from "./pages/PresidentMessagePage";
+import ScientificJournalPage from "./pages/ScientificJournalPage";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +44,12 @@ const App = () => (
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/about/previous-boards" element={<PreviousBoardsPage />} />
+            <Route path="/about/vision-mission" element={<VisionMissionPage />} />
+            <Route path="/about/president-message" element={<PresidentMessagePage />} />
+            <Route path="/about/what-is-pt" element={<WhatIsPTPage />} />
+            <Route path="/about/international" element={<InternationalRelationsPage />} />
+            <Route path="/about/copyright" element={<CopyrightPage />} />
+            <Route path="/about/policies" element={<PoliciesPage />} />
             <Route path="/about/*" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -42,6 +61,13 @@ const App = () => (
             <Route path="/library" element={<LibraryPage />} />
             <Route path="/elibrary" element={<ELibraryPage />} />
             <Route path="/booklets" element={<BookletsPage />} />
+            <Route path="/brochures" element={<BrochuresPage />} />
+            <Route path="/videos" element={<VideosPage />} />
+            <Route path="/membership/benefits" element={<MembershipBenefitsPage />} />
+            <Route path="/membership/types" element={<MembershipTypesPage />} />
+            <Route path="/membership/count" element={<MembersCountPage />} />
+            <Route path="/specializations" element={<SpecializationsPage />} />
+            <Route path="/journal" element={<ScientificJournalPage />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/news/:id" element={<NewsPage />} />
             <Route path="/app" element={<HomePage />} />
