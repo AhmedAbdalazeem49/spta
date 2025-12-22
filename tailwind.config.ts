@@ -63,6 +63,10 @@ export default {
           pale: "hsl(var(--blue-pale))",
           glow: "hsl(var(--blue-glow))",
         },
+        green: {
+          accent: "hsl(var(--accent-green))",
+          light: "hsl(var(--accent-green-light))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
