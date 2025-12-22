@@ -30,6 +30,11 @@ import InternationalRelationsPage from "./pages/InternationalRelationsPage";
 import CopyrightPage from "./pages/CopyrightPage";
 import PresidentMessagePage from "./pages/PresidentMessagePage";
 import ScientificJournalPage from "./pages/ScientificJournalPage";
+import ProfilePage from "./pages/ProfilePage";
+import MembershipManagementPage from "./pages/MembershipManagementPage";
+import DigitalCardPage from "./pages/DigitalCardPage";
+import WorkshopsPage from "./pages/WorkshopsPage";
+import Chatbot from "./components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +59,7 @@ const App = () => (
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<LoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/research/databases" element={<DatabasesPage />} />
             <Route path="/research/center" element={<ResearchCenterPage />} />
@@ -66,6 +72,9 @@ const App = () => (
             <Route path="/membership/benefits" element={<MembershipBenefitsPage />} />
             <Route path="/membership/types" element={<MembershipTypesPage />} />
             <Route path="/membership/count" element={<MembersCountPage />} />
+            <Route path="/membership/management" element={<MembershipManagementPage />} />
+            <Route path="/membership/card" element={<DigitalCardPage />} />
+            <Route path="/workshops" element={<WorkshopsPage />} />
             <Route path="/specializations" element={<SpecializationsPage />} />
             <Route path="/journal" element={<ScientificJournalPage />} />
             <Route path="/news" element={<NewsPage />} />
@@ -73,6 +82,7 @@ const App = () => (
             <Route path="/app" element={<HomePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Chatbot />
         </BrowserRouter>
       </TooltipProvider>
     </LanguageProvider>

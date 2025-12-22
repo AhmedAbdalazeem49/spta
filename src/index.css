@@ -15,6 +15,10 @@
     --blue-light: 210 50% 55%;
     --blue-pale: 210 40% 92%;
     --blue-glow: 210 80% 60%;
+    
+    /* Accent Green */
+    --accent-green: 134 52% 47%;
+    --accent-green-light: 134 52% 55%;
 
     /* Semantic Colors */
     --background: 0 0% 100%;
