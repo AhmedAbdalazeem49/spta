@@ -34,6 +34,9 @@ import ProfilePage from "./pages/ProfilePage";
 import MembershipManagementPage from "./pages/MembershipManagementPage";
 import DigitalCardPage from "./pages/DigitalCardPage";
 import WorkshopsPage from "./pages/WorkshopsPage";
+import CertificatesPage from "./pages/CertificatesPage";
+import DiscountCodesPage from "./pages/DiscountCodesPage";
+import EmailNotificationsPage from "./pages/EmailNotificationsPage";
 import Chatbot from "./components/Chatbot";
 
 const queryClient = new QueryClient();
@@ -75,7 +78,13 @@ const App = () => (
             <Route path="/membership/count" element={<MembersCountPage />} />
             <Route path="/membership/management" element={<MembershipManagementPage />} />
             <Route path="/membership/card" element={<DigitalCardPage />} />
+            
             <Route path="/workshops" element={<WorkshopsPage />} />
+            <Route path="/workshops/certificates" element={<CertificatesPage />} />
+            <Route path="/workshops/codes" element={<DiscountCodesPage />} />
+            
+            <Route path="/communications/emails" element={<EmailNotificationsPage />} />
+            
             <Route path="/specializations" element={<SpecializationsPage />} />
             <Route path="/journal" element={<ScientificJournalPage />} />
             <Route path="/news" element={<NewsPage />} />
