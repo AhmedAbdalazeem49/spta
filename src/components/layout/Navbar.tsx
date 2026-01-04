@@ -7,6 +7,7 @@ import {
   ChevronDown,
   FileText,
   Globe,
+  GraduationCap,
   Library,
   Menu,
   Phone,
@@ -113,6 +114,18 @@ const Navbar = () => {
           path: "/membership/types",
         },
         { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
+        { label: t("إدارة العضوية", "Management"), path: "/membership/management" },
+        { label: t("البطاقة الرقمية", "Digital Card"), path: "/membership/card" },
+      ],
+    },
+    {
+      label: t("ورش العمل", "Workshops"),
+      path: "/workshops",
+      icon: GraduationCap,
+      children: [
+        { label: t("جميع الورش", "All Workshops"), path: "/workshops" },
+        { label: t("الشهادات", "Certificates"), path: "/workshops/certificates" },
+        { label: t("أكواد الخصم", "Discount Codes"), path: "/workshops/codes" },
       ],
     },
     {
@@ -126,8 +139,11 @@ const Navbar = () => {
       icon: FileText,
     },
     { label: t("الأخبار", "News"), path: "/news", icon: FileText },
+    { label: t("التواصل", "Communication"), path: "/communications", icon: Phone, children: [
+      { label: t("البريد والإشعارات", "Email & Notifications"), path: "/communications/emails" },
+      { label: t("اتصل بنا", "Contact Us"), path: "/contact" },
+    ]},
     { label: t("تطبيق SPTA", "SPTA App"), path: "/app", icon: Smartphone },
-    { label: t("اتصل بنا", "Contact Us"), path: "/contact", icon: Phone },
   ];
 
   return (
