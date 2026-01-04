@@ -85,6 +85,7 @@ const App = () => (
             
             <Route path="/communications/emails" element={<EmailNotificationsPage />} />
             
+            
             <Route path="/specializations" element={<SpecializationsPage />} />
             <Route path="/journal" element={<ScientificJournalPage />} />
             <Route path="/news" element={<NewsPage />} />
