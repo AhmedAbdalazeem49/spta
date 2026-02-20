@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        arabic: ['Cairo', 'sans-serif'],
+        arabic: ['Noto Kufi Arabic', 'Cairo', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,18 +51,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        navy: {
-          dark: "hsl(var(--navy-dark))",
-          DEFAULT: "hsl(var(--navy))",
-          light: "hsl(var(--navy-light))",
-        },
-        blue: {
-          primary: "hsl(var(--blue-primary))",
-          medium: "hsl(var(--blue-medium))",
-          light: "hsl(var(--blue-light))",
-          pale: "hsl(var(--blue-pale))",
-          glow: "hsl(var(--blue-glow))",
-        },
+        // Brand palette
+        mint: "hsl(var(--mint))",
+        teal: "hsl(var(--teal))",
+        "aqua-teal": "hsl(var(--aqua-teal))",
+        "brand-blue": "hsl(var(--brand-blue))",
+        "deep-blue": "hsl(var(--deep-blue))",
+        "dark-navy": "hsl(var(--dark-navy))",
+        midnight: "hsl(var(--midnight))",
         green: {
           accent: "hsl(var(--accent-green))",
           light: "hsl(var(--accent-green-light))",
@@ -128,6 +124,7 @@ export default {
         bounce: "bounce 2s ease-in-out infinite",
       },
       backgroundImage: {
+        "gradient-brand": "var(--gradient-brand)",
         "gradient-navy": "var(--gradient-navy)",
         "gradient-blue": "var(--gradient-blue)",
         "gradient-hero": "var(--gradient-hero)",

@@ -8,6 +8,7 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import sptaLogo from '@/assets/spta-logo.png';
 
 const Footer = () => {
   const { t, isRTL } = useLanguage();
@@ -84,9 +85,7 @@ const Footer = () => {
           {/* Logo & About */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-6">
-              <div className="w-14 h-14 rounded-xl bg-primary-foreground flex items-center justify-center">
-                <span className="text-primary font-bold text-2xl">S</span>
-              </div>
+              <img src={sptaLogo} alt="SPTA Logo" className="h-16 w-auto object-contain bg-white/90 rounded-xl p-1" />
               <div>
                 <h2 className="font-bold text-xl">{t('الجمعية السعودية', 'Saudi Physical')}</h2>
                 <p className="text-sm text-primary-foreground/80">{t('للعلاج الطبيعي', 'Therapy Association')}</p>
