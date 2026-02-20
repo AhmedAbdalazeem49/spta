@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
+import sptaLogo from "@/assets/spta-logo.png";
 import {
   BookOpen,
   Building2,
@@ -160,35 +161,9 @@ const Navbar = () => {
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shadow-md"
-            >
-              <span className="text-primary-foreground font-bold text-xl">
-                S
-              </span>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <img src={sptaLogo} alt="SPTA Logo" className="h-14 w-auto object-contain" />
             </motion.div>
-            <div
-              className={isRTL ? "text-right" : "text-left"}
-              style={{ display: "none" }}
-            >
-              <h1
-                className={`font-bold text-lg ${
-                  isScrolled ? "text-foreground" : "text-primary-foreground"
-                }`}
-              >
-                {t("الجمعية السعودية", "Saudi Physical")}
-              </h1>
-              <p
-                className={`text-xs ${
-                  isScrolled
-                    ? "text-muted-foreground"
-                    : "text-primary-foreground/80"
-                }`}
-              >
-                {t("للعلاج الطبيعي", "Therapy Association")}
-              </p>
-            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -327,9 +302,7 @@ const Navbar = () => {
               >
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 h-16 border-b border-border">
-                  <span className="text-foreground font-bold text-xl">
-                    S
-                  </span>
+                  <img src={sptaLogo} alt="SPTA" className="h-10 w-auto object-contain" />
                   <Button
                     size="icon"
                     variant="ghost"

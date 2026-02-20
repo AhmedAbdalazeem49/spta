@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/layout/Layout';
+import sptaLogo from '@/assets/spta-logo.png';
 
 const LoginPage = () => {
   const { t, isRTL } = useLanguage();
@@ -63,9 +64,7 @@ const LoginPage = () => {
               {/* Logo */}
               <div className="text-center mb-8">
                 <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                  <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-2xl">S</span>
-                  </div>
+                  <img src={sptaLogo} alt="SPTA Logo" className="h-16 w-auto object-contain" />
                 </Link>
                 <h1 className="text-2xl font-bold text-foreground mb-2">
                   {isLogin ? t('تسجيل الدخول', 'Sign In') : t('إنشاء حساب جديد', 'Create Account')}
