@@ -1,7 +1,7 @@
+import sptaLogo from "@/assets/spta-logo.png";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
-import sptaLogo from "@/assets/spta-logo.png";
 import {
   BookOpen,
   Building2,
@@ -34,7 +34,6 @@ const Navbar = () => {
       document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);
-
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -70,8 +69,6 @@ const Navbar = () => {
           label: t("المجالس السابقة", "Previous Boards"),
           path: "/about/previous-boards",
         },
-        { label: t("السياسات", "Policies"), path: "/about/policies" },
-        { label: t("حقوق النشر", "Copyright"), path: "/about/copyright" },
       ],
     },
     {
@@ -95,7 +92,6 @@ const Navbar = () => {
       icon: Library,
       children: [
         { label: t("المكتبة", "Library"), path: "/library" },
-        { label: t("المكتبة الإلكترونية", "E-Library"), path: "/elibrary" },
         { label: t("الكتيبات", "Booklets"), path: "/booklets" },
         { label: t("المطويات", "Brochures"), path: "/brochures" },
         { label: t("الفيديوهات", "Videos"), path: "/videos" },
@@ -115,8 +111,14 @@ const Navbar = () => {
           path: "/membership/types",
         },
         { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
-        { label: t("إدارة العضوية", "Management"), path: "/membership/management" },
-        { label: t("البطاقة الرقمية", "Digital Card"), path: "/membership/card" },
+        {
+          label: t("إدارة العضوية", "Management"),
+          path: "/membership/management",
+        },
+        {
+          label: t("البطاقة الرقمية", "Digital Card"),
+          path: "/membership/card",
+        },
       ],
     },
     {
@@ -125,7 +127,10 @@ const Navbar = () => {
       icon: GraduationCap,
       children: [
         { label: t("جميع الورش", "All Workshops"), path: "/workshops" },
-        { label: t("الشهادات", "Certificates"), path: "/workshops/certificates" },
+        {
+          label: t("الشهادات", "Certificates"),
+          path: "/workshops/certificates",
+        },
         { label: t("أكواد الخصم", "Discount Codes"), path: "/workshops/codes" },
       ],
     },
@@ -140,11 +145,19 @@ const Navbar = () => {
       icon: FileText,
     },
     { label: t("الأخبار", "News"), path: "/news", icon: FileText },
-    { label: t("التواصل", "Communication"), path: "/communications", icon: Phone, children: [
-      { label: t("البريد والإشعارات", "Email & Notifications"), path: "/communications/emails" },
-      { label: t("اتصل بنا", "Contact Us"), path: "/contact" },
-    ]},
-    { label: t("تطبيق SPTA", "SPTA App"), path: "/app", icon: Smartphone },
+    {
+      label: t("التواصل", "Contact"),
+      path: "/contact",
+      icon: Phone,
+      children: [
+        {
+          label: t("البريد والإشعارات", "Email & Notifications"),
+          path: "/communications/emails",
+        },
+        { label: t("اتصل بنا", "Contact Us"), path: "/contact" },
+      ],
+    },
+    { label: t("تطبيق SPTA", "SPTA App"), path: "/#app", icon: Smartphone },
   ];
 
   return (
@@ -157,12 +170,16 @@ const Navbar = () => {
           : "bg-transparent"
       }`}
     >
-      <div className="container-custom">
+      <div className="md:px-12 px-2">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center">
             <motion.div whileHover={{ scale: 1.05 }}>
-              <img src={sptaLogo} alt="SPTA Logo" className="h-14 w-auto object-contain" />
+              <img
+                src={sptaLogo}
+                alt="SPTA Logo"
+                className="h-20 w-auto object-contain"
+              />
             </motion.div>
           </Link>
 
@@ -191,7 +208,6 @@ const Navbar = () => {
                         ? "text-foreground hover:bg-secondary"
                         : "text-primary-foreground hover:bg-primary-foreground/10"
                     }`}
-                    style={{ fontSize: "8px" }}
                   >
                     {item.label}
                     {item.children && <ChevronDown className="w-4 h-4" />}
@@ -225,7 +241,20 @@ const Navbar = () => {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <Link to="/login">
+              <Button
+                variant={isScrolled ? "default" : "outline"}
+                className={
+                  !isScrolled
+                    ? "text-primary-foreground bg-primary"
+                    : ""
+                }
+              >
+                {t("تسجيل الدخول", "Login")}
+              </Button>
+            </Link>
+
             <Button
               variant="ghost"
               size="icon"
@@ -237,24 +266,11 @@ const Navbar = () => {
               }`}
             >
               <Globe
-                className={`w-5 h-5 ${
+                className={`w-8 h-8 ${
                   isScrolled ? "text-foreground" : "text-primary-foreground"
                 }`}
               />
             </Button>
-
-            <Link to="/login">
-              <Button
-                variant={isScrolled ? "default" : "outline"}
-                className={
-                  !isScrolled
-                    ? "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                    : ""
-                }
-              >
-                {t("تسجيل الدخول", "Login")}
-              </Button>
-            </Link>
 
             <Button
               variant="ghost"
@@ -298,11 +314,15 @@ const Navbar = () => {
                 transition={{ type: "spring", stiffness: 260, damping: 30 }}
                 className={`fixed top-0 ${
                   isRTL ? "right-0" : "left-0"
-                } z-50 h-screen w-[85%] max-w-sm bg-background shadow-2xl lg:hidden flex flex-col`}
+                } z-50 h-screen w-[75%] max-w-sm bg-background shadow-2xl lg:hidden flex flex-col`}
               >
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 h-16 border-b border-border">
-                  <img src={sptaLogo} alt="SPTA" className="h-10 w-auto object-contain" />
+                  <img
+                    src={sptaLogo}
+                    alt="SPTA"
+                    className="h-10 w-auto object-contain"
+                  />
                   <Button
                     size="icon"
                     variant="ghost"

@@ -260,11 +260,7 @@ const LibraryPage = () => {
                     <ArrowRight className={`w-5 h-5 ${isRTL ? 'rotate-180' : ''}`} />
                   </Button>
                 </Link>
-                <Link to="/contact">
-                  <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                    {t('تواصل معنا', 'Contact Us')}
-                  </Button>
-                </Link>
+
               </div>
             </motion.div>
           </div>

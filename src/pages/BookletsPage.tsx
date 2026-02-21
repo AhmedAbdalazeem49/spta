@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import AOS from "aos";
 import { toast } from "sonner";
 
+
 interface Booklet {
   id: string;
   title: string;
@@ -264,7 +265,7 @@ const BookletsPage = () => {
       </section>
 
       {/* Search & Filter Section */}
-      <section className="py-8 bg-background sticky top-16 z-30 border-b border-border/50 backdrop-blur-lg bg-background/95">
+      <section className="py-8 sticky top-16 z-30 border-b border-border/50 backdrop-blur-lg bg-background/95">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search */}

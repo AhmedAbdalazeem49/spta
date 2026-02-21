@@ -1,13 +1,22 @@
-import Layout from "@/components/layout/Layout";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
-import { Download, Eye, Search, Filter, FileText, Calendar, Tag, X } from "lucide-react";
-import { useState } from "react";
-import hero1 from "@/assets/hero-1.jpg";
+import hero1 from "@/assets/hero-1.webp";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
 import hero4 from "@/assets/hero-4.jpg";
+import Layout from "@/components/layout/Layout";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Calendar,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  Search,
+  Tag,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
 const BrochuresPage = () => {
   const { t, isRTL } = useLanguage();
@@ -30,8 +39,14 @@ const BrochuresPage = () => {
   const brochures = [
     {
       id: 1,
-      title: t("دليل العلاج الطبيعي الشامل", "Comprehensive Physical Therapy Guide"),
-      description: t("دليل شامل للمرضى والممارسين حول أساسيات العلاج الطبيعي", "A comprehensive guide for patients and practitioners on PT basics"),
+      title: t(
+        "دليل العلاج الطبيعي الشامل",
+        "Comprehensive Physical Therapy Guide"
+      ),
+      description: t(
+        "دليل شامل للمرضى والممارسين حول أساسيات العلاج الطبيعي",
+        "A comprehensive guide for patients and practitioners on PT basics"
+      ),
       image: hero1,
       category: "education",
       year: "2024",
@@ -40,8 +55,14 @@ const BrochuresPage = () => {
     },
     {
       id: 2,
-      title: t("إعادة التأهيل بعد السكتة الدماغية", "Stroke Rehabilitation Guide"),
-      description: t("برنامج متكامل لإعادة التأهيل بعد السكتة الدماغية", "Integrated rehabilitation program after stroke"),
+      title: t(
+        "إعادة التأهيل بعد السكتة الدماغية",
+        "Stroke Rehabilitation Guide"
+      ),
+      description: t(
+        "برنامج متكامل لإعادة التأهيل بعد السكتة الدماغية",
+        "Integrated rehabilitation program after stroke"
+      ),
       image: hero2,
       category: "health",
       year: "2024",
@@ -51,7 +72,10 @@ const BrochuresPage = () => {
     {
       id: 3,
       title: t("الممارسة المبنية على الأدلة", "Evidence-Based Practice Guide"),
-      description: t("دليل تطبيقي للممارسة المبنية على الأدلة العلمية", "Practical guide for evidence-based practice"),
+      description: t(
+        "دليل تطبيقي للممارسة المبنية على الأدلة العلمية",
+        "Practical guide for evidence-based practice"
+      ),
       image: hero3,
       category: "research",
       year: "2023",
@@ -61,7 +85,10 @@ const BrochuresPage = () => {
     {
       id: 4,
       title: t("صحة العمود الفقري", "Spinal Health Guide"),
-      description: t("نصائح وإرشادات للحفاظ على صحة العمود الفقري", "Tips and guidelines for maintaining spinal health"),
+      description: t(
+        "نصائح وإرشادات للحفاظ على صحة العمود الفقري",
+        "Tips and guidelines for maintaining spinal health"
+      ),
       image: hero4,
       category: "awareness",
       year: "2023",
@@ -71,7 +98,10 @@ const BrochuresPage = () => {
     {
       id: 5,
       title: t("العلاج الطبيعي للأطفال", "Pediatric Physical Therapy"),
-      description: t("دليل شامل للعلاج الطبيعي للأطفال وذوي الاحتياجات الخاصة", "Complete guide to pediatric PT and special needs"),
+      description: t(
+        "دليل شامل للعلاج الطبيعي للأطفال وذوي الاحتياجات الخاصة",
+        "Complete guide to pediatric PT and special needs"
+      ),
       image: hero1,
       category: "education",
       year: "2024",
@@ -81,7 +111,10 @@ const BrochuresPage = () => {
     {
       id: 6,
       title: t("إصابات الملاعب والرياضيين", "Sports Injuries Guide"),
-      description: t("الوقاية والعلاج من إصابات الملاعب الرياضية", "Prevention and treatment of sports injuries"),
+      description: t(
+        "الوقاية والعلاج من إصابات الملاعب الرياضية",
+        "Prevention and treatment of sports injuries"
+      ),
       image: hero2,
       category: "health",
       year: "2022",
@@ -91,10 +124,13 @@ const BrochuresPage = () => {
   ];
 
   const filteredBrochures = brochures.filter((brochure) => {
-    const matchesSearch = brochure.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          brochure.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || brochure.category === selectedCategory;
-    const matchesYear = selectedYear === "all" || brochure.year === selectedYear;
+    const matchesSearch =
+      brochure.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      brochure.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || brochure.category === selectedCategory;
+    const matchesYear =
+      selectedYear === "all" || brochure.year === selectedYear;
     return matchesSearch && matchesCategory && matchesYear;
   });
 
@@ -169,7 +205,9 @@ const BrochuresPage = () => {
                   className="px-4 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary"
                 >
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -182,7 +220,9 @@ const BrochuresPage = () => {
                 >
                   <option value="all">{t("كل السنوات", "All Years")}</option>
                   {years.slice(1).map((year) => (
-                    <option key={year} value={year}>{year}</option>
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -196,7 +236,10 @@ const BrochuresPage = () => {
         <div className="container-custom">
           <div className="mb-8">
             <p className="text-muted-foreground">
-              {t(`عرض ${filteredBrochures.length} بروشور`, `Showing ${filteredBrochures.length} brochures`)}
+              {t(
+                `عرض ${filteredBrochures.length} بروشور`,
+                `Showing ${filteredBrochures.length} brochures`
+              )}
             </p>
           </div>
 
@@ -227,19 +270,17 @@ const BrochuresPage = () => {
                       alt={brochure.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    
+
                     {/* Overlay */}
                     <motion.div
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: hoveredBrochure === brochure.id ? 1 : 0 }}
+                      animate={{
+                        opacity: hoveredBrochure === brochure.id ? 1 : 0,
+                      }}
                       className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent flex items-end justify-center pb-8"
                     >
                       <div className="flex gap-4">
-                        <Button
-                          size="lg"
-                          variant="secondary"
-                          className="gap-2"
-                        >
+                        <Button size="lg" variant="secondary" className="gap-2">
                           <Eye className="w-5 h-5" />
                           {t("عرض", "View")}
                         </Button>
@@ -268,7 +309,10 @@ const BrochuresPage = () => {
                     {/* Category Badge */}
                     <div className="absolute top-4 start-4">
                       <span className="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm font-medium">
-                        {categories.find((c) => c.id === brochure.category)?.name}
+                        {
+                          categories.find((c) => c.id === brochure.category)
+                            ?.name
+                        }
                       </span>
                     </div>
 
@@ -312,7 +356,10 @@ const BrochuresPage = () => {
                 {t("لا توجد نتائج", "No Results Found")}
               </h3>
               <p className="text-muted-foreground">
-                {t("جرب تغيير معايير البحث", "Try changing your search criteria")}
+                {t(
+                  "جرب تغيير معايير البحث",
+                  "Try changing your search criteria"
+                )}
               </p>
             </motion.div>
           )}

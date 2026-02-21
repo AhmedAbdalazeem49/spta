@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Clock, MapPin, Phone } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import Logo from "@/assets/hero-1.jpg";
+import Logo from "@/assets/hero-1.webp";
 
 interface Branch {
   id: string;

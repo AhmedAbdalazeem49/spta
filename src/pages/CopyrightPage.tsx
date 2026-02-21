@@ -14,6 +14,7 @@ const CopyrightPage = () => {
         "جميع المحتويات المنشورة على هذا الموقع، بما في ذلك النصوص والصور والرسومات والشعارات والفيديوهات، هي ملك للجمعية السعودية للعلاج الطبيعي ومحمية بموجب قوانين حقوق النشر.",
         "All content published on this website, including text, images, graphics, logos, and videos, is owned by the Saudi Physical Therapy Association and protected under copyright laws."
       ),
+      
     },
     {
       icon: FileText,

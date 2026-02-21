@@ -27,15 +27,30 @@ const WorkAreasSection = () => {
       id: 1,
       icon: GraduationCap,
       title: t("التعليم", "Education"),
-      subtitle: t("التعليم المستمر والتطوير المهني", "Continuing Education & Professional Development"),
+      subtitle: t(
+        "التعليم المستمر والتطوير المهني",
+        "Continuing Education & Professional Development"
+      ),
       color: "from-blue-500 to-blue-700",
       bgPattern: "bg-gradient-to-br from-blue-500/10 to-blue-700/10",
       stats: { number: "150+", label: t("دورة تدريبية", "Training Courses") },
       activities: [
-        { icon: BookOpen, text: t("ورش العمل التخصصية", "Specialized Workshops") },
-        { icon: Award, text: t("برامج الشهادات المهنية", "Professional Certificate Programs") },
+        {
+          icon: BookOpen,
+          text: t("ورش العمل التخصصية", "Specialized Workshops"),
+        },
+        {
+          icon: Award,
+          text: t(
+            "برامج الشهادات المهنية",
+            "Professional Certificate Programs"
+          ),
+        },
         { icon: Users, text: t("المؤتمرات العلمية", "Scientific Conferences") },
-        { icon: FileText, text: t("الكتيبات التعليمية", "Educational Booklets") },
+        {
+          icon: FileText,
+          text: t("الكتيبات التعليمية", "Educational Booklets"),
+        },
       ],
       link: "/booklets",
       cta: t("استعرض البرامج", "Browse Programs"),
@@ -49,10 +64,22 @@ const WorkAreasSection = () => {
       bgPattern: "bg-gradient-to-br from-red-500/10 to-rose-600/10",
       stats: { number: "50+", label: t("مبادرة صحية", "Health Initiatives") },
       activities: [
-        { icon: Stethoscope, text: t("التوعية الصحية المجتمعية", "Community Health Awareness") },
-        { icon: Activity, text: t("برامج إعادة التأهيل", "Rehabilitation Programs") },
-        { icon: Building2, text: t("الشراكات الصحية", "Healthcare Partnerships") },
-        { icon: Brain, text: t("الممارسة المبنية على الأدلة", "Evidence-Based Practice") },
+        {
+          icon: Stethoscope,
+          text: t("التوعية الصحية المجتمعية", "Community Health Awareness"),
+        },
+        {
+          icon: Activity,
+          text: t("برامج إعادة التأهيل", "Rehabilitation Programs"),
+        },
+        {
+          icon: Building2,
+          text: t("الشراكات الصحية", "Healthcare Partnerships"),
+        },
+        {
+          icon: Brain,
+          text: t("الممارسة المبنية على الأدلة", "Evidence-Based Practice"),
+        },
       ],
       link: "/about/what-is-pt",
       cta: t("اكتشف المزيد", "Discover More"),
@@ -61,13 +88,22 @@ const WorkAreasSection = () => {
       id: 3,
       icon: Microscope,
       title: t("البحث", "Research"),
-      subtitle: t("تطوير البحث العلمي في العلاج الطبيعي", "Advancing Scientific Research in PT"),
+      subtitle: t(
+        "تطوير البحث العلمي في العلاج الطبيعي",
+        "Advancing Scientific Research in PT"
+      ),
       color: "from-emerald-500 to-teal-600",
       bgPattern: "bg-gradient-to-br from-emerald-500/10 to-teal-600/10",
-      stats: { number: "200+", label: t("بحث علمي منشور", "Published Research") },
+      stats: {
+        number: "200+",
+        label: t("بحث علمي منشور", "Published Research"),
+      },
       activities: [
         { icon: FileText, text: t("المجلة العلمية", "Scientific Journal") },
-        { icon: BookOpen, text: t("قواعد البيانات العلمية", "Scientific Databases") },
+        {
+          icon: BookOpen,
+          text: t("قواعد البيانات العلمية", "Scientific Databases"),
+        },
         { icon: Award, text: t("جوائز البحث العلمي", "Research Awards") },
         { icon: Users, text: t("مركز الأبحاث", "Research Center") },
       ],
@@ -130,7 +166,9 @@ const WorkAreasSection = () => {
                     <h3 className="text-2xl font-bold text-foreground mb-1">
                       {area.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm">{area.subtitle}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {area.subtitle}
+                    </p>
                   </div>
                 </div>
 
@@ -143,10 +181,14 @@ const WorkAreasSection = () => {
                   className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-border/30"
                 >
                   <div className="flex items-center justify-center gap-3">
-                    <span className={`text-4xl font-bold bg-gradient-to-r ${area.color} bg-clip-text text-transparent`}>
+                    <span
+                      className={`text-4xl font-bold bg-gradient-to-r ${area.color} bg-clip-text text-transparent`}
+                    >
                       {area.stats.number}
                     </span>
-                    <span className="text-muted-foreground">{area.stats.label}</span>
+                    <span className="text-muted-foreground">
+                      {area.stats.label}
+                    </span>
                   </div>
                 </motion.div>
 
@@ -161,8 +203,10 @@ const WorkAreasSection = () => {
                       transition={{ delay: 0.1 * actIndex }}
                       className="flex items-center gap-3 group/item"
                     >
-                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-20 flex items-center justify-center group-hover/item:scale-110 transition-transform`}>
-                        <activity.icon className="w-4 h-4 text-foreground" />
+                      <div
+                        className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-20 flex items-center justify-center group-hover/item:scale-110 transition-transform`}
+                      >
+                        <activity.icon className="w-4 h-4 text-white" />
                       </div>
                       <span className="text-foreground/80 group-hover/item:text-foreground transition-colors">
                         {activity.text}
@@ -177,7 +221,11 @@ const WorkAreasSection = () => {
                     className={`w-full bg-gradient-to-r ${area.color} text-white border-0 hover:opacity-90 group/btn`}
                   >
                     {area.cta}
-                    <ArrowRight className={`w-4 h-4 ${isRTL ? "rotate-180 mr-2" : "ml-2"} group-hover/btn:translate-x-1 transition-transform`} />
+                    <ArrowRight
+                      className={`w-4 h-4 ${
+                        isRTL ? "rotate-180 mr-2" : "ml-2"
+                      } group-hover/btn:translate-x-1 transition-transform`}
+                    />
                   </Button>
                 </Link>
               </div>
@@ -189,40 +237,6 @@ const WorkAreasSection = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* Bottom Stats Bar */}
-        <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-16 bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border/30"
-          data-aos="fade-up"
-          data-aos-delay="400"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { number: "5000+", label: t("عضو مسجل", "Registered Members"), icon: Users },
-              { number: "25+", label: t("سنة من العطاء", "Years of Excellence"), icon: Award },
-              { number: "13", label: t("فرع إقليمي", "Regional Branches"), icon: Building2 },
-              { number: "100+", label: t("شريك استراتيجي", "Strategic Partners"), icon: Heart },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 * index, type: "spring" }}
-                className="text-center"
-              >
-                <stat.icon className="w-8 h-8 mx-auto mb-3 text-primary" />
-                <span className="text-3xl md:text-4xl font-bold text-foreground block mb-1">
-                  {stat.number}
-                </span>
-                <span className="text-muted-foreground text-sm">{stat.label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );
