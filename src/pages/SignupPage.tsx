@@ -28,20 +28,8 @@ const SignupPage = () => {
 
   const [existingIds] = useState<string[]>(["1234567890"]); // simulate DB
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (existingIds.includes(formData.nationalId)) {
-      toast({
-        title: t("خطأ", "Error"),
-        description: t(
-          "رقم الهوية مستخدم مسبقاً",
-          "National ID already registered"
-        ),
-        variant: "destructive",
-      });
-      return;
-    }
 
     if (formData.password !== formData.confirmPassword) {
       toast({
@@ -52,10 +40,67 @@ const SignupPage = () => {
       return;
     }
 
-    toast({
-      title: t("تم إنشاء الحساب", "Account Created"),
-      description: t("يمكنك الآن تسجيل الدخول", "You can now log in"),
-    });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.fullNameEn,
+          name_ar: formData.fullNameAr,
+          email: formData.email,
+          phone: formData.phone,
+          national_id: formData.nationalId,
+          specialization: formData.specialization,
+          sub_specialization: formData.subSpecialization,
+          employer: formData.workplace,
+          password: formData.password,
+          password_confirmation: formData.confirmPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Laravel validation errors
+        if (data.errors) {
+          const firstError = Object.values(data.errors)[0] as string[];
+          toast({
+            title: t("خطأ", "Error"),
+            description: firstError[0],
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: t("خطأ", "Error"),
+            description: data.message || "Something went wrong",
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+
+      // Save token if returned
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      toast({
+        title: t("تم إنشاء الحساب", "Account Created"),
+        description: t("يمكنك الآن تسجيل الدخول", "You can now log in"),
+      });
+
+      // Optional redirect
+      window.location.href = "/login";
+    } catch (error) {
+      toast({
+        title: t("خطأ", "Error"),
+        description: t("حدث خطأ في الاتصال بالخادم", "Server connection error"),
+        variant: "destructive",
+      });
+    }
   };
 
   return (

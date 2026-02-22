@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/layout/Layout";
-import sptaLogo from "@/assets/spta-logo.png";
+import sptaLogo from "@/assets/spta-trans.png";
 
 const LoginPage = () => {
   const { t, isRTL } = useLanguage();
@@ -21,13 +21,72 @@ const LoginPage = () => {
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    toast({
-      title: t("تم تسجيل الدخول", "Logged In"),
-      description: t("مرحباً بعودتك", "Welcome back"),
-    });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.errors) {
+          const firstError = Object.values(data.errors)[0] as string[];
+          toast({
+            title: t("خطأ", "Error"),
+            description: firstError[0],
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: t("خطأ", "Error"),
+            description: data.message || "Invalid credentials",
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+
+      // ✅ Save token
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      // ✅ Fetch authenticated user
+      const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/user`, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          Accept: "application/json",
+        },
+      });
+
+      const user = await userResponse.json();
+      localStorage.setItem("user", JSON.stringify(user));
+
+      toast({
+        title: t("تم تسجيل الدخول", "Logged In"),
+        description: t("مرحباً بعودتك", "Welcome back"),
+      });
+
+      // ✅ Redirect to admin/dashboard
+      window.location.href = "/admin";
+    } catch (error) {
+      toast({
+        title: t("خطأ", "Error"),
+        description: t("حدث خطأ في الاتصال بالخادم", "Server connection error"),
+        variant: "destructive",
+      });
+    }
   };
 
   return (

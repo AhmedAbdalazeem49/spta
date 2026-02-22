@@ -1,4 +1,5 @@
-import sptaLogo from "@/assets/spta-logo.png";
+import sptaLogo from "@/assets/spta-trans.png";
+import SecondLogo from "@/assets/spta-logo-colors-trans.png"
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
@@ -173,12 +174,12 @@ const Navbar = () => {
       <div className="md:px-12 px-2">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <motion.div whileHover={{ scale: 1.05 }}>
+          <Link to="/" className="flex">
+            <motion.div whileHover={{ scale: 1.05 }} className="w-auto">
               <img
-                src={sptaLogo}
+                src={isScrolled? SecondLogo : sptaLogo}
                 alt="SPTA Logo"
-                className="h-20 w-auto object-contain"
+                className="w-[160px] object-contain"
               />
             </motion.div>
           </Link>
@@ -246,9 +247,7 @@ const Navbar = () => {
               <Button
                 variant={isScrolled ? "default" : "outline"}
                 className={
-                  !isScrolled
-                    ? "text-primary-foreground bg-primary"
-                    : ""
+                  !isScrolled ? "text-primary-foreground bg-primary" : ""
                 }
               >
                 {t("تسجيل الدخول", "Login")}
