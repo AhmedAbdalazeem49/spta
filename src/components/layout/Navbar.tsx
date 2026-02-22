@@ -2,6 +2,7 @@ import sptaLogo from "@/assets/spta-trans.png";
 import SecondLogo from "@/assets/spta-logo-colors-trans.png"
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -11,21 +12,25 @@ import {
   Globe,
   GraduationCap,
   Library,
+  LogOut,
   Menu,
   Phone,
   Smartphone,
+  User,
   Users,
   X,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { language, setLanguage, t, isRTL } = useLanguage();
+  const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
 
@@ -243,16 +248,36 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-1">
-            <Link to="/login">
-              <Button
-                variant={isScrolled ? "default" : "outline"}
-                className={
-                  !isScrolled ? "text-primary-foreground bg-primary" : ""
-                }
-              >
-                {t("تسجيل الدخول", "Login")}
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile">
+                  <Button
+                    variant={isScrolled ? "default" : "outline"}
+                    className={`gap-2 ${!isScrolled ? "text-primary-foreground bg-primary" : ""}`}
+                  >
+                    <User className="w-4 h-4" />
+                    {user?.name?.split(' ')[0] || t("حسابي", "My Account")}
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={async () => { await logout(); navigate("/login"); }}
+                  className={`rounded-full ${isScrolled ? "hover:bg-secondary" : "hover:bg-primary-foreground/10"}`}
+                >
+                  <LogOut className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-primary-foreground"}`} />
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button
+                  variant={isScrolled ? "default" : "outline"}
+                  className={!isScrolled ? "text-primary-foreground bg-primary" : ""}
+                >
+                  {t("تسجيل الدخول", "Login")}
+                </Button>
+              </Link>
+            )}
 
             <Button
               variant="ghost"
