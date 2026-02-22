@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
-import Hero from "@/components/PresidentMessage/Hero";
-import Message from "@/components/PresidentMessage/Message";
+import Hero from "@/user/components/PresidentMessage/Hero";
+import Message from "@/user/components/PresidentMessage/Message";
 
 const PresidentMessagePage = () => {
   return (

@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/Layout";
-import Cta from "@/components/Specialization/Cta";
-import Hero from "@/components/Specialization/Hero";
-import SpecializationItems from "@/components/Specialization/SpecializationItems";
+import Cta from "@/user/components/Specialization/Cta";
+import Hero from "@/user/components/Specialization/Hero";
+import SpecializationItems from "@/user/components/Specialization/SpecializationItems";
 
 const SpecializationsPage = () => {
   return (

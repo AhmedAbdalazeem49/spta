@@ -1,5 +1,5 @@
-import Hero from "@/components/Databases/Hero";
-import Tips from "@/components/Databases/Tips";
+import Hero from "@/user/components/Databases/Hero";
+import Tips from "@/user/components/Databases/Tips";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";

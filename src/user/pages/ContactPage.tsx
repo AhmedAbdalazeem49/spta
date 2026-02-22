@@ -1,7 +1,7 @@
 import BranchesSection from "@/components/BranchesSection";
-import ContactForm from "@/components/Contact/ContactForm";
-import ContactInfo from "@/components/Contact/ContactInfo";
-import Hero from "@/components/Contact/Hero";
+import ContactForm from "@/user/components/Contact/ContactForm";
+import ContactInfo from "@/user/components/Contact/ContactInfo";
+import Hero from "@/user/components/Contact/Hero";
 import Layout from "@/components/layout/Layout";
 
 const ContactPage = () => {

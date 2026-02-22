@@ -1,10 +1,10 @@
 import BranchesSection from "@/components/BranchesSection";
-import About from "@/components/Home/About";
-import DownloadApp from "@/components/Home/DownloadApp";
-import Hero from "@/components/Home/Hero";
-import Research from "@/components/Home/Research";
-import Stats from "@/components/Home/Stats";
-import WorkAreasSection from "@/components/Home/WorkAreasSection";
+import About from "@/user/components/Home/About";
+import DownloadApp from "@/user/components/Home/DownloadApp";
+import Hero from "@/user/components/Home/Hero";
+import Research from "@/user/components/Home/Research";
+import Stats from "@/user/components/Home/Stats";
+import WorkAreasSection from "@/user/components/Home/WorkAreasSection";
 import Layout from "@/components/layout/Layout";
 
 const HomePage = () => {
