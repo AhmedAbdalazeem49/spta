@@ -116,11 +116,11 @@ const Navbar = () => {
           label: t("أنواع العضوية", "Membership Types"),
           path: "/membership/types",
         },
-        { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
         {
-          label: t("إدارة العضوية", "Management"),
-          path: "/membership/management",
+          label: t("اشترك الآن", "Subscribe"),
+          path: "/membership/subscribe",
         },
+        { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
         {
           label: t("البطاقة الرقمية", "Digital Card"),
           path: "/membership/card",
