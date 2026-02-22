@@ -6,8 +6,11 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import Chatbot from "./components/Chatbot";
 import AboutPage from "./pages/AboutPage";
+import AdminMembershipsPage from "./pages/AdminMembershipsPage";
+import MembershipSubscribePage from "./pages/MembershipSubscribePage";
 import BookletsPage from "./pages/BookletsPage";
 import BrochuresPage from "./pages/BrochuresPage";
 import CertificatesPage from "./pages/CertificatesPage";
@@ -89,8 +92,12 @@ const App = () => (
               <Route path="/membership" element={<MembershipBenefitsPage />} />
               <Route path="/membership/types" element={<MembershipTypesPage />} />
               <Route path="/membership/count" element={<MembersCountPage />} />
+              <Route path="/membership/subscribe" element={<MembershipSubscribePage />} />
               <Route path="/membership/management" element={<ProtectedRoute><MembershipManagementPage /></ProtectedRoute>} />
               <Route path="/membership/card" element={<ProtectedRoute><DigitalCardPage /></ProtectedRoute>} />
+
+              {/* Admin */}
+              <Route path="/admin/memberships" element={<AdminRoute><AdminMembershipsPage /></AdminRoute>} />
 
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
