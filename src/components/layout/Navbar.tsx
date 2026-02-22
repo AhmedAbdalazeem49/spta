@@ -1,5 +1,5 @@
 import sptaLogo from "@/assets/spta-trans.png";
-import SecondLogo from "@/assets/spta-logo-colors-trans.png"
+import SecondLogo from "@/assets/spta-logo-colors-trans.png";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -173,7 +173,7 @@ const Navbar = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
           ? "bg-background/95 backdrop-blur-lg shadow-lg"
-          : "bg-transparent"
+          : "bg-background/95 backdrop-blur-lg shadow-lg"
       }`}
     >
       <div className="md:px-12 px-2">
@@ -182,7 +182,7 @@ const Navbar = () => {
           <Link to="/" className="flex">
             <motion.div whileHover={{ scale: 1.05 }} className="w-auto">
               <img
-                src={isScrolled? SecondLogo : sptaLogo}
+                src={isScrolled ? SecondLogo : SecondLogo}
                 alt="SPTA Logo"
                 className="w-[160px] object-contain"
               />
@@ -212,7 +212,7 @@ const Navbar = () => {
                         ? "bg-primary text-primary-foreground"
                         : isScrolled
                         ? "text-foreground hover:bg-secondary"
-                        : "text-primary-foreground hover:bg-primary-foreground/10"
+                        : "text-foreground hover:bg-secondary"
                     }`}
                   >
                     {item.label}
@@ -253,26 +253,41 @@ const Navbar = () => {
                 <Link to="/profile">
                   <Button
                     variant={isScrolled ? "default" : "outline"}
-                    className={`gap-2 ${!isScrolled ? "text-primary-foreground bg-primary" : ""}`}
+                    className={`gap-2 ${
+                      !isScrolled ? "text-primary-foreground bg-primary" : ""
+                    }`}
                   >
                     <User className="w-4 h-4" />
-                    {user?.name?.split(' ')[0] || t("حسابي", "My Account")}
+                    {user?.name?.split(" ")[0] || t("حسابي", "My Account")}
                   </Button>
                 </Link>
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={async () => { await logout(); navigate("/login"); }}
-                  className={`rounded-full ${isScrolled ? "hover:bg-secondary" : "hover:bg-primary-foreground/10"}`}
+                  onClick={async () => {
+                    await logout();
+                    navigate("/login");
+                  }}
+                  className={`rounded-full ${
+                    isScrolled
+                      ? "hover:bg-secondary"
+                      : "hover:bg-primary-foreground/10"
+                  }`}
                 >
-                  <LogOut className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-primary-foreground"}`} />
+                  <LogOut
+                    className={`w-5 h-5 ${
+                      isScrolled ? "text-foreground" : "text-foreground"
+                    }`}
+                  />
                 </Button>
               </>
             ) : (
               <Link to="/login">
                 <Button
                   variant={isScrolled ? "default" : "outline"}
-                  className={!isScrolled ? "text-primary-foreground bg-primary" : ""}
+                  className={
+                    !isScrolled ? "text-primary-foreground bg-primary" : ""
+                  }
                 >
                   {t("تسجيل الدخول", "Login")}
                 </Button>
@@ -291,7 +306,7 @@ const Navbar = () => {
             >
               <Globe
                 className={`w-8 h-8 ${
-                  isScrolled ? "text-foreground" : "text-primary-foreground"
+                  isScrolled ? "text-foreground" : "text-foreground"
                 }`}
               />
             </Button>
@@ -305,13 +320,13 @@ const Navbar = () => {
               {isMobileMenuOpen ? (
                 <X
                   className={`w-6 h-6 ${
-                    isScrolled ? "text-foreground" : "text-primary-foreground"
+                    isScrolled ? "text-foreground" : "text-foreground"
                   }`}
                 />
               ) : (
                 <Menu
                   className={`w-6 h-6 ${
-                    isScrolled ? "text-foreground" : "text-primary-foreground"
+                    isScrolled ? "text-foreground" : "text-foreground"
                   }`}
                 />
               )}
