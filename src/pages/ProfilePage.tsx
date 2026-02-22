@@ -43,6 +43,8 @@ const ProfilePage = () => {
   const [activeMembership, setActiveMembership] = useState<ActiveMembership | null>(null);
   const [membershipLoading, setMembershipLoading] = useState(true);
   const [membershipError, setMembershipError] = useState(false);
+  const [workshops, setWorkshops] = useState<any[]>([]);
+const [certificates, setCertificates] = useState<any[]>([]);
 
   // Profile edit state
   const [isEditing, setIsEditing] = useState(false);
@@ -91,6 +93,29 @@ const ProfilePage = () => {
     }
   };
 
+  useEffect(() => {
+  fetchWorkshops();
+  fetchCertificates();
+}, []);
+
+const fetchWorkshops = async () => {
+  try {
+    const res = await api.get('/my-workshops');
+    setWorkshops(res.data.data || []);
+  } catch {
+    setWorkshops([]);
+  }
+};
+
+const fetchCertificates = async () => {
+  try {
+    const res = await api.get('/my-certificates');
+    setCertificates(res.data.data || []);
+  } catch {
+    setCertificates([]);
+  }
+};
+
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
@@ -125,20 +150,18 @@ const ProfilePage = () => {
   };
 
   const tabs = [
-    { id: 'overview', labelAr: 'نظرة عامة', labelEn: 'Overview', icon: User },
-    { id: 'membership', labelAr: 'العضوية', labelEn: 'Membership', icon: Crown },
-    { id: 'edit', labelAr: 'تعديل الملف', labelEn: 'Edit Profile', icon: Edit },
-    { id: 'settings', labelAr: 'الإعدادات', labelEn: 'Settings', icon: Settings },
-  ];
+  { id: 'overview', labelAr: 'نظرة عامة', labelEn: 'Overview', icon: User },
+  { id: 'workshops', labelAr: 'ورش العمل', labelEn: 'Workshops', icon: GraduationCap },
+  { id: 'certificates', labelAr: 'الشهادات', labelEn: 'Certificates', icon: Award },
+  { id: 'membership', labelAr: 'العضوية', labelEn: 'Membership', icon: Crown },
+  { id: 'edit', labelAr: 'تعديل الملف', labelEn: 'Edit Profile', icon: Edit },
+  { id: 'settings', labelAr: 'الإعدادات', labelEn: 'Settings', icon: Settings },
+];
 
   return (
     <Layout>
       {/* Hero Section */}
-<<<<<<< Updated upstream
-      <section className="relative bg-gradient-to-br from-midnight via-dark-navy to-deep-blue py-20 pt-28 overflow-hidden">
-=======
       <section className="relative bg-gradient-to-br from-primary via-primary/90 to-primary-dark py-24 overflow-hidden">
->>>>>>> Stashed changes
         <div className="absolute inset-0 opacity-10">
           <div
             className="absolute inset-0"
@@ -149,20 +172,16 @@ const ProfilePage = () => {
         </div>
 
         <div className="container-custom relative z-10">
-<<<<<<< Updated upstream
-          <div className="flex flex-col md:flex-row items-center gap-8" data-aos="fade-up">
-=======
           <div
             className="flex flex-col md:flex-row items-center gap-8"
             data-aos="fade-up"
           >
             {/* Avatar */}
->>>>>>> Stashed changes
             <div className="relative">
               <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary to-teal flex items-center justify-center text-primary-foreground text-4xl font-bold shadow-lg">
-                {user?.name?.charAt(0) || 'U'}
+                {user?.name?.charAt(0) || "U"}
               </div>
-              {activeMembership?.status === 'active' && (
+              {activeMembership?.status === "active" && (
                 <div className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-green-accent flex items-center justify-center shadow-md">
                   <CheckCircle className="w-5 h-5 text-white" />
                 </div>
@@ -170,24 +189,18 @@ const ProfilePage = () => {
             </div>
             <div className="text-center md:text-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
-                {user?.name || t('المستخدم', 'User')}
+                {user?.name || t("المستخدم", "User")}
               </h1>
               <p className="text-white/70 text-lg mb-3">
                 {user?.specialization || user?.email}
               </p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
-<<<<<<< Updated upstream
-                {activeMembership && getStatusBadge(activeMembership.status)}
-=======
-                {getStatusBadge(mockUser.status)}
                 <Badge
                   variant="outline"
                   className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 gap-1.5"
                 >
                   <Shield className="w-3.5 h-3.5" />
-                  {mockUser.membershipNumber}
                 </Badge>
->>>>>>> Stashed changes
               </div>
             </div>
           </div>
@@ -207,13 +220,9 @@ const ProfilePage = () => {
                 key={tab.id}
                 variant={activeTab === tab.id ? "default" : "outline"}
                 onClick={() => setActiveTab(tab.id)}
-<<<<<<< Updated upstream
-                className={`gap-2 transition-all duration-300 ${activeTab === tab.id ? 'shadow-md' : 'hover:bg-primary/5'}`}
-=======
                 className={`gap-2 transition-all duration-300 ${
                   activeTab === tab.id ? "shadow-md" : "hover:bg-primary/5"
                 }`}
->>>>>>> Stashed changes
               >
                 <tab.icon className="w-4 h-4" />
                 {t(tab.labelAr, tab.labelEn)}
@@ -231,9 +240,6 @@ const ProfilePage = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
-<<<<<<< Updated upstream
-                <Card className="card-hover" data-aos="fade-up">
-=======
                 {/* Membership Status Card */}
                 <Card className="card-hover lg:col-span-2" data-aos="fade-up">
                   <CardHeader className="pb-4">
@@ -253,11 +259,21 @@ const ProfilePage = () => {
                             <p className="text-sm text-muted-foreground">
                               {t("نوع العضوية", "Membership Type")}
                             </p>
+                            <p className="font-semibold"></p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Award className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              {t("نوع العضوية", "Membership Type")}
+                            </p>
                             <p className="font-semibold">
-                              {t(
-                                mockUser.membershipType,
-                                mockUser.membershipTypeEn
-                              )}
+                              {activeMembership?.membership?.name_ar ||
+                                activeMembership?.membership?.name ||
+                                "—"}
                             </p>
                           </div>
                         </div>
@@ -270,9 +286,13 @@ const ProfilePage = () => {
                               {t("تاريخ الانضمام", "Join Date")}
                             </p>
                             <p className="font-semibold">
-                              {new Date(mockUser.joinDate).toLocaleDateString(
-                                isRTL ? "ar-SA" : "en-US"
-                              )}
+                              {activeMembership?.starts_at
+                                ? new Date(
+                                    activeMembership.starts_at
+                                  ).toLocaleDateString(
+                                    isRTL ? "ar-SA" : "en-US"
+                                  )
+                                : "—"}
                             </p>
                           </div>
                         </div>
@@ -287,9 +307,13 @@ const ProfilePage = () => {
                               {t("تاريخ الانتهاء", "Expiry Date")}
                             </p>
                             <p className="font-semibold">
-                              {new Date(mockUser.expiryDate).toLocaleDateString(
-                                isRTL ? "ar-SA" : "en-US"
-                              )}
+                              {activeMembership?.ends_at
+                                ? new Date(
+                                    activeMembership.ends_at
+                                  ).toLocaleDateString(
+                                    isRTL ? "ar-SA" : "en-US"
+                                  )
+                                : "—"}
                             </p>
                           </div>
                         </div>
@@ -301,7 +325,9 @@ const ProfilePage = () => {
                             <p className="text-sm text-muted-foreground">
                               {t("الحالة", "Status")}
                             </p>
-                            {getStatusBadge(mockUser.status)}
+                            {activeMembership?.status
+                              ? getStatusBadge(activeMembership.status)
+                              : "—"}
                           </div>
                         </div>
                       </div>
@@ -331,17 +357,13 @@ const ProfilePage = () => {
                       <span className="text-muted-foreground">
                         {t("ورش العمل", "Workshops")}
                       </span>
-                      <span className="text-2xl font-bold text-primary">
-                        {mockWorkshops.length}
-                      </span>
+                      <span className="text-2xl font-bold text-primary"></span>
                     </div>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                       <span className="text-muted-foreground">
                         {t("الشهادات", "Certificates")}
                       </span>
-                      <span className="text-2xl font-bold text-green-accent">
-                        {mockCertificates.length}
-                      </span>
+                      <span className="text-2xl font-bold text-green-accent"></span>
                     </div>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                       <span className="text-muted-foreground">
@@ -353,102 +375,65 @@ const ProfilePage = () => {
                 </Card>
 
                 {/* Personal Info */}
-                <Card
-                  className="card-hover lg:col-span-3"
-                  data-aos="fade-up"
-                  data-aos-delay="200"
-                >
->>>>>>> Stashed changes
-                  <CardHeader className="pb-4">
-                    <CardTitle className="flex items-center gap-2 text-xl">
-                      <User className="w-5 h-5 text-primary" />
-                      {t("المعلومات الشخصية", "Personal Information")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {[
-                        { icon: Mail, label: t('البريد', 'Email'), value: user?.email },
-                        { icon: Phone, label: t('الهاتف', 'Phone'), value: user?.phone },
-                        { icon: Building2, label: t('جهة العمل', 'Employer'), value: user?.employer },
-                        { icon: GraduationCap, label: t('التخصص', 'Specialization'), value: user?.specialization },
-                        { icon: FileText, label: t('التخصص الدقيق', 'Sub-specialization'), value: user?.sub_specialization },
-                        { icon: Shield, label: t('رقم الهوية', 'National ID'), value: user?.national_id },
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 hover:bg-muted/60 transition-colors">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                            <item.icon className="w-5 h-5 text-primary" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-xs text-muted-foreground">{item.label}</p>
-                            <p className="font-medium text-sm truncate">{item.value || '—'}</p>
-                          </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                    {
+                      icon: Mail,
+                      label: t("البريد", "Email"),
+                      value: user?.email,
+                    },
+                    {
+                      icon: Phone,
+                      label: t("الهاتف", "Phone"),
+                      value: user?.phone,
+                    },
+                    {
+                      icon: Building2,
+                      label: t("جهة العمل", "Employer"),
+                      value: user?.employer,
+                    },
+                    {
+                      icon: GraduationCap,
+                      label: t("التخصص", "Specialization"),
+                      value: user?.specialization,
+                    },
+                    {
+                      icon: FileText,
+                      label: t("التخصص الدقيق", "Sub-specialization"),
+                      value: user?.sub_specialization,
+                    },
+                    {
+                      icon: Shield,
+                      label: t("رقم الهوية", "National ID"),
+                      value: user?.national_id,
+                    },
+                  ].map((item, i) => {
+                    const Icon = item.icon;
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 hover:bg-muted/60 transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Icon className="w-5 h-5 text-primary" />
                         </div>
-<<<<<<< Updated upstream
-                      ))}
-=======
                         <div>
-                          <p className="text-sm text-muted-foreground">
-                            {t("البريد الإلكتروني", "Email")}
+                          <p className="text-xs text-muted-foreground">
+                            {item.label}
                           </p>
                           <p className="font-medium text-sm">
-                            {mockUser.email}
+                            {item.value || "—"}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Phone className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            {t("الهاتف", "Phone")}
-                          </p>
-                          <p className="font-medium text-sm" dir="ltr">
-                            {mockUser.phone}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Building2 className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            {t("جهة العمل", "Workplace")}
-                          </p>
-                          <p className="font-medium text-sm">
-                            {t(mockUser.workplace, mockUser.workplaceEn)}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <MapPin className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            {t("المدينة", "City")}
-                          </p>
-                          <p className="font-medium text-sm">
-                            {t(mockUser.city, mockUser.cityEn)}
-                          </p>
-                        </div>
-                      </div>
->>>>>>> Stashed changes
-                    </div>
-                  </CardContent>
-                </Card>
+                    );
+                  })}
+                </div>
               </motion.div>
             )}
 
-<<<<<<< Updated upstream
-            {/* Membership Tab */}
-            {activeTab === 'membership' && (
-=======
             {/* Workshops Tab */}
             {activeTab === "workshops" && (
->>>>>>> Stashed changes
               <motion.div
                 key="membership"
                 initial={{ opacity: 0, y: 20 }}
@@ -456,66 +441,6 @@ const ProfilePage = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
-<<<<<<< Updated upstream
-                {membershipLoading ? (
-                  <div className="space-y-4">
-                    <Skeleton className="h-48 w-full rounded-2xl" />
-                  </div>
-                ) : activeMembership ? (
-                  <Card className="card-hover overflow-hidden" data-aos="fade-up">
-                    <div className="h-2 bg-gradient-to-r from-primary via-teal to-mint" />
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center justify-between flex-wrap gap-3">
-                        <CardTitle className="flex items-center gap-2 text-xl">
-                          <Crown className="w-5 h-5 text-primary" />
-                          {t('عضويتي', 'My Membership')}
-                        </CardTitle>
-                        {getStatusBadge(activeMembership.status)}
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Award className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">{t('نوع العضوية', 'Type')}</p>
-                            <p className="font-semibold">
-                              {activeMembership.membership
-                                ? t(activeMembership.membership.name_ar || activeMembership.membership.name, activeMembership.membership.name)
-                                : '—'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Calendar className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">{t('تاريخ البدء', 'Start Date')}</p>
-                            <p className="font-semibold">{new Date(activeMembership.starts_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Clock className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">{t('تاريخ الانتهاء', 'End Date')}</p>
-                            <p className="font-semibold">{new Date(activeMembership.ends_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-green-accent/10 flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5 text-green-accent" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">{t('الحالة', 'Status')}</p>
-                            {getStatusBadge(activeMembership.status)}
-                          </div>
-                        </div>
-=======
                 <Card className="overflow-hidden" data-aos="fade-up">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -543,7 +468,7 @@ const ProfilePage = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {mockWorkshops.map((workshop, index) => (
+                          {workshops.map((workshop, index) => (
                             <tr
                               key={workshop.id}
                               className="border-t border-border hover:bg-muted/30 transition-colors"
@@ -606,91 +531,40 @@ const ProfilePage = () => {
                 transition={{ duration: 0.3 }}
                 className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
               >
-                {mockCertificates.map((cert, index) => (
-                  <Card
-                    key={cert.id}
-                    className="card-hover group"
-                    data-aos="fade-up"
-                    data-aos-delay={index * 100}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-blue-light flex items-center justify-center text-primary-foreground shadow-md group-hover:scale-110 transition-transform">
-                          <Award className="w-6 h-6" />
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className={
-                            cert.type === "workshop"
-                              ? "bg-blue-pale text-primary"
-                              : "bg-green-accent/10 text-green-accent border-green-accent/30"
-                          }
-                        >
-                          {cert.type === "workshop"
-                            ? t("ورشة", "Workshop")
-                            : t("عضوية", "Membership")}
-                        </Badge>
-                      </div>
-                      <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                        {t(cert.titleAr, cert.titleEn)}
+                {certificates.length === 0 ? (
+                  <Card className="card-hover">
+                    <CardContent className="py-16 text-center">
+                      <Crown className="w-10 h-10 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="text-xl font-bold mb-2">
+                        {t("لا توجد شهادات بعد", "No Certificates Yet")}
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {t("تاريخ الإصدار:", "Issue Date:")}{" "}
-                        {new Date(cert.issueDate).toLocaleDateString(
-                          isRTL ? "ar-SA" : "en-US"
-                        )}
-                      </p>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1 gap-2"
-                        >
-                          <Eye className="w-4 h-4" />
-                          {t("عرض", "View")}
-                        </Button>
-                        <Button size="sm" className="flex-1 gap-2">
-                          <Download className="w-4 h-4" />
-                          {t("تحميل", "Download")}
-                        </Button>
->>>>>>> Stashed changes
-                      </div>
                     </CardContent>
                   </Card>
                 ) : (
-                  /* Empty state — always visible */
-                  <Card className="card-hover" data-aos="fade-up">
-                    <CardContent className="py-16 text-center">
-                      <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: 'spring', delay: 0.1 }}
-                        className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6"
-                      >
-                        <Crown className="w-10 h-10 text-muted-foreground" />
-                      </motion.div>
-                      <h3 className="text-xl font-bold mb-2">{t('لا توجد عضوية نشطة بعد', 'No Active Membership Yet')}</h3>
-                      <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                        {t(
-                          'اشترك الآن للاستفادة من مزايا العضوية والوصول إلى جميع الخدمات',
-                          'Subscribe now to enjoy membership benefits and access all services'
-                        )}
-                      </p>
-                      <Link to="/membership/subscribe">
-                        <Button size="lg" className="gap-2">
-                          <Crown className="w-4 h-4" />
-                          {t('اشترك الآن', 'Subscribe Now')}
-                          <ArrowRight className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} />
+                  certificates.map((cert, index) => (
+                    <Card key={cert.id} className="card-hover group">
+                      <CardContent className="p-6">
+                        <h3 className="font-semibold text-lg mb-2">
+                          {cert.title_ar || cert.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {new Date(cert.issue_date).toLocaleDateString(
+                            isRTL ? "ar-SA" : "en-US"
+                          )}
+                        </p>
+                        <Button size="sm" className="gap-2">
+                          <Download className="w-4 h-4" />
+                          {t("تحميل", "Download")}
                         </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  ))
                 )}
               </motion.div>
             )}
 
             {/* Edit Profile Tab */}
-            {activeTab === 'edit' && (
+            {activeTab === "edit" && (
               <motion.div
                 key="edit"
                 initial={{ opacity: 0, y: 20 }}
@@ -703,66 +577,111 @@ const ProfilePage = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-xl">
                       <Edit className="w-5 h-5 text-primary" />
-                      {t('تعديل الملف الشخصي', 'Edit Profile')}
+                      {t("تعديل الملف الشخصي", "Edit Profile")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">{t('الاسم (English)', 'Name (English)')}</Label>
+                        <Label className="text-sm font-medium">
+                          {t("الاسم (English)", "Name (English)")}
+                        </Label>
                         <Input
                           value={editForm.name}
-                          onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, name: e.target.value })
+                          }
                           className="focus-visible:ring-primary"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">{t('الاسم (عربي)', 'Name (Arabic)')}</Label>
+                        <Label className="text-sm font-medium">
+                          {t("الاسم (عربي)", "Name (Arabic)")}
+                        </Label>
                         <Input
                           value={editForm.name_ar}
-                          onChange={e => setEditForm({ ...editForm, name_ar: e.target.value })}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              name_ar: e.target.value,
+                            })
+                          }
                           className="focus-visible:ring-primary"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">{t('رقم الجوال', 'Phone')}</Label>
+                        <Label className="text-sm font-medium">
+                          {t("رقم الجوال", "Phone")}
+                        </Label>
                         <Input
                           value={editForm.phone}
-                          onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, phone: e.target.value })
+                          }
                           className="focus-visible:ring-primary"
                           dir="ltr"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">{t('جهة العمل', 'Employer')}</Label>
+                        <Label className="text-sm font-medium">
+                          {t("جهة العمل", "Employer")}
+                        </Label>
                         <Input
                           value={editForm.employer}
-                          onChange={e => setEditForm({ ...editForm, employer: e.target.value })}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              employer: e.target.value,
+                            })
+                          }
                           className="focus-visible:ring-primary"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">{t('التخصص', 'Specialization')}</Label>
+                        <Label className="text-sm font-medium">
+                          {t("التخصص", "Specialization")}
+                        </Label>
                         <Input
                           value={editForm.specialization}
-                          onChange={e => setEditForm({ ...editForm, specialization: e.target.value })}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              specialization: e.target.value,
+                            })
+                          }
                           className="focus-visible:ring-primary"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">{t('التخصص الدقيق', 'Sub-specialization')}</Label>
+                        <Label className="text-sm font-medium">
+                          {t("التخصص الدقيق", "Sub-specialization")}
+                        </Label>
                         <Input
                           value={editForm.sub_specialization}
-                          onChange={e => setEditForm({ ...editForm, sub_specialization: e.target.value })}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              sub_specialization: e.target.value,
+                            })
+                          }
                           className="focus-visible:ring-primary"
                         />
                       </div>
                     </div>
 
                     <div className="mt-8 pt-6 border-t border-border">
-                      <Button onClick={handleSaveProfile} disabled={isSaving} className="gap-2 w-full sm:w-auto" size="lg">
-                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                        {t('حفظ التعديلات', 'Save Changes')}
+                      <Button
+                        onClick={handleSaveProfile}
+                        disabled={isSaving}
+                        className="gap-2 w-full sm:w-auto"
+                        size="lg"
+                      >
+                        {isSaving ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Save className="w-4 h-4" />
+                        )}
+                        {t("حفظ التعديلات", "Save Changes")}
                       </Button>
                     </div>
                   </CardContent>
@@ -789,21 +708,6 @@ const ProfilePage = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {[
-<<<<<<< Updated upstream
-                      { key: 'newsletters', labelAr: 'النشرة الإخبارية', labelEn: 'Newsletters', descAr: 'استلام آخر الأخبار', descEn: 'Receive latest news' },
-                      { key: 'workshopReminders', labelAr: 'تذكيرات ورش العمل', labelEn: 'Workshop Reminders', descAr: 'تذكيرات قبل الموعد', descEn: 'Reminders before events' },
-                      { key: 'membershipAlerts', labelAr: 'تنبيهات العضوية', labelEn: 'Membership Alerts', descAr: 'إشعارات التجديد', descEn: 'Renewal notifications' },
-                      { key: 'promotions', labelAr: 'العروض', labelEn: 'Promotions', descAr: 'عروض حصرية', descEn: 'Exclusive offers' },
-                    ].map((s) => (
-                      <div key={s.key} className="flex items-center justify-between p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-                        <div>
-                          <p className="font-medium">{t(s.labelAr, s.labelEn)}</p>
-                          <p className="text-sm text-muted-foreground">{t(s.descAr, s.descEn)}</p>
-                        </div>
-                        <Switch
-                          checked={emailSettings[s.key as keyof typeof emailSettings]}
-                          onCheckedChange={checked => setEmailSettings(prev => ({ ...prev, [s.key]: checked }))}
-=======
                       {
                         key: "newsletters",
                         labelAr: "النشرة الإخبارية",
@@ -859,7 +763,6 @@ const ProfilePage = () => {
                               [setting.key]: checked,
                             }))
                           }
->>>>>>> Stashed changes
                         />
                       </div>
                     ))}
