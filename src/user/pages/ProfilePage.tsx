@@ -119,7 +119,7 @@ const fetchCertificates = async () => {
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
-      await api.put('/me', editForm);
+      await api.put('/profile/update', editForm);
       toast({ title: t('تم بنجاح', 'Success'), description: t('تم تحديث الملف الشخصي', 'Profile updated') });
       setIsEditing(false);
     } catch (err: any) {
