@@ -31,18 +31,12 @@ import {
   Calendar,
   CheckCircle,
   Clock,
-  Download,
-  Edit,
-  FileSpreadsheet,
   Filter,
   GraduationCap,
   MapPin,
   Percent,
-  Plus,
   Search,
   Star,
-  Trash2,
-  Upload,
   User,
   Users,
   XCircle,
@@ -68,24 +62,6 @@ const WorkshopsPage = () => {
     setIsRegistrationOpen(true);
   };
 
-  // Delete a workshop by ID
-  const deleteWorkshop = async (id: number) => {
-    try {
-      await api.delete(`/admin/workshops/${id}`);
-
-      // Remove the workshop from state
-      setWorkshops(workshops.filter((w) => w.id !== id));
-
-      toast({
-        title: t("تم حذف الورشة بنجاح", "Workshop deleted successfully"),
-      });
-    } catch (error: any) {
-      toast({
-        title: t("حدث خطأ أثناء الحذف", "Error deleting workshop"),
-        description: error?.response?.data?.message || error.message,
-      });
-    }
-  };
 
   const [workshops, setWorkshops] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -122,13 +98,19 @@ const WorkshopsPage = () => {
   }, []);
 
   const filteredWorkshops = workshops.filter((workshop) => {
+    const title = workshop?.title ?? "";
+    const description = workshop?.description ?? "";
+
     const matchesSearch =
-      workshop.titleAr.includes(searchQuery) ||
-      workshop.titleEn.toLowerCase().includes(searchQuery.toLowerCase());
+      title.includes(searchQuery) ||
+      description.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesCategory =
-      filterCategory === "all" || workshop.category === filterCategory;
+      filterCategory === "all" || workshop?.category === filterCategory;
+
     const matchesStatus =
-      filterStatus === "all" || workshop.status === filterStatus;
+      filterStatus === "all" || workshop?.status === filterStatus;
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -196,65 +178,15 @@ const WorkshopsPage = () => {
     }
   };
 
-  // 🟢 Create new workshop
-  const handleCreateWorkshop = async (data: any) => {
-    try {
-      await api.post("/admin/workshops", data);
-      toast({ title: t("تم إنشاء الورشة", "Workshop Created") });
-      setIsCreateOpen(false);
-      fetchWorkshops();
-    } catch (err) {
-      console.error(err);
-      toast({
-        title: t("حدث خطأ أثناء إنشاء الورشة", "Error creating workshop"),
-        variant: "destructive",
-      });
-    }
-  };
 
-  // 🟢 Edit existing workshop
-  const handleEditWorkshop = async (id: number, data: any) => {
-    try {
-      await api.put(`/admin/workshops/${id}`, data);
-      toast({ title: t("تم تحديث الورشة", "Workshop Updated") });
-      fetchWorkshops();
-    } catch (err) {
-      console.error(err);
-      toast({
-        title: t("حدث خطأ أثناء تحديث الورشة", "Error updating workshop"),
-        variant: "destructive",
-      });
-    }
-  };
 
-  // 🟢 Delete workshop
-  const handleDeleteWorkshop = async (id: number) => {
-    if (
-      !confirm(
-        t(
-          "هل أنت متأكد من حذف الورشة؟",
-          "Are you sure you want to delete this workshop?"
-        )
-      )
-    )
-      return;
-    try {
-      await api.delete(`/admin/workshops/${id}`);
-      toast({ title: t("تم حذف الورشة", "Workshop Deleted") });
-      fetchWorkshops();
-    } catch (err) {
-      console.error(err);
-      toast({
-        title: t("حدث خطأ أثناء حذف الورشة", "Error deleting workshop"),
-        variant: "destructive",
-      });
-    }
-  };
+
+
 
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-navy-dark via-navy to-navy-light py-20 overflow-hidden">
+      <section className="relative bg-primary py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div
             className="absolute inset-0"
@@ -298,14 +230,6 @@ const WorkshopsPage = () => {
                 <TabsTrigger value="workshops" className="gap-2">
                   <GraduationCap className="w-4 h-4" />
                   {t("ورش العمل", "Workshops")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="admin"
-                  className="gap-2"
-                  onClick={() => setIsAdminMode(true)}
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  {t("لوحة الإدارة", "Admin Panel")}
                 </TabsTrigger>
               </TabsList>
 
@@ -496,121 +420,6 @@ const WorkshopsPage = () => {
               )}
             </TabsContent>
 
-            {/* Admin Tab */}
-            <TabsContent value="admin" className="space-y-6">
-              <Card data-aos="fade-up">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <FileSpreadsheet className="w-5 h-5 text-primary" />
-                      {t("إدارة ورش العمل", "Workshop Management")}
-                    </CardTitle>
-                    <div className="flex gap-2">
-                      <Button variant="outline" className="gap-2">
-                        <Upload className="w-4 h-4" />
-                        {t("رفع ملف الحضور", "Upload Attendance")}
-                      </Button>
-                      <Button className="gap-2 bg-green-accent hover:bg-green-light">
-                        <Plus className="w-4 h-4" />
-                        {t("ورشة جديدة", "New Workshop")}
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-muted/50">
-                        <tr>
-                          <th className="text-start p-4 font-semibold">
-                            {t("الورشة", "Workshop")}
-                          </th>
-                          <th className="text-start p-4 font-semibold">
-                            {t("التاريخ", "Date")}
-                          </th>
-                          <th className="text-start p-4 font-semibold">
-                            {t("المقاعد", "Seats")}
-                          </th>
-                          <th className="text-start p-4 font-semibold">
-                            {t("الحالة", "Status")}
-                          </th>
-                          <th className="text-start p-4 font-semibold">
-                            {t("الإجراءات", "Actions")}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {workshops.map((workshop, index) => (
-                          <tr
-                            key={workshop.id}
-                            className="border-t border-border hover:bg-muted/30 transition-colors"
-                          >
-                            <td className="p-4">
-                              <p className="font-medium">
-                                {t(workshop.titleAr, workshop.titleEn)}
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {t(workshop.instructor, workshop.instructorEn)}
-                              </p>
-                            </td>
-                            <td className="p-4 text-muted-foreground">
-                              {new Date(workshop.date).toLocaleDateString(
-                                isRTL ? "ar-SA" : "en-US"
-                              )}
-                            </td>
-                            <td className="p-4">
-                              <div className="flex items-center gap-2">
-                                <Progress
-                                  value={
-                                    (workshop.registeredCount /
-                                      workshop.seats) *
-                                    100
-                                  }
-                                  className="w-20 h-2"
-                                />
-                                <span className="text-sm">
-                                  {workshop.registeredCount}/{workshop.seats}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="p-4">
-                              {getStatusBadge(workshop.status)}
-                            </td>
-                            <td className="p-4">
-                              <div className="flex items-center gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="gap-1"
-                                >
-                                  <Download className="w-3.5 h-3.5" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="gap-1"
-                                >
-                                  <Edit className="w-3.5 h-3.5" />
-                                </Button>
-
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => deleteWorkshop(workshop.id)}
-                                  className="gap-1 text-destructive hover:text-destructive"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
           </Tabs>
         </div>
       </section>

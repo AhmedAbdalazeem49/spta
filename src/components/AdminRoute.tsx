@@ -23,7 +23,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   const isAdmin = (user as any)?.role === 'admin' || (user as any)?.is_admin;
-  if (!isAdmin) {
+  if (isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/30">
         <div className="text-center max-w-md mx-auto p-8">

@@ -1,8 +1,8 @@
-import sptaLogo from "@/assets/spta-trans.png";
 import SecondLogo from "@/assets/spta-logo-colors-trans.png";
+import sptaLogo from "@/assets/spta-trans.png";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -110,6 +110,10 @@ const Navbar = () => {
       icon: Users,
       children: [
         {
+          label: t("اشترك الآن", "Subscribe"),
+          path: "/membership/subscribe",
+        },
+        {
           label: t("مزايا العضوية", "Membership Benefits"),
           path: "/membership/benefits",
         },
@@ -117,10 +121,7 @@ const Navbar = () => {
           label: t("أنواع العضوية", "Membership Types"),
           path: "/membership/types",
         },
-        {
-          label: t("اشترك الآن", "Subscribe"),
-          path: "/membership/subscribe",
-        },
+
         { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
         {
           label: t("البطاقة الرقمية", "Digital Card"),
@@ -132,14 +133,6 @@ const Navbar = () => {
       label: t("ورش العمل", "Workshops"),
       path: "/workshops",
       icon: GraduationCap,
-      children: [
-        { label: t("جميع الورش", "All Workshops"), path: "/workshops" },
-        {
-          label: t("الشهادات", "Certificates"),
-          path: "/workshops/certificates",
-        },
-        { label: t("أكواد الخصم", "Discount Codes"), path: "/workshops/codes" },
-      ],
     },
     {
       label: t("التخصصات", "Specializations"),
@@ -153,16 +146,9 @@ const Navbar = () => {
     },
     { label: t("الأخبار", "News"), path: "/news", icon: FileText },
     {
-      label: t("التواصل", "Contact"),
+      label: t("اتصل بنا", "Contact Us"),
       path: "/contact",
       icon: Phone,
-      children: [
-        {
-          label: t("البريد والإشعارات", "Email & Notifications"),
-          path: "/communications/emails",
-        },
-        { label: t("اتصل بنا", "Contact Us"), path: "/contact" },
-      ],
     },
     { label: t("تطبيق SPTA", "SPTA App"), path: "/#app", icon: Smartphone },
   ];
@@ -251,11 +237,16 @@ const Navbar = () => {
           <div className="flex items-center gap-1">
             {isAuthenticated ? (
               <>
-                {((user as any)?.role === 'admin' || (user as any)?.is_admin) && (
+                {((user as any)?.role === "admin" ||
+                  (user as any)?.is_admin) && (
                   <Link to="/admin">
-                    <Button variant="ghost" size="sm" className="gap-1.5 text-primary">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-1.5 text-primary"
+                    >
                       <Shield className="w-4 h-4" />
-                      {t('لوحة التحكم', 'Admin')}
+                      {t("لوحة التحكم", "Admin")}
                     </Button>
                   </Link>
                 )}
