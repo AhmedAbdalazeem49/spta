@@ -15,6 +15,7 @@ import {
   LogOut,
   Menu,
   Phone,
+  Shield,
   Smartphone,
   User,
   Users,
@@ -250,6 +251,14 @@ const Navbar = () => {
           <div className="flex items-center gap-1">
             {isAuthenticated ? (
               <>
+                {((user as any)?.role === 'admin' || (user as any)?.is_admin) && (
+                  <Link to="/admin">
+                    <Button variant="ghost" size="sm" className="gap-1.5 text-primary">
+                      <Shield className="w-4 h-4" />
+                      {t('لوحة التحكم', 'Admin')}
+                    </Button>
+                  </Link>
+                )}
                 <Link to="/profile">
                   <Button
                     variant={isScrolled ? "default" : "outline"}

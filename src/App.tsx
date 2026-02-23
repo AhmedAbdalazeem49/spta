@@ -8,43 +8,58 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import Chatbot from "./components/Chatbot";
-import AboutPage from "./user/pages/AboutPage";
-import AdminMembershipsPage from "./admin/pages/AdminMembershipsPage";
-import MembershipSubscribePage from "./admin/pages/MembershipSubscribePage";
-import BookletsPage from "./user/pages/BookletsPage";
-import BrochuresPage from "./user/pages/BrochuresPage";
-import CertificatesPage from "./admin/pages/CertificatesPage";
-import ContactPage from "./user/pages/ContactPage";
-import CopyrightPage from "./user/pages/CopyrightPage";
-import DatabasesPage from "./user/pages/DatabasesPage";
-import DigitalCardPage from "./user/pages/DigitalCardPage";
-import DiscountCodesPage from "./admin/pages/DiscountCodesPage";
-import EmailNotificationsPage from "./admin/pages/EmailNotificationsPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+
+// Public pages
 import HomePage from "./user/pages/HomePage";
-import InternationalRelationsPage from "./user/pages/InternationalRelationsPage";
-import LibraryPage from "./user/pages/LibraryPage";
-import LoginPage from "./pages/LoginPage";
-import MembersCountPage from "./user/pages/MembersCountPage";
-import MembershipBenefitsPage from "./user/pages/MembershipBenefitsPage";
-import MembershipManagementPage from "./admin/pages/MembershipManagementPage";
-import MembershipTypesPage from "./user/pages/MembershipTypesPage";
-import NewsPage from "./user/pages/NewsPage";
-import NotFound from "./pages/NotFound";
-import PoliciesPage from "./user/pages/PoliciesPage";
+import AboutPage from "./user/pages/AboutPage";
+import VisionMissionPage from "./user/pages/VisionMissionPage";
 import PresidentMessagePage from "./user/pages/PresidentMessagePage";
 import PreviousBoardsPage from "./user/pages/PreviousBoardsPage";
-import ProfilePage from "./user/pages/ProfilePage";
-import ResearchCenterPage from "./user/pages/ResearchCenterPage";
-import ResearchPage from "./user/pages/ResearchPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import ScientificJournalPage from "./user/pages/ScientificJournalPage";
-import SignupPage from "./pages/SignupPage";
-import SpecializationsPage from "./user/pages/SpecializationsPage";
-import VideosPage from "./user/pages/VideosPage";
-import VisionMissionPage from "./user/pages/VisionMissionPage";
 import WhatIsPTPage from "./user/pages/WhatIsPTPage";
+import InternationalRelationsPage from "./user/pages/InternationalRelationsPage";
+import CopyrightPage from "./user/pages/CopyrightPage";
+import PoliciesPage from "./user/pages/PoliciesPage";
+import ResearchPage from "./user/pages/ResearchPage";
+import ResearchCenterPage from "./user/pages/ResearchCenterPage";
+import DatabasesPage from "./user/pages/DatabasesPage";
+import LibraryPage from "./user/pages/LibraryPage";
+import BookletsPage from "./user/pages/BookletsPage";
+import BrochuresPage from "./user/pages/BrochuresPage";
+import VideosPage from "./user/pages/VideosPage";
+import SpecializationsPage from "./user/pages/SpecializationsPage";
+import ScientificJournalPage from "./user/pages/ScientificJournalPage";
+import NewsPage from "./user/pages/NewsPage";
+import ContactPage from "./user/pages/ContactPage";
+import MembershipBenefitsPage from "./user/pages/MembershipBenefitsPage";
+import MembershipTypesPage from "./user/pages/MembershipTypesPage";
+import MembersCountPage from "./user/pages/MembersCountPage";
+
+// Auth pages
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import NotFound from "./pages/NotFound";
+
+// Protected user pages
+import ProfilePage from "./user/pages/ProfilePage";
+import DigitalCardPage from "./user/pages/DigitalCardPage";
+import MembershipSubscribePage from "./admin/pages/MembershipSubscribePage";
+
+// Admin layout + pages
+import AdminLayout from "./admin/components/AdminLayout";
+import AdminDashboardPage from "./admin/pages/AdminDashboardPage";
+import AdminUsersPage from "./admin/pages/AdminUsersPage";
+import AdminWorkshopsPage from "./admin/pages/AdminWorkshopsPage";
+import AdminMembershipsPage from "./admin/pages/AdminMembershipsPage";
+import AdminCertificatesPage from "./admin/pages/AdminCertificatesPage";
+
+// Public workshops page (user-facing)
 import WorkshopsPage from "./admin/pages/WorkshopsPage";
+import CertificatesPage from "./admin/pages/CertificatesPage";
+import DiscountCodesPage from "./admin/pages/DiscountCodesPage";
+import EmailNotificationsPage from "./admin/pages/EmailNotificationsPage";
+import MembershipManagementPage from "./admin/pages/MembershipManagementPage";
 
 const queryClient = new QueryClient();
 
@@ -96,8 +111,11 @@ const App = () => (
               <Route path="/membership/management" element={<ProtectedRoute><MembershipManagementPage /></ProtectedRoute>} />
               <Route path="/membership/card" element={<ProtectedRoute><DigitalCardPage /></ProtectedRoute>} />
 
-              {/* Admin */}
-              <Route path="/admin/memberships" element={<AdminRoute><AdminMembershipsPage /></AdminRoute>} />
+              {/* Public Workshops */}
+              <Route path="/workshops" element={<WorkshopsPage />} />
+              <Route path="/workshops/certificates" element={<CertificatesPage />} />
+              <Route path="/workshops/codes" element={<DiscountCodesPage />} />
+              <Route path="/communications/emails" element={<EmailNotificationsPage />} />
 
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
@@ -105,15 +123,15 @@ const App = () => (
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-              {/* Protected */}
+              {/* Protected User */}
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
-              {/* Workshops */}
-              <Route path="/workshops" element={<WorkshopsPage />} />
-              <Route path="/workshops/certificates" element={<CertificatesPage />} />
-              <Route path="/workshops/codes" element={<DiscountCodesPage />} />
-
-              <Route path="/communications/emails" element={<EmailNotificationsPage />} />
+              {/* Admin Panel (all wrapped in AdminRoute + AdminLayout) */}
+              <Route path="/admin" element={<AdminRoute><AdminLayout><AdminDashboardPage /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/users" element={<AdminRoute><AdminLayout><AdminUsersPage /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/workshops" element={<AdminRoute><AdminLayout><AdminWorkshopsPage /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/memberships" element={<AdminRoute><AdminLayout><AdminMembershipsPage /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/certificates" element={<AdminRoute><AdminLayout><AdminCertificatesPage /></AdminLayout></AdminRoute>} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
