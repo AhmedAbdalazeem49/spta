@@ -42,7 +42,7 @@ const AdminDashboardPage = () => {
           api.get("/workshops"),
           api.get("/admin/memberships"),
           api.get("/admin/visitors"),
-          api.get("/coupons"),
+          api.get("/promo-codes"),
         ]);
 
         setStats({

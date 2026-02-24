@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import AuthHero from "@/components/auth/AuthHero";
+import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import Layout from "@/components/layout/Layout";
-import AuthHero from "@/components/auth/AuthHero";
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle2, Eye, EyeOff, Loader2, Lock } from "lucide-react";
+import React, { useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const ResetPasswordPage = () => {
   const { t, isRTL } = useLanguage();
@@ -19,21 +19,36 @@ const ResetPasswordPage = () => {
   const token = searchParams.get("token") || "";
   const emailParam = searchParams.get("email") || "";
 
-  const [formData, setFormData] = useState({ email: emailParam, password: "", confirmPassword: "" });
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!formData.email) e.email = t("مطلوب", "Required");
     if (!formData.password) e.password = t("مطلوب", "Required");
-    else if (formData.password.length < 8) e.password = t("8 أحرف على الأقل", "Min 8 characters");
-    if (formData.password !== formData.confirmPassword) e.confirmPassword = t("غير متطابقتين", "Passwords don't match");
+    else if (formData.password.length < 8)
+      e.password = t("8 أحرف على الأقل", "Min 8 characters");
+    if (formData.password !== formData.confirmPassword)
+      e.confirmPassword = t("غير متطابقتين", "Passwords don't match");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
+
+  if (!token || !emailParam) {
+    toast({
+      title: t("رابط غير صالح", "Invalid link"),
+      description: t("رابط إعادة التعيين غير صحيح", "Reset link is invalid"),
+      variant: "destructive",
+    });
+    navigate("/forgot-password");
+    return;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +57,7 @@ const ResetPasswordPage = () => {
     try {
       await resetPassword({
         token,
-        email: formData.email,
+        email: emailParam,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
@@ -51,7 +66,8 @@ const ResetPasswordPage = () => {
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
-        description: err.response?.data?.message || t("حدث خطأ", "Something went wrong"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "Something went wrong"),
         variant: "destructive",
       });
     } finally {
@@ -92,52 +108,129 @@ const ResetPasswordPage = () => {
                   >
                     <CheckCircle2 className="w-8 h-8 text-primary" />
                   </motion.div>
-                  <h3 className="text-xl font-bold mb-2">{t("تم التغيير!", "Password Changed!")}</h3>
-                  <p className="text-muted-foreground text-sm">{t("جاري التحويل لتسجيل الدخول...", "Redirecting to login...")}</p>
+                  <h3 className="text-xl font-bold mb-2">
+                    {t("تم التغيير!", "Password Changed!")}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {t(
+                      "جاري التحويل لتسجيل الدخول...",
+                      "Redirecting to login..."
+                    )}
+                  </p>
                 </motion.div>
               ) : (
-                <motion.form key="form" onSubmit={handleSubmit} className="space-y-5">
+                <motion.form
+                  key="form"
+                  onSubmit={handleSubmit}
+                  className="space-y-5"
+                >
                   <div>
-                    <label className="block text-sm font-medium mb-2">{t("البريد الإلكتروني", "Email")}</label>
-                    <Input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => { setFormData({ ...formData, email: e.target.value }); setErrors({ ...errors, email: "" }); }}
-                      className={errors.email ? "border-destructive" : ""}
-                    />
-                    {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">{t("كلمة المرور الجديدة", "New Password")}</label>
+                    <label className="block text-sm font-medium mb-2">
+                      {t("كلمة المرور الجديدة", "New Password")}
+                    </label>
                     <div className="relative">
-                      <Lock className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? "right-4" : "left-4"} w-5 text-muted-foreground`} />
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        value={formData.password}
-                        onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setErrors({ ...errors, password: "" }); }}
-                        className={`${isRTL ? "pr-12 pl-12" : "pl-12 pr-12"} ${errors.password ? "border-destructive" : ""}`}
+                      <Lock
+                        className={`absolute top-1/2 -translate-y-1/2 ${
+                          isRTL ? "right-4" : "left-4"
+                        } w-5 text-muted-foreground`}
                       />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? "left-4" : "right-4"} text-muted-foreground`}>
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      <Input
+                        type={showNewPassword ? "text" : "password"}
+                        value={formData.password}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            password: e.target.value,
+                          });
+                          setErrors({ ...errors, password: "" });
+                        }}
+                        className={`${isRTL ? "pr-12 pl-12" : "pl-12 pr-12"} ${
+                          errors.password ? "border-destructive" : ""
+                        }`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className={`absolute top-1/2 -translate-y-1/2 ${
+                          isRTL ? "left-4" : "right-4"
+                        } text-muted-foreground`}
+                      >
+                        {showNewPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
                       </button>
                     </div>
-                    {errors.password && <p className="text-destructive text-xs mt-1">{errors.password}</p>}
+                    {errors.password && (
+                      <p className="text-destructive text-xs mt-1">
+                        {errors.password}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">{t("تأكيد كلمة المرور", "Confirm Password")}</label>
-                    <Input
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => { setFormData({ ...formData, confirmPassword: e.target.value }); setErrors({ ...errors, confirmPassword: "" }); }}
-                      className={errors.confirmPassword ? "border-destructive" : ""}
-                    />
-                    {errors.confirmPassword && <p className="text-destructive text-xs mt-1">{errors.confirmPassword}</p>}
+                    <label className="block text-sm font-medium mb-2">
+                      {t("تأكيد كلمة المرور", "Confirm Password")}
+                    </label>
+
+                    <div className="relative">
+                      <Lock
+                        className={`absolute top-1/2 -translate-y-1/2 ${
+                          isRTL ? "right-4" : "left-4"
+                        } w-5 text-muted-foreground`}
+                      />
+
+                      <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={formData.confirmPassword}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            confirmPassword: e.target.value,
+                          });
+                          setErrors({ ...errors, confirmPassword: "" });
+                        }}
+                        className={`${isRTL ? "pr-12 pl-12" : "pl-12 pr-12"} ${
+                          errors.confirmPassword ? "border-destructive" : ""
+                        }`}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className={`absolute top-1/2 -translate-y-1/2 ${
+                          isRTL ? "left-4" : "right-4"
+                        } text-muted-foreground`}
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
+
+                    {errors.confirmPassword && (
+                      <p className="text-destructive text-xs mt-1">
+                        {errors.confirmPassword}
+                      </p>
+                    )}
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t("تغيير كلمة المرور", "Reset Password")}
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      t("تغيير كلمة المرور", "Reset Password")
+                    )}
                   </Button>
                 </motion.form>
               )}

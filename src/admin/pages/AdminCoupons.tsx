@@ -50,23 +50,90 @@ import api from "@/services/api";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
+/**
+ * Shape returned by the Laravel PromoCodeResource.
+ * Adjust field names below if your Resource serializes differently.
+ */
 interface Coupon {
   id: number;
   code: string;
+  /** "discount" | "free" */
   type: "discount" | "free";
+  /** maps to backend discount_percentage */
   discountPercent: number;
+  /** maps to backend usage_limit */
   maxUsage: number;
+  /** derived on frontend from usage_limit vs used_count */
   usedCount: number;
+  /** maps to backend start_date */
   validFrom: string;
+  /** maps to backend end_date */
   validTo: string;
+  /** derived: "active" | "expired" | "used" */
   status: "active" | "expired" | "used";
   linkedWorkshop: number | null;
   linkedWorkshopAr: string;
   linkedWorkshopEn: string;
   createdAt: string;
+  /** raw is_active from backend */
+  isActive: boolean;
 }
 
-// ── Mock data (used as fallback / placeholder while API not connected) ────────
+// ── API response → frontend Coupon mapper ────────────────────────────────────
+
+/**
+ * Converts a raw backend PromoCode record (from PromoCodeResource or the raw
+ * model) into the frontend Coupon shape.
+ *
+ * The backend resource likely returns snake_case; if you have a
+ * PromoCodeResource that already camelCases the keys, adjust accordingly.
+ */
+function mapApiCoupon(raw: any): Coupon {
+  const usedCount = raw.used_count ?? raw.usedCount ?? 0;
+  const maxUsage = raw.usage_limit ?? raw.maxUsage ?? 0;
+  const discountPercent = parseFloat(
+    raw.discount_percentage ?? raw.discountPercent ?? 0
+  );
+  const isActive = raw.is_active ?? raw.isActive ?? true;
+
+  // Determine status
+  let status: Coupon["status"] = "active";
+  const now = new Date();
+  const endDate = raw.end_date ? new Date(raw.end_date) : null;
+  if (!isActive || (endDate && endDate < now)) {
+    status = "expired";
+  } else if (maxUsage > 0 && usedCount >= maxUsage) {
+    status = "used";
+  }
+
+  const workshopAr =
+    raw.workshop?.title_ar ?? raw.linkedWorkshopAr ?? "جميع الورش";
+  const workshopEn =
+    raw.workshop?.title_en ?? raw.linkedWorkshopEn ?? "All Workshops";
+
+  return {
+    id: raw.id,
+    code: raw.code,
+    type: raw.type,
+    discountPercent: raw.type === "free" ? 100 : discountPercent,
+    maxUsage,
+    usedCount,
+    validFrom: raw.start_date
+      ? raw.start_date.substring(0, 10)
+      : raw.validFrom ?? "",
+    validTo: raw.end_date ? raw.end_date.substring(0, 10) : raw.validTo ?? "",
+    status,
+    linkedWorkshop: raw.workshop_id ?? raw.linkedWorkshop ?? null,
+    linkedWorkshopAr: workshopAr,
+    linkedWorkshopEn: workshopEn,
+    createdAt: raw.created_at
+      ? raw.created_at.substring(0, 10)
+      : raw.createdAt ?? "",
+    isActive,
+  };
+}
+
+// ── Mock data (fallback when API is unreachable) ──────────────────────────────
 
 const mockCoupons: Coupon[] = [
   {
@@ -83,6 +150,7 @@ const mockCoupons: Coupon[] = [
     linkedWorkshopAr: "جميع الورش",
     linkedWorkshopEn: "All Workshops",
     createdAt: "2024-01-01",
+    isActive: true,
   },
   {
     id: 2,
@@ -98,6 +166,7 @@ const mockCoupons: Coupon[] = [
     linkedWorkshopAr: "ورشة التأهيل الحركي المتقدم",
     linkedWorkshopEn: "Advanced Motor Rehabilitation Workshop",
     createdAt: "2024-02-15",
+    isActive: true,
   },
   {
     id: 3,
@@ -113,36 +182,7 @@ const mockCoupons: Coupon[] = [
     linkedWorkshopAr: "جميع الورش",
     linkedWorkshopEn: "All Workshops",
     createdAt: "2024-02-01",
-  },
-  {
-    id: 4,
-    code: "NEWUSER25",
-    type: "discount",
-    discountPercent: 25,
-    maxUsage: 200,
-    usedCount: 67,
-    validFrom: "2024-01-15",
-    validTo: "2024-12-31",
-    status: "active",
-    linkedWorkshop: null,
-    linkedWorkshopAr: "جميع الورش",
-    linkedWorkshopEn: "All Workshops",
-    createdAt: "2024-01-15",
-  },
-  {
-    id: 5,
-    code: "VIP-SPORTS",
-    type: "free",
-    discountPercent: 100,
-    maxUsage: 5,
-    usedCount: 5,
-    validFrom: "2024-04-01",
-    validTo: "2024-04-30",
-    status: "used",
-    linkedWorkshop: 2,
-    linkedWorkshopAr: "ورشة العلاج الطبيعي الرياضي",
-    linkedWorkshopEn: "Sports Physical Therapy Workshop",
-    createdAt: "2024-03-20",
+    isActive: false,
   },
 ];
 
@@ -163,8 +203,8 @@ const AdminCoupons = () => {
   const { toast } = useToast();
 
   // Data
-  const [coupons, setCoupons] = useState<Coupon[]>(mockCoupons);
-  const [isLoading, setIsLoading] = useState(false); // set true if fetching from API
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -181,22 +221,34 @@ const AdminCoupons = () => {
   const [form, setForm] = useState({ ...EMPTY_FORM });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ── API calls (uncomment when backend is ready) ──────────────────────────
+  // ── Fetch on mount ───────────────────────────────────────────────────────
 
-  // useEffect(() => { fetchCoupons(); }, []);
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
 
-  // const fetchCoupons = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const res = await api.get('/coupons');
-  //     const data = res.data?.data || res.data || [];
-  //     setCoupons(Array.isArray(data) ? data : []);
-  //   } catch {
-  //     setCoupons(mockCoupons); // fallback to mock
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const fetchCoupons = async () => {
+    setIsLoading(true);
+    try {
+      const res = await api.get("/promo-codes");
+      // Handle both { data: [...] } and plain array responses
+      const raw: any[] = res.data?.data ?? res.data ?? [];
+      setCoupons(Array.isArray(raw) ? raw.map(mapApiCoupon) : []);
+    } catch (err) {
+      console.error("Failed to fetch promo codes, falling back to mock:", err);
+      setCoupons(mockCoupons);
+      toast({
+        title: t("تعذر الاتصال بالخادم", "Could not reach server"),
+        description: t(
+          "يتم عرض بيانات تجريبية مؤقتاً",
+          "Showing mock data temporarily"
+        ),
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // ── Derived stats ─────────────────────────────────────────────────────────
 
@@ -320,54 +372,39 @@ const AdminCoupons = () => {
     setIsEditOpen(true);
   };
 
+  // ── Build the payload the backend expects ─────────────────────────────────
+
+  const buildPayload = () => ({
+    code: form.code || `SPTA-${Date.now().toString(36).toUpperCase()}`,
+    type: form.type,
+    discount_percentage:
+      form.type === "free" ? 100 : Number(form.discountPercent),
+    usage_limit: Number(form.maxUsage),
+    start_date: form.validFrom || null,
+    end_date: form.validTo || null,
+    workshop_id: form.linkedWorkshop ? parseInt(form.linkedWorkshop) : null,
+  });
+
+  // ── CREATE ────────────────────────────────────────────────────────────────
+
   const handleCreate = async () => {
     setIsSubmitting(true);
     try {
-      // ── API call (uncomment when backend ready) ──
-      // const res = await api.post('/coupons', {
-      //   code: form.code || `SPTA-${Date.now().toString(36).toUpperCase()}`,
-      //   type: form.type,
-      //   discount_percent: form.type === 'free' ? 100 : form.discountPercent,
-      //   max_usage: form.maxUsage,
-      //   valid_from: form.validFrom,
-      //   valid_to: form.validTo,
-      //   linked_workshop: form.linkedWorkshop ? parseInt(form.linkedWorkshop) : null,
-      // });
-      // const created = res.data?.data || res.data;
-      // setCoupons((prev) => [...prev, created]);
-
-      // ── Mock fallback ──
-      const generated =
-        form.code || `SPTA-${Date.now().toString(36).toUpperCase()}`;
-      const created: Coupon = {
-        id: coupons.length + 1,
-        code: generated,
-        type: form.type as "discount" | "free",
-        discountPercent:
-          form.type === "free" ? 100 : Number(form.discountPercent),
-        maxUsage: Number(form.maxUsage),
-        usedCount: 0,
-        validFrom: form.validFrom,
-        validTo: form.validTo,
-        status: "active",
-        linkedWorkshop: form.linkedWorkshop
-          ? parseInt(form.linkedWorkshop)
-          : null,
-        linkedWorkshopAr: "جميع الورش",
-        linkedWorkshopEn: "All Workshops",
-        createdAt: new Date().toISOString().split("T")[0],
-      };
-      setCoupons((prev) => [...prev, created]);
-
+      const res = await api.post("/promo-codes", buildPayload());
+      const created = mapApiCoupon(res.data?.data ?? res.data);
+      setCoupons((prev) => [created, ...prev]);
       setIsCreateOpen(false);
       toast({
         title: t("تم الإنشاء", "Created"),
         description: t("تم إنشاء الكود بنجاح", "Code created successfully"),
       });
-    } catch {
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ??
+        t("فشل إنشاء الكود", "Failed to create code");
       toast({
         title: t("حدث خطأ", "Error"),
-        description: t("فشل إنشاء الكود", "Failed to create code"),
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -375,52 +412,33 @@ const AdminCoupons = () => {
     }
   };
 
+  // ── EDIT ──────────────────────────────────────────────────────────────────
+
   const handleEdit = async () => {
     if (!selectedCoupon) return;
     setIsSubmitting(true);
     try {
-      // ── API call (uncomment when backend ready) ──
-      // await api.put(`/coupons/${selectedCoupon.id}`, {
-      //   code: form.code,
-      //   type: form.type,
-      //   discount_percent: form.type === 'free' ? 100 : form.discountPercent,
-      //   max_usage: form.maxUsage,
-      //   valid_from: form.validFrom,
-      //   valid_to: form.validTo,
-      //   linked_workshop: form.linkedWorkshop ? parseInt(form.linkedWorkshop) : null,
-      // });
-
-      // ── Mock fallback ──
-      setCoupons((prev) =>
-        prev.map((c) =>
-          c.id === selectedCoupon.id
-            ? {
-                ...c,
-                code: form.code,
-                type: form.type as "discount" | "free",
-                discountPercent:
-                  form.type === "free" ? 100 : Number(form.discountPercent),
-                maxUsage: Number(form.maxUsage),
-                validFrom: form.validFrom,
-                validTo: form.validTo,
-                linkedWorkshop: form.linkedWorkshop
-                  ? parseInt(form.linkedWorkshop)
-                  : null,
-              }
-            : c
-        )
+      const res = await api.put(
+        `/promo-codes/${selectedCoupon.id}`,
+        buildPayload()
       );
-
+      const updated = mapApiCoupon(res.data?.data ?? res.data);
+      setCoupons((prev) =>
+        prev.map((c) => (c.id === selectedCoupon.id ? updated : c))
+      );
       setIsEditOpen(false);
       setSelectedCoupon(null);
       toast({
         title: t("تم التعديل", "Updated"),
         description: t("تم تعديل الكود بنجاح", "Code updated successfully"),
       });
-    } catch {
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ??
+        t("فشل تعديل الكود", "Failed to update code");
       toast({
         title: t("حدث خطأ", "Error"),
-        description: t("فشل تعديل الكود", "Failed to update code"),
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -428,25 +446,26 @@ const AdminCoupons = () => {
     }
   };
 
+  // ── DELETE ────────────────────────────────────────────────────────────────
+
   const handleDelete = async () => {
     if (!selectedCoupon) return;
     try {
-      // ── API call (uncomment when backend ready) ──
-      // await api.delete(`/coupons/${selectedCoupon.id}`);
-
-      // ── Mock fallback ──
+      await api.delete(`/promo-codes/${selectedCoupon.id}`);
       setCoupons((prev) => prev.filter((c) => c.id !== selectedCoupon.id));
-
       setIsDeleteOpen(false);
       setSelectedCoupon(null);
       toast({
         title: t("تم الحذف", "Deleted"),
         description: t("تم حذف الكود بنجاح", "Code deleted successfully"),
       });
-    } catch {
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ??
+        t("فشل حذف الكود", "Failed to delete code");
       toast({
         title: t("حدث خطأ", "Error"),
-        description: t("فشل حذف الكود", "Failed to delete code"),
+        description: message,
         variant: "destructive",
       });
     }
@@ -791,11 +810,16 @@ const AdminCoupons = () => {
                               {t("الاستخدام", "Usage")}
                             </span>
                             <span className="font-medium">
-                              {code.usedCount}/{code.maxUsage}
+                              {code.usedCount}/
+                              {code.maxUsage === 0 ? "∞" : code.maxUsage}
                             </span>
                           </div>
                           <Progress
-                            value={(code.usedCount / code.maxUsage) * 100}
+                            value={
+                              code.maxUsage > 0
+                                ? (code.usedCount / code.maxUsage) * 100
+                                : 0
+                            }
                             className="h-2"
                           />
                         </div>
@@ -804,7 +828,7 @@ const AdminCoupons = () => {
                         <div className="space-y-2 text-sm mb-4">
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Calendar className="w-4 h-4 text-primary shrink-0" />
-                            {code.validFrom} → {code.validTo}
+                            {code.validFrom || "—"} → {code.validTo || "—"}
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Link2 className="w-4 h-4 text-primary shrink-0" />
@@ -891,7 +915,11 @@ const AdminCoupons = () => {
                           </p>
                         </div>
                         <Progress
-                          value={(code.usedCount / code.maxUsage) * 100}
+                          value={
+                            code.maxUsage > 0
+                              ? (code.usedCount / code.maxUsage) * 100
+                              : 0
+                          }
                           className="w-24 h-2"
                         />
                       </div>
@@ -931,7 +959,9 @@ const AdminCoupons = () => {
               className="bg-green-accent hover:bg-green-light gap-2"
             >
               <CheckCircle className="w-4 h-4" />
-              {t("إنشاء", "Create")}
+              {isSubmitting
+                ? t("جارٍ الإنشاء...", "Creating...")
+                : t("إنشاء", "Create")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -960,7 +990,9 @@ const AdminCoupons = () => {
               className="bg-green-accent hover:bg-green-light gap-2"
             >
               <CheckCircle className="w-4 h-4" />
-              {t("حفظ التعديلات", "Save Changes")}
+              {isSubmitting
+                ? t("جارٍ الحفظ...", "Saving...")
+                : t("حفظ التعديلات", "Save Changes")}
             </Button>
           </DialogFooter>
         </DialogContent>

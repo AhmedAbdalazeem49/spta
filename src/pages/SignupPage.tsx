@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import AuthHero from "@/components/auth/AuthHero";
+import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import Layout from "@/components/layout/Layout";
-import AuthHero from "@/components/auth/AuthHero";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const { t } = useLanguage();
@@ -19,9 +19,17 @@ const SignupPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
-    fullNameAr: "", fullNameEn: "", email: "", phone: "",
-    nationalId: "", specialization: "", subSpecialization: "",
-    workplace: "", password: "", confirmPassword: "",
+    fullNameAr: "",
+    fullNameEn: "",
+    email: "",
+    phone: "",
+    nationalId: "",
+    specialization: "",
+    subSpecialization: "",
+    workplace: "",
+    password: "",
+    confirmPassword: "",
+    role: "admin",
   });
 
   const set = (field: string, value: string) => {
@@ -33,14 +41,18 @@ const SignupPage = () => {
     const e: Record<string, string> = {};
     if (!formData.fullNameEn) e.fullNameEn = t("مطلوب", "Required");
     if (!formData.email) e.email = t("مطلوب", "Required");
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) e.email = t("بريد غير صالح", "Invalid email");
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      e.email = t("بريد غير صالح", "Invalid email");
     if (!formData.phone) e.phone = t("مطلوب", "Required");
     if (!formData.nationalId) e.nationalId = t("مطلوب", "Required");
     if (!formData.specialization) e.specialization = t("مطلوب", "Required");
-    if (!formData.subSpecialization) e.subSpecialization = t("مطلوب", "Required");
+    if (!formData.subSpecialization)
+      e.subSpecialization = t("مطلوب", "Required");
     if (!formData.password) e.password = t("مطلوب", "Required");
-    else if (formData.password.length < 8) e.password = t("8 أحرف على الأقل", "Min 8 characters");
-    if (formData.password !== formData.confirmPassword) e.confirmPassword = t("غير متطابقتين", "Passwords don't match");
+    else if (formData.password.length < 8)
+      e.password = t("8 أحرف على الأقل", "Min 8 characters");
+    if (formData.password !== formData.confirmPassword)
+      e.confirmPassword = t("غير متطابقتين", "Passwords don't match");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -62,15 +74,26 @@ const SignupPage = () => {
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
-      toast({ title: t("تم إنشاء الحساب", "Account Created"), description: t("مرحباً بك!", "Welcome!") });
+      toast({
+        title: t("تم إنشاء الحساب", "Account Created"),
+        description: t("مرحباً بك!", "Welcome!"),
+      });
       navigate("/profile", { replace: true });
     } catch (error: any) {
       const data = error.response?.data;
       if (data?.errors) {
         const firstError = Object.values(data.errors)[0] as string[];
-        toast({ title: t("خطأ", "Error"), description: firstError[0], variant: "destructive" });
+        toast({
+          title: t("خطأ", "Error"),
+          description: firstError[0],
+          variant: "destructive",
+        });
       } else {
-        toast({ title: t("خطأ", "Error"), description: data?.message || t("حدث خطأ", "Something went wrong"), variant: "destructive" });
+        toast({
+          title: t("خطأ", "Error"),
+          description: data?.message || t("حدث خطأ", "Something went wrong"),
+          variant: "destructive",
+        });
       }
     } finally {
       setIsSubmitting(false);
@@ -78,16 +101,36 @@ const SignupPage = () => {
   };
 
   const fields = [
-    { key: "fullNameAr", label: t("الاسم الرباعي (عربي)", "Full Name (Arabic)"), type: "text" },
-    { key: "fullNameEn", label: t("الاسم الرباعي (English)", "Full Name (English)"), type: "text" },
+    {
+      key: "fullNameAr",
+      label: t("الاسم الرباعي (عربي)", "Full Name (Arabic)"),
+      type: "text",
+    },
+    {
+      key: "fullNameEn",
+      label: t("الاسم الرباعي (English)", "Full Name (English)"),
+      type: "text",
+    },
     { key: "email", label: t("البريد الإلكتروني", "Email"), type: "email" },
     { key: "phone", label: t("رقم الجوال", "Phone Number"), type: "tel" },
     { key: "nationalId", label: t("رقم الهوية", "National ID"), type: "text" },
-    { key: "specialization", label: t("التخصص", "Specialization"), type: "text" },
-    { key: "subSpecialization", label: t("التخصص الدقيق", "Sub-specialization"), type: "text" },
+    {
+      key: "specialization",
+      label: t("التخصص", "Specialization"),
+      type: "text",
+    },
+    {
+      key: "subSpecialization",
+      label: t("التخصص الدقيق", "Sub-specialization"),
+      type: "text",
+    },
     { key: "workplace", label: t("جهة العمل", "Workplace"), type: "text" },
     { key: "password", label: t("كلمة المرور", "Password"), type: "password" },
-    { key: "confirmPassword", label: t("تأكيد كلمة المرور", "Confirm Password"), type: "password" },
+    {
+      key: "confirmPassword",
+      label: t("تأكيد كلمة المرور", "Confirm Password"),
+      type: "password",
+    },
   ];
 
   return (
@@ -110,7 +153,9 @@ const SignupPage = () => {
             <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-5">
               {fields.map((f) => (
                 <div key={f.key} className={f.key === "workplace" ? "" : ""}>
-                  <label className="block text-sm font-medium mb-1.5">{f.label}</label>
+                  <label className="block text-sm font-medium mb-1.5">
+                    {f.label}
+                  </label>
                   <Input
                     type={f.type}
                     value={(formData as any)[f.key]}
@@ -118,20 +163,38 @@ const SignupPage = () => {
                     className={errors[f.key] ? "border-destructive" : ""}
                     placeholder={f.label}
                   />
-                  {errors[f.key] && <p className="text-destructive text-xs mt-1">{errors[f.key]}</p>}
+                  {errors[f.key] && (
+                    <p className="text-destructive text-xs mt-1">
+                      {errors[f.key]}
+                    </p>
+                  )}
                 </div>
               ))}
 
               <div className="md:col-span-2">
-                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t("إنشاء الحساب", "Create Account")}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    t("إنشاء الحساب", "Create Account")
+                  )}
                 </Button>
               </div>
             </form>
 
             <p className="text-center text-sm mt-6">
               {t("لديك حساب بالفعل؟", "Already have an account?")}{" "}
-              <Link to="/login" className="text-primary font-medium hover:underline">{t("تسجيل الدخول", "Sign In")}</Link>
+              <Link
+                to="/login"
+                className="text-primary font-medium hover:underline"
+              >
+                {t("تسجيل الدخول", "Sign In")}
+              </Link>
             </p>
           </motion.div>
         </div>

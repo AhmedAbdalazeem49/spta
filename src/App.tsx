@@ -21,7 +21,6 @@ import InternationalRelationsPage from "./user/pages/InternationalRelationsPage"
 import LibraryPage from "./user/pages/LibraryPage";
 import MembersCountPage from "./user/pages/MembersCountPage";
 import MembershipBenefitsPage from "./user/pages/MembershipBenefitsPage";
-import MembershipTypesPage from "./user/pages/MembershipTypesPage";
 import NewsPage from "./user/pages/NewsPage";
 import PoliciesPage from "./user/pages/PoliciesPage";
 import PresidentMessagePage from "./user/pages/PresidentMessagePage";
@@ -42,7 +41,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SignupPage from "./pages/SignupPage";
 
 // Protected user pages
-import MembershipSubscribePage from "./admin/pages/MembershipSubscribePage";
+import MembershipSubscribePage from "./user/pages/MembershipSubscribePage";
 import DigitalCardPage from "./user/pages/DigitalCardPage";
 import ProfilePage from "./user/pages/ProfilePage";
 
@@ -119,10 +118,6 @@ const App = () => (
                 element={<MembershipBenefitsPage />}
               />
               <Route path="/membership" element={<MembershipBenefitsPage />} />
-              <Route
-                path="/membership/types"
-                element={<MembershipTypesPage />}
-              />
               <Route path="/membership/count" element={<MembersCountPage />} />
               <Route
                 path="/membership/subscribe"

@@ -13,7 +13,7 @@ import api from "@/services/api";
 
 interface Visitor {
   id: number;
-  ip: string;
+  ip_address: string; // ← was "ip"
   user_agent: string;
   url: string;
   created_at: string;
@@ -60,7 +60,7 @@ const AdminVisitorsPage = () => {
               <TableBody>
                 {visitors.map((v) => (
                   <TableRow key={v.id}>
-                    <TableCell>{v.ip}</TableCell>
+                    <TableCell>{v.ip_address}</TableCell>
                     <TableCell>{v.user_agent}</TableCell>
                     <TableCell>{v.url}</TableCell>
                     <TableCell>

@@ -117,10 +117,6 @@ const Navbar = () => {
           label: t("مزايا العضوية", "Membership Benefits"),
           path: "/membership/benefits",
         },
-        {
-          label: t("أنواع العضوية", "Membership Types"),
-          path: "/membership/types",
-        },
 
         { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
         {
