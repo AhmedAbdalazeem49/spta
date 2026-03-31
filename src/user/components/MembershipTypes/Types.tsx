@@ -25,33 +25,26 @@ export default function Types() {
       id: "active",
       icon: Users,
       badge: Shield,
-      title: t("العضوية العاملة", "Active Membership"),
+      title: t("العضوية العامة", "General Membership"),
       subtitle: t("للممارسين المحترفين", "For Professional Practitioners"),
       color: "from-blue-500 to-indigo-600",
-      price: t("200 ريال سنوياً", "200 SAR/year"),
+      price: t("اشتراك سنوي", "Annual Subscription"),
       features: [
-        t(
-          "حق التصويت في الجمعية العمومية",
-          "Voting rights in general assembly"
-        ),
+        t("حق التصويت في الجمعية العمومية", "Voting rights in general assembly"),
         t("الترشح لمجلس الإدارة", "Eligibility for board positions"),
-        t(
-          "خصومات حصرية على جميع الفعاليات",
-          "Exclusive discounts on all events"
-        ),
-        t(
-          "الوصول الكامل للمكتبة الإلكترونية",
-          "Full access to digital library"
-        ),
+        t("خصومات على جميع الفعاليات", "Discounts on all events"),
+        t("الوصول للمكتبة الإلكترونية", "Access to digital library"),
         t("شهادة عضوية رسمية", "Official membership certificate"),
       ],
       requirements: [
         t(
-          "حاصل على شهادة بكالوريوس في العلاج الطبيعي أو ما يعادلها",
-          "Bachelor's degree in PT or equivalent"
+          "الحصول على درجة البكالوريوس في العلاج الطبيعي أو ما يعادلها",
+          "Bachelor's degree in Physical Therapy or equivalent"
         ),
-        t("مرخص من الهيئة السعودية للتخصصات الصحية", "Licensed by SCFHS"),
-        t("يمارس المهنة في المملكة", "Practicing in Saudi Arabia"),
+        t("أن يكون المتقدم من المتخصصين في المجال", "Must be a specialist in the field"),
+        t("الإقامة داخل المملكة العربية السعودية", "Residence in Saudi Arabia"),
+        t("سداد الاشتراكات السنوية", "Payment of annual dues"),
+        t("صدور قرار مجلس الإدارة بالقبول", "Board approval decision"),
       ],
     },
     {
@@ -64,14 +57,13 @@ export default function Types() {
       price: t("مجاناً", "Free"),
       features: [
         t("تكريم خاص في المناسبات", "Special recognition at events"),
-        t("دعوات لجميع الفعاليات الرسمية", "Invitations to official events"),
-        t("شهادة تقدير خاصة", "Special appreciation certificate"),
-        t("ذكر في المطبوعات الرسمية", "Mention in publications"),
+        t("حضور الجلسات والمشاركة في المناقشات", "Attend sessions and participate in discussions"),
+        t("معفاة من سداد الاشتراك", "Exempt from subscription fees"),
+        t("ذكر في المطبوعات الرسمية", "Mention in official publications"),
       ],
       requirements: [
-        t("قدم خدمات جليلة للمهنة", "Distinguished service to profession"),
-        t("موافقة مجلس الإدارة", "Board approval"),
-        t("ترشيح من عضوين عاملين", "Nomination by two active members"),
+        t("تُمنح بقرار الجمعية العمومية", "Granted by General Assembly decision"),
+        t("بناءً على ترشيح مجلس الإدارة", "Based on Board of Directors nomination"),
       ],
     },
     {
@@ -81,7 +73,7 @@ export default function Types() {
       title: t("عضوية الانتساب", "Associate Membership"),
       subtitle: t("للطلاب والمهتمين", "For Students & Enthusiasts"),
       color: "from-emerald-500 to-teal-600",
-      price: t("100 ريال سنوياً", "100 SAR/year"),
+      price: t("اشتراك مخفض", "Reduced Subscription"),
       features: [
         t("حضور الفعاليات بأسعار مخفضة", "Reduced event prices"),
         t("الوصول للمكتبة الإلكترونية", "Digital library access"),
@@ -89,9 +81,11 @@ export default function Types() {
         t("شهادة انتساب", "Associate certificate"),
       ],
       requirements: [
-        t("طالب علاج طبيعي", "PT student"),
-        t("أو مهتم بالمجال", "Interested in PT"),
-        t("أو ممارس خارج المملكة", "Practitioner outside KSA"),
+        t("للطلاب الجامعيين في مجال العلاج الطبيعي", "University students in Physical Therapy"),
+        t(
+          "للعاملين والمهتمين الذين لا يتوفر فيهم شرط المؤهل للعضوية العاملة",
+          "Workers and enthusiasts who do not meet the qualification requirements for general membership"
+        ),
       ],
     },
   ];
@@ -106,12 +100,9 @@ export default function Types() {
               layout
               transition={{ duration: 0.3 }}
               className={`bg-card rounded-3xl border overflow-hidden shadow-sm ${
-                expandedType === type.id
-                  ? "border-primary shadow-xl"
-                  : "border-border/50"
+                expandedType === type.id ? "border-primary shadow-xl" : "border-border/50"
               }`}
             >
-              {/* Header */}
               <div className={`bg-gradient-to-br ${type.color} p-8 text-white`}>
                 <type.icon className="w-14 h-14 mb-4" />
                 <h3 className="text-2xl font-bold">{type.title}</h3>
@@ -122,30 +113,21 @@ export default function Types() {
               </div>
 
               <div className="p-6">
-                {/* Features */}
                 <ul className="space-y-3 mb-6">
                   {type.features.map((feature, i) => (
-                    <li
-                      key={i}
-                      className="flex gap-2 text-sm text-muted-foreground"
-                    >
+                    <li key={i} className="flex gap-2 text-sm text-muted-foreground">
                       <CheckCircle className="w-4 h-4 text-accent mt-0.5" />
                       {feature}
                     </li>
                   ))}
                 </ul>
 
-                {/* Requirements Toggle */}
                 <button
-                  onClick={() =>
-                    setExpandedType(expandedType === type.id ? null : type.id)
-                  }
+                  onClick={() => setExpandedType(expandedType === type.id ? null : type.id)}
                   className="w-full flex justify-between items-center py-3 border-t border-border font-medium"
                 >
                   {t("شروط العضوية", "Requirements")}
-                  <motion.div
-                    animate={{ rotate: expandedType === type.id ? 180 : 0 }}
-                  >
+                  <motion.div animate={{ rotate: expandedType === type.id ? 180 : 0 }}>
                     <ChevronDown className="w-5 h-5" />
                   </motion.div>
                 </button>
@@ -162,10 +144,7 @@ export default function Types() {
                     >
                       <ul className="space-y-2 py-4">
                         {type.requirements.map((req, i) => (
-                          <li
-                            key={i}
-                            className="flex gap-2 text-sm text-muted-foreground"
-                          >
+                          <li key={i} className="flex gap-2 text-sm text-muted-foreground">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
                             {req}
                           </li>
@@ -175,10 +154,8 @@ export default function Types() {
                   )}
                 </AnimatePresence>
 
-                <Link to="/contact">
-                  <Button
-                    className={`w-full mt-4 bg-gradient-to-r ${type.color} text-white hover:opacity-90`}
-                  >
+                <Link to="/membership/subscribe">
+                  <Button className={`w-full mt-4 bg-gradient-to-r ${type.color} text-white hover:opacity-90`}>
                     {t("تقدم للعضوية", "Apply Now")}
                   </Button>
                 </Link>

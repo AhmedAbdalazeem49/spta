@@ -3,30 +3,40 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-import hero1 from "@/assets/hero-1.webp";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import { Users, Crown, Shield, Landmark } from "lucide-react";
 
 const Leadership = () => {
   const { t } = useLanguage();
 
-  const council = [
+  const boardMembers = [
     {
-      name: t("د. أحمد الشهراني", "Dr. Ahmed Al-Shahrani"),
+      name: t("د. عبدالفتاح سعيد القحطاني", "Dr. Abdulfattah Saeed Al-Qahtani"),
       role: t("رئيس مجلس الإدارة", "Chairman of the Board"),
-      image: hero1,
+      icon: Crown,
     },
     {
-      name: t("د. فاطمة القحطاني", "Dr. Fatima Al-Qahtani"),
+      name: t("أ. محمد إسماعيل منشي", "Mr. Mohammed Ismail Menshi"),
       role: t("نائب الرئيس", "Vice Chairman"),
-      image: hero2,
+      icon: Shield,
     },
     {
-      name: t("د. محمد العتيبي", "Dr. Mohammed Al-Otaibi"),
-      role: t("أمين عام الجمعية", "Secretary General"),
-      image: hero3,
+      name: t("أ. شريفة عبدالله آل معلوي", "Ms. Shareefa Abdullah Al Maalawi"),
+      role: t("أمين مجلس الجمعية", "Board Secretary"),
+      icon: Landmark,
     },
+    {
+      name: t("أ. أنبات أحمد مجرشي", "Ms. Anbat Ahmed Mujarshi"),
+      role: t("أمين مال الجمعية", "Treasurer"),
+      icon: Landmark,
+    },
+  ];
+
+  const boardDirectors = [
+    t("د. فيصل خالد الحذيفي", "Dr. Faisal Khaled Al-Huthaifi"),
+    t("د. آلاء محمد البيشي", "Dr. Alaa Mohammed Al-Bishi"),
+    t("د. رشا منصور الغفيلي", "Dr. Rasha Mansour Al-Ghufaili"),
+    t("أ. محمد علي المويسي", "Mr. Mohammed Ali Al-Muwaisi"),
+    t("أ. ملك فايز الرويلي", "Ms. Malak Fayez Al-Ruwaili"),
   ];
 
   return (
@@ -38,39 +48,59 @@ const Leadership = () => {
             {t("القيادة", "Leadership")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {t("المجلس الحالي", "Current Council")}
+            {t("أعضاء مجلس الإدارة", "Board of Directors")}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             {t(
-              "فريق من القادة المتميزين الملتزمين بتطوير المهنة",
-              "A team of distinguished leaders committed to developing the profession"
+              "فريق من القادة المتميزين الملتزمين بتطوير مهنة العلاج الطبيعي في المملكة",
+              "A team of distinguished leaders committed to advancing the physical therapy profession in Saudi Arabia"
             )}
           </p>
         </div>
 
-        {/* Council Members Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {council.map((member, index) => (
+        {/* Board Officers */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {boardMembers.map((member, index) => (
             <motion.div
               key={index}
               data-aos="zoom-in"
               data-aos-delay={index * 100}
               className="group"
             >
-              <div className="relative overflow-hidden rounded-2xl mb-6">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full aspect-square object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="bg-card rounded-2xl p-6 shadow-md card-hover text-center border border-border/50">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <member.icon className="w-8 h-8 text-primary group-hover:text-primary-foreground" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">
+                  {member.name}
+                </h3>
+                <p className="text-muted-foreground text-sm">{member.role}</p>
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-2">
-                {member.name}
-              </h3>
-              <p className="text-muted-foreground">{member.role}</p>
             </motion.div>
           ))}
+        </div>
+
+        {/* Board Directors */}
+        <div data-aos="fade-up">
+          <h3 className="text-xl font-bold text-foreground mb-6 text-center">
+            {t("أعضاء المجلس", "Board Members")}
+          </h3>
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {boardDirectors.map((name, index) => (
+              <motion.div
+                key={index}
+                data-aos="fade-up"
+                data-aos-delay={index * 50}
+                whileHover={{ y: -5 }}
+                className="bg-secondary/50 rounded-xl p-4 text-center"
+              >
+                <div className="w-10 h-10 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-primary" />
+                </div>
+                <p className="text-foreground font-medium text-sm">{name}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

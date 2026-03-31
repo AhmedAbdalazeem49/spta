@@ -10,42 +10,43 @@ const Objectives = () => {
 
   const objectives = [
     t(
-      "تطوير مهنة العلاج الطبيعي في المملكة العربية السعودية",
-      "Develop the physical therapy profession in Saudi Arabia"
+      "تنمية الفكر العلمي في مجال العلاج الطبيعي والعمل على تطويره وتنشيطه.",
+      "Foster scientific thinking in physical therapy and work towards its development and advancement."
     ),
     t(
-      "تعزيز البحث العلمي والممارسة المبنية على الأدلة",
-      "Promote scientific research and evidence-based practice"
+      "تحقيق التواصل العلمي لأعضاء الجمعية وإتاحة الفرصة للعاملين للإسهام في حركة التقدم المعرفي.",
+      "Facilitate scientific communication among members and empower practitioners to contribute to knowledge advancement."
     ),
     t(
-      "توفير فرص التعليم المستمر للممارسين",
-      "Provide continuing education opportunities for practitioners"
+      "تقديم المشورة العلمية وإجراء الدراسات اللازمة لرفع مستوى الأداء.",
+      "Provide scientific consultation and conduct studies to elevate professional performance standards."
     ),
     t(
-      "بناء شراكات محلية وعالمية استراتيجية",
-      "Build strategic local and international partnerships"
+      "تطوير الأداء العلمي والمهني لممارسي المهنة.",
+      "Enhance the scientific and professional capabilities of practitioners."
     ),
     t(
-      "رفع مستوى الوعي بأهمية العلاج الطبيعي",
-      "Raise awareness about the importance of physical therapy"
+      "تيسير تبادل الإنتاج العلمي والرؤى المعرفية بين الهيئات الصحية داخل المملكة وخارجها.",
+      "Facilitate the exchange of scientific outputs and knowledge between healthcare institutions within and beyond the Kingdom."
     ),
-    t("دعم الكوادر الوطنية المتخصصة", "Support specialized national cadres"),
+    t(
+      "التثقيف الصحي للمجتمع ورفع مستوى الوعي بالصحة العامة.",
+      "Promote public health education and raise awareness about community well-being."
+    ),
   ];
 
   return (
     <section className="section-padding bg-secondary/30">
       <div className="container-custom">
-        {/* Section Header */}
         <div className="text-center mb-16" data-aos="fade-up">
           <span className="text-accent font-semibold text-lg mb-4 block">
-            {t("أهدافنا", "Our Goals")}
+            {t("أهداف الجمعية", "Association Objectives")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             {t("نسعى لتحقيق", "We Strive to Achieve")}
           </h2>
         </div>
 
-        {/* Objectives Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {objectives.map((objective, index) => (
             <motion.div

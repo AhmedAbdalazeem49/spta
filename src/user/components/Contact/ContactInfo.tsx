@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Phone,
   Twitter,
+  Globe,
 } from "lucide-react";
 
 export default function ContactInfo() {
@@ -27,55 +28,34 @@ export default function ContactInfo() {
     {
       icon: Phone,
       title: t("الهاتف", "Phone"),
-      details: "+966 XX XXX XXXX",
-      sub: t("متاح 24/7", "Available 24/7"),
+      details: "0541812433",
+      sub: t("للتواصل المباشر", "Direct Contact"),
     },
     {
       icon: Mail,
       title: t("البريد الإلكتروني", "Email"),
-      details: "info@spta.org.sa",
+      details: "spta@ksu.edu.sa",
       sub: t("سنرد خلال 24 ساعة", "We reply within 24 hours"),
     },
     {
-      icon: Clock,
-      title: t("ساعات العمل", "Working Hours"),
-      details: t("الأحد - الخميس", "Sunday - Thursday"),
-      sub: t("8:00 ص - 4:00 م", "8:00 AM - 4:00 PM"),
+      icon: Globe,
+      title: t("الموقع الإلكتروني", "Website"),
+      details: "spta.ksu.edu.sa",
+      sub: t("زوروا موقعنا", "Visit our website"),
     },
   ];
 
   const socialLinks = [
-    {
-      icon: Facebook,
-      href: "#",
-      label: "Facebook",
-      color: "hover:bg-blue-600",
-    },
+    { icon: Facebook, href: "#", label: "Facebook", color: "hover:bg-blue-600" },
     { icon: Twitter, href: "#", label: "Twitter", color: "hover:bg-sky-500" },
-    {
-      icon: Linkedin,
-      href: "#",
-      label: "LinkedIn",
-      color: "hover:bg-blue-700",
-    },
-    {
-      icon: Instagram,
-      href: "#",
-      label: "Instagram",
-      color: "hover:bg-pink-600",
-    },
-    {
-      icon: MessageCircle,
-      href: "#",
-      label: "WhatsApp",
-      color: "hover:bg-green-600",
-    },
+    { icon: Linkedin, href: "#", label: "LinkedIn", color: "hover:bg-blue-700" },
+    { icon: Instagram, href: "#", label: "Instagram", color: "hover:bg-pink-600" },
+    { icon: MessageCircle, href: "#", label: "WhatsApp", color: "hover:bg-green-600" },
   ];
 
   return (
     <section className="py-16 bg-background -mt-16 relative z-20">
       <div className="container-custom">
-        {/* Contact Info Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {contactInfo.map((info, index) => (
             <motion.div
@@ -95,13 +75,8 @@ export default function ContactInfo() {
           ))}
         </div>
 
-        {/* Social Links */}
         <div className="space-y-8">
-          <motion.div
-            data-aos="fade-left"
-            data-aos-delay={100}
-            className="bg-card rounded-2xl p-8 shadow-lg"
-          >
+          <motion.div data-aos="fade-left" data-aos-delay={100} className="bg-card rounded-2xl p-8 shadow-lg">
             <h3 className="text-xl font-bold text-foreground mb-6">
               {t("تابعنا على وسائل التواصل", "Follow Us on Social Media")}
             </h3>

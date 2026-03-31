@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Users, BookOpen, Award, Building2 } from "lucide-react";
+import { Users, BookOpen, Award, Building2, Newspaper, Presentation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Stats() {
@@ -10,22 +10,22 @@ export default function Stats() {
   const stats = [
     {
       number: "5000+",
-      label: t("عضو مسجل", "Registered Members"),
+      label: t("مستفيد من ورش العمل", "Workshop Beneficiaries"),
       icon: Users,
     },
     {
-      number: "200+",
-      label: t("بحث علمي", "Scientific Research"),
-      icon: BookOpen,
+      number: "8",
+      label: t("مؤتمرات علمية", "Scientific Conferences"),
+      icon: Presentation,
     },
     {
-      number: "50+",
-      label: t("شراكة", "Partnerships"),
+      number: "10",
+      label: t("مجموعات تخصصية", "Specialty Groups"),
       icon: Award,
     },
     {
       number: "13",
-      label: t("فرع إقليمي", "Regional Branches"),
+      label: t("فرعاً حول المملكة", "Branches Across KSA"),
       icon: Building2,
     },
   ];
@@ -51,10 +51,7 @@ export default function Stats() {
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
-                transition={{
-                  delay: index * 0.1 + 0.3,
-                  type: "spring",
-                }}
+                transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
                 className="text-4xl md:text-5xl font-bold block mb-2"
               >
                 {stat.number}

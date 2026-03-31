@@ -14,18 +14,15 @@ const Partners = () => {
       type: t("أكاديمي", "Academic"),
     },
     {
+      name: t("المجلس الصحي السعودي", "Saudi Health Council"),
+      type: t("حكومي", "Government"),
+    },
+    {
       name: t("وزارة الصحة", "Ministry of Health"),
       type: t("حكومي", "Government"),
     },
     {
-      name: t(
-        "الهيئة السعودية للتخصصات الصحية",
-        "Saudi Commission for Health Specialties"
-      ),
-      type: t("تنظيمي", "Regulatory"),
-    },
-    {
-      name: t("الاتحاد العالمي للعلاج الطبيعي", "World Physiotherapy"),
+      name: t("World Physiotherapy", "World Physiotherapy"),
       type: t("دولي", "International"),
     },
   ];
@@ -35,11 +32,17 @@ const Partners = () => {
       <div className="container-custom">
         <div className="text-center mb-16" data-aos="fade-up">
           <span className="text-accent font-semibold text-lg mb-4 block">
-            {t("شركاؤنا", "Our Partners")}
+            {t("التمثيل والشراكات", "Representation & Partnerships")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {t("الشراكات والتعاون", "Partnerships & Collaboration")}
           </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            {t(
+              "للجمعية مقعد في المجلس الصحي السعودي وتمثيل عالمي في World Physiotherapy",
+              "SPTA holds a seat in the Saudi Health Council and has international representation in World Physiotherapy"
+            )}
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
