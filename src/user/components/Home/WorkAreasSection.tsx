@@ -26,31 +26,19 @@ const WorkAreasSection = () => {
     {
       id: 1,
       icon: GraduationCap,
-      title: t("التعليم", "Education"),
+      title: t("التعليم والتطوير", "Education & Development"),
       subtitle: t(
-        "التعليم المستمر والتطوير المهني",
-        "Continuing Education & Professional Development"
+        "ورش العمل والدورات التخصصية والمحاضرات",
+        "Workshops, specialized courses, and lectures"
       ),
       color: "from-blue-500 to-blue-700",
       bgPattern: "bg-gradient-to-br from-blue-500/10 to-blue-700/10",
-      stats: { number: "150+", label: t("دورة تدريبية", "Training Courses") },
+      stats: { number: "5000+", label: t("مستفيد", "Beneficiaries") },
       activities: [
-        {
-          icon: BookOpen,
-          text: t("ورش العمل التخصصية", "Specialized Workshops"),
-        },
-        {
-          icon: Award,
-          text: t(
-            "برامج الشهادات المهنية",
-            "Professional Certificate Programs"
-          ),
-        },
+        { icon: BookOpen, text: t("ورش العمل التخصصية", "Specialized Workshops") },
+        { icon: Award, text: t("الندوات والمحاضرات", "Seminars & Lectures") },
         { icon: Users, text: t("المؤتمرات العلمية", "Scientific Conferences") },
-        {
-          icon: FileText,
-          text: t("الكتيبات التعليمية", "Educational Booklets"),
-        },
+        { icon: FileText, text: t("تأليف وترجمة الكتب العلمية", "Authoring & Translating Scientific Books") },
       ],
       link: "/booklets",
       cta: t("استعرض البرامج", "Browse Programs"),
@@ -58,54 +46,36 @@ const WorkAreasSection = () => {
     {
       id: 2,
       icon: Heart,
-      title: t("الصحة", "Health"),
-      subtitle: t("تعزيز جودة الرعاية الصحية", "Enhancing Healthcare Quality"),
+      title: t("خدمة المجتمع", "Community Service"),
+      subtitle: t("التوعية الصحية والأنشطة المجتمعية", "Health awareness and community activities"),
       color: "from-red-500 to-rose-600",
       bgPattern: "bg-gradient-to-br from-red-500/10 to-rose-600/10",
-      stats: { number: "50+", label: t("مبادرة صحية", "Health Initiatives") },
+      stats: { number: "13", label: t("فرعاً حول المملكة", "Branches Across KSA") },
       activities: [
-        {
-          icon: Stethoscope,
-          text: t("التوعية الصحية المجتمعية", "Community Health Awareness"),
-        },
-        {
-          icon: Activity,
-          text: t("برامج إعادة التأهيل", "Rehabilitation Programs"),
-        },
-        {
-          icon: Building2,
-          text: t("الشراكات الصحية", "Healthcare Partnerships"),
-        },
-        {
-          icon: Brain,
-          text: t("الممارسة المبنية على الأدلة", "Evidence-Based Practice"),
-        },
+        { icon: Stethoscope, text: t("التوعية الصحية المجتمعية", "Community Health Awareness") },
+        { icon: Activity, text: t("الأنشطة الثقافية والترفيهية", "Cultural & Recreational Activities") },
+        { icon: Building2, text: t("المشاركات في المعارض", "Exhibition Participation") },
+        { icon: Brain, text: t("التثقيف الصحي للمجتمع", "Public Health Education") },
       ],
-      link: "/about/what-is-pt",
+      link: "/about",
       cta: t("اكتشف المزيد", "Discover More"),
     },
     {
       id: 3,
       icon: Microscope,
-      title: t("البحث", "Research"),
+      title: t("البحث العلمي", "Scientific Research"),
       subtitle: t(
-        "تطوير البحث العلمي في العلاج الطبيعي",
-        "Advancing Scientific Research in PT"
+        "تشجيع البحوث والدراسات الاستشارية",
+        "Encouraging research and consultancy studies"
       ),
       color: "from-emerald-500 to-teal-600",
       bgPattern: "bg-gradient-to-br from-emerald-500/10 to-teal-600/10",
-      stats: {
-        number: "200+",
-        label: t("بحث علمي منشور", "Published Research"),
-      },
+      stats: { number: "1", label: t("مجلة علمية دولية", "International Journal") },
       activities: [
         { icon: FileText, text: t("المجلة العلمية", "Scientific Journal") },
-        {
-          icon: BookOpen,
-          text: t("قواعد البيانات العلمية", "Scientific Databases"),
-        },
-        { icon: Award, text: t("جوائز البحث العلمي", "Research Awards") },
-        { icon: Users, text: t("مركز الأبحاث", "Research Center") },
+        { icon: BookOpen, text: t("البحوث والدراسات", "Research & Studies") },
+        { icon: Award, text: t("الشراكات البحثية", "Research Partnerships") },
+        { icon: Users, text: t("التعاون مع World Physiotherapy", "World Physiotherapy Collaboration") },
       ],
       link: "/research",
       cta: t("ابدأ البحث", "Start Research"),
@@ -114,7 +84,6 @@ const WorkAreasSection = () => {
 
   return (
     <section className="section-padding bg-gradient-to-b from-background via-secondary/20 to-background relative overflow-hidden">
-      {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent rounded-full blur-3xl" />
@@ -123,15 +92,15 @@ const WorkAreasSection = () => {
       <div className="container-custom relative z-10">
         <div className="text-center mb-16" data-aos="fade-up">
           <span className="text-accent font-semibold text-lg mb-4 block">
-            {t("مجالات التميز", "Areas of Excellence")}
+            {t("نشاطات الجمعية", "Association Activities")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             {t("مجالات عملنا", "Our Areas of Work")}
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             {t(
-              "نعمل في ثلاثة محاور رئيسية لتطوير مهنة العلاج الطبيعي في المملكة العربية السعودية وتحقيق رؤية 2030",
-              "We work across three main pillars to develop the physical therapy profession in Saudi Arabia and achieve Vision 2030"
+              "نعمل في ثلاثة محاور رئيسية لتطوير مهنة العلاج الطبيعي في المملكة العربية السعودية تحقيقًا لأهداف رؤية 2030",
+              "We work across three main pillars to develop the physical therapy profession in Saudi Arabia, aligned with Vision 2030 objectives"
             )}
           </p>
         </div>
@@ -146,14 +115,9 @@ const WorkAreasSection = () => {
               onHoverEnd={() => setActiveArea(null)}
               className={`relative rounded-3xl overflow-hidden ${area.bgPattern} border border-border/50 group`}
             >
-              {/* Animated Background Gradient */}
-              <motion.div
-                className={`absolute inset-0 bg-gradient-to-br ${area.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-              />
+              <motion.div className={`absolute inset-0 bg-gradient-to-br ${area.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
 
-              {/* Content */}
               <div className="relative p-8">
-                {/* Icon & Title */}
                 <div className="flex items-start gap-4 mb-6">
                   <motion.div
                     whileHover={{ rotate: 360 }}
@@ -163,16 +127,11 @@ const WorkAreasSection = () => {
                     <area.icon className="w-8 h-8 text-white" />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-1">
-                      {area.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {area.subtitle}
-                    </p>
+                    <h3 className="text-2xl font-bold text-foreground mb-1">{area.title}</h3>
+                    <p className="text-muted-foreground text-sm">{area.subtitle}</p>
                   </div>
                 </div>
 
-                {/* Stats Counter */}
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
@@ -181,18 +140,13 @@ const WorkAreasSection = () => {
                   className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-border/30"
                 >
                   <div className="flex items-center justify-center gap-3">
-                    <span
-                      className={`text-4xl font-bold bg-gradient-to-r ${area.color} bg-clip-text text-transparent`}
-                    >
+                    <span className={`text-4xl font-bold bg-gradient-to-r ${area.color} bg-clip-text text-transparent`}>
                       {area.stats.number}
                     </span>
-                    <span className="text-muted-foreground">
-                      {area.stats.label}
-                    </span>
+                    <span className="text-muted-foreground">{area.stats.label}</span>
                   </div>
                 </motion.div>
 
-                {/* Activities List */}
                 <div className="space-y-3 mb-6">
                   {area.activities.map((activity, actIndex) => (
                     <motion.div
@@ -203,9 +157,7 @@ const WorkAreasSection = () => {
                       transition={{ delay: 0.1 * actIndex }}
                       className="flex items-center gap-3 group/item"
                     >
-                      <div
-                        className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-20 flex items-center justify-center group-hover/item:scale-110 transition-transform`}
-                      >
+                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-20 flex items-center justify-center group-hover/item:scale-110 transition-transform`}>
                         <activity.icon className="w-4 h-4 text-white" />
                       </div>
                       <span className="text-foreground/80 group-hover/item:text-foreground transition-colors">
@@ -215,25 +167,15 @@ const WorkAreasSection = () => {
                   ))}
                 </div>
 
-                {/* CTA Button */}
                 <Link to={area.link}>
-                  <Button
-                    className={`w-full bg-gradient-to-r ${area.color} text-white border-0 hover:opacity-90 group/btn`}
-                  >
+                  <Button className={`w-full bg-gradient-to-r ${area.color} text-white border-0 hover:opacity-90 group/btn`}>
                     {area.cta}
-                    <ArrowRight
-                      className={`w-4 h-4 ${
-                        isRTL ? "rotate-180 mr-2" : "ml-2"
-                      } group-hover/btn:translate-x-1 transition-transform`}
-                    />
+                    <ArrowRight className={`w-4 h-4 ${isRTL ? "rotate-180 mr-2" : "ml-2"} group-hover/btn:translate-x-1 transition-transform`} />
                   </Button>
                 </Link>
               </div>
 
-              {/* Hover Glow Effect */}
-              <motion.div
-                className={`absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-br ${area.color} rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
-              />
+              <motion.div className={`absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-br ${area.color} rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`} />
             </motion.div>
           ))}
         </div>

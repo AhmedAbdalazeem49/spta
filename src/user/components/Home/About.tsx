@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 
-// Import image
-import hero1 from "@/assets/hero-1.webp";
+import sptaConference2 from "@/assets/spta-conference-2.jpg";
 
 export default function About() {
   const { isRTL, t } = useLanguage();
@@ -31,24 +30,22 @@ export default function About() {
 
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
               {t(
-                "تأسست الجمعية السعودية للعلاج الطبيعي بهدف تطوير مهنة العلاج الطبيعي في المملكة العربية السعودية، وتعزيز البحث العلمي والممارسة المبنية على الأدلة، وتوفير فرص التعليم المستمر للممارسين.",
-                "The Saudi Physical Therapy Association was established to develop the physical therapy profession in Saudi Arabia, promote scientific research and evidence-based practice, and provide continuing education opportunities for practitioners."
+                "تُعتبر الجمعية السعودية للعلاج الطبيعي إحدى الجمعيات العلمية التابعة لجامعة الملك سعود، والتي أُنشئت وفق القواعد المنظمة للجمعيات العلمية في الجامعات السعودية.",
+                "The Saudi Physical Therapy Association (SPTA) is a scientific society affiliated with King Saud University, established in accordance with the regulations governing scientific societies in Saudi universities."
               )}
             </p>
 
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               {t(
-                "نسعى لتحقيق رؤية المملكة 2030 من خلال رفع مستوى الخدمات الصحية وتأهيل الكوادر الوطنية المتخصصة في مجال العلاج الطبيعي.",
-                "We strive to achieve Saudi Vision 2030 by raising the level of healthcare services and qualifying national cadres specialized in physical therapy."
+                "تمارس الجمعية نشاطاتها في تطوير المعارف النظرية والتطبيقية، وتقديم الاستشارات والدراسات العلمية والتطبيقية للقطاعات الصحية العامة والخاصة في مجال العلاج الطبيعي.",
+                "The association carries out its activities in advancing theoretical and applied knowledge, and providing consultations and scientific studies to both public and private healthcare sectors in the field of physical therapy."
               )}
             </p>
 
             <Link to="/about">
               <Button className="gap-2" size="lg">
                 {t("اقرأ المزيد", "Read More")}
-                <ArrowRight
-                  className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`}
-                />
+                <ArrowRight className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
               </Button>
             </Link>
           </div>
@@ -57,8 +54,8 @@ export default function About() {
           <div className="relative" data-aos="fade-left" data-aos-delay="200">
             <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <img
-                src={hero1}
-                alt={t("العلاج الطبيعي", "Physical Therapy")}
+                src={sptaConference2}
+                alt={t("فعاليات الجمعية", "SPTA Events")}
                 className="w-full aspect-[4/3] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent" />
@@ -71,9 +68,9 @@ export default function About() {
               transition={{ delay: 0.5, type: "spring" }}
               className="absolute -bottom-8 right-0 lg:-right-8 bg-accent text-accent-foreground p-6 rounded-2xl shadow-lg"
             >
-              <span className="text-4xl font-bold block">25+</span>
+              <span className="text-4xl font-bold block">13</span>
               <span className="text-sm">
-                {t("سنة من الخبرة", "Years of Experience")}
+                {t("فرعاً حول المملكة", "Branches Across KSA")}
               </span>
             </motion.div>
           </div>

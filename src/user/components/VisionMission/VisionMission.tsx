@@ -29,8 +29,8 @@ const VisionMission = () => {
               </h2>
               <p className="text-xl text-white/90 leading-relaxed">
                 {t(
-                  "أن تكون الجمعية السعودية للعلاج الطبيعي الكيان الرائد والمرجع الأول لمهنة العلاج الطبيعي في المملكة العربية السعودية والمنطقة العربية، محققةً أعلى معايير الجودة والتميز في خدمة المجتمع.",
-                  "To be the leading entity and primary reference for the physical therapy profession in Saudi Arabia and the Arab region, achieving the highest standards of quality and excellence in serving the community."
+                  "أن تكون الجمعية مرجعًا ومنظمًا لمهنة العلاج الطبيعي في المملكة، ومنبرًا يمثل المختصين أمام الجهات والمنظمات المحلية والدولية.",
+                  "To be the authoritative reference and regulatory body for the physical therapy profession in the Kingdom, serving as a platform that represents specialists before local and international organizations."
                 )}
               </p>
             </div>
@@ -53,8 +53,8 @@ const VisionMission = () => {
               </h2>
               <p className="text-xl text-white/90 leading-relaxed">
                 {t(
-                  "تمكين أخصائيي العلاج الطبيعي وتطوير كفاءاتهم من خلال التعليم المستمر والبحث العلمي، والمساهمة في رفع مستوى الخدمات الصحية في المملكة، وتعزيز الوعي المجتمعي بأهمية العلاج الطبيعي.",
-                  "Empowering physical therapists and developing their competencies through continuing education and scientific research, contributing to raising the level of healthcare services in the Kingdom, and enhancing community awareness of the importance of physical therapy."
+                  "الريادة العلمية والمهنية للعاملين في مجال العلاج الطبيعي، والسعي دائمًا إلى نشر التوعية وخدمة المجتمع.",
+                  "To lead in scientific and professional excellence for physical therapy practitioners, while continuously striving to spread awareness and serve the community."
                 )}
               </p>
             </div>
