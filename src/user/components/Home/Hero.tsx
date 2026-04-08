@@ -7,7 +7,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import sptaEvent1 from "@/assets/spta-event-1.jpg";
+import sptaEvent1 from "@/assets/spta-award-1.jpg";
 import sptaConference1 from "@/assets/spta-conference-1.jpg";
 import sptaAward1 from "@/assets/spta-award-1.jpg";
 import sptaCeremony1 from "@/assets/spta-ceremony-1.jpg";

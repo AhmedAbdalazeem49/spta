@@ -1,24 +1,14 @@
 "use client";
 
-import React from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Quote as QuoteIcon } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React from "react";
 
 const Quote = () => {
   const { t } = useLanguage();
 
   const quotes = [
-    {
-      text: t(
-        "نحن ننظر إلى القطاع غير الربحي على أنه قطاع مهم في دعم مسيرة التعليم والثقافة والصحة والبحث، وسنعتمد عليه بشكل رئيسي.",
-        "We view the non-profit sector as a vital pillar in supporting the advancement of education, culture, health, and research — and we will rely on it as a key driver."
-      ),
-      author: t(
-        "سمو ولي العهد الأمير محمد بن سلمان",
-        "HRH Crown Prince Mohammed bin Salman"
-      ),
-    },
     {
       text: t(
         "وبذلنا الغالي والنفيس للمحافظة على صحة الإنسان وتوفير كل أسباب العيش الكريم له.",
@@ -27,6 +17,16 @@ const Quote = () => {
       author: t(
         "خادم الحرمين الشريفين الملك سلمان بن عبدالعزيز",
         "Custodian of the Two Holy Mosques King Salman bin Abdulaziz"
+      ),
+    },
+    {
+      text: t(
+        "نحن ننظر إلى القطاع غير الربحي على أنه قطاع مهم في دعم مسيرة التعليم والثقافة والصحة والبحث، وسنعتمد عليه بشكل رئيسي.",
+        "We view the non-profit sector as a vital pillar in supporting the advancement of education, culture, health, and research — and we will rely on it as a key driver."
+      ),
+      author: t(
+        "سمو ولي العهد الأمير محمد بن سلمان",
+        "HRH Crown Prince Mohammed bin Salman"
       ),
     },
   ];
@@ -47,9 +47,7 @@ const Quote = () => {
                 {quote.text}
               </p>
               <div>
-                <p className="font-bold text-lg text-accent">
-                  {quote.author}
-                </p>
+                <p className="font-bold text-lg text-accent">{quote.author}</p>
               </div>
             </motion.div>
           ))}

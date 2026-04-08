@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import sptaConference2 from "@/assets/spta-conference-2.jpg";
@@ -30,8 +30,8 @@ export default function About() {
 
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
               {t(
-                "تُعتبر الجمعية السعودية للعلاج الطبيعي إحدى الجمعيات العلمية التابعة لجامعة الملك سعود، والتي أُنشئت وفق القواعد المنظمة للجمعيات العلمية في الجامعات السعودية.",
-                "The Saudi Physical Therapy Association (SPTA) is a scientific society affiliated with King Saud University, established in accordance with the regulations governing scientific societies in Saudi universities."
+                "تأسست الجمعية السعودية للعلاج الطبيعي لتمارس نشاطاتها في تطوير المعارف النظرية والتطبيقية , وتقديم الاستشارات والدراسات العلمية والتطبيقات للقطاعات الصحية العامة والخاصة في مجال العلاج الطبيعي .",
+                "The Saudi Physical Therapy Association was established to carry out activities aimed at developing both theoretical and practical knowledge, and to provide consultations, scientific studies, and practical applications to the public and private healthcare sectors in the field of physical therapy."
               )}
             </p>
 
@@ -45,7 +45,9 @@ export default function About() {
             <Link to="/about">
               <Button className="gap-2" size="lg">
                 {t("اقرأ المزيد", "Read More")}
-                <ArrowRight className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
+                <ArrowRight
+                  className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`}
+                />
               </Button>
             </Link>
           </div>
