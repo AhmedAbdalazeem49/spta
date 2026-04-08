@@ -61,6 +61,12 @@ import AdminCommunicationSettings from "./admin/pages/AdminCommunicationSettings
 // Public workshops page (user-facing)
 import WorkshopsPage from "./admin/pages/WorkshopsPage";
 
+// Conference & Certificate pages
+import ConferencesPage from "./user/pages/ConferencesPage";
+import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
+import CertificateViewPage from "./user/pages/CertificateViewPage";
+import ConferencePopup from "./components/ConferencePopup";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -133,6 +139,15 @@ const App = () => (
               />
               {/* Public Workshops */}
               <Route path="/workshops" element={<WorkshopsPage />} />
+              {/* Conferences */}
+              <Route path="/conferences" element={<ConferencesPage />} />
+              <Route path="/conferences/:id" element={<ConferenceDetailPage />} />
+              {/* Certificates (user) */}
+              <Route path="/certificates" element={
+                <ProtectedRoute>
+                  <CertificateViewPage />
+                </ProtectedRoute>
+              } />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
@@ -251,6 +266,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Chatbot />
+            <ConferencePopup />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
