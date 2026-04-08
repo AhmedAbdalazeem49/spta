@@ -146,7 +146,7 @@ const Navbar = () => {
       path: "/contact",
       icon: Phone,
     },
-    { label: t("تطبيق SPTA", "SPTA App"), path: "/#app", icon: Smartphone },
+    // { label: t("تطبيق SPTA", "SPTA App"), path: "/#app", icon: Smartphone },
   ];
 
   return (
