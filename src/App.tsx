@@ -139,6 +139,15 @@ const App = () => (
               />
               {/* Public Workshops */}
               <Route path="/workshops" element={<WorkshopsPage />} />
+              {/* Conferences */}
+              <Route path="/conferences" element={<ConferencesPage />} />
+              <Route path="/conferences/:id" element={<ConferenceDetailPage />} />
+              {/* Certificates (user) */}
+              <Route path="/certificates" element={
+                <ProtectedRoute>
+                  <CertificateViewPage />
+                </ProtectedRoute>
+              } />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
