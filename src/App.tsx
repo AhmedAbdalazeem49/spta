@@ -61,6 +61,12 @@ import AdminCommunicationSettings from "./admin/pages/AdminCommunicationSettings
 // Public workshops page (user-facing)
 import WorkshopsPage from "./admin/pages/WorkshopsPage";
 
+// Conference & Certificate pages
+import ConferencesPage from "./user/pages/ConferencesPage";
+import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
+import CertificateViewPage from "./user/pages/CertificateViewPage";
+import ConferencePopup from "./components/ConferencePopup";
+
 const queryClient = new QueryClient();
 
 const App = () => (
