@@ -10,31 +10,10 @@ export default function Timeline() {
 
   const timeline = [
     {
-      year: "1995",
+      year: "2024",
       event: t(
-        "الانضمام للاتحاد العالمي للعلاج الطبيعي",
-        "Joined World Physiotherapy"
-      ),
-    },
-    {
-      year: "2010",
-      event: t(
-        "استضافة المؤتمر الإقليمي الأول",
-        "Hosted First Regional Conference"
-      ),
-    },
-    {
-      year: "2015",
-      event: t(
-        "توقيع اتفاقية التعاون مع APTA",
-        "Signed cooperation agreement with APTA"
-      ),
-    },
-    {
-      year: "2018",
-      event: t(
-        "المشاركة في المؤتمر العالمي بجنيف",
-        "Participated in World Congress in Geneva"
+        "استضافة المؤتمر العالمي للعلاج الطبيعي",
+        "Hosting World PT Congress"
       ),
     },
     {
@@ -45,10 +24,31 @@ export default function Timeline() {
       ),
     },
     {
-      year: "2024",
+      year: "2018",
       event: t(
-        "استضافة المؤتمر العالمي للعلاج الطبيعي",
-        "Hosting World PT Congress"
+        "المشاركة في المؤتمر العالمي بجنيف",
+        "Participated in World Congress in Geneva"
+      ),
+    },
+    {
+      year: "2015",
+      event: t(
+        "توقيع اتفاقية التعاون مع APTA",
+        "Signed cooperation agreement with APTA"
+      ),
+    },
+    {
+      year: "2010",
+      event: t(
+        "استضافة المؤتمر الإقليمي الأول",
+        "Hosted First Regional Conference"
+      ),
+    },
+    {
+      year: "1995",
+      event: t(
+        "الانضمام للاتحاد العالمي للعلاج الطبيعي",
+        "Joined World Physiotherapy"
       ),
     },
   ];

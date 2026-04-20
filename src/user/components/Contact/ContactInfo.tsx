@@ -75,7 +75,7 @@ export default function ContactInfo() {
           ))}
         </div>
 
-        <div className="space-y-8">
+        {/* <div className="space-y-8 hidden">
           <motion.div data-aos="fade-left" data-aos-delay={100} className="bg-card rounded-2xl p-8 shadow-lg">
             <h3 className="text-xl font-bold text-foreground mb-6">
               {t("تابعنا على وسائل التواصل", "Follow Us on Social Media")}
@@ -93,7 +93,7 @@ export default function ContactInfo() {
               ))}
             </div>
           </motion.div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

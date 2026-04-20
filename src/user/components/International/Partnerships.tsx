@@ -1,21 +1,18 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Handshake, Building2, Calendar } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { Building2, Calendar, Handshake } from "lucide-react";
+import React from "react";
 
 export default function Partnerships() {
   const { t } = useLanguage();
 
   const partnerships = [
     {
-      name: t(
-        "جمعية العلاج الطبيعي الأمريكية",
-        "American Physical Therapy Association"
-      ),
+      name: t("APTA", "APTA"),
       type: t("شراكة تعليمية", "Educational Partnership"),
-      since: "2018",
+      since: "2015",
     },
     {
       name: t(

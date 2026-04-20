@@ -1,8 +1,8 @@
 "use client";
 
 import hero1 from "@/assets/hero-1.webp";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import hero2 from "@/assets/spta-clinic-1.jpg";
+import hero3 from "@/assets/spta-conference-1.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import React from "react";

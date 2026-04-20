@@ -61,10 +61,6 @@ const Navbar = () => {
           path: "/about/vision-mission",
         },
         {
-          label: t("كلمة الرئيس", "President Message"),
-          path: "/about/president-message",
-        },
-        {
           label: t("ما هو العلاج الطبيعي", "What is PT"),
           path: "/about/what-is-pt",
         },
@@ -78,32 +74,32 @@ const Navbar = () => {
         },
       ],
     },
-    {
-      label: t("البحث والتعليم", "Research"),
-      path: "/research",
-      icon: BookOpen,
-      children: [
-        {
-          label: t("مركز الأبحاث", "Research Center"),
-          path: "/research/center",
-        },
-        {
-          label: t("قواعد البيانات", "Databases"),
-          path: "/research/databases",
-        },
-      ],
-    },
-    {
-      label: t("المكتبة والإعلام", "Library & Media"),
-      path: "/library",
-      icon: Library,
-      children: [
-        { label: t("المكتبة", "Library"), path: "/library" },
-        { label: t("الكتيبات", "Booklets"), path: "/booklets" },
-        { label: t("المطويات", "Brochures"), path: "/brochures" },
-        { label: t("الفيديوهات", "Videos"), path: "/videos" },
-      ],
-    },
+    // {
+    //   label: t("البحث والتعليم", "Research"),
+    //   path: "/research",
+    //   icon: BookOpen,
+    //   children: [
+    //     {
+    //       label: t("مركز الأبحاث", "Research Center"),
+    //       path: "/research/center",
+    //     },
+    //     {
+    //       label: t("قواعد البيانات", "Databases"),
+    //       path: "/research/databases",
+    //     },
+    //   ],
+    // },
+    // {
+    //   label: t("المكتبة والإعلام", "Library & Media"),
+    //   path: "/library",
+    //   icon: Library,
+    //   children: [
+    //     { label: t("المكتبة", "Library"), path: "/library" },
+    //     { label: t("الكتيبات", "Booklets"), path: "/booklets" },
+    //     { label: t("المطويات", "Brochures"), path: "/brochures" },
+    //     { label: t("الفيديوهات", "Videos"), path: "/videos" },
+    //   ],
+    // },
     {
       label: t("العضوية", "Membership"),
       path: "/membership",
@@ -135,11 +131,11 @@ const Navbar = () => {
       path: "/specializations",
       icon: Building2,
     },
-    {
-      label: t("المجلة العلمية", "Scientific Journal"),
-      path: "/journal",
-      icon: FileText,
-    },
+    // {
+    //   label: t("المجلة العلمية", "Scientific Journal"),
+    //   path: "/journal",
+    //   icon: FileText,
+    // },
     { label: t("الأخبار", "News"), path: "/news", icon: FileText },
     {
       label: t("اتصل بنا", "Contact Us"),

@@ -2,7 +2,6 @@ import Layout from "@/components/layout/Layout";
 import Benefits from "@/user/components/WhatIsPt/Benefits";
 import Clarifications from "@/user/components/WhatIsPt/Clarifications";
 import Conditions from "@/user/components/WhatIsPt/Conditions";
-import Cta from "@/user/components/WhatIsPt/Cta";
 import Hero from "@/user/components/WhatIsPt/Hero";
 
 const WhatIsPTPage = () => {
@@ -12,7 +11,6 @@ const WhatIsPTPage = () => {
       <Benefits />
       <Clarifications />
       <Conditions />
-      <Cta />
     </Layout>
   );
 };

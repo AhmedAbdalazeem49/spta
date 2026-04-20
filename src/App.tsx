@@ -23,7 +23,6 @@ import MembersCountPage from "./user/pages/MembersCountPage";
 import MembershipBenefitsPage from "./user/pages/MembershipBenefitsPage";
 import NewsPage from "./user/pages/NewsPage";
 import PoliciesPage from "./user/pages/PoliciesPage";
-import PresidentMessagePage from "./user/pages/PresidentMessagePage";
 import PreviousBoardsPage from "./user/pages/PreviousBoardsPage";
 import ResearchCenterPage from "./user/pages/ResearchCenterPage";
 import ResearchPage from "./user/pages/ResearchPage";
@@ -54,9 +53,6 @@ import AdminUsersPage from "./admin/pages/AdminUsersPage";
 import AdminVisitorsPage from "./admin/pages/AdminVisitorsPage";
 import AdminWorkshopsPage from "./admin/pages/AdminWorkshopsPage";
 import AdminCoupons from "./admin/pages/AdminCoupons";
-import AdminNewsletter from "./admin/pages/AdminNewsletter";
-import AdminNotifications from "./admin/pages/Adminnotifications";
-import AdminCommunicationSettings from "./admin/pages/AdminCommunicationSettings";
 
 // Public workshops page (user-facing)
 import WorkshopsPage from "./admin/pages/WorkshopsPage";
@@ -66,6 +62,7 @@ import ConferencesPage from "./user/pages/ConferencesPage";
 import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
 import CertificateViewPage from "./user/pages/CertificateViewPage";
 import ConferencePopup from "./components/ConferencePopup";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +74,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+          <ScrollToTop />
             <Routes>
               <Route path="/" element={<HomePage />} />
               {/* About */}
@@ -84,10 +82,6 @@ const App = () => (
               <Route
                 path="/about/vision-mission"
                 element={<VisionMissionPage />}
-              />
-              <Route
-                path="/about/president-message"
-                element={<PresidentMessagePage />}
               />
               <Route
                 path="/about/previous-boards"
@@ -229,36 +223,6 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminCoupons />
-                    </AdminLayout>
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/newsletter"
-                element={
-                  <AdminRoute>
-                    <AdminLayout>
-                      <AdminNewsletter />
-                    </AdminLayout>
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/notifications"
-                element={
-                  <AdminRoute>
-                    <AdminLayout>
-                      <AdminNotifications />
-                    </AdminLayout>
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/communication-settings"
-                element={
-                  <AdminRoute>
-                    <AdminLayout>
-                      <AdminCommunicationSettings />
                     </AdminLayout>
                   </AdminRoute>
                 }

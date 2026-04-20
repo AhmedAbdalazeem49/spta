@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { Microscope, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { ArrowRight, Microscope } from "lucide-react";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   const { t, isRTL } = useLanguage();
@@ -46,12 +47,14 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" variant="secondary" className="gap-2">
-                {t("تقديم بحث", "Submit Research")}
-                <ArrowRight
-                  className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`}
-                />
-              </Button>
+              <Link to="/contact">
+                <Button size="lg" variant="secondary" className="gap-2">
+                  {t("تقديم بحث", "Submit Research")}
+                  <ArrowRight
+                    className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`}
+                  />
+                </Button>
+              </Link>
             </div>
           </motion.div>
 

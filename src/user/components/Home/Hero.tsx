@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 import sptaEvent1 from "@/assets/spta-award-1.jpg";
 import sptaConference1 from "@/assets/spta-conference-1.jpg";
-import sptaAward1 from "@/assets/spta-award-1.jpg";
+import sptaAward1 from "@/assets/spta-community-1.jpg";
 import sptaCeremony1 from "@/assets/spta-ceremony-1.jpg";
 
 export default function Hero() {
@@ -28,7 +28,7 @@ export default function Hero() {
         "The leading reference and regulator of the physical therapy profession in Saudi Arabia"
       ),
       cta: t("انضم إلينا", "Join Us"),
-      ctaLink: "/membership/types",
+      ctaLink: "/contact",
       learnMoreLink: "/about",
     },
     {

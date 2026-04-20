@@ -49,7 +49,7 @@ export default function Hero() {
           </p>
 
           {/* CTA Button */}
-          <Link to="/membership/types">
+          <Link to="/membership/subscribe">
             <Button size="lg" className="btn-hero gap-2">
               {t("انضم الآن", "Join Now")}
               <ArrowRight className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />

@@ -8,6 +8,7 @@ import Stats from "@/user/components/Home/Stats";
 import WorkAreasSection from "@/user/components/Home/WorkAreasSection";
 import Quote from "@/user/components/About/Quote";
 import Layout from "@/components/layout/Layout";
+import Message from "../components/PresidentMessage/Message";
 
 const HomePage = () => {
   return (
@@ -17,7 +18,7 @@ const HomePage = () => {
       <Quote />
       {/* <WorkAreasSection /> */}
       <Stats />
-      <LatestNews />
+      <Message />
       {/* <Research /> */}
       {/* <DownloadApp /> */}
       {/* <BranchesSection /> */}

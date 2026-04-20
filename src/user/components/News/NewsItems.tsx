@@ -120,10 +120,10 @@ export default function NewsItems() {
                     <User className="w-4 h-4" />
                     {item.author}
                   </span>
-                  <Link to="/news" className="flex items-center gap-2 text-primary font-semibold hover:gap-4 transition-all">
+                  {/* <Link to="/news" className="flex items-center gap-2 text-primary font-semibold hover:gap-4 transition-all">
                     {t("اقرأ المزيد", "Read More")}
                     <ArrowRight className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`} />
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </motion.article>

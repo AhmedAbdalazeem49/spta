@@ -155,7 +155,6 @@ const fetchCertificates = async () => {
   { id: 'certificates', labelAr: 'الشهادات', labelEn: 'Certificates', icon: Award },
   { id: 'membership', labelAr: 'العضوية', labelEn: 'Membership', icon: Crown },
   { id: 'edit', labelAr: 'تعديل الملف', labelEn: 'Edit Profile', icon: Edit },
-  { id: 'settings', labelAr: 'الإعدادات', labelEn: 'Settings', icon: Settings },
 ];
 
   return (
@@ -584,33 +583,6 @@ const fetchCertificates = async () => {
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <Label className="text-sm font-medium">
-                          {t("الاسم (English)", "Name (English)")}
-                        </Label>
-                        <Input
-                          value={editForm.name}
-                          onChange={(e) =>
-                            setEditForm({ ...editForm, name: e.target.value })
-                          }
-                          className="focus-visible:ring-primary"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">
-                          {t("الاسم (عربي)", "Name (Arabic)")}
-                        </Label>
-                        <Input
-                          value={editForm.name_ar}
-                          onChange={(e) =>
-                            setEditForm({
-                              ...editForm,
-                              name_ar: e.target.value,
-                            })
-                          }
-                          className="focus-visible:ring-primary"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">
                           {t("رقم الجوال", "Phone")}
                         </Label>
                         <Input
@@ -682,94 +654,6 @@ const fetchCertificates = async () => {
                           <Save className="w-4 h-4" />
                         )}
                         {t("حفظ التعديلات", "Save Changes")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )}
-
-            {/* Settings Tab */}
-            {activeTab === "settings" && (
-              <motion.div
-                key="settings"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="max-w-2xl mx-auto"
-              >
-                <Card data-aos="fade-up">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Bell className="w-5 h-5 text-primary" />
-                      {t("إعدادات البريد الإلكتروني", "Email Settings")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {[
-                      {
-                        key: "newsletters",
-                        labelAr: "النشرة الإخبارية",
-                        labelEn: "Newsletters",
-                        descAr: "استلام آخر الأخبار والتحديثات",
-                        descEn: "Receive latest news and updates",
-                      },
-                      {
-                        key: "workshopReminders",
-                        labelAr: "تذكيرات ورش العمل",
-                        labelEn: "Workshop Reminders",
-                        descAr: "تذكيرات قبل موعد ورش العمل",
-                        descEn: "Reminders before workshop dates",
-                      },
-                      {
-                        key: "membershipAlerts",
-                        labelAr: "تنبيهات العضوية",
-                        labelEn: "Membership Alerts",
-                        descAr: "إشعارات انتهاء وتجديد العضوية",
-                        descEn: "Expiry and renewal notifications",
-                      },
-                      {
-                        key: "promotions",
-                        labelAr: "العروض الترويجية",
-                        labelEn: "Promotions",
-                        descAr: "عروض وخصومات حصرية للأعضاء",
-                        descEn: "Exclusive member offers and discounts",
-                      },
-                    ].map((setting, index) => (
-                      <div
-                        key={setting.key}
-                        className="flex items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                        data-aos="fade-up"
-                        data-aos-delay={index * 50}
-                      >
-                        <div>
-                          <p className="font-medium">
-                            {t(setting.labelAr, setting.labelEn)}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {t(setting.descAr, setting.descEn)}
-                          </p>
-                        </div>
-                        <Switch
-                          checked={
-                            emailSettings[
-                              setting.key as keyof typeof emailSettings
-                            ]
-                          }
-                          onCheckedChange={(checked) =>
-                            setEmailSettings((prev) => ({
-                              ...prev,
-                              [setting.key]: checked,
-                            }))
-                          }
-                        />
-                      </div>
-                    ))}
-                    <div className="pt-4">
-                      <Button className="w-full gap-2">
-                        <Settings className="w-4 h-4" />
-                        {t("حفظ الإعدادات", "Save Settings")}
                       </Button>
                     </div>
                   </CardContent>

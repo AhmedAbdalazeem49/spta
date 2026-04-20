@@ -1,21 +1,21 @@
 // AdminDashboardPage.tsx
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Users,
-  GraduationCap,
-  Crown,
-  Award,
-  TrendingUp,
-  ArrowRight,
-  Eye,
-  Ticket,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 import api from "@/services/api";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Award,
+  Crown,
+  Eye,
+  GraduationCap,
+  Ticket,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const AdminDashboardPage = () => {
   const { t } = useLanguage();
@@ -65,16 +65,16 @@ const AdminDashboardPage = () => {
                 0
               : 0,
           certificates: 0,
-          visitors:
-            visitorsRes.status === "fulfilled"
-              ? visitorsRes.value.data?.data?.length ||
-                visitorsRes.value.data?.length ||
-                0
-              : 0,
           coupons:
             couponsRes.status === "fulfilled"
               ? couponsRes.value.data?.data?.length ||
                 couponsRes.value.data?.length ||
+                0
+              : 0,
+          visitors:
+            visitorsRes.status === "fulfilled"
+              ? visitorsRes.value.data?.data?.length ||
+                visitorsRes.value.data?.length ||
                 0
               : 0,
         });
@@ -116,18 +116,18 @@ const AdminDashboardPage = () => {
       link: "/admin/certificates",
     },
     {
-      title: t("عدد الزوار", "Visitors"),
-      count: stats.visitors,
-      icon: Eye,
-      color: "from-orange-400 to-orange-600",
-      link: "/admin/visitors",
-    },
-    {
       title: t("أكواد الخصم", "Coupons"),
       count: stats.coupons,
       icon: Ticket,
       color: "from-purple-500 to-purple-700",
       link: "/admin/coupons",
+    },
+    {
+      title: t("عدد الزوار", "Visitors"),
+      count: stats.visitors,
+      icon: Eye,
+      color: "from-orange-400 to-orange-600",
+      link: "/admin/visitors",
     },
   ];
 

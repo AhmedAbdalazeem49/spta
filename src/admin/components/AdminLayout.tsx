@@ -77,24 +77,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       labelAr: "الزائرين",
       labelEn: "Visitors",
     },
-    {
-      path: "/admin/newsletter",
-      icon: Mail,
-      labelAr: "النشرات البريدية",
-      labelEn: "Newsletter",
-    },
-    {
-      path: "/admin/notifications",
-      icon: Bell,
-      labelAr: "الإشعارات",
-      labelEn: "Notifications",
-    },
-    {
-      path: "/admin/communication-settings",
-      icon: Settings,
-      labelAr: "إعدادات التواصل",
-      labelEn: "Comm. Settings",
-    },
   ];
 
   const isActive = (path: string) => {

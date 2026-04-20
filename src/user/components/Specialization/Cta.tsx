@@ -16,7 +16,7 @@ interface CtaProps {
 export default function Cta({
   title,
   description,
-  link = "/membership/types",
+  link = "/contact",
   buttonText,
 }: CtaProps) {
   const { t, isRTL } = useLanguage();
