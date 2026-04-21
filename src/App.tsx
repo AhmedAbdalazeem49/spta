@@ -147,6 +147,11 @@ const App = () => (
                   <CertificateViewPage />
                 </ProtectedRoute>
               } />
+              {/* Public certificate verification */}
+              <Route path="/certificates/verify/:code" element={<CertificateVerifyPage />} />
+              {/* Payment status */}
+              <Route path="/payment/success" element={<PaymentSuccessPage />} />
+              <Route path="/payment/failed" element={<PaymentFailedPage />} />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
