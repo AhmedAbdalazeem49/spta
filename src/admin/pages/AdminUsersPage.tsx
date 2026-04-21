@@ -56,6 +56,9 @@ interface UserItem {
   employer?: string;
   role?: string;
   is_admin?: boolean;
+  status?: 'pending' | 'approved' | 'rejected' | 'active';
+  classification_number?: string;
+  membership_type?: string;
   email_verified_at?: string | null;
   created_at?: string;
   updated_at?: string;
