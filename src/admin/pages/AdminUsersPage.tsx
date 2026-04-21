@@ -29,7 +29,18 @@ import {
   Briefcase,
   Building2,
   Pencil,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  BadgeCheck,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 
@@ -45,6 +56,9 @@ interface UserItem {
   employer?: string;
   role?: string;
   is_admin?: boolean;
+  status?: 'pending' | 'approved' | 'rejected' | 'active';
+  classification_number?: string;
+  membership_type?: string;
   email_verified_at?: string | null;
   created_at?: string;
   updated_at?: string;
@@ -71,12 +85,14 @@ const AdminUsersPage = () => {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<EditForm>({
     name: "",
     name_ar: "",
@@ -98,20 +114,25 @@ const AdminUsersPage = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setPage(1);
-      fetchUsers(1, searchQuery);
+      fetchUsers(1, searchQuery, statusFilter);
     }, 400);
     return () => clearTimeout(timeout);
-  }, [searchQuery]);
+  }, [searchQuery, statusFilter]);
 
   useEffect(() => {
-    fetchUsers(page, searchQuery);
+    fetchUsers(page, searchQuery, statusFilter);
   }, [page]);
 
-  const fetchUsers = async (pageNumber: number = 1, search: string = "") => {
+  const fetchUsers = async (
+    pageNumber: number = 1,
+    search: string = "",
+    status: string = "all"
+  ) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams({ page: String(pageNumber) });
       if (search.trim()) params.append("search", search.trim());
+      if (status && status !== "all") params.append("status", status);
 
       const res = await api.get(`/admin/users?${params.toString()}`);
       const data = res.data?.data || res.data || [];
@@ -125,6 +146,36 @@ const AdminUsersPage = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateStatus = async (
+    userId: number,
+    newStatus: "approved" | "rejected"
+  ) => {
+    setUpdatingId(userId);
+    try {
+      await api.patch(`/admin/users/${userId}/status`, { status: newStatus });
+      toast({
+        title: t("تم بنجاح", "Success"),
+        description:
+          newStatus === "approved"
+            ? t("تم تفعيل المستخدم", "User approved & activated")
+            : t("تم رفض المستخدم", "User rejected"),
+      });
+      // Optimistic update
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
+      );
+    } catch (err: any) {
+      toast({
+        title: t("خطأ", "Error"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "Error occurred"),
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -236,21 +287,34 @@ const AdminUsersPage = () => {
               {t("قائمة المستخدمين", "Users List")} ({users.length})
             </CardTitle>
           </div>
-          <div className="relative mt-2">
-            <Search
-              className={`absolute top-1/2 -translate-y-1/2 ${
-                isRTL ? "right-3" : "left-3"
-              } w-4 h-4 text-muted-foreground`}
-            />
-            <Input
-              placeholder={t(
-                "بحث بالاسم أو البريد...",
-                "Search by name or email..."
-              )}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={isRTL ? "pr-10" : "pl-10"}
-            />
+          <div className="flex flex-col sm:flex-row gap-2 mt-2">
+            <div className="relative flex-1">
+              <Search
+                className={`absolute top-1/2 -translate-y-1/2 ${
+                  isRTL ? "right-3" : "left-3"
+                } w-4 h-4 text-muted-foreground`}
+              />
+              <Input
+                placeholder={t(
+                  "بحث بالاسم أو البريد...",
+                  "Search by name or email..."
+                )}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={isRTL ? "pr-10" : "pl-10"}
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("كل الحالات", "All Statuses")}</SelectItem>
+                <SelectItem value="pending">{t("قيد المراجعة", "Pending")}</SelectItem>
+                <SelectItem value="approved">{t("موافق عليه", "Approved")}</SelectItem>
+                <SelectItem value="rejected">{t("مرفوض", "Rejected")}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -302,6 +366,9 @@ const AdminUsersPage = () => {
                     </th>
                     <th className="text-start p-4 font-semibold text-sm">
                       {t("الدور", "Role")}
+                    </th>
+                    <th className="text-start p-4 font-semibold text-sm">
+                      {t("الحالة", "Status")}
                     </th>
                     <th className="text-start p-4 font-semibold text-sm">
                       {t("الإجراءات", "Actions")}
@@ -366,7 +433,72 @@ const AdminUsersPage = () => {
                           </Badge>
                         </td>
                         <td className="p-4">
-                          <div className="flex items-center gap-1">
+                          {(() => {
+                            const status = u.status || (u.email_verified_at ? "approved" : "pending");
+                            const config: Record<string, { label: string; cls: string; Icon: any }> = {
+                              pending: {
+                                label: t("قيد المراجعة", "Pending"),
+                                cls: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
+                                Icon: Clock,
+                              },
+                              approved: {
+                                label: t("موافق عليه", "Approved"),
+                                cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+                                Icon: BadgeCheck,
+                              },
+                              active: {
+                                label: t("نشط", "Active"),
+                                cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+                                Icon: CheckCircle2,
+                              },
+                              rejected: {
+                                label: t("مرفوض", "Rejected"),
+                                cls: "bg-red-500/10 text-red-600 border-red-500/30",
+                                Icon: XCircle,
+                              },
+                            };
+                            const c = config[status] || config.pending;
+                            const SI = c.Icon;
+                            return (
+                              <Badge variant="outline" className={`${c.cls} gap-1`}>
+                                <SI className="w-3 h-3" />
+                                {c.label}
+                              </Badge>
+                            );
+                          })()}
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-1 flex-wrap">
+                            {(u.status === "pending" || (!u.status && !u.email_verified_at)) && (
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 gap-1 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
+                                  onClick={() => updateStatus(u.id, "approved")}
+                                  disabled={updatingId === u.id}
+                                  title={t("تفعيل", "Verify & Approve")}
+                                >
+                                  {updatingId === u.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : (
+                                    <BadgeCheck className="w-3.5 h-3.5" />
+                                  )}
+                                  <span className="hidden md:inline text-xs">{t("تفعيل", "Verify")}</span>
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 gap-1 text-red-600 border-red-500/30 hover:bg-red-500/10"
+                                  onClick={() => updateStatus(u.id, "rejected")}
+                                  disabled={updatingId === u.id}
+                                  title={t("رفض", "Reject")}
+                                >
+                                  <XCircle className="w-3.5 h-3.5" />
+                                  <span className="hidden md:inline text-xs">{t("رفض", "Reject")}</span>
+                                </Button>
+                              </>
+                            )}
                             <Button
                               size="sm"
                               variant="ghost"
@@ -380,7 +512,7 @@ const AdminUsersPage = () => {
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="text-blue-500 hover:text-blue-600"
+                              className="text-primary hover:text-primary/80"
                               onClick={() => openEdit(u)}
                             >
                               <Pencil className="w-4 h-4" />

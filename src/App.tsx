@@ -61,8 +61,13 @@ import WorkshopsPage from "./admin/pages/WorkshopsPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
 import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
 import CertificateViewPage from "./user/pages/CertificateViewPage";
+import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferencePopup from "./components/ConferencePopup";
 import ScrollToTop from "./components/ScrollToTop";
+
+// Payment status pages
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PaymentFailedPage from "./pages/PaymentFailedPage";
 
 const queryClient = new QueryClient();
 
@@ -142,6 +147,11 @@ const App = () => (
                   <CertificateViewPage />
                 </ProtectedRoute>
               } />
+              {/* Public certificate verification */}
+              <Route path="/certificates/verify/:code" element={<CertificateVerifyPage />} />
+              {/* Payment status */}
+              <Route path="/payment/success" element={<PaymentSuccessPage />} />
+              <Route path="/payment/failed" element={<PaymentFailedPage />} />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />

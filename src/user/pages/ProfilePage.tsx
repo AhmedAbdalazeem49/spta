@@ -15,10 +15,10 @@ import {
   User, Award, Calendar, Mail, Settings, Download, Eye, Clock,
   CheckCircle, XCircle, AlertCircle, GraduationCap, Building2,
   Phone, MapPin, FileText, Bell, Shield, Crown, ArrowRight,
-  Edit, Loader2, Save
+  Edit, Loader2, Save, RefreshCw
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '@/services/api';
 
 interface ActiveMembership {
@@ -39,6 +39,7 @@ const ProfilePage = () => {
   const { t, isRTL } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [activeMembership, setActiveMembership] = useState<ActiveMembership | null>(null);
   const [membershipLoading, setMembershipLoading] = useState(true);
@@ -331,11 +332,24 @@ const fetchCertificates = async () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-6 pt-6 border-t border-border">
-                      <Button className="w-full sm:w-auto gap-2 bg-green-accent hover:bg-green-light">
-                        <FileText className="w-4 h-4" />
-                        {t("تجديد العضوية", "Renew Membership")}
+                    <div className="mt-6 pt-6 border-t border-border flex flex-wrap gap-2">
+                      <Button
+                        onClick={() => navigate('/membership/subscribe')}
+                        className="gap-2"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        {activeMembership
+                          ? t("تجديد العضوية", "Renew Membership")
+                          : t("اشترك الآن", "Subscribe Now")}
                       </Button>
+                      {activeMembership && (
+                        <Button asChild variant="outline" className="gap-2">
+                          <Link to="/membership/card">
+                            <FileText className="w-4 h-4" />
+                            {t("بطاقة العضوية", "Membership Card")}
+                          </Link>
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

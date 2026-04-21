@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '@/services/api';
 
+export type UserStatus = 'pending' | 'approved' | 'rejected' | 'active';
+
 interface User {
   id: number;
   name: string;
@@ -8,9 +10,15 @@ interface User {
   email: string;
   phone?: string;
   national_id?: string;
+  classification_number?: string;
   specialization?: string;
   sub_specialization?: string;
   employer?: string;
+  membership_type?: string;
+  status?: UserStatus;
+  is_admin?: boolean;
+  role?: string;
+  email_verified_at?: string | null;
 }
 
 interface AuthContextType {
@@ -18,24 +26,37 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isApproved: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
+  register: (data: RegisterData) => Promise<RegisterResult>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (data: ResetPasswordData) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
-interface RegisterData {
+export interface RegisterData {
   name: string;
   name_ar: string;
   email: string;
   phone: string;
   national_id: string;
-  specialization: string;
-  sub_specialization: string;
+  classification_number?: string;
+  specialization?: string;
+  sub_specialization?: string;
   employer?: string;
+  membership_type: string;
+  promo_code?: string;
   password: string;
   password_confirmation: string;
+}
+
+export interface RegisterResult {
+  status: UserStatus;
+  user?: User;
+  token?: string;
+  payment_url?: string;
+  message?: string;
 }
 
 interface ResetPasswordData {
@@ -76,28 +97,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = async (email: string, password: string) => {
     const res = await api.post('/login', { email, password });
     const data = res.data?.data || res.data;
     const newToken = data.token;
+    const userData = data.user;
+
+    // Block login if user is pending or rejected
+    if (userData?.status === 'pending') {
+      const err: any = new Error('pending_approval');
+      err.code = 'pending_approval';
+      err.user = userData;
+      throw err;
+    }
+    if (userData?.status === 'rejected') {
+      const err: any = new Error('rejected');
+      err.code = 'rejected';
+      err.user = userData;
+      throw err;
+    }
+
     localStorage.setItem('token', newToken);
     setToken(newToken);
-    const userData = data.user;
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  const register = async (data: RegisterData) => {
+  const register = async (data: RegisterData): Promise<RegisterResult> => {
     const res = await api.post('/register', data);
     const resData = res.data?.data || res.data;
-    const newToken = resData.token;
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    const userData = resData.user;
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    const status: UserStatus = resData.user?.status || resData.status || 'pending';
+
+    // For pending users, do NOT persist token / log them in
+    if (status === 'pending') {
+      return {
+        status: 'pending',
+        user: resData.user,
+        message: resData.message,
+      };
+    }
+
+    // For approved/active flow (e.g. honorary or auto-approved)
+    if (resData.token) {
+      localStorage.setItem('token', resData.token);
+      setToken(resData.token);
+    }
+    if (resData.user) {
+      setUser(resData.user);
+      localStorage.setItem('user', JSON.stringify(resData.user));
+    }
+
+    return {
+      status,
+      user: resData.user,
+      token: resData.token,
+      payment_url: resData.payment_url,
+    };
   };
 
   const logout = async () => {
@@ -117,17 +175,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await api.post('/password/reset', data);
   };
 
+  const refreshUser = async () => {
+    if (token) await fetchUser();
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
       token,
       isLoading,
-      isAuthenticated: !!user && !!token,
+      isAuthenticated: !!user && !!token && user.status !== 'pending' && user.status !== 'rejected',
+      isApproved: user?.status === 'approved' || user?.status === 'active' || !!user?.email_verified_at,
       login,
       register,
       logout,
       forgotPassword,
       resetPassword,
+      refreshUser,
     }}>
       {children}
     </AuthContext.Provider>
