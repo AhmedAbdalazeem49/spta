@@ -433,7 +433,72 @@ const AdminUsersPage = () => {
                           </Badge>
                         </td>
                         <td className="p-4">
-                          <div className="flex items-center gap-1">
+                          {(() => {
+                            const status = u.status || (u.email_verified_at ? "approved" : "pending");
+                            const config: Record<string, { label: string; cls: string; Icon: any }> = {
+                              pending: {
+                                label: t("قيد المراجعة", "Pending"),
+                                cls: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
+                                Icon: Clock,
+                              },
+                              approved: {
+                                label: t("موافق عليه", "Approved"),
+                                cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+                                Icon: BadgeCheck,
+                              },
+                              active: {
+                                label: t("نشط", "Active"),
+                                cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+                                Icon: CheckCircle2,
+                              },
+                              rejected: {
+                                label: t("مرفوض", "Rejected"),
+                                cls: "bg-red-500/10 text-red-600 border-red-500/30",
+                                Icon: XCircle,
+                              },
+                            };
+                            const c = config[status] || config.pending;
+                            const SI = c.Icon;
+                            return (
+                              <Badge variant="outline" className={`${c.cls} gap-1`}>
+                                <SI className="w-3 h-3" />
+                                {c.label}
+                              </Badge>
+                            );
+                          })()}
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-1 flex-wrap">
+                            {(u.status === "pending" || (!u.status && !u.email_verified_at)) && (
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 gap-1 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
+                                  onClick={() => updateStatus(u.id, "approved")}
+                                  disabled={updatingId === u.id}
+                                  title={t("تفعيل", "Verify & Approve")}
+                                >
+                                  {updatingId === u.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : (
+                                    <BadgeCheck className="w-3.5 h-3.5" />
+                                  )}
+                                  <span className="hidden md:inline text-xs">{t("تفعيل", "Verify")}</span>
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 gap-1 text-red-600 border-red-500/30 hover:bg-red-500/10"
+                                  onClick={() => updateStatus(u.id, "rejected")}
+                                  disabled={updatingId === u.id}
+                                  title={t("رفض", "Reject")}
+                                >
+                                  <XCircle className="w-3.5 h-3.5" />
+                                  <span className="hidden md:inline text-xs">{t("رفض", "Reject")}</span>
+                                </Button>
+                              </>
+                            )}
                             <Button
                               size="sm"
                               variant="ghost"
@@ -447,7 +512,7 @@ const AdminUsersPage = () => {
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="text-blue-500 hover:text-blue-600"
+                              className="text-primary hover:text-primary/80"
                               onClick={() => openEdit(u)}
                             >
                               <Pencil className="w-4 h-4" />
