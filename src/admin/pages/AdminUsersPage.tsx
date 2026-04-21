@@ -287,21 +287,34 @@ const AdminUsersPage = () => {
               {t("قائمة المستخدمين", "Users List")} ({users.length})
             </CardTitle>
           </div>
-          <div className="relative mt-2">
-            <Search
-              className={`absolute top-1/2 -translate-y-1/2 ${
-                isRTL ? "right-3" : "left-3"
-              } w-4 h-4 text-muted-foreground`}
-            />
-            <Input
-              placeholder={t(
-                "بحث بالاسم أو البريد...",
-                "Search by name or email..."
-              )}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={isRTL ? "pr-10" : "pl-10"}
-            />
+          <div className="flex flex-col sm:flex-row gap-2 mt-2">
+            <div className="relative flex-1">
+              <Search
+                className={`absolute top-1/2 -translate-y-1/2 ${
+                  isRTL ? "right-3" : "left-3"
+                } w-4 h-4 text-muted-foreground`}
+              />
+              <Input
+                placeholder={t(
+                  "بحث بالاسم أو البريد...",
+                  "Search by name or email..."
+                )}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={isRTL ? "pr-10" : "pl-10"}
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("كل الحالات", "All Statuses")}</SelectItem>
+                <SelectItem value="pending">{t("قيد المراجعة", "Pending")}</SelectItem>
+                <SelectItem value="approved">{t("موافق عليه", "Approved")}</SelectItem>
+                <SelectItem value="rejected">{t("مرفوض", "Rejected")}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
         <CardContent className="p-0">
