@@ -114,20 +114,25 @@ const AdminUsersPage = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setPage(1);
-      fetchUsers(1, searchQuery);
+      fetchUsers(1, searchQuery, statusFilter);
     }, 400);
     return () => clearTimeout(timeout);
-  }, [searchQuery]);
+  }, [searchQuery, statusFilter]);
 
   useEffect(() => {
-    fetchUsers(page, searchQuery);
+    fetchUsers(page, searchQuery, statusFilter);
   }, [page]);
 
-  const fetchUsers = async (pageNumber: number = 1, search: string = "") => {
+  const fetchUsers = async (
+    pageNumber: number = 1,
+    search: string = "",
+    status: string = "all"
+  ) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams({ page: String(pageNumber) });
       if (search.trim()) params.append("search", search.trim());
+      if (status && status !== "all") params.append("status", status);
 
       const res = await api.get(`/admin/users?${params.toString()}`);
       const data = res.data?.data || res.data || [];
@@ -141,6 +146,36 @@ const AdminUsersPage = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateStatus = async (
+    userId: number,
+    newStatus: "approved" | "rejected"
+  ) => {
+    setUpdatingId(userId);
+    try {
+      await api.patch(`/admin/users/${userId}/status`, { status: newStatus });
+      toast({
+        title: t("تم بنجاح", "Success"),
+        description:
+          newStatus === "approved"
+            ? t("تم تفعيل المستخدم", "User approved & activated")
+            : t("تم رفض المستخدم", "User rejected"),
+      });
+      // Optimistic update
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
+      );
+    } catch (err: any) {
+      toast({
+        title: t("خطأ", "Error"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "Error occurred"),
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingId(null);
     }
   };
 
