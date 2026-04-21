@@ -368,6 +368,9 @@ const AdminUsersPage = () => {
                       {t("الدور", "Role")}
                     </th>
                     <th className="text-start p-4 font-semibold text-sm">
+                      {t("الحالة", "Status")}
+                    </th>
+                    <th className="text-start p-4 font-semibold text-sm">
                       {t("الإجراءات", "Actions")}
                     </th>
                   </tr>
