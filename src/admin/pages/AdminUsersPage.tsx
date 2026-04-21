@@ -29,7 +29,18 @@ import {
   Briefcase,
   Building2,
   Pencil,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  BadgeCheck,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 
