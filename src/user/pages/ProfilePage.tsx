@@ -39,6 +39,7 @@ const ProfilePage = () => {
   const { t, isRTL } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [activeMembership, setActiveMembership] = useState<ActiveMembership | null>(null);
   const [membershipLoading, setMembershipLoading] = useState(true);
