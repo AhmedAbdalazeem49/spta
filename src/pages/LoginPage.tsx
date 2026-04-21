@@ -48,6 +48,28 @@ const LoginPage = () => {
       const from = (location.state as any)?.from?.pathname || "/profile";
       navigate(from, { replace: true });
     } catch (error: any) {
+      if (error?.code === "pending_approval") {
+        toast({
+          title: t("حسابك قيد المراجعة", "Account Under Review"),
+          description: t(
+            "سيتم تفعيل حسابك بعد التحقق من بياناتك من قبل الإدارة.",
+            "Your account will be activated once verified by the administration."
+          ),
+          variant: "destructive",
+        });
+        return;
+      }
+      if (error?.code === "rejected") {
+        toast({
+          title: t("تم رفض الحساب", "Account Rejected"),
+          description: t(
+            "تم رفض طلب تسجيلك. تواصل مع الإدارة للمزيد من المعلومات.",
+            "Your registration was rejected. Contact the administration for more info."
+          ),
+          variant: "destructive",
+        });
+        return;
+      }
       const data = error.response?.data;
       if (data?.errors) {
         const firstError = Object.values(data.errors)[0] as string[];
