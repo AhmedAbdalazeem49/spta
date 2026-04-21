@@ -15,10 +15,10 @@ import {
   User, Award, Calendar, Mail, Settings, Download, Eye, Clock,
   CheckCircle, XCircle, AlertCircle, GraduationCap, Building2,
   Phone, MapPin, FileText, Bell, Shield, Crown, ArrowRight,
-  Edit, Loader2, Save
+  Edit, Loader2, Save, RefreshCw
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '@/services/api';
 
 interface ActiveMembership {
