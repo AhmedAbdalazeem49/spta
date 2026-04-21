@@ -332,11 +332,24 @@ const fetchCertificates = async () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-6 pt-6 border-t border-border">
-                      <Button className="w-full sm:w-auto gap-2 bg-green-accent hover:bg-green-light">
-                        <FileText className="w-4 h-4" />
-                        {t("تجديد العضوية", "Renew Membership")}
+                    <div className="mt-6 pt-6 border-t border-border flex flex-wrap gap-2">
+                      <Button
+                        onClick={() => navigate('/membership/subscribe')}
+                        className="gap-2"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        {activeMembership
+                          ? t("تجديد العضوية", "Renew Membership")
+                          : t("اشترك الآن", "Subscribe Now")}
                       </Button>
+                      {activeMembership && (
+                        <Button asChild variant="outline" className="gap-2">
+                          <Link to="/membership/card">
+                            <FileText className="w-4 h-4" />
+                            {t("بطاقة العضوية", "Membership Card")}
+                          </Link>
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
