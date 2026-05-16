@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        arabic: ['Noto Kufi Arabic', 'Cairo', 'sans-serif'],
+        sans: ['LamaSans', 'Inter', 'system-ui', 'sans-serif'],
+        arabic: ['LamaSans', 'Noto Kufi Arabic', 'Cairo', 'sans-serif'],
+        display: ['LamaSans', 'Inter', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
