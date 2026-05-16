@@ -42,6 +42,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import PaymentMethodPicker, { PaymentMethodKey } from "@/components/PaymentMethodPicker";
 
 const categories = [
   { id: "all", labelAr: "الكل", labelEn: "All" },
@@ -59,6 +60,8 @@ const WorkshopsPage = () => {
   const openRegistration = (workshop: (typeof workshops)[0]) => {
     if (workshop.status !== "open") return;
     setSelectedWorkshop(workshop);
+    setRegStep("info");
+    setPaymentMethod(null);
     setIsRegistrationOpen(true);
   };
 
@@ -77,6 +80,9 @@ const WorkshopsPage = () => {
     phone: "",
     isMember: true,
   });
+  const [regStep, setRegStep] = useState<"info" | "payment" | "success">("info");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodKey | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
 
   // 🟢 Fetch workshops from API
   const fetchWorkshops = async () => {
