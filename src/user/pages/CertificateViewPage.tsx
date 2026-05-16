@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import AOS from 'aos';
 import Layout from '@/components/layout/Layout';
@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/services/api';
 import CertificateTemplate, { CertTemplate } from '@/components/CertificateTemplate';
+import { downloadElementAsPdf, printElement } from '@/lib/certificate-export';
 
 interface Certificate {
   id: string | number;
@@ -43,6 +44,8 @@ const CertificateViewPage = () => {
   const [error, setError] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [templateMap, setTemplateMap] = useState<Record<string, CertTemplate>>({});
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const certRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     AOS.init({ duration: 700, once: true });
@@ -73,16 +76,27 @@ const CertificateViewPage = () => {
     setTemplateMap((p) => ({ ...p, [String(id)]: tpl }));
 
   const handleDownload = async (cert: Certificate) => {
-    toast({
-      title: t('جاري التحضير...', 'Preparing...'),
-      description: t('سيتم تحميل الشهادة كملف PDF', 'Certificate will be downloaded as PDF')
-    });
-    // Best-effort: open print which user can save as PDF
-    setTimeout(() => window.print(), 300);
+    const el = certRefs.current[String(cert.id)];
+    if (!el) return;
+    setBusyId(String(cert.id));
+    try {
+      const name = `${cert.recipient_name || 'user'}-${cert.workshop_title || 'certificate'}`;
+      await downloadElementAsPdf(el, `certificate-${name}`);
+      toast({ title: t('تم تحميل الشهادة', 'Certificate downloaded') });
+    } catch {
+      toast({
+        title: t('تعذر التحميل', 'Download failed'),
+        variant: 'destructive',
+      });
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const handlePrint = (cert: Certificate) => {
-    window.print();
+    const el = certRefs.current[String(cert.id)];
+    if (!el) return;
+    printElement(el);
   };
 
   const handleShare = async (cert: Certificate) => {
@@ -182,9 +196,11 @@ const CertificateViewPage = () => {
                   transition={{ delay: i * 0.1 }}
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow rounded-2xl">
-                    <CertificateTemplate cert={cert} template={tpl} />
+                    <div ref={(node) => (certRefs.current[String(cert.id)] = node)}>
+                      <CertificateTemplate cert={cert} template={tpl} />
+                    </div>
 
-                    <CardContent className="p-4 space-y-3 border-t">
+                    <CardContent className="p-4 space-y-3 border-t no-print">
                       {/* Template selector */}
                       <div>
                         <p className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1.5">
@@ -210,8 +226,8 @@ const CertificateViewPage = () => {
 
                       {/* Actions */}
                       <div className="flex items-center gap-2">
-                        <Button onClick={() => handleDownload(cert)} variant="outline" size="sm" className="flex-1 gap-1.5 text-xs">
-                          <Download className="w-3.5 h-3.5" />
+                        <Button onClick={() => handleDownload(cert)} disabled={busyId === String(cert.id)} variant="outline" size="sm" className="flex-1 gap-1.5 text-xs">
+                          {busyId === String(cert.id) ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
                           {t('PDF', 'PDF')}
                         </Button>
                         <Button onClick={() => handlePrint(cert)} variant="outline" size="sm" className="flex-1 gap-1.5 text-xs">
