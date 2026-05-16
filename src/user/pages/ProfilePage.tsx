@@ -83,7 +83,7 @@ const [certificates, setCertificates] = useState<any[]>([]);
   const fetchMembership = async () => {
     setMembershipLoading(true);
     try {
-      const res = await api.get('/membership/my-membership');
+      const res = await api.get('/my-membership');
       const data = res.data?.data || res.data;
       setActiveMembership(data || null);
     } catch {
@@ -154,7 +154,6 @@ const fetchCertificates = async () => {
   { id: 'overview', labelAr: 'نظرة عامة', labelEn: 'Overview', icon: User },
   { id: 'workshops', labelAr: 'ورش العمل', labelEn: 'Workshops', icon: GraduationCap },
   { id: 'certificates', labelAr: 'الشهادات', labelEn: 'Certificates', icon: Award },
-  { id: 'membership', labelAr: 'العضوية', labelEn: 'Membership', icon: Crown },
   { id: 'edit', labelAr: 'تعديل الملف', labelEn: 'Edit Profile', icon: Edit },
 ];
 
@@ -354,38 +353,7 @@ const fetchCertificates = async () => {
                   </CardContent>
                 </Card>
 
-                {/* Quick Stats */}
-                <Card
-                  className="card-hover"
-                  data-aos="fade-up"
-                  data-aos-delay="100"
-                >
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xl">
-                      {t("إحصائيات سريعة", "Quick Stats")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                      <span className="text-muted-foreground">
-                        {t("ورش العمل", "Workshops")}
-                      </span>
-                      <span className="text-2xl font-bold text-primary"></span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                      <span className="text-muted-foreground">
-                        {t("الشهادات", "Certificates")}
-                      </span>
-                      <span className="text-2xl font-bold text-green-accent"></span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                      <span className="text-muted-foreground">
-                        {t("سنوات العضوية", "Years Member")}
-                      </span>
-                      <span className="text-2xl font-bold text-primary">2</span>
-                    </div>
-                  </CardContent>
-                </Card>
+
 
                 {/* Personal Info */}
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

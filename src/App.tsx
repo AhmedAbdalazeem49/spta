@@ -29,7 +29,6 @@ import ResearchPage from "./user/pages/ResearchPage";
 import ScientificJournalPage from "./user/pages/ScientificJournalPage";
 import SpecializationsPage from "./user/pages/SpecializationsPage";
 import VideosPage from "./user/pages/VideosPage";
-import VisionMissionPage from "./user/pages/VisionMissionPage";
 import WhatIsPTPage from "./user/pages/WhatIsPTPage";
 
 // Auth pages
@@ -48,7 +47,6 @@ import ProfilePage from "./user/pages/ProfilePage";
 import AdminLayout from "./admin/components/AdminLayout";
 import AdminCertificatesPage from "./admin/pages/AdminCertificatesPage";
 import AdminDashboardPage from "./admin/pages/AdminDashboardPage";
-import AdminMembershipsPage from "./admin/pages/AdminMembershipsPage";
 import AdminUsersPage from "./admin/pages/AdminUsersPage";
 import AdminVisitorsPage from "./admin/pages/AdminVisitorsPage";
 import AdminWorkshopsPage from "./admin/pages/AdminWorkshopsPage";
@@ -64,10 +62,10 @@ import CertificateViewPage from "./user/pages/CertificateViewPage";
 import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferencePopup from "./components/ConferencePopup";
 import ScrollToTop from "./components/ScrollToTop";
+import VerifyOtpPage from "./pages/VerifyOtpPage";
+import PaymentPage from "./pages/PaymentPage";
 
-// Payment status pages
-import PaymentSuccessPage from "./pages/PaymentSuccessPage";
-import PaymentFailedPage from "./pages/PaymentFailedPage";
+
 
 const queryClient = new QueryClient();
 
@@ -79,15 +77,11 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-          <ScrollToTop />
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<HomePage />} />
               {/* About */}
               <Route path="/about" element={<AboutPage />} />
-              <Route
-                path="/about/vision-mission"
-                element={<VisionMissionPage />}
-              />
               <Route
                 path="/about/previous-boards"
                 element={<PreviousBoardsPage />}
@@ -140,21 +134,29 @@ const App = () => (
               <Route path="/workshops" element={<WorkshopsPage />} />
               {/* Conferences */}
               <Route path="/conferences" element={<ConferencesPage />} />
-              <Route path="/conferences/:id" element={<ConferenceDetailPage />} />
+              <Route
+                path="/conferences/:id"
+                element={<ConferenceDetailPage />}
+              />
               {/* Certificates (user) */}
-              <Route path="/certificates" element={
-                <ProtectedRoute>
-                  <CertificateViewPage />
-                </ProtectedRoute>
-              } />
+              <Route
+                path="/certificates"
+                element={
+                  <ProtectedRoute>
+                    <CertificateViewPage />
+                  </ProtectedRoute>
+                }
+              />
               {/* Public certificate verification */}
-              <Route path="/certificates/verify/:code" element={<CertificateVerifyPage />} />
-              {/* Payment status */}
-              <Route path="/payment/success" element={<PaymentSuccessPage />} />
-              <Route path="/payment/failed" element={<PaymentFailedPage />} />
+              <Route
+                path="/certificates/verify/:code"
+                element={<CertificateVerifyPage />}
+              />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/verify-otp" element={ <VerifyOtpPage />} />
+              <Route path="/payment" element={<PaymentPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               {/* Protected User */}
@@ -198,16 +200,6 @@ const App = () => (
                 }
               />
               <Route
-                path="/admin/memberships"
-                element={
-                  <AdminRoute>
-                    <AdminLayout>
-                      <AdminMembershipsPage />
-                    </AdminLayout>
-                  </AdminRoute>
-                }
-              />
-              <Route
                 path="/admin/certificates"
                 element={
                   <AdminRoute>
@@ -239,7 +231,7 @@ const App = () => (
               />
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <Chatbot />
+            {/* <Chatbot /> */}
             <ConferencePopup />
           </BrowserRouter>
         </TooltipProvider>

@@ -54,12 +54,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       labelEn: "Workshops",
     },
     {
-      path: "/admin/memberships",
-      icon: Crown,
-      labelAr: "العضويات",
-      labelEn: "Memberships",
-    },
-    {
       path: "/admin/certificates",
       icon: Award,
       labelAr: "الشهادات",
@@ -71,12 +65,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       labelAr: "أكواد الخصم",
       labelEn: "Coupons",
     },
-    {
-      path: "/admin/visitors",
-      icon: Eye,
-      labelAr: "الزائرين",
-      labelEn: "Visitors",
-    },
+    // {
+    //   path: "/admin/visitors",
+    //   icon: Eye,
+    //   labelAr: "الزائرين",
+    //   labelEn: "Visitors",
+    // },
   ];
 
   const isActive = (path: string) => {

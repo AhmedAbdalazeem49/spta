@@ -1,7 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import api from '@/services/api';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import api from "@/services/api";
 
-export type UserStatus = 'pending' | 'approved' | 'rejected' | 'active';
+export type UserStatus = "pending" | "approved" | "rejected" | "active";
 
 interface User {
   id: number;
@@ -68,86 +74,102 @@ interface ResetPasswordData {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   const clearAuth = useCallback(() => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   }, []);
 
   const fetchUser = useCallback(async () => {
     try {
-      const res = await api.get('/me');
+      const res = await api.get("/me");
       const userData = res.data?.data || res.data?.user || res.data;
+
       setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-    } catch {
-      clearAuth();
+      localStorage.setItem("user", JSON.stringify(userData));
+    } catch (error: any) {
+      // only logout if NOT OTP flow
+      console.warn("fetchUser failed:", error?.response?.status);
+
+      if (error?.response?.status === 401) {
+        // DO NOT clear auth during OTP/signup flow
+        return;
+      }
     }
   }, [clearAuth]);
 
+  // ✅ FIXED: runs when token changes
   useEffect(() => {
-    if (token) {
-      fetchUser().finally(() => setIsLoading(false));
-    } else {
+    if (!token) {
       setIsLoading(false);
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    fetchUser().finally(() => setIsLoading(false));
+  }, [token, fetchUser]);
 
   const login = async (email: string, password: string) => {
-    const res = await api.post('/login', { email, password });
+    const res = await api.post("/login", { email, password });
     const data = res.data?.data || res.data;
+
     const newToken = data.token;
     const userData = data.user;
 
-    // Block login if user is pending or rejected
-    if (userData?.status === 'pending') {
-      const err: any = new Error('pending_approval');
-      err.code = 'pending_approval';
-      err.user = userData;
-      throw err;
-    }
-    if (userData?.status === 'rejected') {
-      const err: any = new Error('rejected');
-      err.code = 'rejected';
+    if (userData?.status === "pending") {
+      const err: any = new Error("pending_approval");
+      err.code = "pending_approval";
       err.user = userData;
       throw err;
     }
 
-    localStorage.setItem('token', newToken);
+    if (userData?.status === "rejected") {
+      const err: any = new Error("rejected");
+      err.code = "rejected";
+      err.user = userData;
+      throw err;
+    }
+
+    localStorage.setItem("token", newToken);
     setToken(newToken);
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const register = async (data: RegisterData): Promise<RegisterResult> => {
-    const res = await api.post('/register', data);
+    const res = await api.post("/register", data);
     const resData = res.data?.data || res.data;
-    const status: UserStatus = resData.user?.status || resData.status || 'pending';
 
-    // For pending users, do NOT persist token / log them in
-    if (status === 'pending') {
+    const status: UserStatus =
+      resData.user?.status || resData.status || "pending";
+
+    // ❌ IMPORTANT: DO NOT login user after signup (OTP flow)
+    if (status === "pending") {
       return {
-        status: 'pending',
+        status: "pending",
         user: resData.user,
         message: resData.message,
       };
     }
 
-    // For approved/active flow (e.g. honorary or auto-approved)
+    // only if backend auto-approves
     if (resData.token) {
-      localStorage.setItem('token', resData.token);
+      localStorage.setItem("token", resData.token);
       setToken(resData.token);
     }
+
     if (resData.user) {
       setUser(resData.user);
-      localStorage.setItem('user', JSON.stringify(resData.user));
+      localStorage.setItem("user", JSON.stringify(resData.user));
     }
 
     return {
@@ -160,19 +182,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await api.post('/logout');
-    } catch {
-      // ignore
-    }
+      await api.post("/logout");
+    } catch {}
     clearAuth();
   };
 
   const forgotPassword = async (email: string) => {
-    await api.post('/password/email', { email });
+    await api.post("/password/email", { email });
   };
 
   const resetPassword = async (data: ResetPasswordData) => {
-    await api.post('/password/reset', data);
+    await api.post("/password/reset", data);
   };
 
   const refreshUser = async () => {
@@ -180,19 +200,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      token,
-      isLoading,
-      isAuthenticated: !!user && !!token && user.status !== 'pending' && user.status !== 'rejected',
-      isApproved: user?.status === 'approved' || user?.status === 'active' || !!user?.email_verified_at,
-      login,
-      register,
-      logout,
-      forgotPassword,
-      resetPassword,
-      refreshUser,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isLoading,
+
+        // ✅ FIXED LOGIC FOR OTP FLOW
+        isAuthenticated: !!token,
+
+        isApproved:
+          user?.status === "approved" ||
+          user?.status === "active" ||
+          !!user?.email_verified_at,
+
+        login,
+        register,
+        logout,
+        forgotPassword,
+        resetPassword,
+        refreshUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -200,6 +229,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };

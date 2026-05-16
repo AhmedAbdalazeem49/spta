@@ -56,7 +56,7 @@ export default function Clarifications() {
               }`}
             >
               <motion.div
-                data-aos={section.reverse ? "fade-left" : "fade-right"}
+                data-aos={section.reverse ? "fade-up" : "fade-up"}
                 className={section.reverse ? "lg:order-2" : ""}
               >
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -67,7 +67,7 @@ export default function Clarifications() {
                 </p>
               </motion.div>
               <motion.div
-                data-aos={section.reverse ? "fade-right" : "fade-left"}
+                data-aos={section.reverse ? "fade-up" : "fade-up"}
                 className={section.reverse ? "lg:order-1" : ""}
               >
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">

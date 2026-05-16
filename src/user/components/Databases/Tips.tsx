@@ -55,7 +55,7 @@ export default function Tips() {
           </div>
 
           {/* Help Box */}
-          <div data-aos="fade-left" data-aos-delay="200">
+          <div data-aos="fade-up" data-aos-delay="200">
             <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-2xl p-8">
               <h3 className="text-xl font-bold mb-4">
                 {t("هل تحتاج مساعدة؟", "Need Help?")}

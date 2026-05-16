@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FileText, CheckCircle, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
+import { Calendar, CheckCircle, FileText } from "lucide-react";
+import React from "react";
 
 interface Issue {
   volume: string;
@@ -63,7 +63,7 @@ export default function Submissions({
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Submission Types */}
-          <div data-aos="fade-right">
+          <div data-aos="fade-up">
             <FileText className="w-12 h-12 mb-4 text-accent" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
               {t("أنواع المخطوطات المقبولة", "Accepted Manuscript Types")}
@@ -86,7 +86,7 @@ export default function Submissions({
           </div>
 
           {/* Latest Issues */}
-          <div data-aos="fade-left">
+          <div data-aos="fade-up">
             <div className="bg-card rounded-2xl p-8 border border-border/50">
               <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
                 <Calendar className="w-6 h-6 text-primary" />

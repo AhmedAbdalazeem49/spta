@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 import { Send } from "lucide-react";
+import React, { useState } from "react";
 
 export default function ContactForm() {
   const { t } = useLanguage();
@@ -52,7 +52,7 @@ export default function ContactForm() {
     <section className="section-padding bg-secondary/30">
       <div className="container-custom">
         <motion.div
-          data-aos="fade-right"
+          data-aos="fade-up"
           className="bg-card rounded-2xl p-8 shadow-lg"
         >
           <h2 className="text-2xl font-bold text-foreground mb-6">

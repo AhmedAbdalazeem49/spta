@@ -1,10 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 import {
   Clock,
   Facebook,
+  Globe,
   Instagram,
   Linkedin,
   Mail,
@@ -12,7 +13,6 @@ import {
   MessageCircle,
   Phone,
   Twitter,
-  Globe,
 } from "lucide-react";
 
 export default function ContactInfo() {
@@ -46,11 +46,31 @@ export default function ContactInfo() {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook", color: "hover:bg-blue-600" },
+    {
+      icon: Facebook,
+      href: "#",
+      label: "Facebook",
+      color: "hover:bg-blue-600",
+    },
     { icon: Twitter, href: "#", label: "Twitter", color: "hover:bg-sky-500" },
-    { icon: Linkedin, href: "#", label: "LinkedIn", color: "hover:bg-blue-700" },
-    { icon: Instagram, href: "#", label: "Instagram", color: "hover:bg-pink-600" },
-    { icon: MessageCircle, href: "#", label: "WhatsApp", color: "hover:bg-green-600" },
+    {
+      icon: Linkedin,
+      href: "#",
+      label: "LinkedIn",
+      color: "hover:bg-blue-700",
+    },
+    {
+      icon: Instagram,
+      href: "#",
+      label: "Instagram",
+      color: "hover:bg-pink-600",
+    },
+    {
+      icon: MessageCircle,
+      href: "#",
+      label: "WhatsApp",
+      color: "hover:bg-green-600",
+    },
   ];
 
   return (
@@ -76,7 +96,7 @@ export default function ContactInfo() {
         </div>
 
         {/* <div className="space-y-8 hidden">
-          <motion.div data-aos="fade-left" data-aos-delay={100} className="bg-card rounded-2xl p-8 shadow-lg">
+          <motion.div data-aos="fade-up" data-aos-delay={100} className="bg-card rounded-2xl p-8 shadow-lg">
             <h3 className="text-xl font-bold text-foreground mb-6">
               {t("تابعنا على وسائل التواصل", "Follow Us on Social Media")}
             </h3>

@@ -125,49 +125,6 @@ const DigitalCardPage = () => {
         </div>
       </section>
 
-      {/* Admin Controls Info */}
-      <section className="py-16 bg-muted/30">
-        <div className="container-custom">
-          <Card data-aos="fade-up">
-            <CardHeader>
-              <CardTitle className="text-center">
-                {t('خيارات التخصيص للمشرفين', 'Admin Customization Options')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-6 text-center">
-                <div className="p-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <CreditCard className="w-6 h-6 text-primary" />
-                  </div>
-                  <h4 className="font-semibold mb-2">{t('تصميمات متعددة', 'Multiple Designs')}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t('اختر من بين 4 تصميمات احترافية', 'Choose from 4 professional designs')}
-                  </p>
-                </div>
-                <div className="p-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <Shield className="w-6 h-6 text-primary" />
-                  </div>
-                  <h4 className="font-semibold mb-2">{t('التوقيع الرسمي', 'Official Signature')}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t('إضافة توقيع رئيس الجمعية', 'Add president signature')}
-                  </p>
-                </div>
-                <div className="p-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <QrCode className="w-6 h-6 text-primary" />
-                  </div>
-                  <h4 className="font-semibold mb-2">{t('الختم الرسمي', 'Official Stamp')}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t('إضافة ختم الجمعية الرسمي', 'Add official association stamp')}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
     </Layout>
   );
 };

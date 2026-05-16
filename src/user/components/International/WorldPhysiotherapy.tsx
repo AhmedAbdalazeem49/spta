@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Globe, MapPin, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { ExternalLink, Globe, MapPin } from "lucide-react";
+import React from "react";
 
 export default function WorldPhysiotherapy() {
   const { t } = useLanguage();
@@ -27,7 +27,7 @@ export default function WorldPhysiotherapy() {
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Section */}
-          <div data-aos="fade-right">
+          <div data-aos="fade-up">
             <span className="text-accent font-semibold text-lg mb-4 block">
               {t("شراكتنا الرئيسية", "Our Main Partnership")}
             </span>
@@ -50,7 +50,7 @@ export default function WorldPhysiotherapy() {
           </div>
 
           {/* Stats & Map Section */}
-          <div data-aos="fade-left">
+          <div data-aos="fade-up">
             <div className="grid grid-cols-3 gap-4">
               {worldPhysiotherapy.stats.map((stat, index) => (
                 <motion.div

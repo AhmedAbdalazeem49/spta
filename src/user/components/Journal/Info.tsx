@@ -32,7 +32,7 @@ export default function Info({ journalInfo }: InfoProps) {
       <div className="container-custom">
         <div className="bg-card rounded-3xl shadow-xl border border-border/50 p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div data-aos="fade-right">
+            <div data-aos="fade-up">
               <h2 className="text-3xl font-bold text-foreground mb-4">
                 {info.name}
               </h2>
@@ -64,7 +64,7 @@ export default function Info({ journalInfo }: InfoProps) {
               </p>
             </div>
 
-            <div data-aos="fade-left">
+            <div data-aos="fade-up">
               <div className="rounded-2xl overflow-hidden shadow-lg">
                 <img
                   src={heroImage}

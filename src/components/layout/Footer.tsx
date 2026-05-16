@@ -66,7 +66,7 @@ const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Newsletter */}
-      <div className="border-b border-primary-foreground/10">
+      <div className="border-b border-primary-foreground/10 hidden">
         <div className="container-custom py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

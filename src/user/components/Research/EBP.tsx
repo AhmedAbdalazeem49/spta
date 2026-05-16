@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function EBP() {
   const { t, isRTL } = useLanguage();
@@ -58,7 +58,7 @@ export default function EBP() {
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Text Content */}
-          <div data-aos="fade-right">
+          <div data-aos="fade-up">
             <span className="text-accent font-semibold text-lg mb-4 block">
               {t("الممارسة المبنية على الأدلة", "Evidence-Based Practice")}
             </span>
@@ -85,7 +85,7 @@ export default function EBP() {
           </div>
 
           {/* Right Steps */}
-          <div data-aos="fade-left" data-aos-delay="200">
+          <div data-aos="fade-up" data-aos-delay="200">
             <div className="space-y-4">
               {ebpSteps.map((item, index) => (
                 <motion.div

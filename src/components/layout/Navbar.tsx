@@ -57,10 +57,6 @@ const Navbar = () => {
       children: [
         { label: t("نظرة عامة", "Overview"), path: "/about" },
         {
-          label: t("الرؤية والرسالة", "Vision & Mission"),
-          path: "/about/vision-mission",
-        },
-        {
           label: t("ما هو العلاج الطبيعي", "What is PT"),
           path: "/about/what-is-pt",
         },

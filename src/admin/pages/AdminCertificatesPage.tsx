@@ -1,21 +1,16 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -23,37 +18,42 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Award,
-  Search,
-  Filter,
-  Eye,
-  CheckCircle,
-  Clock,
-  XCircle,
-  Download,
-  QrCode,
-  Calendar,
-  GraduationCap,
-  User,
-  FileText,
-  Stamp,
-  Signature,
-  Copy,
-  Printer,
-  Settings,
-  Shield,
-  AlertCircle,
-  Plus,
-  Loader2,
-  UserSearch,
-  BookOpen,
-  Hash,
-  Sparkles,
-} from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  AlertCircle,
+  Award,
+  BookOpen,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Copy,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  GraduationCap,
+  Hash,
+  Loader2,
+  Plus,
+  Printer,
+  QrCode,
+  Search,
+  Settings,
+  Shield,
+  Signature,
+  Sparkles,
+  Stamp,
+  User,
+  UserSearch,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Certificate {
   id: string | number;
@@ -427,14 +427,14 @@ const AdminCertificatesPage = () => {
             <Award className="w-4 h-4" />
             {t("الشهادات", "Certificates")}
           </TabsTrigger>
-          <TabsTrigger value="verify" className="gap-2">
+          {/* <TabsTrigger value="verify" className="gap-2">
             <Shield className="w-4 h-4" />
             {t("التحقق السريع", "Quick Verify")}
-          </TabsTrigger>
-          <TabsTrigger value="templates" className="gap-2">
+          </TabsTrigger> */}
+          {/* <TabsTrigger value="templates" className="gap-2">
             <FileText className="w-4 h-4" />
             {t("القوالب", "Templates")}
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
 
         {/* ══ Certificates Tab ══════════════════════════════════════════════ */}

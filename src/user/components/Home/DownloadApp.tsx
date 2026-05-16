@@ -1,15 +1,18 @@
-import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 
 const DownloadApp = () => {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden" id="app">
+    <section
+      className="py-20 bg-primary text-primary-foreground relative overflow-hidden"
+      id="app"
+    >
       <div className="container-custom relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
-          <div data-aos="fade-right">
+          <div data-aos="fade-up">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
               {t("حمّل تطبيق SPTA", "Download SPTA App")}
             </h2>
@@ -69,7 +72,7 @@ const DownloadApp = () => {
           {/* Right Mockup */}
           <div
             className="flex justify-center"
-            data-aos="fade-left"
+            data-aos="fade-up"
             data-aos-delay="200"
           >
             <motion.div

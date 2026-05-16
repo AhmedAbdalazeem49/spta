@@ -53,7 +53,7 @@ export default function About() {
           </div>
 
           {/* Image Section */}
-          <div className="relative" data-aos="fade-left" data-aos-delay="200">
+          <div className="relative" data-aos="fade-up" data-aos-delay="200">
             <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <img
                 src={sptaConference2}
