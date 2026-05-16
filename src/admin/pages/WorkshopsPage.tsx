@@ -473,126 +473,172 @@ const WorkshopsPage = () => {
         </div>
       </section>
 
-      {/* Registration Dialog */}
-      <Dialog open={isRegistrationOpen} onOpenChange={setIsRegistrationOpen}>
+      {/* Registration Dialog — 3 steps: info → payment → success */}
+      <Dialog
+        open={isRegistrationOpen}
+        onOpenChange={(o) => (o ? setIsRegistrationOpen(true) : resetRegistration())}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <GraduationCap className="w-5 h-5 text-primary" />
-              {t("التسجيل في الورشة", "Workshop Registration")}
+              {regStep === "info"
+                ? t("التسجيل في الورشة", "Workshop Registration")
+                : regStep === "payment"
+                ? t("اختر طريقة الدفع", "Choose Payment Method")
+                : t("تم التسجيل بنجاح", "Registration Successful")}
             </DialogTitle>
             <DialogDescription>
               {selectedWorkshop &&
-                t(selectedWorkshop.titleAr, selectedWorkshop.titleEn)}
+                t(
+                  selectedWorkshop.titleAr || selectedWorkshop.title,
+                  selectedWorkshop.titleEn || selectedWorkshop.title
+                )}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>{t("الاسم الكامل", "Full Name")}</Label>
-              <Input
-                value={registrationData.name}
-                onChange={(e) =>
-                  setRegistrationData({
-                    ...registrationData,
-                    name: e.target.value,
-                  })
-                }
-                placeholder={t("أدخل اسمك الكامل", "Enter your full name")}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>{t("البريد الإلكتروني", "Email")}</Label>
-              <Input
-                type="email"
-                value={registrationData.email}
-                onChange={(e) =>
-                  setRegistrationData({
-                    ...registrationData,
-                    email: e.target.value,
-                  })
-                }
-                placeholder="example@email.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>{t("رقم الهاتف", "Phone Number")}</Label>
-              <Input
-                type="tel"
-                value={registrationData.phone}
-                onChange={(e) =>
-                  setRegistrationData({
-                    ...registrationData,
-                    phone: e.target.value,
-                  })
-                }
-                placeholder="+966 5X XXX XXXX"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>{t("نوع التسجيل", "Registration Type")}</Label>
-              <Select
-                value={registrationData.isMember ? "member" : "non-member"}
-                onValueChange={(v) =>
-                  setRegistrationData({
-                    ...registrationData,
-                    isMember: v === "member",
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="member">
-                    {t("عضو", "Member")} - {selectedWorkshop?.priceMembers}{" "}
-                    {t("ريال", "SAR")}
-                  </SelectItem>
-                  <SelectItem value="non-member">
-                    {t("غير عضو", "Non-Member")} -{" "}
-                    {selectedWorkshop?.priceNonMembers} {t("ريال", "SAR")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* STEP 1 — INFO */}
+          {regStep === "info" && (
+            <>
+              <div className="space-y-4 py-2">
+                <div className="space-y-2">
+                  <Label>{t("الاسم الكامل", "Full Name")}</Label>
+                  <Input
+                    value={registrationData.name}
+                    onChange={(e) =>
+                      setRegistrationData({ ...registrationData, name: e.target.value })
+                    }
+                    placeholder={t("أدخل اسمك الكامل", "Enter your full name")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("البريد الإلكتروني", "Email")}</Label>
+                  <Input
+                    type="email"
+                    value={registrationData.email}
+                    onChange={(e) =>
+                      setRegistrationData({ ...registrationData, email: e.target.value })
+                    }
+                    placeholder="example@email.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("رقم الهاتف", "Phone Number")}</Label>
+                  <Input
+                    type="tel"
+                    value={registrationData.phone}
+                    onChange={(e) =>
+                      setRegistrationData({ ...registrationData, phone: e.target.value })
+                    }
+                    placeholder="+966 5X XXX XXXX"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("نوع التسجيل", "Registration Type")}</Label>
+                  <Select
+                    value={registrationData.isMember ? "member" : "non-member"}
+                    onValueChange={(v) =>
+                      setRegistrationData({
+                        ...registrationData,
+                        isMember: v === "member",
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="member">
+                        {t("عضو", "Member")} - {selectedWorkshop?.priceMembers}{" "}
+                        {t("ريال", "SAR")}
+                      </SelectItem>
+                      <SelectItem value="non-member">
+                        {t("غير عضو", "Non-Member")} -{" "}
+                        {selectedWorkshop?.priceNonMembers} {t("ريال", "SAR")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            {/* Price Summary */}
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">
-                  {t("المبلغ المطلوب", "Total Amount")}
-                </span>
-                <span className="text-2xl font-bold text-primary">
-                  {registrationData.isMember
-                    ? selectedWorkshop?.priceMembers
-                    : selectedWorkshop?.priceNonMembers}{" "}
-                  {t("ريال", "SAR")}
-                </span>
+                <div className="p-4 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">
+                      {t("المبلغ المطلوب", "Total Amount")}
+                    </span>
+                    <span className="text-2xl font-bold text-primary">
+                      {registrationData.isMember
+                        ? selectedWorkshop?.priceMembers
+                        : selectedWorkshop?.priceNonMembers}{" "}
+                      {t("ريال", "SAR")}
+                    </span>
+                  </div>
+                  {registrationData.isMember && (
+                    <p className="text-xs text-green-accent mt-2 flex items-center gap-1">
+                      <Star className="w-3 h-3" />
+                      {t("تم تطبيق خصم الأعضاء", "Member discount applied")}
+                    </p>
+                  )}
+                </div>
               </div>
-              {registrationData.isMember && (
-                <p className="text-xs text-green-accent mt-2 flex items-center gap-1">
-                  <Star className="w-3 h-3" />
-                  {t("تم تطبيق خصم الأعضاء", "Member discount applied")}
-                </p>
-              )}
-            </div>
-          </div>
 
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsRegistrationOpen(false)}
-            >
-              {t("إلغاء", "Cancel")}
-            </Button>
-            <Button
-              onClick={handleRegister}
-              className="bg-green-accent hover:bg-green-light gap-2"
-            >
-              <CheckCircle className="w-4 h-4" />
-              {t("تأكيد التسجيل", "Confirm Registration")}
-            </Button>
-          </DialogFooter>
+              <DialogFooter>
+                <Button variant="outline" onClick={resetRegistration}>
+                  {t("إلغاء", "Cancel")}
+                </Button>
+                <Button onClick={goToPayment} className="gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  {t("متابعة للدفع", "Continue to Payment")}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+
+          {/* STEP 2 — PAYMENT */}
+          {regStep === "payment" && selectedWorkshop && (
+            <div className="py-2">
+              <PaymentMethodPicker
+                amount={
+                  registrationData.isMember
+                    ? selectedWorkshop.priceMembers
+                    : selectedWorkshop.priceNonMembers
+                }
+                selected={paymentMethod}
+                onSelect={setPaymentMethod}
+                loading={isPaying}
+                onConfirm={handlePayAndRegister}
+                confirmLabel={{ ar: "ادفع وسجّل الآن", en: "Pay & Register Now" }}
+              />
+              <button
+                onClick={() => setRegStep("info")}
+                className="text-xs text-muted-foreground hover:text-primary mt-3 mx-auto block"
+              >
+                ← {t("رجوع", "Back")}
+              </button>
+            </div>
+          )}
+
+          {/* STEP 3 — SUCCESS */}
+          {regStep === "success" && (
+            <div className="py-6 text-center space-y-4">
+              <div className="mx-auto w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                <CheckCircle className="w-9 h-9 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold">
+                  {t("تم التسجيل بنجاح!", "You're registered!")}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t(
+                    "سيتم إرسال تفاصيل التأكيد إلى بريدك الإلكتروني.",
+                    "Confirmation details have been sent to your email."
+                  )}
+                </p>
+              </div>
+              <Button onClick={resetRegistration} className="w-full">
+                {t("تم", "Done")}
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </Layout>
