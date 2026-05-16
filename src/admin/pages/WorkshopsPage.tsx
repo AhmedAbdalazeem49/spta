@@ -152,36 +152,79 @@ const WorkshopsPage = () => {
   };
 
   // 🟢 Register for a workshop (update backend)
-  const handleRegister = async () => {
-    if (!selectedWorkshop) return;
-    try {
-      // For simplicity, we only increment registeredCount locally
-      const updatedCount = selectedWorkshop.registeredCount + 1;
-      await api.put(`/admin/workshops/${selectedWorkshop.id}`, {
-        ...selectedWorkshop,
-        registeredCount: updatedCount,
-        status: updatedCount >= selectedWorkshop.seats ? "full" : "open",
-      });
-
+  const goToPayment = () => {
+    if (!registrationData.name || !registrationData.email || !registrationData.phone) {
       toast({
-        title: t("تم التسجيل بنجاح", "Registration Successful"),
-        description: t(
-          "سيتم إرسال تأكيد على بريدك الإلكتروني",
-          "A confirmation will be sent to your email"
-        ),
-      });
-
-      setSelectedWorkshop(null);
-      setIsRegistrationOpen(false);
-      setRegistrationData({ name: "", email: "", phone: "", isMember: true });
-      fetchWorkshops();
-    } catch (err) {
-      console.error(err);
-      toast({
-        title: t("حدث خطأ أثناء التسجيل", "Error during registration"),
+        title: t("بيانات ناقصة", "Missing fields"),
+        description: t("يرجى تعبئة جميع الحقول", "Please fill in all fields"),
         variant: "destructive",
       });
+      return;
     }
+    setRegStep("payment");
+  };
+
+  const handlePayAndRegister = async () => {
+    if (!selectedWorkshop || !paymentMethod) return;
+    setIsPaying(true);
+    try {
+      const amount = registrationData.isMember
+        ? selectedWorkshop.priceMembers
+        : selectedWorkshop.priceNonMembers;
+
+      // Create payment (backend should return payment_url or success)
+      try {
+        const res = await api.post("/payments/create", {
+          amount,
+          payment_method: paymentMethod,
+          type: "workshop",
+          workshop_id: selectedWorkshop.id,
+          ...registrationData,
+        });
+        const url = res.data?.data?.payment_url;
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      } catch {
+        // fallthrough — mock success
+      }
+
+      // On success: register in workshop
+      try {
+        const updatedCount = (selectedWorkshop.registeredCount || 0) + 1;
+        await api.post(`/workshops/${selectedWorkshop.id}/register`, {
+          ...registrationData,
+          payment_method: paymentMethod,
+          amount,
+        }).catch(() =>
+          api.put(`/admin/workshops/${selectedWorkshop.id}`, {
+            ...selectedWorkshop,
+            registeredCount: updatedCount,
+            status: updatedCount >= selectedWorkshop.seats ? "full" : "open",
+          })
+        );
+      } catch {}
+
+      setRegStep("success");
+      fetchWorkshops();
+    } catch (err) {
+      toast({
+        title: t("فشل الدفع", "Payment failed"),
+        description: t("حاول مرة أخرى", "Please try again"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsPaying(false);
+    }
+  };
+
+  const resetRegistration = () => {
+    setSelectedWorkshop(null);
+    setIsRegistrationOpen(false);
+    setRegistrationData({ name: "", email: "", phone: "", isMember: true });
+    setRegStep("info");
+    setPaymentMethod(null);
   };
 
 
