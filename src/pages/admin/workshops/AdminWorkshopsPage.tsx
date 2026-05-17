@@ -12,7 +12,10 @@ import { useEffect, useState } from "react";
 // Components
 import { WorkshopDeleteModal } from "@/components/admin/workshops/WorkshopDeleteModal";
 import { WorkshopDetailsModal } from "@/components/admin/workshops/WorkshopDetailsModal";
-import { emptyWorkshopForm, WorkshopFormModal } from "@/components/admin/workshops/WorkshopFormModal";
+import {
+  emptyWorkshopForm,
+  WorkshopFormModal,
+} from "@/components/admin/workshops/WorkshopFormModal";
 import { WorkshopsTable } from "@/components/admin/workshops/WorkshopsTable";
 
 const AdminWorkshopsPage = () => {
@@ -22,11 +25,11 @@ const AdminWorkshopsPage = () => {
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
-  
+
   const [selected, setSelected] = useState<Workshop | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -108,7 +111,8 @@ const AdminWorkshopsPage = () => {
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
-        description: err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "An error occurred"),
         variant: "destructive",
       });
     } finally {
@@ -128,7 +132,8 @@ const AdminWorkshopsPage = () => {
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
-        description: err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "An error occurred"),
         variant: "destructive",
       });
     } finally {
@@ -154,7 +159,10 @@ const AdminWorkshopsPage = () => {
             {t("إدارة ورش العمل", "Workshops Management")}
           </h2>
           <p className="text-muted-foreground text-sm">
-            {t("إنشاء وتعديل وحذف ورش العمل", "Create, edit and delete workshops")}
+            {t(
+              "إنشاء وتعديل وحذف ورش العمل",
+              "Create, edit and delete workshops"
+            )}
           </p>
         </div>
         <Button onClick={openCreate} className="gap-2 shrink-0">
@@ -168,7 +176,10 @@ const AdminWorkshopsPage = () => {
           <div className="relative">
             <Search className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder={t("بحث بالاسم أو الطبيب  ...", "Search by name, doctor...")}
+              placeholder={t(
+                "بحث بالاسم أو الطبيب  ...",
+                "Search by name, doctor..."
+              )}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -191,7 +202,11 @@ const AdminWorkshopsPage = () => {
                   : t("لا توجد ورش عمل", "No workshops found")}
               </p>
               {!searchQuery && (
-                <Button onClick={openCreate} variant="outline" className="mt-4 gap-2">
+                <Button
+                  onClick={openCreate}
+                  variant="outline"
+                  className="mt-4 gap-2"
+                >
                   <Plus className="w-4 h-4" />
                   {t("أنشئ أول ورشة", "Create first workshop")}
                 </Button>

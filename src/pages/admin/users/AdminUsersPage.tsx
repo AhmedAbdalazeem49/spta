@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
@@ -24,17 +30,17 @@ const AdminUsersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  
+
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
-  
+
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
-  
+
   const [editForm, setEditForm] = useState<EditForm>({
     name: "",
     name_ar: "",
@@ -71,7 +77,11 @@ const AdminUsersPage = () => {
     fetchUsers(page, searchQuery, statusFilter);
   }, [page]);
 
-  const fetchUsers = async (pageNumber: number = 1, search: string = "", status: string = "all") => {
+  const fetchUsers = async (
+    pageNumber: number = 1,
+    search: string = "",
+    status: string = "all"
+  ) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams({ page: String(pageNumber) });
@@ -93,7 +103,10 @@ const AdminUsersPage = () => {
     }
   };
 
-  const updateStatus = async (userId: number, newStatus: "approved" | "rejected") => {
+  const updateStatus = async (
+    userId: number,
+    newStatus: "approved" | "rejected"
+  ) => {
     setUpdatingId(userId);
     try {
       await api.patch(`/admin/users/${userId}/status`, { status: newStatus });
@@ -104,11 +117,14 @@ const AdminUsersPage = () => {
             ? t("تم تفعيل المستخدم", "User approved & activated")
             : t("تم رفض المستخدم", "User rejected"),
       });
-      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u)));
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
+      );
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
-        description: err.response?.data?.message || t("حدث خطأ", "Error occurred"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "Error occurred"),
         variant: "destructive",
       });
     } finally {
@@ -167,7 +183,8 @@ const AdminUsersPage = () => {
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
-        description: err.response?.data?.message || t("حدث خطأ", "Error occurred"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "Error occurred"),
         variant: "destructive",
       });
     } finally {
@@ -208,7 +225,10 @@ const AdminUsersPage = () => {
     if (!addForm.name.trim() || !addForm.email.trim()) {
       toast({
         title: t("خطأ في البيانات", "Validation Error"),
-        description: t("الاسم والبريد الإلكتروني مطلوبان", "Name and email are required"),
+        description: t(
+          "الاسم والبريد الإلكتروني مطلوبان",
+          "Name and email are required"
+        ),
         variant: "destructive",
       });
       return;
@@ -281,7 +301,11 @@ const AdminUsersPage = () => {
           </p>
         </div>
 
-        <Button onClick={openAdd} className="gap-2 shrink-0 shadow-sm" size="default">
+        <Button
+          onClick={openAdd}
+          className="gap-2 shrink-0 shadow-sm"
+          size="default"
+        >
           <UserPlus className="w-4 h-4" />
           {t("إضافة مستخدم", "Add User")}
         </Button>
@@ -302,7 +326,10 @@ const AdminUsersPage = () => {
                 } w-4 h-4 text-muted-foreground`}
               />
               <Input
-                placeholder={t("بحث بالاسم أو البريد...", "Search by name or email...")}
+                placeholder={t(
+                  "بحث بالاسم أو البريد...",
+                  "Search by name or email..."
+                )}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={isRTL ? "pr-10" : "pl-10"}
@@ -313,10 +340,18 @@ const AdminUsersPage = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("كل الحالات", "All Statuses")}</SelectItem>
-                <SelectItem value="pending">{t("قيد المراجعة", "Pending")}</SelectItem>
-                <SelectItem value="approved">{t("موافق", "Approved")}</SelectItem>
-                <SelectItem value="rejected">{t("مرفوض", "Rejected")}</SelectItem>
+                <SelectItem value="all">
+                  {t("كل الحالات", "All Statuses")}
+                </SelectItem>
+                <SelectItem value="pending">
+                  {t("قيد المراجعة", "Pending")}
+                </SelectItem>
+                <SelectItem value="approved">
+                  {t("موافق", "Approved")}
+                </SelectItem>
+                <SelectItem value="rejected">
+                  {t("مرفوض", "Rejected")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -325,7 +360,10 @@ const AdminUsersPage = () => {
           {isLoading ? (
             <div className="p-6 space-y-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-14 w-full bg-gray-200 rounded-lg animate-pulse" />
+                <div
+                  key={i}
+                  className="h-14 w-full bg-gray-200 rounded-lg animate-pulse"
+                />
               ))}
             </div>
           ) : users.length === 0 ? (

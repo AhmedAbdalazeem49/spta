@@ -54,21 +54,6 @@ const Navbar = () => {
       label: t("من نحن", "About"),
       path: "/about",
       icon: Users,
-      children: [
-        { label: t("نظرة عامة", "Overview"), path: "/about" },
-        {
-          label: t("ما هو العلاج الطبيعي", "What is PT"),
-          path: "/about/what-is-pt",
-        },
-        {
-          label: t("العلاقات الدولية", "International"),
-          path: "/about/international",
-        },
-        // {
-        //   label: t("المجالس السابقة", "Previous Boards"),
-        //   path: "/about/previous-boards",
-        // },
-      ],
     },
     // {
     //   label: t("البحث والتعليم", "Research"),
@@ -100,22 +85,11 @@ const Navbar = () => {
       label: t("العضوية", "Membership"),
       path: "/membership",
       icon: Users,
-      children: [
-        {
-          label: t("اشترك الآن", "Subscribe"),
-          path: "/membership/subscribe",
-        },
-        {
-          label: t("مزايا العضوية", "Membership Benefits"),
-          path: "/membership/benefits",
-        },
-
-        { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
-        // {
-        //   label: t("البطاقة الرقمية", "Digital Card"),
-        //   path: "/membership/card",
-        // },
-      ],
+    },
+    {
+      label: t("البطاقة الرقمية", "Digital Card"),
+      path: "/card",
+      icon: Users,
     },
     {
       label: t("ورش العمل", "Workshops"),
@@ -132,7 +106,6 @@ const Navbar = () => {
     //   path: "/journal",
     //   icon: FileText,
     // },
-    { label: t("الأخبار", "News"), path: "/news", icon: FileText },
     {
       label: t("اتصل بنا", "Contact Us"),
       path: "/contact",
@@ -176,7 +149,7 @@ const Navbar = () => {
                   key={item.path}
                   className="relative"
                   onMouseEnter={() =>
-                    item.children && setActiveDropdown(item.path)
+                    item.children  && setActiveDropdown(item.path)
                   }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >

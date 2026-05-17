@@ -39,33 +39,31 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SignupPage from "./pages/SignupPage";
 
 // Protected user pages
-import MembershipSubscribePage from "./user/pages/MembershipSubscribePage";
 import DigitalCardPage from "./user/pages/DigitalCardPage";
+import MembershipSubscribePage from "./user/pages/MembershipSubscribePage";
 import ProfilePage from "./user/pages/ProfilePage";
 
 // Admin layout + pages
 import AdminLayout from "./admin/components/AdminLayout";
 import AdminCertificatesPage from "./pages/admin/certificates/AdminCertificatesPage";
+import AdminCoupons from "./pages/admin/coupons/AdminCoupons";
 import AdminDashboardPage from "./pages/admin/dashboard/AdminDashboardPage";
 import AdminUsersPage from "./pages/admin/users/AdminUsersPage";
 import AdminVisitorsPage from "./pages/admin/visitors/AdminVisitorsPage";
 import AdminWorkshopsPage from "./pages/admin/workshops/AdminWorkshopsPage";
-import AdminCoupons from "./pages/admin/coupons/AdminCoupons";
 
 // Public workshops page (user-facing)
 import WorkshopsPage from "./pages/WorkshopsPage";
 
 // Conference & Certificate pages
-import ConferencesPage from "./user/pages/ConferencesPage";
-import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
-import CertificateViewPage from "./user/pages/CertificateViewPage";
-import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferencePopup from "./components/ConferencePopup";
 import ScrollToTop from "./components/ScrollToTop";
-import VerifyOtpPage from "./pages/VerifyOtpPage";
 import PaymentPage from "./pages/PaymentPage";
-
-
+import VerifyOtpPage from "./pages/VerifyOtpPage";
+import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
+import CertificateViewPage from "./user/pages/CertificateViewPage";
+import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
+import ConferencesPage from "./user/pages/ConferencesPage";
 
 const queryClient = new QueryClient();
 
@@ -118,18 +116,7 @@ const App = () => (
               />
               <Route path="/membership" element={<MembershipBenefitsPage />} />
               <Route path="/membership/count" element={<MembersCountPage />} />
-              <Route
-                path="/membership/subscribe"
-                element={<MembershipSubscribePage />}
-              />
-              <Route
-                path="/membership/card"
-                element={
-                  <ProtectedRoute>
-                    <DigitalCardPage />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/card" element={<DigitalCardPage />} />
               {/* Public Workshops */}
               <Route path="/workshops" element={<WorkshopsPage />} />
               {/* Conferences */}
@@ -155,7 +142,7 @@ const App = () => (
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/verify-otp" element={ <VerifyOtpPage />} />
+              <Route path="/verify-otp" element={<VerifyOtpPage />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -232,7 +219,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             {/* <Chatbot /> */}
-            <ConferencePopup />
+            {/* <ConferencePopup /> */}
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

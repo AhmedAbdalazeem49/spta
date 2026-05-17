@@ -9,7 +9,7 @@ const ContactPage = () => {
     <Layout>
       <Hero />
       <ContactInfo />
-      <ContactForm />
+      {/* <ContactForm /> */}
       <BranchesSection />
     </Layout>
   );

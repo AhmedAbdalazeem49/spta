@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CreditCard, Smartphone, Wallet, Loader2, CheckCircle2 } from "lucide-react";
+import { CreditCard, Smartphone, Loader2, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 
@@ -8,8 +8,7 @@ export type PaymentMethodKey =
   | "visa"
   | "applepay"
   | "googlepay"
-  | "tabby"
-  | "tamara";
+
 
 interface Props {
   amount: number;
@@ -32,8 +31,6 @@ const methods: {
   { key: "visa", ar: "فيزا / ماستركارد", en: "Visa / Mastercard", Icon: CreditCard },
   { key: "applepay", ar: "Apple Pay", en: "Apple Pay", Icon: Smartphone },
   { key: "googlepay", ar: "Google Pay", en: "Google Pay", Icon: Smartphone },
-  { key: "tabby", ar: "Tabby — تقسيط", en: "Tabby — Split", Icon: Wallet, hint: { ar: "قسّط على 4 دفعات", en: "Pay in 4" } },
-  { key: "tamara", ar: "Tamara — قسّط لاحقًا", en: "Tamara — Pay Later", Icon: Wallet, hint: { ar: "ادفع لاحقًا", en: "Pay later" } },
 ];
 
 const PaymentMethodPicker: React.FC<Props> = ({

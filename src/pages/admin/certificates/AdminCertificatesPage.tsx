@@ -5,13 +5,28 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 import { Certificate, Recipient, Workshop } from "@/types/certificate";
-import { getCertificateDate, getCertificateName, getCertificateVerificationUrl, getCertificateWorkshop } from "@/utils/certificateUtils";
+import {
+  getCertificateDate,
+  getCertificateName,
+  getCertificateVerificationUrl,
+  getCertificateWorkshop,
+} from "@/utils/certificateUtils";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, Award, FileText, Plus, Settings, Shield } from "lucide-react";
+import {
+  AlertCircle,
+  Award,
+  FileText,
+  Plus,
+  Settings,
+  Shield,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Components
-import { CertificateAddModal, EMPTY_FORM } from "@/components/admin/certificates/CertificateAddModal";
+import {
+  CertificateAddModal,
+  EMPTY_FORM,
+} from "@/components/admin/certificates/CertificateAddModal";
 import { CertificateCard } from "@/components/admin/certificates/CertificateCard";
 import { CertificateDetailsModal } from "@/components/admin/certificates/CertificateDetailsModal";
 import { CertificateFilters } from "@/components/admin/certificates/CertificateFilters";
@@ -40,7 +55,9 @@ const AdminCertificatesPage = () => {
 
   // Quick verify
   const [verifyCode, setVerifyCode] = useState("");
-  const [verifyResult, setVerifyResult] = useState<"success" | "error" | null>(null);
+  const [verifyResult, setVerifyResult] = useState<"success" | "error" | null>(
+    null
+  );
 
   // Certificate settings dialog
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -114,11 +131,17 @@ const AdminCertificatesPage = () => {
     }
   };
 
-  const selectedWorkshop = workshops.find((w) => String(w.id) === form.workshopId);
-  const selectedRecipient = recipients.find((r) => String(r.id) === form.recipientId);
+  const selectedWorkshop = workshops.find(
+    (w) => String(w.id) === form.workshopId
+  );
+  const selectedRecipient = recipients.find(
+    (r) => String(r.id) === form.recipientId
+  );
 
-  const getWorkshopName = (w: Workshop) => w.title || t(w.titleAr || "", w.titleEn || "");
-  const getRecipientName = (r: Recipient) => r.name || t(r.nameAr || "", r.nameEn || "");
+  const getWorkshopName = (w: Workshop) =>
+    w.title || t(w.titleAr || "", w.titleEn || "");
+  const getRecipientName = (r: Recipient) =>
+    r.name || t(r.nameAr || "", r.nameEn || "");
 
   const filteredWorkshops = workshops.filter((w) =>
     getWorkshopName(w).toLowerCase().includes(workshopSearch.toLowerCase())
@@ -126,7 +149,9 @@ const AdminCertificatesPage = () => {
 
   const filteredRecipients = recipients.filter(
     (r) =>
-      getRecipientName(r).toLowerCase().includes(recipientSearch.toLowerCase()) ||
+      getRecipientName(r)
+        .toLowerCase()
+        .includes(recipientSearch.toLowerCase()) ||
       (r.email || "").toLowerCase().includes(recipientSearch.toLowerCase())
   );
 
@@ -141,7 +166,9 @@ const AdminCertificatesPage = () => {
     t("— اسم الورشة —", "— Workshop Title —");
 
   const previewDate = form.issueDate || (selectedWorkshop?.date ?? "") || "—";
-  const previewHours = form.hours || (selectedWorkshop?.hours ? String(selectedWorkshop.hours) : "");
+  const previewHours =
+    form.hours ||
+    (selectedWorkshop?.hours ? String(selectedWorkshop.hours) : "");
 
   const handleAddOpen = () => {
     setForm({ ...EMPTY_FORM });
@@ -155,7 +182,10 @@ const AdminCertificatesPage = () => {
     if (!previewName || !previewWorkshop) {
       toast({
         title: t("بيانات ناقصة", "Missing data"),
-        description: t("يرجى اختيار المستلم والورشة على الأقل", "Please select at least a recipient and workshop"),
+        description: t(
+          "يرجى اختيار المستلم والورشة على الأقل",
+          "Please select at least a recipient and workshop"
+        ),
         variant: "destructive",
       });
       return;
@@ -173,7 +203,10 @@ const AdminCertificatesPage = () => {
       });
       toast({
         title: t("تم إنشاء الشهادة", "Certificate Created"),
-        description: t("تمت إضافة الشهادة بنجاح", "Certificate added successfully"),
+        description: t(
+          "تمت إضافة الشهادة بنجاح",
+          "Certificate added successfully"
+        ),
       });
       setIsAddOpen(false);
       fetchCertificates();
@@ -201,7 +234,9 @@ const AdminCertificatesPage = () => {
   });
 
   const handleVerify = () => {
-    const found = certificates.find((c) => String(c.id).toUpperCase() === verifyCode.toUpperCase());
+    const found = certificates.find(
+      (c) => String(c.id).toUpperCase() === verifyCode.toUpperCase()
+    );
     if (found && found.status === "verified") {
       setVerifyResult("success");
       setSelected(found);
@@ -242,11 +277,18 @@ const AdminCertificatesPage = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button onClick={handleAddOpen} className="gap-2 bg-primary hover:bg-primary/90">
+          <Button
+            onClick={handleAddOpen}
+            className="gap-2 bg-primary hover:bg-primary/90"
+          >
             <Plus className="w-4 h-4" />
             {t("إضافة شهادة", "Add Certificate")}
           </Button>
-          <Button onClick={() => setIsSettingsOpen(true)} variant="outline" className="gap-2">
+          <Button
+            onClick={() => setIsSettingsOpen(true)}
+            variant="outline"
+            className="gap-2"
+          >
             <Settings className="w-4 h-4" />
             {t("إعدادات الشهادة", "Certificate Settings")}
           </Button>
@@ -337,7 +379,9 @@ const AdminCertificatesPage = () => {
         <TabsContent value="templates" className="space-y-6">
           <CertificateTemplates
             currentTemplate={certificateSettings.template}
-            onSelectTemplate={(t) => setCertificateSettings({ ...certificateSettings, template: t })}
+            onSelectTemplate={(t) =>
+              setCertificateSettings({ ...certificateSettings, template: t })
+            }
           />
         </TabsContent>
       </Tabs>

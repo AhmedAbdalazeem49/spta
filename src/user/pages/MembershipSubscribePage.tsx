@@ -1,36 +1,16 @@
-import AuthHero from "@/components/auth/AuthHero";
-import Layout from "@/components/layout/Layout";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useToast } from "@/hooks/use-toast";
-import api from "@/services/api";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
-  Banknote,
   Check,
-  CreditCard,
-  Crown,
   GraduationCap,
-  Loader2,
+  Lock,
   ShieldCheck,
   Sparkles,
   Star,
   Users,
-  X,
 } from "lucide-react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -71,7 +51,7 @@ const PLANS: Plan[] = [
     durationAr: "12 شهراً",
     durationEn: "12 months",
     isFree: false,
-    priceValue: null, // determined by API or admin
+    priceValue: null,
     featuresAr: [
       "الحصول على درجة البكالوريوس في العلاج الطبيعي أو ما يعادلها",
       "أن يكون المتقدم من المتخصصين في المجال",
@@ -143,49 +123,6 @@ const PLANS: Plan[] = [
 
 // ─── Payment Methods ───────────────────────────────────────────────────────────
 
-type PaymentMethod = "credit_card" | "mada" | "bank_transfer";
-
-interface PaymentMethodOption {
-  value: PaymentMethod;
-  labelAr: string;
-  labelEn: string;
-  Icon: React.ElementType;
-  description: { ar: string; en: string };
-}
-
-const PAYMENT_METHODS: PaymentMethodOption[] = [
-  {
-    value: "credit_card",
-    labelAr: "بطاقة ائتمان / خصم",
-    labelEn: "Credit / Debit Card",
-    Icon: CreditCard,
-    description: {
-      ar: "Visa، Mastercard، American Express",
-      en: "Visa, Mastercard, American Express",
-    },
-  },
-  {
-    value: "mada",
-    labelAr: "مدى",
-    labelEn: "Mada",
-    Icon: Banknote,
-    description: {
-      ar: "بطاقة مدى البنكية السعودية",
-      en: "Saudi Mada bank card",
-    },
-  },
-  {
-    value: "bank_transfer",
-    labelAr: "تحويل بنكي",
-    labelEn: "Bank Transfer",
-    Icon: Banknote,
-    description: {
-      ar: "تحويل مباشر عبر البنك",
-      en: "Direct bank wire transfer",
-    },
-  },
-];
-
 // ─── Plan Card ─────────────────────────────────────────────────────────────────
 
 const planStyles: Record<
@@ -217,13 +154,7 @@ interface PlanCardProps {
   t: (ar: string, en: string) => string;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({
-  plan,
-  index,
-  onSelect,
-  isRTL,
-  t,
-}) => {
+const PlanCard: React.FC<PlanCardProps> = ({ plan, index, isRTL, t }) => {
   const style = planStyles[plan.key];
 
   return (
@@ -301,31 +232,6 @@ const PlanCard: React.FC<PlanCardProps> = ({
               </li>
             ))}
           </ul>
-
-          {/* CTA */}
-          {/* {plan.isFree ? (
-            <Button
-              variant="outline"
-              className="w-full gap-2 rounded-xl h-11"
-              disabled
-            >
-              <Crown className="w-4 h-4" />
-              {t("بالترشيح فقط", "By Nomination Only")}
-            </Button>
-          ) : (
-            <Button
-              onClick={() => onSelect(plan)}
-              className="w-full gap-2 rounded-xl h-11 group/btn"
-              size="lg"
-            >
-              {t("اشترك الآن", "Subscribe Now")}
-              <ArrowRight
-                className={`w-4 h-4 transition-transform group-hover/btn:translate-x-1 ${
-                  isRTL ? "rotate-180 group-hover/btn:-translate-x-1" : ""
-                }`}
-              />
-            </Button>
-          )} */}
         </div>
       </div>
     </motion.div>
@@ -334,21 +240,10 @@ const PlanCard: React.FC<PlanCardProps> = ({
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
-type DialogStep = "select_payment" | "confirm" | "processing";
-
 const MembershipSubscribePage = () => {
   const { t, isRTL } = useLanguage();
-  const { toast } = useToast();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(
-    null
-  );
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [step, setStep] = useState<DialogStep>("select_payment");
-  const [isSubscribing, setIsSubscribing] = useState(false);
 
   const handleSelectPlan = (plan: Plan) => {
     if (!isAuthenticated) {
@@ -357,67 +252,10 @@ const MembershipSubscribePage = () => {
       });
       return;
     }
-    setSelectedPlan(plan);
-    setSelectedPayment(null);
-    setStep("select_payment");
-    setIsDialogOpen(true);
-  };
-
-  const handleConfirm = () => {
-    if (!selectedPayment) return;
-    setStep("confirm");
-  };
-
-  const handleSubscribe = async () => {
-    if (!selectedPlan || !selectedPayment) return;
-    setIsSubscribing(true);
-    setStep("processing");
-    try {
-      const res = await api.post("/membership/subscribe", {
-        membership_id: selectedPlan.id,
-        payment_method: selectedPayment,
-      });
-      const data = res.data?.data || res.data;
-      if (data?.payment_url) {
-        window.location.href = data.payment_url;
-      } else {
-        toast({
-          title: t("تم بنجاح", "Success"),
-          description: t("تم الاشتراك بنجاح", "Subscribed successfully"),
-        });
-        navigate("/profile");
-      }
-    } catch (err: any) {
-      toast({
-        title: t("خطأ", "Error"),
-        description:
-          err.response?.data?.message ||
-          t("حدث خطأ ما", "Something went wrong"),
-        variant: "destructive",
-      });
-      setStep("select_payment");
-    } finally {
-      setIsSubscribing(false);
-    }
-  };
-
-  const closeDialog = () => {
-    if (isSubscribing) return;
-    setIsDialogOpen(false);
-    setSelectedPlan(null);
-    setSelectedPayment(null);
-    setStep("select_payment");
   };
 
   return (
-    <Layout>
-      <AuthHero
-        titleAr="اشترك في العضوية"
-        titleEn="Subscribe to Membership"
-        subtitleAr="اختر الباقة المناسبة وابدأ رحلتك المهنية معنا"
-        subtitleEn="Choose the right plan and start your professional journey with us"
-      />
-
+    <>
       {/* ── Plans Section ── */}
       <section className="py-20 relative">
         {/* Background decoration */}
@@ -460,26 +298,51 @@ const MembershipSubscribePage = () => {
             ))}
           </div>
 
-          {/* Auth nudge */}
+          {/* Auth Nudge */}
           {!isAuthenticated && (
             <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="mt-10 text-center"
+              className="mt-12 flex justify-center"
             >
-              <p className="text-sm text-muted-foreground">
-                {t(
-                  "يجب تسجيل الدخول للاشتراك.",
-                  "You must be logged in to subscribe."
-                )}{" "}
-                <button
-                  onClick={() => navigate("/login")}
-                  className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
-                >
-                  {t("تسجيل الدخول", "Log in")}
-                </button>
-              </p>
+              <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-primary/5 px-6 py-5 shadow-lg backdrop-blur-sm max-w-xl w-full">
+                {/* Glow Effect */}
+                <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-primary/10 blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-primary/10 blur-3xl" />
+
+                <div className="relative z-10 flex flex-col items-center text-center gap-4">
+                  {/* Icon */}
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 border border-primary/20">
+                    <Lock className="h-6 w-6 text-primary" />
+                  </div>
+
+                  {/* Text */}
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {t("تسجيل الدخول مطلوب", "Login Required")}
+                    </h3>
+
+                    <p className="text-sm leading-relaxed text-muted-foreground max-w-md">
+                      {t(
+                        "يجب تسجيل الدخول للاشتراك والوصول إلى جميع المميزات والخدمات المتاحة.",
+                        "You must be logged in to subscribe and access all available features and services."
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Action Button */}
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="group inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:bg-primary/90"
+                  >
+                    {t("تسجيل الدخول", "Log in")}
+
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
+                  </button>
+                </div>
+              </div>
             </motion.div>
           )}
         </div>
@@ -506,224 +369,7 @@ const MembershipSubscribePage = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* ── Subscription Dialog ── */}
-      <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
-        <DialogContent className="sm:max-w-lg rounded-2xl">
-          <DialogHeader className="pb-2">
-            <DialogTitle className="flex items-center gap-2 text-lg">
-              {step === "processing" ? (
-                <Loader2 className="w-5 h-5 animate-spin text-primary" />
-              ) : (
-                <CreditCard className="w-5 h-5 text-primary" />
-              )}
-              {step === "processing"
-                ? t("جاري المعالجة...", "Processing...")
-                : step === "confirm"
-                ? t("تأكيد الاشتراك", "Confirm Subscription")
-                : t("اختر طريقة الدفع", "Choose Payment Method")}
-            </DialogTitle>
-            {selectedPlan && step !== "processing" && (
-              <DialogDescription className="text-sm">
-                {t(
-                  `الاشتراك في ${selectedPlan.nameAr}`,
-                  `Subscribing to ${selectedPlan.nameEn}`
-                )}
-              </DialogDescription>
-            )}
-          </DialogHeader>
-
-          <AnimatePresence mode="wait">
-            {/* Step 1: Payment selection */}
-            {step === "select_payment" && selectedPlan && (
-              <motion.div
-                key="select"
-                initial={{ opacity: 0, x: isRTL ? -16 : 16 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: isRTL ? 16 : -16 }}
-                className="space-y-3 py-2"
-              >
-                {/* Plan summary pill */}
-                <div className="flex items-center gap-3 p-3.5 rounded-xl bg-muted/60 border border-border/50">
-                  <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                      planStyles[selectedPlan.key].iconBg
-                    }`}
-                  >
-                    <selectedPlan.Icon className="w-4.5 h-4.5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">
-                      {t(selectedPlan.nameAr, selectedPlan.nameEn)}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {t(selectedPlan.priceAr, selectedPlan.priceEn)} —{" "}
-                      {t(selectedPlan.durationAr, selectedPlan.durationEn)}
-                    </p>
-                  </div>
-                </div>
-
-                <Label className="text-sm font-medium">
-                  {t("طريقة الدفع", "Payment Method")}
-                </Label>
-
-                {PAYMENT_METHODS.map((pm) => (
-                  <button
-                    key={pm.value}
-                    onClick={() => setSelectedPayment(pm.value)}
-                    className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all duration-200
-                      ${
-                        selectedPayment === pm.value
-                          ? "border-primary bg-primary/5 ring-1 ring-primary/30"
-                          : "border-border/60 bg-background hover:border-border hover:bg-muted/40"
-                      }`}
-                  >
-                    <div
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors
-                      ${
-                        selectedPayment === pm.value
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <pm.Icon className="w-4 h-4" />
-                    </div>
-                    <div className={`flex-1 text-${isRTL ? "right" : "left"}`}>
-                      <p className="font-medium text-sm">
-                        {t(pm.labelAr, pm.labelEn)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {t(pm.description.ar, pm.description.en)}
-                      </p>
-                    </div>
-                    {selectedPayment === pm.value && (
-                      <Check className="w-4 h-4 text-primary shrink-0" />
-                    )}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-
-            {/* Step 2: Confirm */}
-            {step === "confirm" && selectedPlan && selectedPayment && (
-              <motion.div
-                key="confirm"
-                initial={{ opacity: 0, x: isRTL ? -16 : 16 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: isRTL ? 16 : -16 }}
-                className="space-y-4 py-2"
-              >
-                {/* Summary card */}
-                <div className="rounded-xl border border-border/60 bg-muted/30 divide-y divide-border/40">
-                  <div className="flex justify-between items-center px-4 py-3">
-                    <span className="text-sm text-muted-foreground">
-                      {t("نوع العضوية", "Membership Type")}
-                    </span>
-                    <span className="font-semibold text-sm">
-                      {t(selectedPlan.nameAr, selectedPlan.nameEn)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center px-4 py-3">
-                    <span className="text-sm text-muted-foreground">
-                      {t("المدة", "Duration")}
-                    </span>
-                    <span className="font-semibold text-sm">
-                      {t(selectedPlan.durationAr, selectedPlan.durationEn)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center px-4 py-3">
-                    <span className="text-sm text-muted-foreground">
-                      {t("طريقة الدفع", "Payment Method")}
-                    </span>
-                    <span className="font-semibold text-sm">
-                      {t(
-                        PAYMENT_METHODS.find((p) => p.value === selectedPayment)
-                          ?.labelAr ?? "",
-                        PAYMENT_METHODS.find((p) => p.value === selectedPayment)
-                          ?.labelEn ?? ""
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                  {t(
-                    "بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية للجمعية.",
-                    "By continuing, you agree to the Association's terms, conditions and privacy policy."
-                  )}
-                </p>
-              </motion.div>
-            )}
-
-            {/* Step 3: Processing */}
-            {step === "processing" && (
-              <motion.div
-                key="processing"
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col items-center py-10 gap-4"
-              >
-                <Loader2 className="w-12 h-12 animate-spin text-primary" />
-                <p className="text-sm text-muted-foreground">
-                  {t("جاري تحضير طلبك...", "Preparing your request...")}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {step !== "processing" && (
-            <DialogFooter className="gap-2 pt-2 flex-row-reverse sm:flex-row-reverse">
-              <Button
-                variant="ghost"
-                onClick={
-                  step === "confirm"
-                    ? () => setStep("select_payment")
-                    : closeDialog
-                }
-                className="gap-1.5"
-              >
-                {step === "confirm" ? (
-                  <>
-                    <ArrowRight
-                      className={`w-4 h-4 ${isRTL ? "" : "rotate-180"}`}
-                    />
-                    {t("رجوع", "Back")}
-                  </>
-                ) : (
-                  <>
-                    <X className="w-4 h-4" />
-                    {t("إلغاء", "Cancel")}
-                  </>
-                )}
-              </Button>
-
-              {step === "select_payment" && (
-                <Button
-                  onClick={handleConfirm}
-                  disabled={!selectedPayment}
-                  className="gap-2 flex-1 sm:flex-initial"
-                >
-                  {t("التالي", "Next")}
-                  <ArrowRight
-                    className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`}
-                  />
-                </Button>
-              )}
-
-              {step === "confirm" && (
-                <Button
-                  onClick={handleSubscribe}
-                  className="gap-2 flex-1 sm:flex-initial"
-                >
-                  <Check className="w-4 h-4" />
-                  {t("تأكيد الدفع والاشتراك", "Confirm & Pay")}
-                </Button>
-              )}
-            </DialogFooter>
-          )}
-        </DialogContent>
-      </Dialog>
-    </Layout>
+    </>
   );
 };
 

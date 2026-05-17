@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -9,12 +15,24 @@ import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 import { Coupon, mapApiCoupon, mockCoupons } from "@/types/coupon";
 import { motion } from "framer-motion";
-import { CheckCircle, Filter, Percent, Plus, Search, Tag, Ticket, TrendingUp } from "lucide-react";
+import {
+  CheckCircle,
+  Filter,
+  Percent,
+  Plus,
+  Search,
+  Tag,
+  Ticket,
+  TrendingUp,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Components
 import { CouponDeleteModal } from "@/components/admin/coupons/CouponDeleteModal";
-import { CouponFormModal, EMPTY_COUPON_FORM } from "@/components/admin/coupons/CouponFormModal";
+import {
+  CouponFormModal,
+  EMPTY_COUPON_FORM,
+} from "@/components/admin/coupons/CouponFormModal";
 import { CouponsAnalytics } from "@/components/admin/coupons/CouponsAnalytics";
 import { CouponsList } from "@/components/admin/coupons/CouponsList";
 
@@ -52,7 +70,10 @@ const AdminCoupons = () => {
       setCoupons(mockCoupons);
       toast({
         title: t("تعذر الاتصال بالخادم", "Could not reach server"),
-        description: t("يتم عرض بيانات تجريبية مؤقتاً", "Showing mock data temporarily"),
+        description: t(
+          "يتم عرض بيانات تجريبية مؤقتاً",
+          "Showing mock data temporarily"
+        ),
         variant: "destructive",
       });
     } finally {
@@ -67,13 +88,16 @@ const AdminCoupons = () => {
     avgDiscount:
       coupons.length > 0
         ? Math.round(
-            coupons.reduce((acc, c) => acc + c.discountPercent, 0) / coupons.length
+            coupons.reduce((acc, c) => acc + c.discountPercent, 0) /
+              coupons.length
           )
         : 0,
   };
 
   const filtered = coupons.filter((c) => {
-    const matchesSearch = c.code.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = c.code
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     const matchesType = filterType === "all" || c.type === filterType;
     const matchesStatus = filterStatus === "all" || c.status === filterStatus;
     return matchesSearch && matchesType && matchesStatus;
@@ -101,7 +125,9 @@ const AdminCoupons = () => {
       maxUsage: coupon.maxUsage,
       validFrom: coupon.validFrom,
       validTo: coupon.validTo,
-      linkedWorkshop: coupon.linkedWorkshop ? String(coupon.linkedWorkshop) : "",
+      linkedWorkshop: coupon.linkedWorkshop
+        ? String(coupon.linkedWorkshop)
+        : "",
     });
     setIsEditOpen(true);
   };
@@ -109,7 +135,8 @@ const AdminCoupons = () => {
   const buildPayload = () => ({
     code: form.code || `SPTA-${Date.now().toString(36).toUpperCase()}`,
     type: form.type,
-    discount_percentage: form.type === "free" ? 100 : Number(form.discountPercent),
+    discount_percentage:
+      form.type === "free" ? 100 : Number(form.discountPercent),
     usage_limit: Number(form.maxUsage),
     start_date: form.validFrom || null,
     end_date: form.validTo || null,
@@ -128,7 +155,9 @@ const AdminCoupons = () => {
         description: t("تم إنشاء الكود بنجاح", "Code created successfully"),
       });
     } catch (err: any) {
-      const message = err?.response?.data?.message ?? t("فشل إنشاء الكود", "Failed to create code");
+      const message =
+        err?.response?.data?.message ??
+        t("فشل إنشاء الكود", "Failed to create code");
       toast({
         title: t("حدث خطأ", "Error"),
         description: message,
@@ -143,9 +172,14 @@ const AdminCoupons = () => {
     if (!selectedCoupon) return;
     setIsSubmitting(true);
     try {
-      const res = await api.put(`/promo-codes/${selectedCoupon.id}`, buildPayload());
+      const res = await api.put(
+        `/promo-codes/${selectedCoupon.id}`,
+        buildPayload()
+      );
       const updated = mapApiCoupon(res.data?.data ?? res.data);
-      setCoupons((prev) => prev.map((c) => (c.id === selectedCoupon.id ? updated : c)));
+      setCoupons((prev) =>
+        prev.map((c) => (c.id === selectedCoupon.id ? updated : c))
+      );
       setIsEditOpen(false);
       setSelectedCoupon(null);
       toast({
@@ -153,7 +187,9 @@ const AdminCoupons = () => {
         description: t("تم تعديل الكود بنجاح", "Code updated successfully"),
       });
     } catch (err: any) {
-      const message = err?.response?.data?.message ?? t("فشل تعديل الكود", "Failed to update code");
+      const message =
+        err?.response?.data?.message ??
+        t("فشل تعديل الكود", "Failed to update code");
       toast({
         title: t("حدث خطأ", "Error"),
         description: message,
@@ -176,7 +212,9 @@ const AdminCoupons = () => {
         description: t("تم حذف الكود بنجاح", "Code deleted successfully"),
       });
     } catch (err: any) {
-      const message = err?.response?.data?.message ?? t("فشل حذف الكود", "Failed to delete code");
+      const message =
+        err?.response?.data?.message ??
+        t("فشل حذف الكود", "Failed to delete code");
       toast({
         title: t("حدث خطأ", "Error"),
         description: message,
@@ -200,7 +238,10 @@ const AdminCoupons = () => {
             )}
           </p>
         </div>
-        <Button onClick={openCreate} className="gap-2 bg-green-accent hover:bg-green-light">
+        <Button
+          onClick={openCreate}
+          className="gap-2 bg-green-accent hover:bg-green-light"
+        >
           <Plus className="w-4 h-4" />
           {t("كود جديد", "New Code")}
         </Button>
@@ -208,7 +249,9 @@ const AdminCoupons = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {isLoading
-          ? [1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)
+          ? [1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))
           : [
               {
                 icon: Ticket,
@@ -243,9 +286,13 @@ const AdminCoupons = () => {
               >
                 <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4 text-center">
-                    <stat.icon className={`w-8 h-8 mx-auto mb-2 ${stat.color}`} />
+                    <stat.icon
+                      className={`w-8 h-8 mx-auto mb-2 ${stat.color}`}
+                    />
                     <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {stat.label}
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -288,7 +335,9 @@ const AdminCoupons = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">{t("الكل", "All")}</SelectItem>
-                    <SelectItem value="discount">{t("خصم", "Discount")}</SelectItem>
+                    <SelectItem value="discount">
+                      {t("خصم", "Discount")}
+                    </SelectItem>
                     <SelectItem value="free">{t("مجاني", "Free")}</SelectItem>
                   </SelectContent>
                 </Select>
@@ -300,8 +349,12 @@ const AdminCoupons = () => {
                   <SelectContent>
                     <SelectItem value="all">{t("الكل", "All")}</SelectItem>
                     <SelectItem value="active">{t("نشط", "Active")}</SelectItem>
-                    <SelectItem value="expired">{t("منتهي", "Expired")}</SelectItem>
-                    <SelectItem value="used">{t("مستنفد", "Used Up")}</SelectItem>
+                    <SelectItem value="expired">
+                      {t("منتهي", "Expired")}
+                    </SelectItem>
+                    <SelectItem value="used">
+                      {t("مستنفد", "Used Up")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>

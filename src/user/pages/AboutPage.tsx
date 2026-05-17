@@ -1,4 +1,3 @@
-import Cta from "@/user/components/About/Cta";
 import Hero from "@/user/components/About/Hero";
 import Leadership from "@/user/components/About/Leadership";
 import Objectives from "@/user/components/About/Objectives";
@@ -17,7 +16,6 @@ const AboutPage = () => {
       <Leadership />
       <Quote />
       <Partners />
-      <Cta />
     </Layout>
   );
 };

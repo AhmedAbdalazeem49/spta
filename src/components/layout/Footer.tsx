@@ -30,28 +30,15 @@ const Footer = () => {
     about: [
       { label: t("نبذة عن الجمعية", "About SPTA"), path: "/about" },
       {
-        label: t("الرؤية والرسالة", "Vision & Mission"),
-        path: "/about/vision-mission",
+        label: t("العلاقات الدولية", "International"),
+        path: "/about/international",
       },
-      { label: t("مجلس الإدارة", "Board of Directors"), path: "/about" },
-      { label: t("الفروع", "Branches"), path: "/about" },
-    ],
-    services: [
       {
-        label: t("أنواع العضوية", "Membership Types"),
-        path: "/membership/types",
+        label: t("ما هو العلاج الطبيعي", "What is PT"),
+        path: "/about/what-is-pt",
       },
-      { label: t("ورش العمل", "Workshops"), path: "/news" },
-      {
-        label: t("المجلة العلمية", "Scientific Journal"),
-        path: "/research/journal",
-      },
-      { label: t("المكتبة الإلكترونية", "E-Library"), path: "/library" },
-    ],
-    quick: [
+      { label: t("الفروع", "Branches"), path: "/contact" },
       { label: t("الأخبار", "News"), path: "/news" },
-      { label: t("اتصل بنا", "Contact"), path: "/contact" },
-      { label: t("تسجيل الدخول", "Login"), path: "/login" },
     ],
   };
 
@@ -102,9 +89,9 @@ const Footer = () => {
 
       {/* Main Footer */}
       <div className="container-custom py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Logo & About */}
-          <div className="lg:col-span-2">
+          <div>
             <Link to="/" className="mb-6">
               <img
                 src={sptaLogo}
@@ -127,25 +114,6 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3">
               {footerLinks.about.map((link) => (
-                <li key={link.path + link.label}>
-                  <Link
-                    to={link.path}
-                    className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services Links */}
-          <div>
-            <h3 className="font-bold text-lg mb-6">
-              {t("الخدمات", "Services")}
-            </h3>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
                 <li key={link.path + link.label}>
                   <Link
                     to={link.path}
