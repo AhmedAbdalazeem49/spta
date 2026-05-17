@@ -438,7 +438,7 @@ const AdminUsersPage = () => {
                   {t("قيد المراجعة", "Pending")}
                 </SelectItem>
                 <SelectItem value="approved">
-                  {t("موافق عليه", "Approved")}
+                  {t("موافق", "Approved")}
                 </SelectItem>
                 <SelectItem value="rejected">
                   {t("مرفوض", "Rejected")}
@@ -577,7 +577,7 @@ const AdminUsersPage = () => {
                                 Icon: Clock,
                               },
                               approved: {
-                                label: t("موافق عليه", "Approved"),
+                                label: t("موافق", "Approved"),
                                 cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
                                 Icon: BadgeCheck,
                               },
