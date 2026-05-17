@@ -1,7 +1,10 @@
 import Layout from "@/components/layout/Layout";
+import PaymentMethodPicker, {
+  PaymentMethodKey,
+} from "@/components/PaymentMethodPicker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -33,16 +36,41 @@ import {
   Clock,
   Filter,
   GraduationCap,
+  Loader2,
   MapPin,
   Percent,
   Search,
   Star,
+  Tag,
   User,
   Users,
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import PaymentMethodPicker, { PaymentMethodKey } from "@/components/PaymentMethodPicker";
+
+interface Workshop {
+  id: number;
+  title: string;
+  description: string;
+  doctor_name: string;
+  location: string;
+  date: string;
+  time: string;
+  duration_minutes: number;
+  regular_price: string;
+  member_price: string;
+  total_capacity: number;
+  registered_count?: number;
+  status: "open" | "closed" | "completed" | "full";
+}
+
+interface PromoResult {
+  valid: boolean;
+  type?: "free" | "discount";
+  discount_percentage?: number;
+  discountAmount: number;
+  finalPrice: number;
+}
 
 const categories = [
   { id: "all", labelAr: "الكل", labelEn: "All" },
@@ -56,45 +84,48 @@ const WorkshopsPage = () => {
   const { t, isRTL } = useLanguage();
   const { toast } = useToast();
 
-  // Open the registration dialog for a specific workshop
-  const openRegistration = (workshop: (typeof workshops)[0]) => {
-    if (workshop.status !== "open") return;
-    setSelectedWorkshop(workshop);
-    setRegStep("info");
-    setPaymentMethod(null);
-    setIsRegistrationOpen(true);
-  };
-
-
-  const [workshops, setWorkshops] = useState<any[]>([]);
+  const [workshops, setWorkshops] = useState<Workshop[]>([]);
+  const [isLoadingWorkshops, setIsLoadingWorkshops] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
+
+  // Registration dialog
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [selectedWorkshop, setSelectedWorkshop] = useState<any | null>(null);
-  const [registrationData, setRegistrationData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    isMember: true,
-  });
-  const [regStep, setRegStep] = useState<"info" | "payment" | "success">("info");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodKey | null>(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(
+    null
+  );
+  const [regStep, setRegStep] = useState<"info" | "payment" | "success">(
+    "info"
+  );
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodKey | null>(
+    null
+  );
   const [isPaying, setIsPaying] = useState(false);
 
-  // 🟢 Fetch workshops from API
+  // Registration form fields
+  const [classificationNumber, setClassificationNumber] = useState("");
+  const [isMember, setIsMember] = useState(true);
+
+  // Promo code
+  const [promoCode, setPromoCode] = useState("");
+  const [promoResult, setPromoResult] = useState<PromoResult | null>(null);
+  const [isCheckingPromo, setIsCheckingPromo] = useState(false);
+  const [promoError, setPromoError] = useState("");
+
+  // ── Fetch workshops ──────────────────────────────────────────────────────────
   const fetchWorkshops = async () => {
+    setIsLoadingWorkshops(true);
     try {
       const res = await api.get("/workshops");
-      setWorkshops(res.data.data);
-    } catch (err) {
-      console.error(err);
+      setWorkshops(res.data.data ?? res.data ?? []);
+    } catch {
       toast({
         title: t("حدث خطأ أثناء تحميل ورش العمل", "Error loading workshops"),
         variant: "destructive",
       });
+    } finally {
+      setIsLoadingWorkshops(false);
     }
   };
 
@@ -103,27 +134,24 @@ const WorkshopsPage = () => {
     fetchWorkshops();
   }, []);
 
-  const filteredWorkshops = workshops.filter((workshop) => {
-    const title = workshop?.title ?? "";
-    const description = workshop?.description ?? "";
-
+  // ── Filters ──────────────────────────────────────────────────────────────────
+  const filteredWorkshops = workshops.filter((w) => {
     const matchesSearch =
-      title.includes(searchQuery) ||
-      description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesCategory =
-      filterCategory === "all" || workshop?.category === filterCategory;
-
-    const matchesStatus =
-      filterStatus === "all" || workshop?.status === filterStatus;
-
+      w.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      w.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = filterCategory === "all"; // no category field in API yet
+    const matchesStatus = filterStatus === "all" || w.status === filterStatus;
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  // ── Status badge ─────────────────────────────────────────────────────────────
   const getStatusBadge = (status: string) => {
-    const configs = {
+    const configs: Record<
+      string,
+      { color: string; icon: any; labelAr: string; labelEn: string }
+    > = {
       open: {
-        color: "bg-green-accent/10 text-green-accent border-green-accent/30",
+        color: "bg-green-500/10 text-green-600 border-green-500/30",
         icon: CheckCircle,
         labelAr: "متاح",
         labelEn: "Open",
@@ -140,8 +168,14 @@ const WorkshopsPage = () => {
         labelAr: "مغلق",
         labelEn: "Closed",
       },
+      completed: {
+        color: "bg-muted text-muted-foreground border-border",
+        icon: CheckCircle,
+        labelAr: "منتهي",
+        labelEn: "Completed",
+      },
     };
-    const config = configs[status as keyof typeof configs] || configs.closed;
+    const config = configs[status] ?? configs.closed;
     const Icon = config.icon;
     return (
       <Badge variant="outline" className={`${config.color} gap-1`}>
@@ -151,67 +185,116 @@ const WorkshopsPage = () => {
     );
   };
 
-  // 🟢 Register for a workshop (update backend)
-  const goToPayment = () => {
-    if (!registrationData.name || !registrationData.email || !registrationData.phone) {
-      toast({
-        title: t("بيانات ناقصة", "Missing fields"),
-        description: t("يرجى تعبئة جميع الحقول", "Please fill in all fields"),
-        variant: "destructive",
+  // ── Price helpers ────────────────────────────────────────────────────────────
+  const basePrice = (w: Workshop) =>
+    parseFloat(isMember ? w.member_price : w.regular_price) || 0;
+
+  const displayPrice = () => {
+    if (!selectedWorkshop) return 0;
+    return promoResult ? promoResult.finalPrice : basePrice(selectedWorkshop);
+  };
+
+  // ── Promo code check ─────────────────────────────────────────────────────────
+  const checkPromo = async () => {
+    if (!promoCode.trim() || !selectedWorkshop) return;
+    setIsCheckingPromo(true);
+    setPromoError("");
+    setPromoResult(null);
+    try {
+      const res = await api.post("/promo-codes/validate", {
+        code: promoCode.trim(),
+        workshop_id: selectedWorkshop.id,
       });
-      return;
+      const promo = res.data?.data ?? res.data;
+      const original = basePrice(selectedWorkshop);
+      let discountAmount = 0;
+      let finalPrice = original;
+
+      if (promo.type === "free") {
+        discountAmount = original;
+        finalPrice = 0;
+      } else if (promo.type === "discount") {
+        discountAmount = (original * (promo.discount_percentage ?? 0)) / 100;
+        finalPrice = Math.max(0, original - discountAmount);
+      }
+
+      setPromoResult({ valid: true, ...promo, discountAmount, finalPrice });
+      toast({
+        title: t("تم تطبيق الكود", "Promo applied"),
+        description: t(
+          `وفّرت ${discountAmount.toFixed(2)} ريال`,
+          `You saved ${discountAmount.toFixed(2)} SAR`
+        ),
+      });
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.message ||
+        t("كود الخصم غير صالح", "Invalid promo code");
+      setPromoError(msg);
+    } finally {
+      setIsCheckingPromo(false);
     }
+  };
+
+  const removePromo = () => {
+    setPromoCode("");
+    setPromoResult(null);
+    setPromoError("");
+  };
+
+  // ── Open registration dialog ─────────────────────────────────────────────────
+  const openRegistration = (workshop: Workshop) => {
+    if (workshop.status !== "open") return;
+    setSelectedWorkshop(workshop);
+    setRegStep("info");
+    setPaymentMethod(null);
+    setClassificationNumber("");
+    setIsMember(true);
+    setPromoCode("");
+    setPromoResult(null);
+    setPromoError("");
+    setIsRegistrationOpen(true);
+  };
+
+  const resetRegistration = () => {
+    setSelectedWorkshop(null);
+    setIsRegistrationOpen(false);
+    setRegStep("info");
+    setPaymentMethod(null);
+    setClassificationNumber("");
+    setPromoCode("");
+    setPromoResult(null);
+    setPromoError("");
+  };
+
+  // ── Step 1 → Step 2 ──────────────────────────────────────────────────────────
+  const goToPayment = () => {
     setRegStep("payment");
   };
 
+  // ── Submit registration ───────────────────────────────────────────────────────
   const handlePayAndRegister = async () => {
     if (!selectedWorkshop || !paymentMethod) return;
     setIsPaying(true);
     try {
-      const amount = registrationData.isMember
-        ? selectedWorkshop.priceMembers
-        : selectedWorkshop.priceNonMembers;
-
-      // Create payment (backend should return payment_url or success)
-      try {
-        const res = await api.post("/payments/create", {
-          amount,
-          payment_method: paymentMethod,
-          type: "workshop",
-          workshop_id: selectedWorkshop.id,
-          ...registrationData,
-        });
-        const url = res.data?.data?.payment_url;
-        if (url) {
-          window.location.href = url;
-          return;
-        }
-      } catch {
-        // fallthrough — mock success
-      }
-
-      // On success: register in workshop
-      try {
-        const updatedCount = (selectedWorkshop.registeredCount || 0) + 1;
-        await api.post(`/workshops/${selectedWorkshop.id}/register`, {
-          ...registrationData,
-          payment_method: paymentMethod,
-          amount,
-        }).catch(() =>
-          api.put(`/admin/workshops/${selectedWorkshop.id}`, {
-            ...selectedWorkshop,
-            registeredCount: updatedCount,
-            status: updatedCount >= selectedWorkshop.seats ? "full" : "open",
-          })
-        );
-      } catch {}
+      await api.post("/registrations", {
+        workshop_id: selectedWorkshop.id,
+        classification_number: classificationNumber || undefined,
+        promo_code: promoResult?.valid ? promoCode.trim() : undefined,
+      });
 
       setRegStep("success");
       fetchWorkshops();
-    } catch (err) {
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.message ||
+        t(
+          "فشل التسجيل، حاول مرة أخرى",
+          "Registration failed, please try again"
+        );
       toast({
-        title: t("فشل الدفع", "Payment failed"),
-        description: t("حاول مرة أخرى", "Please try again"),
+        title: t("خطأ", "Error"),
+        description: msg,
         variant: "destructive",
       });
     } finally {
@@ -219,22 +302,19 @@ const WorkshopsPage = () => {
     }
   };
 
-  const resetRegistration = () => {
-    setSelectedWorkshop(null);
-    setIsRegistrationOpen(false);
-    setRegistrationData({ name: "", email: "", phone: "", isMember: true });
-    setRegStep("info");
-    setPaymentMethod(null);
+  // ── Format duration ───────────────────────────────────────────────────────────
+  const formatDuration = (minutes: number) => {
+    if (minutes < 60) return `${minutes} ${t("دقيقة", "min")}`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return m
+      ? `${h}${t("س", "h")} ${m}${t("د", "m")}`
+      : `${h} ${t("ساعة", "hr")}`;
   };
-
-
-
-
-
 
   return (
     <Layout>
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="relative bg-primary py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div
@@ -244,7 +324,6 @@ const WorkshopsPage = () => {
             }}
           />
         </div>
-
         <div className="container-custom relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -281,7 +360,6 @@ const WorkshopsPage = () => {
                   {t("ورش العمل", "Workshops")}
                 </TabsTrigger>
               </TabsList>
-
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="gap-1">
                   <Percent className="w-3 h-3 text-green-accent" />
@@ -290,7 +368,6 @@ const WorkshopsPage = () => {
               </div>
             </div>
 
-            {/* Workshops Tab */}
             <TabsContent value="workshops" className="space-y-6">
               {/* Filters */}
               <Card data-aos="fade-up">
@@ -339,127 +416,148 @@ const WorkshopsPage = () => {
                         <SelectItem value="closed">
                           {t("مغلق", "Closed")}
                         </SelectItem>
+                        <SelectItem value="completed">
+                          {t("منتهي", "Completed")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Workshops Grid */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <AnimatePresence>
-                  {filteredWorkshops.map((workshop, index) => (
-                    <motion.div
-                      key={workshop.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Card className="card-hover overflow-hidden group h-full">
-                        <div className="h-2 bg-gradient-to-r from-primary to-blue-light" />
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="flex-1">
-                              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                                {t(workshop.titleAr, workshop.titleEn)}
-                              </h3>
-                              <p className="text-sm text-muted-foreground">
-                                {t(
-                                  workshop.descriptionAr,
-                                  workshop.descriptionEn
-                                )}
-                              </p>
-                            </div>
-                            {getStatusBadge(workshop.status)}
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                              <Calendar className="w-4 h-4 text-primary" />
-                              {new Date(workshop.date).toLocaleDateString(
-                                isRTL ? "ar-SA" : "en-US"
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                              <Clock className="w-4 h-4 text-primary" />
-                              {workshop.time} -{" "}
-                              {t(workshop.duration, workshop.durationEn)}
-                            </div>
-                            <div className="flex items-center gap-2 text-muted-foreground col-span-2">
-                              <MapPin className="w-4 h-4 text-primary" />
-                              {t(workshop.locationAr, workshop.locationEn)}
-                            </div>
-                            <div className="flex items-center gap-2 text-muted-foreground col-span-2">
-                              <User className="w-4 h-4 text-primary" />
-                              {t(workshop.instructor, workshop.instructorEn)}
-                            </div>
-                          </div>
-
-                          {/* Seats Progress */}
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between text-sm mb-2">
-                              <span className="text-muted-foreground flex items-center gap-1">
-                                <Users className="w-4 h-4" />
-                                {t("المقاعد", "Seats")}
-                              </span>
-                              <span className="font-medium">
-                                {workshop.registeredCount}/{workshop.seats}
-                              </span>
-                            </div>
-                            <Progress
-                              value={
-                                (workshop.registeredCount / workshop.seats) *
-                                100
-                              }
-                              className="h-2"
-                            />
-                          </div>
-
-                          {/* Pricing */}
-                          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 mb-4">
-                            <div>
-                              <p className="text-xs text-muted-foreground">
-                                {t("للأعضاء", "Members")}
-                              </p>
-                              <p className="font-bold text-green-accent">
-                                {workshop.priceMembers} {t("ريال", "SAR")}
-                              </p>
-                            </div>
-                            <div className="text-end">
-                              <p className="text-xs text-muted-foreground">
-                                {t("لغير الأعضاء", "Non-Members")}
-                              </p>
-                              <p className="font-bold">
-                                {workshop.priceNonMembers} {t("ريال", "SAR")}
-                              </p>
-                            </div>
-                          </div>
-
-                          <Button
-                            className="w-full gap-2"
-                            disabled={workshop.status !== "open"}
-                            onClick={() => openRegistration(workshop)}
-                          >
-                            {workshop.status === "open" ? (
-                              <>
-                                <CheckCircle className="w-4 h-4" />
-                                {t("التسجيل الآن", "Register Now")}
-                              </>
-                            ) : workshop.status === "full" ? (
-                              t("المقاعد ممتلئة", "Seats Full")
-                            ) : (
-                              t("التسجيل مغلق", "Registration Closed")
-                            )}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
+              {/* Grid */}
+              {isLoadingWorkshops ? (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="h-80 rounded-xl bg-muted animate-pulse"
+                    />
                   ))}
-                </AnimatePresence>
-              </div>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-6">
+                  <AnimatePresence>
+                    {filteredWorkshops.map((workshop, index) => (
+                      <motion.div
+                        key={workshop.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ delay: index * 0.07 }}
+                      >
+                        <Card className="card-hover overflow-hidden group h-full">
+                          <div className="h-2 bg-gradient-to-r from-primary to-blue-light" />
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                                  {workshop.title}
+                                </h3>
+                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                  {workshop.description}
+                                </p>
+                              </div>
+                              <div className="ms-3 shrink-0">
+                                {getStatusBadge(workshop.status)}
+                              </div>
+                            </div>
 
-              {filteredWorkshops.length === 0 && (
+                            <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
+                              <div className="flex items-center gap-2 text-muted-foreground">
+                                <Calendar className="w-4 h-4 text-primary shrink-0" />
+                                {new Date(workshop.date).toLocaleDateString(
+                                  isRTL ? "ar-SA" : "en-US"
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 text-muted-foreground">
+                                <Clock className="w-4 h-4 text-primary shrink-0" />
+                                {workshop.time?.slice(0, 5)} ·{" "}
+                                {formatDuration(workshop.duration_minutes)}
+                              </div>
+                              <div className="flex items-center gap-2 text-muted-foreground col-span-2">
+                                <MapPin className="w-4 h-4 text-primary shrink-0" />
+                                {workshop.location}
+                              </div>
+                              <div className="flex items-center gap-2 text-muted-foreground col-span-2">
+                                <User className="w-4 h-4 text-primary shrink-0" />
+                                {workshop.doctor_name}
+                              </div>
+                            </div>
+
+                            {/* Seats progress — only if registered_count available */}
+                            {workshop.registered_count !== undefined && (
+                              <div className="mb-4">
+                                <div className="flex items-center justify-between text-sm mb-2">
+                                  <span className="text-muted-foreground flex items-center gap-1">
+                                    <Users className="w-4 h-4" />
+                                    {t("المقاعد", "Seats")}
+                                  </span>
+                                  <span className="font-medium">
+                                    {workshop.registered_count}/
+                                    {workshop.total_capacity}
+                                  </span>
+                                </div>
+                                <Progress
+                                  value={
+                                    (workshop.registered_count /
+                                      workshop.total_capacity) *
+                                    100
+                                  }
+                                  className="h-2"
+                                />
+                              </div>
+                            )}
+
+                            {/* Pricing */}
+                            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 mb-4">
+                              <div>
+                                <p className="text-xs text-muted-foreground">
+                                  {t("للأعضاء", "Members")}
+                                </p>
+                                <p className="font-bold text-green-600">
+                                  {workshop.member_price} {t("ريال", "SAR")}
+                                </p>
+                              </div>
+                              <div
+                                className={isRTL ? "text-start" : "text-end"}
+                              >
+                                <p className="text-xs text-muted-foreground">
+                                  {t("لغير الأعضاء", "Non-Members")}
+                                </p>
+                                <p className="font-bold">
+                                  {workshop.regular_price} {t("ريال", "SAR")}
+                                </p>
+                              </div>
+                            </div>
+
+                            <Button
+                              className="w-full gap-2"
+                              disabled={workshop.status !== "open"}
+                              onClick={() => openRegistration(workshop)}
+                            >
+                              {workshop.status === "open" ? (
+                                <>
+                                  <CheckCircle className="w-4 h-4" />
+                                  {t("التسجيل الآن", "Register Now")}
+                                </>
+                              ) : workshop.status === "full" ? (
+                                t("المقاعد ممتلئة", "Seats Full")
+                              ) : workshop.status === "completed" ? (
+                                t("الورشة منتهية", "Workshop Ended")
+                              ) : (
+                                t("التسجيل مغلق", "Registration Closed")
+                              )}
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {!isLoadingWorkshops && filteredWorkshops.length === 0 && (
                 <div className="text-center py-12">
                   <AlertCircle className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
                   <p className="text-muted-foreground">
@@ -468,15 +566,16 @@ const WorkshopsPage = () => {
                 </div>
               )}
             </TabsContent>
-
           </Tabs>
         </div>
       </section>
 
-      {/* Registration Dialog — 3 steps: info → payment → success */}
+      {/* ── Registration Dialog ──────────────────────────────────────────────── */}
       <Dialog
         open={isRegistrationOpen}
-        onOpenChange={(o) => (o ? setIsRegistrationOpen(true) : resetRegistration())}
+        onOpenChange={(o) =>
+          o ? setIsRegistrationOpen(true) : resetRegistration()
+        }
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -488,92 +587,158 @@ const WorkshopsPage = () => {
                 ? t("اختر طريقة الدفع", "Choose Payment Method")
                 : t("تم التسجيل بنجاح", "Registration Successful")}
             </DialogTitle>
-            <DialogDescription>
-              {selectedWorkshop &&
-                t(
-                  selectedWorkshop.titleAr || selectedWorkshop.title,
-                  selectedWorkshop.titleEn || selectedWorkshop.title
-                )}
-            </DialogDescription>
+            <DialogDescription>{selectedWorkshop?.title}</DialogDescription>
           </DialogHeader>
 
           {/* STEP 1 — INFO */}
-          {regStep === "info" && (
+          {regStep === "info" && selectedWorkshop && (
             <>
               <div className="space-y-4 py-2">
+                {/* Classification number */}
                 <div className="space-y-2">
-                  <Label>{t("الاسم الكامل", "Full Name")}</Label>
+                  <Label>{t("رقم التصنيف", "Classification Number")}</Label>
                   <Input
-                    value={registrationData.name}
-                    onChange={(e) =>
-                      setRegistrationData({ ...registrationData, name: e.target.value })
-                    }
-                    placeholder={t("أدخل اسمك الكامل", "Enter your full name")}
+                    value={classificationNumber}
+                    onChange={(e) => setClassificationNumber(e.target.value)}
+                    placeholder={t(
+                      "رقم التصنيف المهني (اختياري)",
+                      "Professional classification no. (optional)"
+                    )}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>{t("البريد الإلكتروني", "Email")}</Label>
-                  <Input
-                    type="email"
-                    value={registrationData.email}
-                    onChange={(e) =>
-                      setRegistrationData({ ...registrationData, email: e.target.value })
-                    }
-                    placeholder="example@email.com"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("رقم الهاتف", "Phone Number")}</Label>
-                  <Input
-                    type="tel"
-                    value={registrationData.phone}
-                    onChange={(e) =>
-                      setRegistrationData({ ...registrationData, phone: e.target.value })
-                    }
-                    placeholder="+966 5X XXX XXXX"
-                  />
-                </div>
+
+                {/* Member type */}
                 <div className="space-y-2">
                   <Label>{t("نوع التسجيل", "Registration Type")}</Label>
                   <Select
-                    value={registrationData.isMember ? "member" : "non-member"}
-                    onValueChange={(v) =>
-                      setRegistrationData({
-                        ...registrationData,
-                        isMember: v === "member",
-                      })
-                    }
+                    value={isMember ? "member" : "non-member"}
+                    onValueChange={(v) => {
+                      setIsMember(v === "member");
+                      removePromo(); // reset promo when type changes
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="member">
-                        {t("عضو", "Member")} - {selectedWorkshop?.priceMembers}{" "}
+                        {t("عضو", "Member")} — {selectedWorkshop.member_price}{" "}
                         {t("ريال", "SAR")}
                       </SelectItem>
                       <SelectItem value="non-member">
-                        {t("غير عضو", "Non-Member")} -{" "}
-                        {selectedWorkshop?.priceNonMembers} {t("ريال", "SAR")}
+                        {t("غير عضو", "Non-Member")} —{" "}
+                        {selectedWorkshop.regular_price} {t("ريال", "SAR")}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="p-4 rounded-lg bg-muted/50">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">
-                      {t("المبلغ المطلوب", "Total Amount")}
+                {/* Promo code */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-1">
+                    <Tag className="w-3.5 h-3.5 text-primary" />
+                    {t("كود الخصم", "Promo Code")}{" "}
+                    <span className="text-xs text-muted-foreground">
+                      ({t("اختياري", "optional")})
                     </span>
-                    <span className="text-2xl font-bold text-primary">
-                      {registrationData.isMember
-                        ? selectedWorkshop?.priceMembers
-                        : selectedWorkshop?.priceNonMembers}{" "}
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={promoCode}
+                      onChange={(e) => {
+                        setPromoCode(e.target.value.toUpperCase());
+                        if (promoResult) removePromo();
+                        setPromoError("");
+                      }}
+                      placeholder="PROMO2025"
+                      disabled={!!promoResult}
+                      className="uppercase"
+                    />
+                    {promoResult ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={removePromo}
+                        className="shrink-0 text-destructive border-destructive/30 hover:bg-destructive/10"
+                      >
+                        <XCircle className="w-4 h-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={checkPromo}
+                        disabled={!promoCode.trim() || isCheckingPromo}
+                        className="shrink-0"
+                      >
+                        {isCheckingPromo ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          t("تطبيق", "Apply")
+                        )}
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Promo feedback */}
+                  {promoResult?.valid && (
+                    <p className="text-xs text-emerald-600 flex items-center gap-1">
+                      <CheckCircle className="w-3.5 h-3.5" />
+                      {promoResult.type === "free"
+                        ? t(
+                            "كود مجاني — التسجيل بدون رسوم",
+                            "Free code — no charge"
+                          )
+                        : t(
+                            `خصم ${
+                              promoResult.discount_percentage
+                            }% — وفّرت ${promoResult.discountAmount.toFixed(
+                              2
+                            )} ريال`,
+                            `${
+                              promoResult.discount_percentage
+                            }% off — saved ${promoResult.discountAmount.toFixed(
+                              2
+                            )} SAR`
+                          )}
+                    </p>
+                  )}
+                  {promoError && (
+                    <p className="text-xs text-destructive flex items-center gap-1">
+                      <XCircle className="w-3.5 h-3.5" />
+                      {promoError}
+                    </p>
+                  )}
+                </div>
+
+                {/* Price summary */}
+                <div className="p-4 rounded-lg bg-muted/50 space-y-2">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>{t("السعر الأصلي", "Original Price")}</span>
+                    <span>
+                      {basePrice(selectedWorkshop).toFixed(2)}{" "}
                       {t("ريال", "SAR")}
                     </span>
                   </div>
-                  {registrationData.isMember && (
-                    <p className="text-xs text-green-accent mt-2 flex items-center gap-1">
+                  {promoResult?.valid && promoResult.discountAmount > 0 && (
+                    <div className="flex items-center justify-between text-sm text-emerald-600">
+                      <span>{t("الخصم", "Discount")}</span>
+                      <span>
+                        − {promoResult.discountAmount.toFixed(2)}{" "}
+                        {t("ريال", "SAR")}
+                      </span>
+                    </div>
+                  )}
+                  <div className="border-t border-border pt-2 flex items-center justify-between">
+                    <span className="font-medium">
+                      {t("المبلغ المطلوب", "Total Amount")}
+                    </span>
+                    <span className="text-2xl font-bold text-primary">
+                      {displayPrice().toFixed(2)} {t("ريال", "SAR")}
+                    </span>
+                  </div>
+                  {isMember && (
+                    <p className="text-xs text-emerald-600 flex items-center gap-1">
                       <Star className="w-3 h-3" />
                       {t("تم تطبيق خصم الأعضاء", "Member discount applied")}
                     </p>
@@ -585,10 +750,50 @@ const WorkshopsPage = () => {
                 <Button variant="outline" onClick={resetRegistration}>
                   {t("إلغاء", "Cancel")}
                 </Button>
-                <Button onClick={goToPayment} className="gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  {t("متابعة للدفع", "Continue to Payment")}
-                </Button>
+                {/* If free after promo, skip payment step */}
+                {displayPrice() === 0 ? (
+                  <Button
+                    onClick={async () => {
+                      setIsPaying(true);
+                      try {
+                        await api.post("/registrations", {
+                          workshop_id: selectedWorkshop.id,
+                          classification_number:
+                            classificationNumber || undefined,
+                          promo_code: promoResult?.valid
+                            ? promoCode.trim()
+                            : undefined,
+                        });
+                        setRegStep("success");
+                        fetchWorkshops();
+                      } catch (err: any) {
+                        toast({
+                          title: t("خطأ", "Error"),
+                          description:
+                            err.response?.data?.message ||
+                            t("فشل التسجيل", "Registration failed"),
+                          variant: "destructive",
+                        });
+                      } finally {
+                        setIsPaying(false);
+                      }
+                    }}
+                    disabled={isPaying}
+                    className="gap-2"
+                  >
+                    {isPaying ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <CheckCircle className="w-4 h-4" />
+                    )}
+                    {t("تسجيل مجاناً", "Register Free")}
+                  </Button>
+                ) : (
+                  <Button onClick={goToPayment} className="gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    {t("متابعة للدفع", "Continue to Payment")}
+                  </Button>
+                )}
               </DialogFooter>
             </>
           )}
@@ -597,16 +802,15 @@ const WorkshopsPage = () => {
           {regStep === "payment" && selectedWorkshop && (
             <div className="py-2">
               <PaymentMethodPicker
-                amount={
-                  registrationData.isMember
-                    ? selectedWorkshop.priceMembers
-                    : selectedWorkshop.priceNonMembers
-                }
+                amount={displayPrice()}
                 selected={paymentMethod}
                 onSelect={setPaymentMethod}
                 loading={isPaying}
                 onConfirm={handlePayAndRegister}
-                confirmLabel={{ ar: "ادفع وسجّل الآن", en: "Pay & Register Now" }}
+                confirmLabel={{
+                  ar: "ادفع وسجّل الآن",
+                  en: "Pay & Register Now",
+                }}
               />
               <button
                 onClick={() => setRegStep("info")}

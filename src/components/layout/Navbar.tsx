@@ -64,10 +64,10 @@ const Navbar = () => {
           label: t("العلاقات الدولية", "International"),
           path: "/about/international",
         },
-        {
-          label: t("المجالس السابقة", "Previous Boards"),
-          path: "/about/previous-boards",
-        },
+        // {
+        //   label: t("المجالس السابقة", "Previous Boards"),
+        //   path: "/about/previous-boards",
+        // },
       ],
     },
     // {
@@ -111,10 +111,10 @@ const Navbar = () => {
         },
 
         { label: t("عدد الأعضاء", "Members Count"), path: "/membership/count" },
-        {
-          label: t("البطاقة الرقمية", "Digital Card"),
-          path: "/membership/card",
-        },
+        // {
+        //   label: t("البطاقة الرقمية", "Digital Card"),
+        //   path: "/membership/card",
+        // },
       ],
     },
     {
@@ -122,11 +122,11 @@ const Navbar = () => {
       path: "/workshops",
       icon: GraduationCap,
     },
-    {
-      label: t("التخصصات", "Specializations"),
-      path: "/specializations",
-      icon: Building2,
-    },
+    // {
+    //   label: t("التخصصات", "Specializations"),
+    //   path: "/specializations",
+    //   icon: Building2,
+    // },
     // {
     //   label: t("المجلة العلمية", "Scientific Journal"),
     //   path: "/journal",

@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Users, Crown, Shield, Landmark } from "lucide-react";
+import { motion } from "framer-motion";
+import { Crown, Landmark, Shield, Users, Wallet } from "lucide-react";
+import React from "react";
 
 const Leadership = () => {
   const { t } = useLanguage();
@@ -20,14 +20,14 @@ const Leadership = () => {
       icon: Shield,
     },
     {
-      name: t("أ. شريفة عبدالله آل معلوي", "Ms. Shareefa Abdullah Al Maalawi"),
+      name: t("أ. شريفة عبدالله آل معلوي", "Ms. Shareefa Abdullah Al-Maalawi"),
       role: t("أمين مجلس الجمعية", "Board Secretary"),
       icon: Landmark,
     },
     {
-      name: t("أ. أنبات أحمد مجرشي", "Ms. Anbat Ahmed Mujarshi"),
+      name: t("أ. أنبات أحمد مجرشي", "Mr. Anbat Ahmed Mujarshi"),
       role: t("أمين مال الجمعية", "Treasurer"),
-      icon: Landmark,
+      icon: Wallet,
     },
   ];
 

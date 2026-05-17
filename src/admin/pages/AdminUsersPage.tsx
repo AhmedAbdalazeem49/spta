@@ -33,6 +33,8 @@ import {
   XCircle,
   Clock,
   BadgeCheck,
+  UserPlus,
+  Lock,
 } from "lucide-react";
 import {
   Select,
@@ -56,7 +58,7 @@ interface UserItem {
   employer?: string;
   role?: string;
   is_admin?: boolean;
-  status?: 'pending' | 'approved' | 'rejected' | 'active';
+  status?: "pending" | "approved" | "rejected" | "active";
   classification_number?: string;
   membership_type?: string;
   email_verified_at?: string | null;
@@ -77,6 +79,34 @@ interface EditForm {
   password: string;
   password_confirmation: string;
 }
+
+interface AddForm {
+  name: string;
+  name_ar: string;
+  email: string;
+  phone: string;
+  national_id: string;
+  specialization: string;
+  sub_specialization: string;
+  employer: string;
+  is_admin: boolean;
+  password: string;
+  password_confirmation: string;
+}
+
+const defaultAddForm: AddForm = {
+  name: "",
+  name_ar: "",
+  email: "",
+  phone: "",
+  national_id: "",
+  specialization: "",
+  sub_specialization: "",
+  employer: "",
+  is_admin: false,
+  password: "",
+  password_confirmation: "",
+};
 
 const AdminUsersPage = () => {
   const { t, isRTL } = useLanguage();
@@ -106,6 +136,12 @@ const AdminUsersPage = () => {
     password: "",
     password_confirmation: "",
   });
+
+  // Add User State
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [addForm, setAddForm] = useState<AddForm>(defaultAddForm);
+  const [addStep, setAddStep] = useState<1 | 2>(1);
 
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -163,7 +199,6 @@ const AdminUsersPage = () => {
             ? t("تم تفعيل المستخدم", "User approved & activated")
             : t("تم رفض المستخدم", "User rejected"),
       });
-      // Optimistic update
       setUsers((prev) =>
         prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
       );
@@ -213,7 +248,6 @@ const AdminUsersPage = () => {
       is_admin: editForm.is_admin,
     };
 
-    // Only send password if filled in
     if (editForm.password.trim()) {
       payload.password = editForm.password;
       payload.password_confirmation = editForm.password_confirmation;
@@ -263,6 +297,82 @@ const AdminUsersPage = () => {
     }
   };
 
+  // ─── Add User ────────────────────────────────────────────────────────────────
+  const openAdd = () => {
+    setAddForm(defaultAddForm);
+    setAddStep(1);
+    setIsAddOpen(true);
+  };
+
+  const handleAdd = async () => {
+    // Basic validation
+    if (!addForm.name.trim() || !addForm.email.trim()) {
+      toast({
+        title: t("خطأ في البيانات", "Validation Error"),
+        description: t(
+          "الاسم والبريد الإلكتروني مطلوبان",
+          "Name and email are required"
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!addForm.password.trim()) {
+      toast({
+        title: t("خطأ في البيانات", "Validation Error"),
+        description: t("كلمة المرور مطلوبة", "Password is required"),
+        variant: "destructive",
+      });
+      return;
+    }
+    if (addForm.password !== addForm.password_confirmation) {
+      toast({
+        title: t("خطأ في البيانات", "Validation Error"),
+        description: t("كلمتا المرور غير متطابقتين", "Passwords do not match"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAdding(true);
+    try {
+      await api.post("/admin/users", {
+        name: addForm.name,
+        name_ar: addForm.name_ar,
+        email: addForm.email,
+        phone: addForm.phone,
+        national_id: addForm.national_id,
+        specialization: addForm.specialization,
+        sub_specialization: addForm.sub_specialization,
+        employer: addForm.employer,
+        is_admin: addForm.is_admin,
+        password: addForm.password,
+        password_confirmation: addForm.password_confirmation,
+      });
+      toast({
+        title: t("تم بنجاح", "Success"),
+        description: t("تم إضافة المستخدم بنجاح", "User created successfully"),
+      });
+      setIsAddOpen(false);
+      setAddForm(defaultAddForm);
+      fetchUsers(1, searchQuery, statusFilter);
+      setPage(1);
+    } catch (err: any) {
+      const errors = err.response?.data?.errors;
+      const firstError = errors
+        ? Object.values(errors).flat().join(", ")
+        : err.response?.data?.message || t("حدث خطأ", "Error occurred");
+      toast({
+        title: t("خطأ", "Error"),
+        description: firstError,
+        variant: "destructive",
+      });
+    } finally {
+      setIsAdding(false);
+    }
+  };
+  // ─────────────────────────────────────────────────────────────────────────────
+
   const formatDate = (date?: string | null) => {
     if (!date) return "—";
     return new Date(date).toLocaleDateString();
@@ -270,14 +380,26 @@ const AdminUsersPage = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <Users className="w-6 h-6 text-primary" />
-          {t("إدارة المستخدمين", "Users Management")}
-        </h2>
-        <p className="text-muted-foreground">
-          {t("عرض وإدارة جميع المستخدمين", "View and manage all users")}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Users className="w-6 h-6 text-primary" />
+            {t("إدارة المستخدمين", "Users Management")}
+          </h2>
+          <p className="text-muted-foreground">
+            {t("عرض وإدارة جميع المستخدمين", "View and manage all users")}
+          </p>
+        </div>
+
+        {/* ── Add User Button ── */}
+        <Button
+          onClick={openAdd}
+          className="gap-2 shrink-0 shadow-sm"
+          size="default"
+        >
+          <UserPlus className="w-4 h-4" />
+          {t("إضافة مستخدم", "Add User")}
+        </Button>
       </div>
 
       <Card>
@@ -309,10 +431,18 @@ const AdminUsersPage = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("كل الحالات", "All Statuses")}</SelectItem>
-                <SelectItem value="pending">{t("قيد المراجعة", "Pending")}</SelectItem>
-                <SelectItem value="approved">{t("موافق عليه", "Approved")}</SelectItem>
-                <SelectItem value="rejected">{t("مرفوض", "Rejected")}</SelectItem>
+                <SelectItem value="all">
+                  {t("كل الحالات", "All Statuses")}
+                </SelectItem>
+                <SelectItem value="pending">
+                  {t("قيد المراجعة", "Pending")}
+                </SelectItem>
+                <SelectItem value="approved">
+                  {t("موافق عليه", "Approved")}
+                </SelectItem>
+                <SelectItem value="rejected">
+                  {t("مرفوض", "Rejected")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -434,8 +564,13 @@ const AdminUsersPage = () => {
                         </td>
                         <td className="p-4">
                           {(() => {
-                            const status = u.status || (u.email_verified_at ? "approved" : "pending");
-                            const config: Record<string, { label: string; cls: string; Icon: any }> = {
+                            const status =
+                              u.status ||
+                              (u.email_verified_at ? "approved" : "pending");
+                            const config: Record<
+                              string,
+                              { label: string; cls: string; Icon: any }
+                            > = {
                               pending: {
                                 label: t("قيد المراجعة", "Pending"),
                                 cls: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
@@ -460,7 +595,10 @@ const AdminUsersPage = () => {
                             const c = config[status] || config.pending;
                             const SI = c.Icon;
                             return (
-                              <Badge variant="outline" className={`${c.cls} gap-1`}>
+                              <Badge
+                                variant="outline"
+                                className={`${c.cls} gap-1`}
+                              >
                                 <SI className="w-3 h-3" />
                                 {c.label}
                               </Badge>
@@ -469,7 +607,8 @@ const AdminUsersPage = () => {
                         </td>
                         <td className="p-4">
                           <div className="flex items-center gap-1 flex-wrap">
-                            {(u.status === "pending" || (!u.status && !u.email_verified_at)) && (
+                            {(u.status === "pending" ||
+                              (!u.status && !u.email_verified_at)) && (
                               <>
                                 <Button
                                   size="sm"
@@ -484,7 +623,9 @@ const AdminUsersPage = () => {
                                   ) : (
                                     <BadgeCheck className="w-3.5 h-3.5" />
                                   )}
-                                  <span className="hidden md:inline text-xs">{t("تفعيل", "Verify")}</span>
+                                  <span className="hidden md:inline text-xs">
+                                    {t("تفعيل", "Verify")}
+                                  </span>
                                 </Button>
                                 <Button
                                   size="sm"
@@ -495,7 +636,9 @@ const AdminUsersPage = () => {
                                   title={t("رفض", "Reject")}
                                 >
                                   <XCircle className="w-3.5 h-3.5" />
-                                  <span className="hidden md:inline text-xs">{t("رفض", "Reject")}</span>
+                                  <span className="hidden md:inline text-xs">
+                                    {t("رفض", "Reject")}
+                                  </span>
                                 </Button>
                               </>
                             )}
@@ -560,6 +703,438 @@ const AdminUsersPage = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* ── Add User Dialog ───────────────────────────────────────────────────── */}
+      <Dialog
+        open={isAddOpen}
+        onOpenChange={(open) => {
+          setIsAddOpen(open);
+          if (!open) setAddStep(1);
+        }}
+      >
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/10">
+                <UserPlus className="w-5 h-5 text-primary" />
+              </div>
+              {t("إضافة مستخدم جديد", "Add New User")}
+            </DialogTitle>
+            <DialogDescription>
+              {t(
+                "أدخل بيانات المستخدم الجديد. الحقول المميزة بـ * إلزامية.",
+                "Enter the new user's details. Fields marked * are required."
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Step indicator */}
+          <div className="flex items-center gap-2 pt-1 pb-2">
+            <button
+              type="button"
+              onClick={() => setAddStep(1)}
+              className={`flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full transition-colors ${
+                addStep === 1
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              {t("البيانات الأساسية", "Basic Info")}
+            </button>
+            <div className="h-px flex-1 bg-border" />
+            <button
+              type="button"
+              onClick={() => setAddStep(2)}
+              className={`flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full transition-colors ${
+                addStep === 2
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              {t("الأمان والصلاحيات", "Security & Role")}
+            </button>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {addStep === 1 ? (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                transition={{ duration: 0.2 }}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2"
+              >
+                {/* Name EN */}
+                <div className="space-y-1.5">
+                  <Label className="flex items-center gap-1">
+                    {t("الاسم (EN)", "Name (EN)")}
+                    <span className="text-destructive text-xs">*</span>
+                  </Label>
+                  <Input
+                    placeholder={t("الاسم بالإنجليزية", "Name in English")}
+                    value={addForm.name}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, name: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Name AR */}
+                <div className="space-y-1.5">
+                  <Label>{t("الاسم (AR)", "Name (AR)")}</Label>
+                  <Input
+                    placeholder={t("الاسم بالعربية", "الاسم بالعربية")}
+                    value={addForm.name_ar}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, name_ar: e.target.value })
+                    }
+                    dir="rtl"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <Label className="flex items-center gap-1">
+                    {t("البريد الإلكتروني", "Email")}
+                    <span className="text-destructive text-xs">*</span>
+                  </Label>
+                  <div className="relative">
+                    <Mail
+                      className={`absolute top-1/2 -translate-y-1/2 ${
+                        isRTL ? "right-3" : "left-3"
+                      } w-4 h-4 text-muted-foreground`}
+                    />
+                    <Input
+                      type="email"
+                      placeholder="user@example.com"
+                      value={addForm.email}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, email: e.target.value })
+                      }
+                      className={isRTL ? "pr-10" : "pl-10"}
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="space-y-1.5">
+                  <Label>{t("الهاتف", "Phone")}</Label>
+                  <div className="relative">
+                    <Phone
+                      className={`absolute top-1/2 -translate-y-1/2 ${
+                        isRTL ? "right-3" : "left-3"
+                      } w-4 h-4 text-muted-foreground`}
+                    />
+                    <Input
+                      placeholder="+966 5x xxx xxxx"
+                      value={addForm.phone}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, phone: e.target.value })
+                      }
+                      className={isRTL ? "pr-10" : "pl-10"}
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
+
+                {/* National ID */}
+                <div className="space-y-1.5">
+                  <Label>{t("رقم الهوية", "National ID")}</Label>
+                  <div className="relative">
+                    <CreditCard
+                      className={`absolute top-1/2 -translate-y-1/2 ${
+                        isRTL ? "right-3" : "left-3"
+                      } w-4 h-4 text-muted-foreground`}
+                    />
+                    <Input
+                      placeholder={t(
+                        "رقم الهوية الوطنية",
+                        "National ID number"
+                      )}
+                      value={addForm.national_id}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, national_id: e.target.value })
+                      }
+                      className={isRTL ? "pr-10" : "pl-10"}
+                    />
+                  </div>
+                </div>
+
+                {/* Employer */}
+                <div className="space-y-1.5">
+                  <Label>{t("جهة العمل", "Employer")}</Label>
+                  <div className="relative">
+                    <Building2
+                      className={`absolute top-1/2 -translate-y-1/2 ${
+                        isRTL ? "right-3" : "left-3"
+                      } w-4 h-4 text-muted-foreground`}
+                    />
+                    <Input
+                      placeholder={t(
+                        "اسم الجهة أو المؤسسة",
+                        "Organization name"
+                      )}
+                      value={addForm.employer}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, employer: e.target.value })
+                      }
+                      className={isRTL ? "pr-10" : "pl-10"}
+                    />
+                  </div>
+                </div>
+
+                {/* Specialization */}
+                <div className="space-y-1.5">
+                  <Label>{t("التخصص", "Specialization")}</Label>
+                  <div className="relative">
+                    <Briefcase
+                      className={`absolute top-1/2 -translate-y-1/2 ${
+                        isRTL ? "right-3" : "left-3"
+                      } w-4 h-4 text-muted-foreground`}
+                    />
+                    <Input
+                      placeholder={t("التخصص الرئيسي", "Main specialization")}
+                      value={addForm.specialization}
+                      onChange={(e) =>
+                        setAddForm({
+                          ...addForm,
+                          specialization: e.target.value,
+                        })
+                      }
+                      className={isRTL ? "pr-10" : "pl-10"}
+                    />
+                  </div>
+                </div>
+
+                {/* Sub-Specialization */}
+                <div className="space-y-1.5">
+                  <Label>{t("التخصص الفرعي", "Sub-Specialization")}</Label>
+                  <div className="relative">
+                    <Briefcase
+                      className={`absolute top-1/2 -translate-y-1/2 ${
+                        isRTL ? "right-3" : "left-3"
+                      } w-4 h-4 text-muted-foreground`}
+                    />
+                    <Input
+                      placeholder={t("التخصص الفرعي", "Sub-specialization")}
+                      value={addForm.sub_specialization}
+                      onChange={(e) =>
+                        setAddForm({
+                          ...addForm,
+                          sub_specialization: e.target.value,
+                        })
+                      }
+                      className={isRTL ? "pr-10" : "pl-10"}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-4 py-2"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Password */}
+                  <div className="space-y-1.5">
+                    <Label className="flex items-center gap-1">
+                      {t("كلمة المرور", "Password")}
+                      <span className="text-destructive text-xs">*</span>
+                    </Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={addForm.password}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, password: e.target.value })
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t("8 أحرف على الأقل", "At least 8 characters")}
+                    </p>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="space-y-1.5">
+                    <Label className="flex items-center gap-1">
+                      {t("تأكيد كلمة المرور", "Confirm Password")}
+                      <span className="text-destructive text-xs">*</span>
+                    </Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={addForm.password_confirmation}
+                      onChange={(e) =>
+                        setAddForm({
+                          ...addForm,
+                          password_confirmation: e.target.value,
+                        })
+                      }
+                    />
+                    {addForm.password_confirmation &&
+                      addForm.password !== addForm.password_confirmation && (
+                        <p className="text-xs text-destructive flex items-center gap-1">
+                          <XCircle className="w-3 h-3" />
+                          {t(
+                            "كلمتا المرور غير متطابقتين",
+                            "Passwords do not match"
+                          )}
+                        </p>
+                      )}
+                    {addForm.password_confirmation &&
+                      addForm.password === addForm.password_confirmation && (
+                        <p className="text-xs text-emerald-600 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          {t("متطابقتان", "Passwords match")}
+                        </p>
+                      )}
+                  </div>
+                </div>
+
+                {/* Admin Toggle */}
+                <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-muted/30 mt-2">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                      <Shield className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">
+                        {t("صلاحيات المدير", "Admin Privileges")}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {t(
+                          "منح المستخدم صلاحيات الإدارة الكاملة",
+                          "Grant this user full admin access"
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAddForm({ ...addForm, is_admin: !addForm.is_admin })
+                    }
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                      addForm.is_admin ? "bg-primary" : "bg-muted-foreground/30"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                        addForm.is_admin ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Summary card */}
+                {(addForm.name || addForm.email) && (
+                  <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      {t("ملخص البيانات", "Summary")}
+                    </p>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                      {addForm.name && (
+                        <>
+                          <span className="text-muted-foreground">
+                            {t("الاسم", "Name")}
+                          </span>
+                          <span className="font-medium truncate">
+                            {addForm.name}
+                          </span>
+                        </>
+                      )}
+                      {addForm.email && (
+                        <>
+                          <span className="text-muted-foreground">
+                            {t("البريد", "Email")}
+                          </span>
+                          <span className="font-medium truncate">
+                            {addForm.email}
+                          </span>
+                        </>
+                      )}
+                      {addForm.employer && (
+                        <>
+                          <span className="text-muted-foreground">
+                            {t("جهة العمل", "Employer")}
+                          </span>
+                          <span className="font-medium truncate">
+                            {addForm.employer}
+                          </span>
+                        </>
+                      )}
+                      <span className="text-muted-foreground">
+                        {t("الدور", "Role")}
+                      </span>
+                      <span className="font-medium">
+                        {addForm.is_admin
+                          ? t("مدير", "Admin")
+                          : t("مستخدم", "User")}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <DialogFooter className="gap-2 pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsAddOpen(false)}
+              disabled={isAdding}
+            >
+              {t("إلغاء", "Cancel")}
+            </Button>
+
+            {addStep === 1 ? (
+              <Button
+                onClick={() => setAddStep(2)}
+                disabled={!addForm.name.trim() || !addForm.email.trim()}
+                className="gap-2"
+              >
+                {t("التالي", "Next")}
+                <Lock className="w-4 h-4" />
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  onClick={() => setAddStep(1)}
+                  disabled={isAdding}
+                >
+                  {t("السابق", "Back")}
+                </Button>
+                <Button
+                  onClick={handleAdd}
+                  disabled={
+                    isAdding ||
+                    !addForm.password.trim() ||
+                    addForm.password !== addForm.password_confirmation
+                  }
+                  className="gap-2"
+                >
+                  {isAdding ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <UserPlus className="w-4 h-4" />
+                  )}
+                  {t("إضافة المستخدم", "Create User")}
+                </Button>
+              </>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* ───────────────────────────────────────────────────────────────────────── */}
 
       {/* View Dialog */}
       <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>

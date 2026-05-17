@@ -34,13 +34,13 @@ export default function ContactInfo() {
     {
       icon: Mail,
       title: t("البريد الإلكتروني", "Email"),
-      details: "spta@ksu.edu.sa",
+      details: "spta@spta.sa",
       sub: t("سنرد خلال 24 ساعة", "We reply within 24 hours"),
     },
     {
       icon: Globe,
       title: t("الموقع الإلكتروني", "Website"),
-      details: "spta.ksu.edu.sa",
+      details: "spta.sa",
       sub: t("زوروا موقعنا", "Visit our website"),
     },
   ];

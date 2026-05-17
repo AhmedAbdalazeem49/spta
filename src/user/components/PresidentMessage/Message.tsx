@@ -155,7 +155,7 @@ export default function Message() {
                   </p>
                   <p className="text-muted-foreground">
                     {t(
-                      "رئيس مجلس إدارة الجمعية السعودية للعلاج الطبيعي",
+                      "رئيس مجلس إدارة الجمعية السعودية للعلاج الطبيعـي",
                       "Chairman of the SPTA Board of Directors"
                     )}
                   </p>

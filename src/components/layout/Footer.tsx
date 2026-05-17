@@ -185,21 +185,21 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 flex-shrink-0" />
                 <a
-                  href="mailto:spta@ksu.edu.sa"
+                  href="mailto:spta@spta.sa"
                   className="text-primary-foreground/80 hover:text-primary-foreground"
                 >
-                  spta@ksu.edu.sa
+                  spta@spta.sa
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Globe className="w-5 h-5 flex-shrink-0" />
                 <a
-                  href="https://spta.ksu.edu.sa"
+                  href="https://spta.sa"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary-foreground/80 hover:text-primary-foreground"
                 >
-                  spta.ksu.edu.sa
+                  spta.sa
                 </a>
               </li>
             </ul>

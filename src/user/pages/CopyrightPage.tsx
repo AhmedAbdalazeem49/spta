@@ -1,7 +1,13 @@
 import Layout from "@/components/layout/Layout";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { Shield, AlertTriangle, FileText, Mail, CheckCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle,
+  FileText,
+  Mail,
+  Shield,
+} from "lucide-react";
 
 const CopyrightPage = () => {
   const { t, isRTL } = useLanguage();
@@ -14,7 +20,6 @@ const CopyrightPage = () => {
         "جميع المحتويات المنشورة على هذا الموقع، بما في ذلك النصوص والصور والرسومات والشعارات والفيديوهات، هي ملك للجمعية السعودية للعلاج الطبيعي ومحمية بموجب قوانين حقوق النشر.",
         "All content published on this website, including text, images, graphics, logos, and videos, is owned by the Saudi Physical Therapy Association and protected under copyright laws."
       ),
-      
     },
     {
       icon: FileText,
@@ -104,8 +109,12 @@ const CopyrightPage = () => {
                       <notice.icon className="w-7 h-7 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-foreground mb-4">{notice.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{notice.content}</p>
+                      <h3 className="text-xl font-bold text-foreground mb-4">
+                        {notice.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {notice.content}
+                      </p>
                     </div>
                   </div>
                 </motion.div>
@@ -152,15 +161,18 @@ const CopyrightPage = () => {
                 )}
               </p>
               <a
-                href="mailto:spta@ksu.edu.sa"
+                href="mailto:spta@spta.sa"
                 className="text-primary font-bold text-lg hover:underline"
               >
-                spta@ksu.edu.sa
+                spta@spta.sa
               </a>
             </motion.div>
 
             {/* Legal Notice */}
-            <div className="mt-12 text-center text-sm text-muted-foreground" data-aos="fade-up">
+            <div
+              className="mt-12 text-center text-sm text-muted-foreground"
+              data-aos="fade-up"
+            >
               <p>
                 {t(
                   "© 2024 الجمعية السعودية للعلاج الطبيعي. جميع الحقوق محفوظة.",

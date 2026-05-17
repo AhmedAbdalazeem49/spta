@@ -303,7 +303,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
           </ul>
 
           {/* CTA */}
-          {plan.isFree ? (
+          {/* {plan.isFree ? (
             <Button
               variant="outline"
               className="w-full gap-2 rounded-xl h-11"
@@ -325,7 +325,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
                 }`}
               />
             </Button>
-          )}
+          )} */}
         </div>
       </div>
     </motion.div>

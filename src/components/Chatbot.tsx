@@ -1,23 +1,23 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  MessageCircle, 
-  X, 
-  Send, 
-  Bot, 
-  User,
-  Minimize2,
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Bot,
   Maximize2,
-  Sparkles
-} from 'lucide-react';
+  MessageCircle,
+  Minimize2,
+  Send,
+  Sparkles,
+  User,
+  X,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface Message {
   id: number;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
 }
@@ -27,7 +27,7 @@ const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,29 +35,32 @@ const Chatbot = () => {
   // Welcome messages
   const welcomeMessages = {
     ar: [
-      'مرحباً بك في الجمعية السعودية للعلاج الطبيعي! 👋',
-      'كيف يمكنني مساعدتك اليوم؟ يمكنني الإجابة على أسئلتك حول:',
-      '• العضوية والتسجيل\n• ورش العمل والدورات\n• المجلة العلمية\n• الخدمات المقدمة',
+      "مرحباً بك في الجمعية السعودية للعلاج الطبيعي! 👋",
+      "كيف يمكنني مساعدتك اليوم؟ يمكنني الإجابة على أسئلتك حول:",
+      "• العضوية والتسجيل\n• ورش العمل والدورات\n• المجلة العلمية\n• الخدمات المقدمة",
     ],
     en: [
-      'Welcome to the Saudi Physical Therapy Association! 👋',
-      'How can I help you today? I can answer your questions about:',
-      '• Membership and registration\n• Workshops and courses\n• Scientific journal\n• Services offered',
+      "Welcome to the Saudi Physical Therapy Association! 👋",
+      "How can I help you today? I can answer your questions about:",
+      "• Membership and registration\n• Workshops and courses\n• Scientific journal\n• Services offered",
     ],
   };
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       // Show welcome messages with typing effect
-      const lang = isRTL ? 'ar' : 'en';
+      const lang = isRTL ? "ar" : "en";
       welcomeMessages[lang].forEach((msg, index) => {
         setTimeout(() => {
-          setMessages(prev => [...prev, {
-            id: Date.now() + index,
-            role: 'assistant',
-            content: msg,
-            timestamp: new Date(),
-          }]);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now() + index,
+              role: "assistant",
+              content: msg,
+              timestamp: new Date(),
+            },
+          ]);
         }, index * 500);
       });
     }
@@ -75,41 +78,43 @@ const Chatbot = () => {
 
     const userMessage: Message = {
       id: Date.now(),
-      role: 'user',
+      role: "user",
       content: inputValue,
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
     setIsTyping(true);
 
     // Simulate AI response (replace with actual API call)
     setTimeout(() => {
-      const responses = isRTL ? [
-        'شكراً لتواصلك معنا! سأقوم بمساعدتك في استفسارك.',
-        'للمزيد من المعلومات، يمكنك التواصل معنا عبر البريد الإلكتروني: spta@ksu.edu.sa',
-        'يسعدني مساعدتك! هل هناك شيء آخر تود معرفته؟',
-      ] : [
-        'Thank you for reaching out! I\'ll help you with your inquiry.',
-        'For more information, you can contact us at: spta@ksu.edu.sa',
-        'Happy to help! Is there anything else you\'d like to know?',
-      ];
+      const responses = isRTL
+        ? [
+            "شكراً لتواصلك معنا! سأقوم بمساعدتك في استفسارك.",
+            "للمزيد من المعلومات، يمكنك التواصل معنا عبر البريد الإلكتروني: spta@spta.sa",
+            "يسعدني مساعدتك! هل هناك شيء آخر تود معرفته؟",
+          ]
+        : [
+            "Thank you for reaching out! I'll help you with your inquiry.",
+            "For more information, you can contact us at: spta@spta.sa",
+            "Happy to help! Is there anything else you'd like to know?",
+          ];
 
       const botResponse: Message = {
         id: Date.now(),
-        role: 'assistant',
+        role: "assistant",
         content: responses[Math.floor(Math.random() * responses.length)],
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, botResponse]);
+      setMessages((prev) => [...prev, botResponse]);
       setIsTyping(false);
     }, 1500);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -136,11 +141,11 @@ const Chatbot = () => {
               >
                 <MessageCircle className="w-7 h-7" />
               </motion.div>
-              
+
               {/* Pulse effect */}
               <span className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
             </Button>
-            
+
             {/* Tooltip */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -148,7 +153,7 @@ const Chatbot = () => {
               transition={{ delay: 1 }}
               className="absolute bottom-full mb-2 end-0 bg-card rounded-lg shadow-lg px-3 py-2 text-sm whitespace-nowrap"
             >
-              {t('كيف يمكننا مساعدتك؟', 'How can we help?')}
+              {t("كيف يمكننا مساعدتك؟", "How can we help?")}
               <div className="absolute bottom-0 end-6 translate-y-1/2 rotate-45 w-2 h-2 bg-card" />
             </motion.div>
           </motion.div>
@@ -162,12 +167,16 @@ const Chatbot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className={`fixed z-50 ${isMinimized ? 'bottom-6 end-6' : 'bottom-6 end-6 sm:bottom-6 sm:end-6'}`}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className={`fixed z-50 ${
+              isMinimized
+                ? "bottom-6 end-6"
+                : "bottom-6 end-6 sm:bottom-6 sm:end-6"
+            }`}
           >
-            <div 
+            <div
               className={`bg-card rounded-2xl shadow-2xl overflow-hidden border border-border transition-all duration-300 ${
-                isMinimized ? 'w-72' : 'w-[360px] sm:w-[400px]'
+                isMinimized ? "w-72" : "w-[360px] sm:w-[400px]"
               }`}
             >
               {/* Header */}
@@ -179,11 +188,11 @@ const Chatbot = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold">
-                        {t('مساعد SPTA', 'SPTA Assistant')}
+                        {t("مساعد SPTA", "SPTA Assistant")}
                       </h3>
                       <p className="text-xs opacity-80 flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-green-accent" />
-                        {t('متصل الآن', 'Online')}
+                        {t("متصل الآن", "Online")}
                       </p>
                     </div>
                   </div>
@@ -194,7 +203,11 @@ const Chatbot = () => {
                       className="h-8 w-8 text-primary-foreground hover:bg-white/20"
                       onClick={() => setIsMinimized(!isMinimized)}
                     >
-                      {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
+                      {isMinimized ? (
+                        <Maximize2 className="w-4 h-4" />
+                      ) : (
+                        <Minimize2 className="w-4 h-4" />
+                      )}
                     </Button>
                     <Button
                       size="icon"
@@ -213,7 +226,7 @@ const Chatbot = () => {
                 {!isMinimized && (
                   <motion.div
                     initial={{ height: 0 }}
-                    animate={{ height: 'auto' }}
+                    animate={{ height: "auto" }}
                     exit={{ height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
@@ -225,17 +238,17 @@ const Chatbot = () => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className={`flex items-end gap-2 ${
-                              message.role === 'user' ? 'flex-row-reverse' : ''
+                              message.role === "user" ? "flex-row-reverse" : ""
                             }`}
                           >
-                            <div 
+                            <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                                message.role === 'user' 
-                                  ? 'bg-primary text-primary-foreground' 
-                                  : 'bg-muted text-muted-foreground'
+                                message.role === "user"
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted text-muted-foreground"
                               }`}
                             >
-                              {message.role === 'user' ? (
+                              {message.role === "user" ? (
                                 <User className="w-4 h-4" />
                               ) : (
                                 <Bot className="w-4 h-4" />
@@ -243,19 +256,28 @@ const Chatbot = () => {
                             </div>
                             <div
                               className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
-                                message.role === 'user'
-                                  ? 'bg-primary text-primary-foreground rounded-br-sm'
-                                  : 'bg-muted rounded-bl-sm'
+                                message.role === "user"
+                                  ? "bg-primary text-primary-foreground rounded-br-sm"
+                                  : "bg-muted rounded-bl-sm"
                               }`}
                             >
-                              <p className="text-sm whitespace-pre-line">{message.content}</p>
-                              <p className={`text-[10px] mt-1 ${
-                                message.role === 'user' ? 'text-primary-foreground/60' : 'text-muted-foreground'
-                              }`}>
-                                {message.timestamp.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', { 
-                                  hour: '2-digit', 
-                                  minute: '2-digit' 
-                                })}
+                              <p className="text-sm whitespace-pre-line">
+                                {message.content}
+                              </p>
+                              <p
+                                className={`text-[10px] mt-1 ${
+                                  message.role === "user"
+                                    ? "text-primary-foreground/60"
+                                    : "text-muted-foreground"
+                                }`}
+                              >
+                                {message.timestamp.toLocaleTimeString(
+                                  isRTL ? "ar-SA" : "en-US",
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  }
+                                )}
                               </p>
                             </div>
                           </motion.div>
@@ -275,17 +297,29 @@ const Chatbot = () => {
                               <div className="flex gap-1">
                                 <motion.span
                                   animate={{ y: [0, -5, 0] }}
-                                  transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                                  transition={{
+                                    duration: 0.6,
+                                    repeat: Infinity,
+                                    delay: 0,
+                                  }}
                                   className="w-2 h-2 rounded-full bg-muted-foreground/50"
                                 />
                                 <motion.span
                                   animate={{ y: [0, -5, 0] }}
-                                  transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                                  transition={{
+                                    duration: 0.6,
+                                    repeat: Infinity,
+                                    delay: 0.2,
+                                  }}
                                   className="w-2 h-2 rounded-full bg-muted-foreground/50"
                                 />
                                 <motion.span
                                   animate={{ y: [0, -5, 0] }}
-                                  transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                                  transition={{
+                                    duration: 0.6,
+                                    repeat: Infinity,
+                                    delay: 0.4,
+                                  }}
                                   className="w-2 h-2 rounded-full bg-muted-foreground/50"
                                 />
                               </div>
@@ -303,7 +337,10 @@ const Chatbot = () => {
                           value={inputValue}
                           onChange={(e) => setInputValue(e.target.value)}
                           onKeyPress={handleKeyPress}
-                          placeholder={t('اكتب رسالتك...', 'Type your message...')}
+                          placeholder={t(
+                            "اكتب رسالتك...",
+                            "Type your message..."
+                          )}
                           className="flex-1 rounded-full bg-muted border-0 focus-visible:ring-1"
                         />
                         <Button
@@ -317,7 +354,7 @@ const Chatbot = () => {
                       </div>
                       <p className="text-[10px] text-muted-foreground text-center mt-2 flex items-center justify-center gap-1">
                         <Sparkles className="w-3 h-3" />
-                        {t('مدعوم بالذكاء الاصطناعي', 'Powered by AI')}
+                        {t("مدعوم بالذكاء الاصطناعي", "Powered by AI")}
                       </p>
                     </div>
                   </motion.div>

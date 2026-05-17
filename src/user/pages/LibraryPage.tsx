@@ -299,35 +299,6 @@ const LibraryPage = () => {
                 ))}
               </div>
             </div>
-
-            <motion.div
-              data-aos="fade-up"
-              className="bg-primary rounded-3xl p-10 text-primary-foreground"
-            >
-              <Lock className="w-16 h-16 mb-6 opacity-80" />
-              <h3 className="text-2xl font-bold mb-4">
-                {t(
-                  "هل أنت طالب دراسات عليا؟",
-                  "Are You a Postgraduate Student?"
-                )}
-              </h3>
-              <p className="text-primary-foreground/80 mb-8">
-                {t(
-                  "احصل على وصول مجاني كامل لجميع قواعد البيانات والموارد الحصرية المخصصة لطلاب الدراسات العليا.",
-                  "Get full free access to all databases and exclusive resources dedicated to postgraduate students."
-                )}
-              </p>
-              <div className="flex gap-4 flex-wrap">
-                <Link to="/signup">
-                  <Button variant="secondary" className="gap-2">
-                    {t("سجل الآن", "Register Now")}
-                    <ArrowRight
-                      className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`}
-                    />
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
