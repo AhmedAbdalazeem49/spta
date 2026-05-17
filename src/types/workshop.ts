@@ -1,12 +1,14 @@
 export interface Workshop {
   id: number;
-  title_ar: string;
-  title_en: string;
-  description_ar?: string;
-  description_en?: string;
-  starts_at: string;
-  ends_at: string;
-  price: number;
-  seats?: number;
-  cover_image?: string;
+  title?: string;
+  description?: string;
+  doctor_name?: string;
+  location?: string;
+  date?: string;
+  time?: string;
+  regular_price?: number;
+  member_price?: number;
+  total_capacity?: number;
+  status?: "open" | "closed" | "completed";
+  duration_minutes?: number;
 }

@@ -45,15 +45,15 @@ import ProfilePage from "./user/pages/ProfilePage";
 
 // Admin layout + pages
 import AdminLayout from "./admin/components/AdminLayout";
-import AdminCertificatesPage from "./admin/pages/AdminCertificatesPage";
-import AdminDashboardPage from "./admin/pages/AdminDashboardPage";
-import AdminUsersPage from "./admin/pages/AdminUsersPage";
-import AdminVisitorsPage from "./admin/pages/AdminVisitorsPage";
-import AdminWorkshopsPage from "./admin/pages/AdminWorkshopsPage";
-import AdminCoupons from "./admin/pages/AdminCoupons";
+import AdminCertificatesPage from "./pages/admin/certificates/AdminCertificatesPage";
+import AdminDashboardPage from "./pages/admin/dashboard/AdminDashboardPage";
+import AdminUsersPage from "./pages/admin/users/AdminUsersPage";
+import AdminVisitorsPage from "./pages/admin/visitors/AdminVisitorsPage";
+import AdminWorkshopsPage from "./pages/admin/workshops/AdminWorkshopsPage";
+import AdminCoupons from "./pages/admin/coupons/AdminCoupons";
 
 // Public workshops page (user-facing)
-import WorkshopsPage from "./admin/pages/WorkshopsPage";
+import WorkshopsPage from "./pages/WorkshopsPage";
 
 // Conference & Certificate pages
 import ConferencesPage from "./user/pages/ConferencesPage";

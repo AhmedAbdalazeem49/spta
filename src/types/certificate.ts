@@ -1,14 +1,34 @@
-export type CertificateTemplate = "classic" | "modern" | "elegant" | "minimal";
-
 export interface Certificate {
-  id: number;
-  code: string;
-  user_id: number;
-  user_name: string;
-  title_ar: string;
-  title_en: string;
-  issued_at: string;
-  template?: CertificateTemplate;
-  workshop_id?: number;
-  conference_id?: number;
+  id: string | number;
+  recipient_name?: string;
+  recipientNameAr?: string;
+  recipientNameEn?: string;
+  workshop_title?: string;
+  workshopTitleAr?: string;
+  workshopTitleEn?: string;
+  workshop_date?: string;
+  workshopDate?: string;
+  issue_date?: string;
+  issueDate?: string;
+  hours?: number;
+  status?: string;
+  verification_url?: string;
+  verificationUrl?: string;
+}
+
+export interface Workshop {
+  id: string | number;
+  title?: string;
+  titleAr?: string;
+  titleEn?: string;
+  date?: string;
+  hours?: number;
+}
+
+export interface Recipient {
+  id: string | number;
+  name?: string;
+  nameAr?: string;
+  nameEn?: string;
+  email?: string;
 }
