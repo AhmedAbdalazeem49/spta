@@ -232,6 +232,14 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, index, isRTL, t }) => {
               </li>
             ))}
           </ul>
+
+          <button
+            onClick={() => onSelect(plan)}
+            className={`w-full group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-md transition-all duration-300 hover:shadow-xl hover:bg-primary/90 mt-auto`}
+          >
+            {t("تسجيل بالعضوية", "Register Membership")}
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
+          </button>
         </div>
       </div>
     </motion.div>
@@ -248,10 +256,18 @@ const MembershipSubscribePage = () => {
   const handleSelectPlan = (plan: Plan) => {
     if (!isAuthenticated) {
       navigate("/login", {
-        state: { from: { pathname: "/membership/subscribe" } },
+        state: { from: { pathname: "/membership" } },
       });
       return;
     }
+    
+    // If authenticated, go to payment page
+    navigate("/payment", {
+      state: {
+        type: "membership",
+        item: plan,
+      },
+    });
   };
 
   return (

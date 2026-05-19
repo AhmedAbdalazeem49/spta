@@ -19,6 +19,18 @@ export const workshopStatusConfig = {
     variant: "secondary" as const,
     color: "bg-blue-500/10 text-blue-600 border-blue-500/20",
   },
+  postponed: {
+    label_ar: "مؤجلة",
+    label_en: "Postponed",
+    variant: "secondary" as const,
+    color: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+  },
+  full: {
+    label_ar: "ممتلئة",
+    label_en: "Full",
+    variant: "secondary" as const,
+    color: "bg-slate-500/10 text-slate-600 border-slate-500/20",
+  },
 };
 
 interface WorkshopStatusBadgeProps {

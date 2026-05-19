@@ -12,7 +12,10 @@ import {
   Users,
   GraduationCap,
   Star,
-  Sparkles
+  Sparkles,
+  Printer,
+  FileImage,
+  FileText
 } from 'lucide-react';
 
 interface MemberData {
@@ -280,12 +283,19 @@ const DigitalMembershipCard = ({
 
       {/* Action Buttons */}
       {showControls && (
-        <div className="flex justify-center gap-3">
-          <Button variant="outline" className="gap-2">
-            <Download className="w-4 h-4" />
-            {t('تحميل', 'Download')}
+        <div className="flex flex-wrap justify-center gap-3">
+          <Button variant="outline" className="gap-2" onClick={() => window.print()}>
+            <Printer className="w-4 h-4" />
+            {t('طباعة', 'Print')}
           </Button>
-
+          <Button variant="outline" className="gap-2">
+            <FileImage className="w-4 h-4" />
+            {t('تحميل كصورة', 'Download Image')}
+          </Button>
+          <Button variant="outline" className="gap-2">
+            <FileText className="w-4 h-4" />
+            {t('تحميل PDF', 'Download PDF')}
+          </Button>
         </div>
       )}
     </div>

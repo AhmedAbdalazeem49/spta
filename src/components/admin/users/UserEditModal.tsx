@@ -2,9 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { EditForm, UserItem } from "@/types/user";
-import { Loader2, Pencil, Shield } from "lucide-react";
+import { Loader2, Pencil, Shield, Users, Building2 } from "lucide-react";
 
 interface UserEditModalProps {
   isOpen: boolean;
@@ -159,38 +166,40 @@ export const UserEditModal = ({
             />
           </div>
 
-          {/* Admin Toggle */}
+          {/* Role Select */}
           <div className="sm:col-span-2">
-            <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/30">
-              <div className="flex items-center gap-3">
-                <Shield className="w-5 h-5 text-primary" />
-                <div>
-                  <p className="text-sm font-medium">
-                    {t("صلاحيات المدير", "Admin Privileges")}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {t(
-                      "منح المستخدم صلاحيات الإدارة الكاملة",
-                      "Grant this user full admin access"
-                    )}
-                  </p>
-                </div>
+            <div className="space-y-1.5">
+              <Label>{t("الصلاحية والدور", "Role")}</Label>
+              <div className="relative">
+                <Select
+                  value={editForm.role}
+                  onValueChange={(val) => setEditForm({ ...editForm, role: val })}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="member">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <span>{t("عضو", "Member")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="branch_manager">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-blue-500" />
+                        <span>{t("مدير فرع", "Branch Manager")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="system_admin">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-primary" />
+                        <span>{t("مدير النظام", "System Admin")}</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <button
-                type="button"
-                onClick={() =>
-                  setEditForm({ ...editForm, is_admin: !editForm.is_admin })
-                }
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                  editForm.is_admin ? "bg-primary" : "bg-muted-foreground/30"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    editForm.is_admin ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
             </div>
           </div>
         </div>

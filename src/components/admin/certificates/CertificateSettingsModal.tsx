@@ -11,6 +11,7 @@ interface CertificateSettings {
   stampImageUrl: string;
   customText: string;
   template: string;
+  chairmanName: string;
 }
 
 interface CertificateSettingsModalProps {
@@ -58,6 +59,17 @@ export const CertificateSettingsModal = ({
               {t("صورة الختم", "Stamp Image")}
             </Label>
             <Input type="file" accept="image/*" />
+          </div>
+
+          <div className="space-y-2">
+            <Label>{t("رئيس الجمعية", "Chairman Name")}</Label>
+            <Input
+              placeholder={t("اسم رئيس الجمعية", "Chairman's Name")}
+              value={settings.chairmanName || ""}
+              onChange={(e) =>
+                setSettings({ ...settings, chairmanName: e.target.value })
+              }
+            />
           </div>
 
           <div className="space-y-2">

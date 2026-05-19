@@ -50,7 +50,7 @@ const AdminUsersPage = () => {
     specialization: "",
     sub_specialization: "",
     employer: "",
-    is_admin: false,
+    role: "member",
     password: "",
     password_confirmation: "",
   });
@@ -143,7 +143,7 @@ const AdminUsersPage = () => {
       specialization: u.specialization || "",
       sub_specialization: u.sub_specialization || "",
       employer: u.employer || "",
-      is_admin: u.is_admin || false,
+      role: u.role || "member",
       password: "",
       password_confirmation: "",
     });
@@ -163,7 +163,7 @@ const AdminUsersPage = () => {
       specialization: editForm.specialization,
       sub_specialization: editForm.sub_specialization,
       employer: editForm.employer,
-      is_admin: editForm.is_admin,
+      role: editForm.role,
     };
 
     if (editForm.password.trim()) {
@@ -261,7 +261,7 @@ const AdminUsersPage = () => {
         specialization: addForm.specialization,
         sub_specialization: addForm.sub_specialization,
         employer: addForm.employer,
-        is_admin: addForm.is_admin,
+        role: addForm.role,
         password: addForm.password,
         password_confirmation: addForm.password_confirmation,
       });

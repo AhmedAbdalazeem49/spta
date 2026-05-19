@@ -27,7 +27,7 @@ export interface EditForm {
   specialization: string;
   sub_specialization: string;
   employer: string;
-  is_admin: boolean;
+  role: string;
   password: string;
   password_confirmation: string;
 }
@@ -41,7 +41,7 @@ export interface AddForm {
   specialization: string;
   sub_specialization: string;
   employer: string;
-  is_admin: boolean;
+  role: string;
   password: string;
   password_confirmation: string;
 }
@@ -55,7 +55,7 @@ export const defaultAddForm: AddForm = {
   specialization: "",
   sub_specialization: "",
   employer: "",
-  is_admin: false,
+  role: "member",
   password: "",
   password_confirmation: "",
 };

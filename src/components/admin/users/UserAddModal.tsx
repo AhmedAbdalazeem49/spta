@@ -309,39 +309,39 @@ export const UserAddModal = ({
                 </div>
               </div>
 
-              {/* Admin Toggle */}
-              <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-muted/30 mt-2">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                    <Shield className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">
-                      {t("صلاحيات المدير", "Admin Privileges")}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {t(
-                        "منح المستخدم صلاحيات الإدارة الكاملة",
-                        "Grant this user full admin access"
-                      )}
-                    </p>
-                  </div>
+              {/* Role Select */}
+              <div className="space-y-1.5 mt-2">
+                <Label>{t("الصلاحية والدور", "Role")}</Label>
+                <div className="relative">
+                  <Select
+                    value={addForm.role}
+                    onValueChange={(val) => setAddForm({ ...addForm, role: val })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="member">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-muted-foreground" />
+                          <span>{t("عضو", "Member")}</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="branch_manager">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4 text-blue-500" />
+                          <span>{t("مدير فرع", "Branch Manager")}</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="system_admin">
+                        <div className="flex items-center gap-2">
+                          <Shield className="w-4 h-4 text-primary" />
+                          <span>{t("مدير النظام", "System Admin")}</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setAddForm({ ...addForm, is_admin: !addForm.is_admin })
-                  }
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                    addForm.is_admin ? "bg-primary" : "bg-muted-foreground/30"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                      addForm.is_admin ? "translate-x-6" : "translate-x-1"
-                    }`}
-                  />
-                </button>
               </div>
 
               {/* Summary card */}
@@ -385,9 +385,11 @@ export const UserAddModal = ({
                       {t("الدور", "Role")}
                     </span>
                     <span className="font-medium">
-                      {addForm.is_admin
-                        ? t("مدير", "Admin")
-                        : t("مستخدم", "User")}
+                      {addForm.role === "system_admin"
+                        ? t("مدير النظام", "System Admin")
+                        : addForm.role === "branch_manager"
+                        ? t("مدير فرع", "Branch Manager")
+                        : t("عضو", "Member")}
                     </span>
                   </div>
                 </div>

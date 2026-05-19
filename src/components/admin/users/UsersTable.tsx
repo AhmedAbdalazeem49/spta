@@ -118,10 +118,14 @@ export const UsersTable = ({
                 </td>
                 <td className="p-4">
                   <Badge
-                    variant={u.is_admin ? "default" : "secondary"}
-                    className="text-xs"
+                    variant={u.role === "system_admin" ? "default" : u.role === "branch_manager" ? "outline" : "secondary"}
+                    className={`text-xs ${u.role === "branch_manager" ? "border-blue-500 text-blue-500" : ""}`}
                   >
-                    {u.is_admin ? t("مدير", "Admin") : t("مستخدم", "User")}
+                    {u.role === "system_admin" 
+                      ? t("مدير النظام", "System Admin") 
+                      : u.role === "branch_manager" 
+                      ? t("مدير فرع", "Branch Manager") 
+                      : t("عضو", "Member")}
                   </Badge>
                 </td>
                 <td className="p-4">

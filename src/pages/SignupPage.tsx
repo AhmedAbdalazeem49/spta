@@ -1,117 +1,24 @@
 import AuthHero from "@/components/auth/AuthHero";
 import Layout from "@/components/layout/Layout";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import api from "@/services/api";
 import { motion } from "framer-motion";
-import {
-  AlertCircle,
-  Banknote,
-  CheckCircle2,
-  Clock,
-  CreditCard,
-  Info,
-  Loader2,
-  ShieldCheck,
-  Smartphone,
-  Tag,
-  Wallet,
-} from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { Info, Loader2, ShieldCheck, Smartphone } from "lucide-react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-type MembershipKey = "active" | "affiliate" | "intern" | "student";
-
-interface MembershipOption {
-  key: MembershipKey;
-  labelAr: string;
-  labelEn: string;
-  price: number;
-  requiresClassification: boolean;
-}
-
-const MEMBERSHIPS: MembershipOption[] = [
-  {
-    key: "active",
-    labelAr: "عضو عامل",
-    labelEn: "Active Member",
-    price: 200,
-    requiresClassification: true,
-  },
-  {
-    key: "affiliate",
-    labelAr: "عضو منتسب",
-    labelEn: "Affiliate Member",
-    price: 200,
-    requiresClassification: false,
-  },
-  {
-    key: "intern",
-    labelAr: "طالب امتياز",
-    labelEn: "Intern Student",
-    price: 150,
-    requiresClassification: false,
-  },
-  {
-    key: "student",
-    labelAr: "طالب",
-    labelEn: "Student",
-    price: 100,
-    requiresClassification: false,
-  },
-];
-
-type PaymentMethod = "moyasar";
-
-const PAYMENT_METHODS: {
-  key: PaymentMethod;
-  labelAr: string;
-  labelEn: string;
-  Icon: React.ElementType;
-}[] = [{ key: "moyasar", labelAr: "ميسر", labelEn: "Moyasar", Icon: Wallet }];
-
-interface PromoResult {
-  type: "percent" | "fixed" | "free" | "invalid";
-  value: number;
-  message?: string;
-}
-
 const SignupPage = () => {
-  const { t, isRTL } = useLanguage();
+  const { t } = useLanguage();
   const { toast } = useToast();
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [pendingDialogOpen, setPendingDialogOpen] = useState(false);
-  const [classificationConfirmOpen, setClassificationConfirmOpen] =
-    useState(false);
-
-  const [promo, setPromo] = useState<PromoResult | null>(null);
-  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
-
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("moyasar");
 
   const [formData, setFormData] = useState({
     fullNameAr: "",
@@ -120,8 +27,6 @@ const SignupPage = () => {
     email: "",
     phone: "",
     classificationNumber: "",
-    membershipType: "" as MembershipKey | "",
-    promoCode: "",
     specialization: "",
     subSpecialization: "",
     workplace: "",
@@ -134,56 +39,6 @@ const SignupPage = () => {
     setErrors((p) => ({ ...p, [field]: "" }));
   };
 
-  const selectedMembership = useMemo(
-    () => MEMBERSHIPS.find((m) => m.key === formData.membershipType),
-    [formData.membershipType]
-  );
-
-  const finalPrice = useMemo(() => {
-    if (!selectedMembership) return 0;
-    const base = selectedMembership.price;
-    if (!promo || promo.type === "invalid") return base;
-    if (promo.type === "free") return 0;
-    if (promo.type === "percent")
-      return Math.max(0, base - (base * promo.value) / 100);
-    if (promo.type === "fixed") return Math.max(0, base - promo.value);
-    return base;
-  }, [selectedMembership, promo]);
-
-  const applyPromo = async () => {
-    if (!formData.promoCode.trim()) return;
-    setIsApplyingPromo(true);
-
-    try {
-      const res = await api.post("/promo/validate", {
-        code: formData.promoCode.trim(),
-        membership_type: formData.membershipType,
-      });
-
-      const data = res.data?.data || res.data;
-
-      setPromo({
-        type: data.type,
-        value: Number(data.value || 0),
-        message: data.message,
-      });
-
-      toast({
-        title: t("تم تطبيق الكود", "Code Applied"),
-        description: t("تم تطبيق الخصم بنجاح", "Discount applied successfully"),
-      });
-    } catch {
-      setPromo({ type: "invalid", value: 0 });
-
-      toast({
-        title: t("كود غير صالح", "Invalid Code"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsApplyingPromo(false);
-    }
-  };
-
   const validate = () => {
     const e: Record<string, string> = {};
 
@@ -192,9 +47,6 @@ const SignupPage = () => {
     if (!formData.nationalId) e.nationalId = t("مطلوب", "Required");
     if (!formData.email) e.email = t("مطلوب", "Required");
     if (!formData.phone) e.phone = t("مطلوب", "Required");
-
-    if (!formData.membershipType)
-      e.membershipType = t("اختر نوع العضوية", "Select membership");
 
     if (!formData.password) e.password = t("مطلوب", "Required");
 
@@ -208,21 +60,14 @@ const SignupPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-
-    if (formData.classificationNumber && !classificationConfirmOpen) {
-      setClassificationConfirmOpen(true);
-      return;
-    }
-
     await proceedRegistration();
   };
 
   const proceedRegistration = async () => {
-    setClassificationConfirmOpen(false);
     setIsSubmitting(true);
 
     try {
-      const result = await register({
+      await register({
         name: formData.fullNameEn,
         name_ar: formData.fullNameAr,
         email: formData.email,
@@ -232,13 +77,10 @@ const SignupPage = () => {
         specialization: formData.specialization || undefined,
         sub_specialization: formData.subSpecialization || undefined,
         employer: formData.workplace || undefined,
-        membership_type: formData.membershipType,
-        promo_code: formData.promoCode || undefined,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
 
-      // ✅ ALWAYS GO OTP FIRST (CRITICAL FIX)
       toast({
         title: t("تم إنشاء الحساب", "Account Created"),
         description: t(
@@ -247,15 +89,9 @@ const SignupPage = () => {
         ),
       });
 
-      localStorage.setItem("pending_membership_type", formData.membershipType);
-
       navigate("/verify-otp", {
         state: {
           email: formData.email,
-          membership_type: formData.membershipType,
-          finalPrice,
-          promoCode: formData.promoCode,
-          paymentMethod,
         },
       });
     } catch (error: any) {
@@ -275,10 +111,10 @@ const SignupPage = () => {
   return (
     <Layout>
       <AuthHero
-        titleAr="انضم إلى مجتمعنا المهني"
-        titleEn="Join Our Professional Community"
-        subtitleAr="أنشئ حسابك واختر عضويتك للبدء"
-        subtitleEn="Create your account and choose your membership"
+        titleAr="إنشاء حساب جديد"
+        titleEn="Create New Account"
+        subtitleAr="أنشئ حسابك للانضمام إلى مجتمعنا المهني"
+        subtitleEn="Create your account to join our professional community"
       />
 
       <section className="py-16 -mt-10 relative z-10">
@@ -379,14 +215,24 @@ const SignupPage = () => {
                     <Label className="text-sm font-medium mb-1.5 block">
                       {t("رقم الجوال *", "Phone *")}
                     </Label>
-                    <Input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => set("phone", e.target.value)}
-                      className={errors.phone ? "border-destructive" : ""}
-                      dir="ltr"
-                      placeholder="+9665XXXXXXXX"
-                    />
+                    <div className="relative">
+                      <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => set("phone", e.target.value)}
+                        className={`pl-10 ${errors.phone ? "border-destructive" : ""}`}
+                        dir="ltr"
+                        placeholder="+966 5XXXXXXXX"
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1.5">
+                      <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                      {t(
+                        "الرجاء إدخال رمز الدولة ورقم الجوال بالكامل",
+                        "Please include country code and full phone number."
+                      )}
+                    </p>
                     {errors.phone && (
                       <p className="text-destructive text-xs mt-1">
                         {errors.phone}
@@ -423,77 +269,28 @@ const SignupPage = () => {
                 </div>
               </div>
 
-              {/* ─── Membership ─── */}
+              {/* ─── Classification Number ─── */}
               <div className="border-t border-border pt-6">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-primary" />
-                  {t("نوع العضوية", "Membership Type")}
-                </h3>
-
                 <div>
                   <Label className="text-sm font-medium mb-1.5 block">
-                    {t("اختر نوع العضوية *", "Select Membership *")}
+                    {t("رقم التصنيف (اختياري)", "Classification Number (Optional)")}
                   </Label>
-                  <Select
-                    value={formData.membershipType}
-                    onValueChange={(v) => set("membershipType", v)}
-                  >
-                    <SelectTrigger
-                      className={
-                        errors.membershipType ? "border-destructive" : ""
-                      }
-                    >
-                      <SelectValue placeholder={t("اختر...", "Choose...")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MEMBERSHIPS.map((m) => (
-                        <SelectItem key={m.key} value={m.key}>
-                          <div className="flex items-center justify-between w-full gap-4">
-                            <span>{t(m.labelAr, m.labelEn)}</span>
-                            <span className="text-primary font-bold">
-                              {m.price} {t("ر.س", "SAR")}
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.membershipType && (
-                    <p className="text-destructive text-xs mt-1">
-                      {errors.membershipType}
-                    </p>
-                  )}
-                </div>
-
-                {selectedMembership?.requiresClassification && (
-                  <div className="mt-4">
-                    <Label className="text-sm font-medium mb-1.5 block">
-                      {t("رقم التصنيف *", "Classification Number *")}
-                    </Label>
-                    <Input
-                      value={formData.classificationNumber}
-                      onChange={(e) =>
-                        set("classificationNumber", e.target.value)
-                      }
-                      className={
-                        errors.classificationNumber ? "border-destructive" : ""
-                      }
-                      dir="ltr"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1.5">
-                      <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-                      {t(
-                        "يرجى التأكد من صحة رقم التصنيف. سيُستخدم لاحقاً للتكامل مع الهيئة السعودية للتخصصات الصحية.",
-                        "Please ensure the classification number is correct. It will be used later for integration with the Saudi Commission for Health Specialties."
-                      )}
-                    </p>
-                    {errors.classificationNumber && (
-                      <p className="text-destructive text-xs mt-1">
-                        {errors.classificationNumber}
-                      </p>
+                  <Input
+                    value={formData.classificationNumber}
+                    onChange={(e) =>
+                      set("classificationNumber", e.target.value)
+                    }
+                    dir="ltr"
+                    placeholder="e.g. 123456"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1.5">
+                    <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                    {t(
+                      "رقم التصنيف اختياري ويمكن إضافته للممارسين الصحيين الذين يرغبون في التكامل المستقبلي مع الهيئة السعودية للتخصصات الصحية.",
+                      "Classification number is optional and can be added for healthcare professionals who want future integration with Saudi health authorities."
                     )}
-                  </div>
-                )}
+                  </p>
+                </div>
               </div>
 
               {/* ─── Password ─── */}
@@ -546,11 +343,6 @@ const SignupPage = () => {
               >
                 {isSubmitting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
-                ) : finalPrice > 0 ? (
-                  t(
-                    `المتابعة للدفع — ${finalPrice} ر.س`,
-                    `Continue to Payment — ${finalPrice} SAR`
-                  )
                 ) : (
                   t("إنشاء الحساب", "Create Account")
                 )}
@@ -569,44 +361,9 @@ const SignupPage = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Pending approval modal */}
-      <Dialog open={pendingDialogOpen} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="mx-auto w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center mb-2">
-              <Clock className="w-8 h-8 text-yellow-500" />
-            </div>
-            <DialogTitle className="text-center text-xl">
-              {t("طلبك قيد المراجعة", "Your Request is Under Review")}
-            </DialogTitle>
-            <DialogDescription className="text-center pt-2">
-              {t(
-                "تم استلام طلب التسجيل بنجاح. سنقوم بالتحقق من رقم التصنيف الخاص بك قبل تفعيل الحساب. ستتلقى إشعاراً عبر البريد الإلكتروني عند الموافقة.",
-                "Your registration request has been received. We will verify your classification number before activating your account. You will receive an email notification once approved."
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="p-3 rounded-lg bg-muted/40 text-sm text-center">
-            <Badge
-              variant="outline"
-              className="bg-yellow-500/10 text-yellow-600 border-yellow-500/30"
-            >
-              {t("قيد المراجعة", "Pending Approval")}
-            </Badge>
-          </div>
-          <DialogFooter>
-            <Button
-              className="w-full"
-              onClick={() => navigate("/login", { replace: true })}
-            >
-              {t("حسناً", "Got it")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Layout>
   );
 };
 
 export default SignupPage;
+

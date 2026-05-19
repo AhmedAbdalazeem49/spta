@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Workshop } from "@/types/workshop";
 import { motion } from "framer-motion";
-import { Edit, GraduationCap, Trash2 } from "lucide-react";
+import { Edit, GraduationCap, Trash2, Users } from "lucide-react";
 import { WorkshopStatusBadge } from "./WorkshopStatusBadge";
 
 interface WorkshopsTableProps {
@@ -10,6 +10,7 @@ interface WorkshopsTableProps {
   onOpenView: (w: Workshop) => void;
   onOpenEdit: (w: Workshop) => void;
   onOpenDelete: (w: Workshop) => void;
+  onOpenSubscriptions: (w: Workshop) => void;
 }
 
 export const WorkshopsTable = ({
@@ -17,6 +18,7 @@ export const WorkshopsTable = ({
   onOpenView,
   onOpenEdit,
   onOpenDelete,
+  onOpenSubscriptions,
 }: WorkshopsTableProps) => {
   const { t } = useLanguage();
 
@@ -111,6 +113,15 @@ export const WorkshopsTable = ({
                     title={t("عرض", "View")}
                   >
                     <GraduationCap className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 text-muted-foreground hover:text-blue-500"
+                    onClick={() => onOpenSubscriptions(w)}
+                    title={t("الاشتراكات", "Subscriptions")}
+                  >
+                    <Users className="w-4 h-4" />
                   </Button>
                   <Button
                     size="sm"

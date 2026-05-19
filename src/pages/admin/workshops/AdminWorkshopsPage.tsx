@@ -17,6 +17,7 @@ import {
   WorkshopFormModal,
 } from "@/components/admin/workshops/WorkshopFormModal";
 import { WorkshopsTable } from "@/components/admin/workshops/WorkshopsTable";
+import { WorkshopSubscriptionsModal } from "@/components/admin/workshops/WorkshopSubscriptionsModal";
 
 const AdminWorkshopsPage = () => {
   const { t } = useLanguage();
@@ -29,6 +30,7 @@ const AdminWorkshopsPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isSubscriptionsOpen, setIsSubscriptionsOpen] = useState(false);
 
   const [selected, setSelected] = useState<Workshop | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -85,6 +87,11 @@ const AdminWorkshopsPage = () => {
   const openView = (w: Workshop) => {
     setSelected(w);
     setIsViewOpen(true);
+  };
+
+  const openSubscriptions = (w: Workshop) => {
+    setSelected(w);
+    setIsSubscriptionsOpen(true);
   };
 
   const handleSave = async () => {
@@ -221,6 +228,7 @@ const AdminWorkshopsPage = () => {
                 setSelected(w);
                 setIsDeleteOpen(true);
               }}
+              onOpenSubscriptions={openSubscriptions}
             />
           )}
         </CardContent>
@@ -249,6 +257,12 @@ const AdminWorkshopsPage = () => {
         selected={selected}
         onDelete={handleDelete}
         isSaving={isSaving}
+      />
+
+      <WorkshopSubscriptionsModal
+        isOpen={isSubscriptionsOpen}
+        onOpenChange={setIsSubscriptionsOpen}
+        workshop={selected}
       />
     </div>
   );

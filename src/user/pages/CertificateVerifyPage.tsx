@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import api from "@/services/api";
+import CertificateTemplate from "@/components/CertificateTemplate";
 
 interface VerificationResult {
   valid: boolean;
@@ -43,6 +44,10 @@ const CertificateVerifyPage = () => {
             hours: 8,
             verification_code: code,
             issuer: "Saudi Physical Therapy Association",
+            status: "verified",
+            chairman_name: "د. خالد العبدالله",
+            signature_url: "https://upload.wikimedia.org/wikipedia/commons/f/f8/John_Hancock_signature.svg", // Mock sig
+            stamp_url: "https://cdn-icons-png.flaticon.com/512/3757/3757912.png" // Mock stamp
           });
         } else {
           setData({ valid: false });
@@ -105,10 +110,17 @@ const CertificateVerifyPage = () => {
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-emerald-200 dark:border-emerald-900/40 shadow-xl overflow-hidden">
-                <div className="h-2 bg-gradient-to-r from-emerald-500 to-teal-500" />
-                <CardContent className="p-8 space-y-6">
-                  <div className="flex items-center justify-between">
+              <div className="space-y-6">
+                {/* Certificate Preview */}
+                <div className="rounded-xl overflow-hidden shadow-lg border border-border">
+                  <CertificateTemplate cert={{...data, id: code || '1'}} template="classic" />
+                </div>
+
+                {/* Verification Details */}
+                <Card className="border-emerald-200 dark:border-emerald-900/40 shadow-xl overflow-hidden">
+                  <div className="h-2 bg-gradient-to-r from-emerald-500 to-teal-500" />
+                  <CardContent className="p-8 space-y-6">
+                    <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Award className="w-6 h-6 text-primary" />
                       <span className="font-bold">
@@ -141,6 +153,7 @@ const CertificateVerifyPage = () => {
                   </div>
                 </CardContent>
               </Card>
+              </div>
             )}
           </motion.div>
         </div>

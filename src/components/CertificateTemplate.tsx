@@ -13,6 +13,9 @@ interface Cert {
   hours?: number;
   status?: string;
   verification_code?: string;
+  chairman_name?: string;
+  signature_url?: string;
+  stamp_url?: string;
 }
 
 interface Props {
@@ -34,6 +37,26 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
       <CheckCircle2 className="w-3 h-3 me-1" />
       {t("موثقة", "Verified")}
     </Badge>
+  );
+
+  const Signatures = (
+    <div className="absolute bottom-6 right-8 left-8 flex justify-between items-end px-4">
+      {cert.stamp_url && (
+        <div className="text-start">
+          <img src={cert.stamp_url} alt="Stamp" className="h-16 w-16 opacity-60 mix-blend-multiply" />
+        </div>
+      )}
+      {cert.chairman_name && (
+        <div className="text-center">
+          {cert.signature_url && (
+            <img src={cert.signature_url} alt="Signature" className="h-10 mx-auto mb-1 opacity-80 mix-blend-multiply" />
+          )}
+          <div className="h-px w-24 bg-current opacity-30 mx-auto mb-1" />
+          <p className="text-xs opacity-70">{t("رئيس الجمعية", "Chairman")}</p>
+          <p className="text-sm font-semibold">{cert.chairman_name}</p>
+        </div>
+      )}
+    </div>
   );
 
   if (template === "modern") {
@@ -67,6 +90,25 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             <span>{cert.issue_date}</span>
             {cert.hours && <span>· {cert.hours} {t("ساعة", "hours")}</span>}
           </div>
+        </div>
+        
+        {/* Modern Signatures - custom style for dark bg */}
+        <div className="absolute bottom-6 right-8 left-8 flex justify-between items-end px-4">
+          {cert.stamp_url && (
+            <div className="text-start">
+              <img src={cert.stamp_url} alt="Stamp" className="h-16 w-16 opacity-80 mix-blend-screen" />
+            </div>
+          )}
+          {cert.chairman_name && (
+            <div className="text-center">
+              {cert.signature_url && (
+                <img src={cert.signature_url} alt="Signature" className="h-10 mx-auto mb-1 opacity-90 mix-blend-screen" />
+              )}
+              <div className="h-px w-24 bg-primary-foreground opacity-30 mx-auto mb-1" />
+              <p className="text-xs text-primary-foreground/70">{t("رئيس الجمعية", "Chairman")}</p>
+              <p className="text-sm font-semibold text-primary-foreground">{cert.chairman_name}</p>
+            </div>
+          )}
         </div>
       </motion.div>
     );
@@ -106,6 +148,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           </p>
           {VerifiedBadge}
         </div>
+        {Signatures}
       </motion.div>
     );
   }
@@ -138,6 +181,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           </div>
           {VerifiedBadge}
         </div>
+        {Signatures}
       </motion.div>
     );
   }
@@ -174,6 +218,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         </div>
         {VerifiedBadge}
       </div>
+      {Signatures}
     </motion.div>
   );
 };

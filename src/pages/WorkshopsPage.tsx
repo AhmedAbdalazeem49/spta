@@ -1,7 +1,4 @@
 import Layout from "@/components/layout/Layout";
-import PaymentMethodPicker, {
-  PaymentMethodKey,
-} from "@/components/PaymentMethodPicker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
@@ -40,13 +38,11 @@ import {
   MapPin,
   Percent,
   Search,
-  Star,
-  Tag,
-  User,
   Users,
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Workshop {
   id: number;
@@ -64,14 +60,6 @@ interface Workshop {
   status: "open" | "closed" | "completed" | "full";
 }
 
-interface PromoResult {
-  valid: boolean;
-  type?: "free" | "discount";
-  discount_percentage?: number;
-  discountAmount: number;
-  finalPrice: number;
-}
-
 const categories = [
   { id: "all", labelAr: "الكل", labelEn: "All" },
   { id: "rehabilitation", labelAr: "التأهيل", labelEn: "Rehabilitation" },
@@ -83,6 +71,8 @@ const categories = [
 const WorkshopsPage = () => {
   const { t, isRTL } = useLanguage();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [isLoadingWorkshops, setIsLoadingWorkshops] = useState(true);
@@ -92,26 +82,13 @@ const WorkshopsPage = () => {
 
   // Registration dialog
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(
-    null
-  );
-  const [regStep, setRegStep] = useState<"info" | "payment" | "success">(
-    "info"
-  );
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodKey | null>(
-    null
-  );
-  const [isPaying, setIsPaying] = useState(false);
+  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(null);
+
+  // We automatically determine if member
+  const isMember = user?.membership_status === "active";
 
   // Registration form fields
   const [classificationNumber, setClassificationNumber] = useState("");
-  const [isMember, setIsMember] = useState(true);
-
-  // Promo code
-  const [promoCode, setPromoCode] = useState("");
-  const [promoResult, setPromoResult] = useState<PromoResult | null>(null);
-  const [isCheckingPromo, setIsCheckingPromo] = useState(false);
-  const [promoError, setPromoError] = useState("");
 
   // ── Fetch workshops ──────────────────────────────────────────────────────────
   const fetchWorkshops = async () => {
@@ -185,121 +162,47 @@ const WorkshopsPage = () => {
     );
   };
 
-  // ── Price helpers ────────────────────────────────────────────────────────────
-  const basePrice = (w: Workshop) =>
-    parseFloat(isMember ? w.member_price : w.regular_price) || 0;
-
-  const displayPrice = () => {
-    if (!selectedWorkshop) return 0;
-    return promoResult ? promoResult.finalPrice : basePrice(selectedWorkshop);
-  };
-
-  // ── Promo code check ─────────────────────────────────────────────────────────
-  const checkPromo = async () => {
-    if (!promoCode.trim() || !selectedWorkshop) return;
-    setIsCheckingPromo(true);
-    setPromoError("");
-    setPromoResult(null);
-    try {
-      const res = await api.post("/promo-codes/validate", {
-        code: promoCode.trim(),
-        workshop_id: selectedWorkshop.id,
-      });
-      const promo = res.data?.data ?? res.data;
-      const original = basePrice(selectedWorkshop);
-      let discountAmount = 0;
-      let finalPrice = original;
-
-      if (promo.type === "free") {
-        discountAmount = original;
-        finalPrice = 0;
-      } else if (promo.type === "discount") {
-        discountAmount = (original * (promo.discount_percentage ?? 0)) / 100;
-        finalPrice = Math.max(0, original - discountAmount);
-      }
-
-      setPromoResult({ valid: true, ...promo, discountAmount, finalPrice });
-      toast({
-        title: t("تم تطبيق الكود", "Promo applied"),
-        description: t(
-          `وفّرت ${discountAmount.toFixed(2)} ريال`,
-          `You saved ${discountAmount.toFixed(2)} SAR`
-        ),
-      });
-    } catch (err: any) {
-      const msg =
-        err.response?.data?.message ||
-        t("كود الخصم غير صالح", "Invalid promo code");
-      setPromoError(msg);
-    } finally {
-      setIsCheckingPromo(false);
-    }
-  };
-
-  const removePromo = () => {
-    setPromoCode("");
-    setPromoResult(null);
-    setPromoError("");
-  };
-
   // ── Open registration dialog ─────────────────────────────────────────────────
   const openRegistration = (workshop: Workshop) => {
     if (workshop.status !== "open") return;
+    if (!isAuthenticated) {
+      toast({
+        title: t("تسجيل الدخول مطلوب", "Login Required"),
+        description: t("يجب تسجيل الدخول للاشتراك في ورش العمل", "You must be logged in to subscribe to workshops"),
+      });
+      navigate("/login", { state: { from: { pathname: "/workshops" } } });
+      return;
+    }
     setSelectedWorkshop(workshop);
-    setRegStep("info");
-    setPaymentMethod(null);
     setClassificationNumber("");
-    setIsMember(true);
-    setPromoCode("");
-    setPromoResult(null);
-    setPromoError("");
     setIsRegistrationOpen(true);
   };
 
   const resetRegistration = () => {
     setSelectedWorkshop(null);
     setIsRegistrationOpen(false);
-    setRegStep("info");
-    setPaymentMethod(null);
     setClassificationNumber("");
-    setPromoCode("");
-    setPromoResult(null);
-    setPromoError("");
   };
 
-  // ── Step 1 → Step 2 ──────────────────────────────────────────────────────────
+  // ── Step 1 → Payment ──────────────────────────────────────────────────────────
   const goToPayment = () => {
-    setRegStep("payment");
-  };
+    if (!selectedWorkshop) return;
+    
+    // Pass the item with proper price calculation based on member status
+    const itemWithPrice = {
+      ...selectedWorkshop,
+      priceValue: parseFloat(isMember ? selectedWorkshop.member_price : selectedWorkshop.regular_price) || 0,
+      nameAr: selectedWorkshop.title,
+      nameEn: selectedWorkshop.title,
+      classification_number: classificationNumber,
+    };
 
-  // ── Submit registration ───────────────────────────────────────────────────────
-  const handlePayAndRegister = async () => {
-    if (!selectedWorkshop || !paymentMethod) return;
-    setIsPaying(true);
-    try {
-      await api.post("/registrations", {
-        workshop_id: selectedWorkshop.id,
-        classification_number: classificationNumber || undefined,
-        promo_code: promoResult?.valid ? promoCode.trim() : undefined,
-      });
-
-      setRegStep("success");
-      fetchWorkshops();
-    } catch (err: any) {
-      const msg =
-        err.response?.data?.message ||
-        t(
-          "فشل التسجيل، حاول مرة أخرى",
-          "Registration failed, please try again"
-        );
-      toast({
-        title: t("خطأ", "Error"),
-        description: msg,
-        variant: "destructive",
-      });
-    } finally {
-      setIsPaying(false);
-    }
+    navigate("/payment", {
+      state: {
+        type: "workshop",
+        item: itemWithPrice,
+      },
+    });
   };
 
   // ── Format duration ───────────────────────────────────────────────────────────
@@ -448,6 +351,22 @@ const WorkshopsPage = () => {
                       >
                         <Card className="card-hover overflow-hidden group h-full">
                           <div className="h-2 bg-gradient-to-r from-primary to-blue-light" />
+                          
+                          {/* Workshop Cover Image (Placeholder for now) */}
+                          <div className="h-40 w-full bg-muted overflow-hidden relative">
+                            <img 
+                              src={`https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000&auto=format&fit=crop`} 
+                              alt="Workshop cover" 
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                            <div className="absolute bottom-4 start-4 text-white">
+                              <Badge className="bg-primary hover:bg-primary/90 mb-2">
+                                {t("ورشة عمل", "Workshop")}
+                              </Badge>
+                            </div>
+                          </div>
+
                           <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                               <div className="flex-1">
@@ -478,10 +397,6 @@ const WorkshopsPage = () => {
                               <div className="flex items-center gap-2 text-muted-foreground col-span-2">
                                 <MapPin className="w-4 h-4 text-primary shrink-0" />
                                 {workshop.location}
-                              </div>
-                              <div className="flex items-center gap-2 text-muted-foreground col-span-2">
-                                <User className="w-4 h-4 text-primary shrink-0" />
-                                {workshop.doctor_name}
                               </div>
                             </div>
 
@@ -558,7 +473,7 @@ const WorkshopsPage = () => {
               )}
 
               {!isLoadingWorkshops && filteredWorkshops.length === 0 && (
-                <div className="text-center py-12">
+               <div className="text-center py-12">
                   <AlertCircle className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
                   <p className="text-muted-foreground">
                     {t("لا توجد ورش عمل متاحة", "No workshops available")}
@@ -581,17 +496,12 @@ const WorkshopsPage = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <GraduationCap className="w-5 h-5 text-primary" />
-              {regStep === "info"
-                ? t("التسجيل في الورشة", "Workshop Registration")
-                : regStep === "payment"
-                ? t("اختر طريقة الدفع", "Choose Payment Method")
-                : t("تم التسجيل بنجاح", "Registration Successful")}
+              {t("التسجيل في الورشة", "Workshop Registration")}
             </DialogTitle>
             <DialogDescription>{selectedWorkshop?.title}</DialogDescription>
           </DialogHeader>
 
-          {/* STEP 1 — INFO */}
-          {regStep === "info" && selectedWorkshop && (
+          {selectedWorkshop && (
             <>
               <div className="space-y-4 py-2">
                 {/* Classification number */}
@@ -605,144 +515,30 @@ const WorkshopsPage = () => {
                       "Professional classification no. (optional)"
                     )}
                   />
-                </div>
-
-                {/* Member type */}
-                <div className="space-y-2">
-                  <Label>{t("نوع التسجيل", "Registration Type")}</Label>
-                  <Select
-                    value={isMember ? "member" : "non-member"}
-                    onValueChange={(v) => {
-                      setIsMember(v === "member");
-                      removePromo(); // reset promo when type changes
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="member">
-                        {t("عضو", "Member")} — {selectedWorkshop.member_price}{" "}
-                        {t("ريال", "SAR")}
-                      </SelectItem>
-                      <SelectItem value="non-member">
-                        {t("غير عضو", "Non-Member")} —{" "}
-                        {selectedWorkshop.regular_price} {t("ريال", "SAR")}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Promo code */}
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-1">
-                    <Tag className="w-3.5 h-3.5 text-primary" />
-                    {t("كود الخصم", "Promo Code")}{" "}
-                    <span className="text-xs text-muted-foreground">
-                      ({t("اختياري", "optional")})
-                    </span>
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input
-                      value={promoCode}
-                      onChange={(e) => {
-                        setPromoCode(e.target.value.toUpperCase());
-                        if (promoResult) removePromo();
-                        setPromoError("");
-                      }}
-                      placeholder="PROMO2025"
-                      disabled={!!promoResult}
-                      className="uppercase"
-                    />
-                    {promoResult ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={removePromo}
-                        className="shrink-0 text-destructive border-destructive/30 hover:bg-destructive/10"
-                      >
-                        <XCircle className="w-4 h-4" />
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={checkPromo}
-                        disabled={!promoCode.trim() || isCheckingPromo}
-                        className="shrink-0"
-                      >
-                        {isCheckingPromo ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          t("تطبيق", "Apply")
-                        )}
-                      </Button>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t(
+                      "رقم التصنيف اختياري، ويمكن إضافته للممارسين الصحيين الذين يرغبون في دمج بياناتهم مع الهيئات الصحية السعودية مستقبلاً.",
+                      "Classification number is optional and can be added for healthcare professionals who want future integration with Saudi health authorities."
                     )}
-                  </div>
-
-                  {/* Promo feedback */}
-                  {promoResult?.valid && (
-                    <p className="text-xs text-emerald-600 flex items-center gap-1">
-                      <CheckCircle className="w-3.5 h-3.5" />
-                      {promoResult.type === "free"
-                        ? t(
-                            "كود مجاني — التسجيل بدون رسوم",
-                            "Free code — no charge"
-                          )
-                        : t(
-                            `خصم ${
-                              promoResult.discount_percentage
-                            }% — وفّرت ${promoResult.discountAmount.toFixed(
-                              2
-                            )} ريال`,
-                            `${
-                              promoResult.discount_percentage
-                            }% off — saved ${promoResult.discountAmount.toFixed(
-                              2
-                            )} SAR`
-                          )}
-                    </p>
-                  )}
-                  {promoError && (
-                    <p className="text-xs text-destructive flex items-center gap-1">
-                      <XCircle className="w-3.5 h-3.5" />
-                      {promoError}
-                    </p>
-                  )}
+                  </p>
                 </div>
 
-                {/* Price summary */}
-                <div className="p-4 rounded-lg bg-muted/50 space-y-2">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>{t("السعر الأصلي", "Original Price")}</span>
-                    <span>
-                      {basePrice(selectedWorkshop).toFixed(2)}{" "}
-                      {t("ريال", "SAR")}
+                {/* Status logic */}
+                <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium text-muted-foreground">{t("حالة العضوية", "Membership Status")}</span>
+                    <span className={`font-bold ${isMember ? "text-emerald-600" : "text-muted-foreground"}`}>
+                      {isMember ? t("عضو نشط", "Active Member") : t("غير عضو", "Non-Member")}
                     </span>
                   </div>
-                  {promoResult?.valid && promoResult.discountAmount > 0 && (
-                    <div className="flex items-center justify-between text-sm text-emerald-600">
-                      <span>{t("الخصم", "Discount")}</span>
-                      <span>
-                        − {promoResult.discountAmount.toFixed(2)}{" "}
-                        {t("ريال", "SAR")}
-                      </span>
-                    </div>
-                  )}
-                  <div className="border-t border-border pt-2 flex items-center justify-between">
+                  <div className="border-t border-primary/10 pt-2 flex items-center justify-between">
                     <span className="font-medium">
                       {t("المبلغ المطلوب", "Total Amount")}
                     </span>
-                    <span className="text-2xl font-bold text-primary">
-                      {displayPrice().toFixed(2)} {t("ريال", "SAR")}
+                    <span className="text-xl font-bold text-primary">
+                      {isMember ? selectedWorkshop.member_price : selectedWorkshop.regular_price} {t("ريال", "SAR")}
                     </span>
                   </div>
-                  {isMember && (
-                    <p className="text-xs text-emerald-600 flex items-center gap-1">
-                      <Star className="w-3 h-3" />
-                      {t("تم تطبيق خصم الأعضاء", "Member discount applied")}
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -750,98 +546,12 @@ const WorkshopsPage = () => {
                 <Button variant="outline" onClick={resetRegistration}>
                   {t("إلغاء", "Cancel")}
                 </Button>
-                {/* If free after promo, skip payment step */}
-                {displayPrice() === 0 ? (
-                  <Button
-                    onClick={async () => {
-                      setIsPaying(true);
-                      try {
-                        await api.post("/registrations", {
-                          workshop_id: selectedWorkshop.id,
-                          classification_number:
-                            classificationNumber || undefined,
-                          promo_code: promoResult?.valid
-                            ? promoCode.trim()
-                            : undefined,
-                        });
-                        setRegStep("success");
-                        fetchWorkshops();
-                      } catch (err: any) {
-                        toast({
-                          title: t("خطأ", "Error"),
-                          description:
-                            err.response?.data?.message ||
-                            t("فشل التسجيل", "Registration failed"),
-                          variant: "destructive",
-                        });
-                      } finally {
-                        setIsPaying(false);
-                      }
-                    }}
-                    disabled={isPaying}
-                    className="gap-2"
-                  >
-                    {isPaying ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <CheckCircle className="w-4 h-4" />
-                    )}
-                    {t("تسجيل مجاناً", "Register Free")}
-                  </Button>
-                ) : (
-                  <Button onClick={goToPayment} className="gap-2">
-                    <CheckCircle className="w-4 h-4" />
-                    {t("متابعة للدفع", "Continue to Payment")}
-                  </Button>
-                )}
+                <Button onClick={goToPayment} className="gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  {t("متابعة للدفع", "Continue to Payment")}
+                </Button>
               </DialogFooter>
             </>
-          )}
-
-          {/* STEP 2 — PAYMENT */}
-          {regStep === "payment" && selectedWorkshop && (
-            <div className="py-2">
-              <PaymentMethodPicker
-                amount={displayPrice()}
-                selected={paymentMethod}
-                onSelect={setPaymentMethod}
-                loading={isPaying}
-                onConfirm={handlePayAndRegister}
-                confirmLabel={{
-                  ar: "ادفع وسجّل الآن",
-                  en: "Pay & Register Now",
-                }}
-              />
-              <button
-                onClick={() => setRegStep("info")}
-                className="text-xs text-muted-foreground hover:text-primary mt-3 mx-auto block"
-              >
-                ← {t("رجوع", "Back")}
-              </button>
-            </div>
-          )}
-
-          {/* STEP 3 — SUCCESS */}
-          {regStep === "success" && (
-            <div className="py-6 text-center space-y-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                <CheckCircle className="w-9 h-9 text-emerald-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold">
-                  {t("تم التسجيل بنجاح!", "You're registered!")}
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {t(
-                    "سيتم إرسال تفاصيل التأكيد إلى بريدك الإلكتروني.",
-                    "Confirmation details have been sent to your email."
-                  )}
-                </p>
-              </div>
-              <Button onClick={resetRegistration} className="w-full">
-                {t("تم", "Done")}
-              </Button>
-            </div>
           )}
         </DialogContent>
       </Dialog>

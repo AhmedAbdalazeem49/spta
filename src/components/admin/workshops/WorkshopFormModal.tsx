@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Edit, Loader2, Plus } from "lucide-react";
+import { Edit, Loader2, Plus, Bell } from "lucide-react";
 
 export const emptyWorkshopForm = {
   title: "",
@@ -16,7 +16,7 @@ export const emptyWorkshopForm = {
   regular_price: "",
   member_price: "",
   total_capacity: "",
-  status: "open" as "open" | "closed" | "completed",
+  status: "open" as "open" | "closed" | "completed" | "postponed" | "full",
   duration_minutes: 60,
 };
 
@@ -188,10 +188,25 @@ export const WorkshopFormModal = ({
               }
             >
               <option value="open">{t("مفتوح", "Open")}</option>
+              <option value="full">{t("ممتلئة", "Full")}</option>
               <option value="closed">{t("مغلق", "Closed")}</option>
               <option value="completed">{t("مكتمل", "Completed")}</option>
+              <option value="postponed">{t("مؤجلة", "Postponed")}</option>
             </select>
           </div>
+
+          {form.status === "postponed" && editMode && (
+            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-lg flex items-center justify-between">
+              <div>
+                <p className="font-medium text-amber-600">{t("تم تأجيل الورشة", "Workshop Postponed")}</p>
+                <p className="text-sm text-muted-foreground">{t("يجب إشعار جميع المشتركين", "All subscribers must be notified")}</p>
+              </div>
+              <Button size="sm" variant="outline" className="gap-2 border-amber-500/30 text-amber-600 hover:bg-amber-500/10">
+                <Bell className="w-4 h-4" />
+                {t("إشعار المشتركين", "Notify Subscribers")}
+              </Button>
+            </div>
+          )}
         </div>
 
         <DialogFooter>

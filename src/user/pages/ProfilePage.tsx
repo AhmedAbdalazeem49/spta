@@ -562,6 +562,15 @@ const fetchCertificates = async () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
+                    <div className="mb-8 flex items-start gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50">
+                      <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+                      <p className="text-sm leading-relaxed">
+                        {t(
+                          "لتعديل المعلومات الأساسية أو الرسمية (مثل الاسم أو رقم الهوية)، يرجى التواصل معنا عبر البريد الإلكتروني أو الواتساب وسيقوم فريق الإدارة بمساعدتك.",
+                          "If you need to modify sensitive information such as your name or official data, please contact us via email or WhatsApp and our administration team will assist you."
+                        )}
+                      </p>
+                    </div>
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <Label className="text-sm font-medium">
