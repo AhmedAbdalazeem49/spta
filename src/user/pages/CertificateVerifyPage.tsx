@@ -44,10 +44,10 @@ const CertificateVerifyPage = () => {
             hours: 8,
             verification_code: code,
             issuer: "Saudi Physical Therapy Association",
-            status: "verified",
-            chairman_name: "د. خالد العبدالله",
-            signature_url: "https://upload.wikimedia.org/wikipedia/commons/f/f8/John_Hancock_signature.svg", // Mock sig
-            stamp_url: "https://cdn-icons-png.flaticon.com/512/3757/3757912.png" // Mock stamp
+            // status: "verified",
+            // chairman_name: "د. خالد العبدالله",
+            // signature_url: "https://upload.wikimedia.org/wikipedia/commons/f/f8/John_Hancock_signature.svg", // Mock sig
+            // stamp_url: "https://cdn-icons-png.flaticon.com/512/3757/3757912.png" // Mock stamp
           });
         } else {
           setData({ valid: false });

@@ -1,19 +1,21 @@
 import api from "@/api/client";
 import { PAYMENT_ENDPOINTS } from "@/api/endpoints";
-import type {
-  CreatePaymentPayload,
-  CreatePaymentResponse,
-} from "@/types/payment";
 
 export const paymentService = {
-  async create(payload: CreatePaymentPayload): Promise<CreatePaymentResponse> {
-    const { data } = await api.post(PAYMENT_ENDPOINTS.create, payload);
-    return data?.data ?? data;
+  async createMembership(payload: {
+    membership_type: string;
+    payment_method: string;
+  }) {
+    const { data } = await api.post("/membership/subscribe", payload);
+
+    return data?.data; // { payment_url: "" }
   },
+
   async verify(paymentId: string) {
     const { data } = await api.post(PAYMENT_ENDPOINTS.verify, {
       payment_id: paymentId,
     });
+
     return data?.data ?? data;
   },
 };

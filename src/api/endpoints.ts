@@ -60,6 +60,4 @@ export const COUPON_ENDPOINTS = {
   adminDelete: (id: string | number) => `/admin/promo-codes/${id}`,
 } as const;
 
-export const VISITOR_ENDPOINTS = {
-  adminList: "/admin/visitors",
-} as const;
+

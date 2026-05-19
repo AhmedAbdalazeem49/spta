@@ -33,6 +33,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isApproved: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithToken: (token: string, user: User) => void; // ← new
   register: (data: RegisterData) => Promise<RegisterResult>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -92,27 +93,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const res = await api.get("/me");
       const userData = res.data?.data || res.data?.user || res.data;
-
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
     } catch (error: any) {
-      // only logout if NOT OTP flow
       console.warn("fetchUser failed:", error?.response?.status);
-
       if (error?.response?.status === 401) {
-        // DO NOT clear auth during OTP/signup flow
         return;
       }
     }
   }, [clearAuth]);
 
-  // ✅ FIXED: runs when token changes
   useEffect(() => {
     if (!token) {
       setIsLoading(false);
       return;
     }
-
     fetchUser().finally(() => setIsLoading(false));
   }, [token, fetchUser]);
 
@@ -143,6 +138,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
+  /**
+   * Called after OTP verification — sets auth state directly
+   * without hitting /login again.
+   */
+  const loginWithToken = (newToken: string, userData: User) => {
+    localStorage.setItem("token", newToken);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setToken(newToken);
+    setUser(userData);
+  };
+
   const register = async (data: RegisterData): Promise<RegisterResult> => {
     const res = await api.post("/register", data);
     const resData = res.data?.data || res.data;
@@ -150,7 +156,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const status: UserStatus =
       resData.user?.status || resData.status || "pending";
 
-    // ❌ IMPORTANT: DO NOT login user after signup (OTP flow)
     if (status === "pending") {
       return {
         status: "pending",
@@ -159,7 +164,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       };
     }
 
-    // only if backend auto-approves
     if (resData.token) {
       localStorage.setItem("token", resData.token);
       setToken(resData.token);
@@ -203,16 +207,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         token,
         isLoading,
-
-        // ✅ FIXED LOGIC FOR OTP FLOW
         isAuthenticated: !!token,
-
         isApproved:
           user?.status === "approved" ||
           user?.status === "active" ||
           !!user?.email_verified_at,
-
         login,
+        loginWithToken,
         register,
         logout,
         forgotPassword,

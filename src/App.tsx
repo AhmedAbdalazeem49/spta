@@ -19,8 +19,6 @@ import DatabasesPage from "./user/pages/DatabasesPage";
 import HomePage from "./user/pages/HomePage";
 import InternationalRelationsPage from "./user/pages/InternationalRelationsPage";
 import LibraryPage from "./user/pages/LibraryPage";
-import MembersCountPage from "./user/pages/MembersCountPage";
-import MembershipBenefitsPage from "./user/pages/MembershipBenefitsPage";
 import NewsPage from "./user/pages/NewsPage";
 import PoliciesPage from "./user/pages/PoliciesPage";
 import PreviousBoardsPage from "./user/pages/PreviousBoardsPage";
@@ -40,7 +38,6 @@ import SignupPage from "./pages/SignupPage";
 
 // Protected user pages
 import DigitalCardPage from "./user/pages/DigitalCardPage";
-import MembershipSubscribePage from "./user/pages/MembershipSubscribePage";
 import ProfilePage from "./user/pages/ProfilePage";
 
 // Admin layout + pages
@@ -57,12 +54,14 @@ import WorkshopsPage from "./pages/WorkshopsPage";
 // Conference & Certificate pages
 import ConferencePopup from "./components/ConferencePopup";
 import ScrollToTop from "./components/ScrollToTop";
+import AdminMembershipsPage from "./pages/admin/Memberships/AdminMembershipsPage";
 import PaymentPage from "./pages/PaymentPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
 import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import CertificateViewPage from "./user/pages/CertificateViewPage";
 import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
+import Membership from "./user/pages/Membership";
 
 const queryClient = new QueryClient();
 
@@ -109,12 +108,7 @@ const App = () => (
               <Route path="/news" element={<NewsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               {/* Membership */}
-              <Route
-                path="/membership/benefits"
-                element={<MembershipBenefitsPage />}
-              />
-              <Route path="/membership" element={<MembershipBenefitsPage />} />
-              <Route path="/membership/count" element={<MembersCountPage />} />
+              <Route path="/membership" element={<Membership />} />
               <Route path="/card" element={<DigitalCardPage />} />
               {/* Public Workshops */}
               <Route path="/workshops" element={<WorkshopsPage />} />
@@ -135,8 +129,8 @@ const App = () => (
               />
               {/* Public certificate verification */}
               <Route
-                path="/certificates/verify/:code"
-                element={<CertificateVerifyPage />}
+                path="/certificates/verify/"
+                element={<CertificateViewPage />}
               />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
@@ -202,6 +196,17 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminCoupons />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/admin/memberships"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminMembershipsPage />
                     </AdminLayout>
                   </AdminRoute>
                 }

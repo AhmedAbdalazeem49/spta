@@ -7,4 +7,3 @@ export { conferenceService } from "./conference.service";
 export { workshopService } from "./workshop.service";
 export { userService } from "./user.service";
 export { couponService } from "./coupon.service";
-export { visitorService } from "./visitor.service";

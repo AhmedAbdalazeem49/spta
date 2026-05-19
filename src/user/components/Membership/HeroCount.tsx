@@ -1,14 +1,12 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Gift, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { Users } from "lucide-react";
+import React from "react";
 
-export default function Hero() {
-  const { t, isRTL } = useLanguage();
+export default function HeroCount() {
+  const { t } = useLanguage();
 
   return (
     <section className="relative py-24 bg-gradient-to-br from-primary via-primary/90 to-primary-dark overflow-hidden">
@@ -26,25 +24,18 @@ export default function Hero() {
           className="text-center max-w-4xl mx-auto"
         >
           {/* Icon */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", delay: 0.2 }}
-            className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-accent/20 flex items-center justify-center"
-          >
-            <Gift className="w-10 h-10 text-accent" />
-          </motion.div>
+          <Users className="w-16 h-16 mx-auto mb-6 text-accent" />
 
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            {t("مميزات العضوية", "Membership Benefits")}
+            {t("إحصائيات الأعضاء", "Members Statistics")}
           </h1>
 
           {/* Description */}
-          <p className="text-xl text-white/80 mb-8">
+          <p className="text-xl text-white/80">
             {t(
-              "استمتع بمزايا حصرية وخدمات متميزة كعضو في الجمعية السعودية للعلاج الطبيعي",
-              "Enjoy exclusive benefits and premium services as an SPTA member"
+              "نفخر بمجتمعنا المتنامي من المتخصصين في العلاج الطبيعي",
+              "We are proud of our growing community of PT specialists"
             )}
           </p>
         </motion.div>

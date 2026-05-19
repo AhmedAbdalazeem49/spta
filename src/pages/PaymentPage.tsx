@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import api from "@/services/api";
+import { paymentService } from "@/services/payment.service";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -65,7 +65,7 @@ const PaymentPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState("creditcard");
-  
+
   const [couponCode, setCouponCode] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
   const [discount, setDiscount] = useState(0); // Value from 0 to 1
@@ -83,26 +83,35 @@ const PaymentPage = () => {
 
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
-    
+
     setCouponLoading(true);
     try {
       // Fake API call to validate coupon
-      await new Promise(res => setTimeout(res, 800));
-      
+      await new Promise((res) => setTimeout(res, 800));
+
       // Demo logic:
       if (couponCode.toUpperCase() === "FREE100") {
         setDiscount(1);
         setIsFree(true);
-        toast.success(t("تم تطبيق الكوبون المجاني بنجاح!", "Free coupon applied successfully!"));
+        toast.success(
+          t(
+            "تم تطبيق الكوبون المجاني بنجاح!",
+            "Free coupon applied successfully!"
+          )
+        );
       } else if (couponCode.toUpperCase() === "DISCOUNT50") {
         setDiscount(0.5);
-        toast.success(t("تم تطبيق خصم 50% بنجاح!", "50% discount applied successfully!"));
+        toast.success(
+          t("تم تطبيق خصم 50% بنجاح!", "50% discount applied successfully!")
+        );
       } else {
         toast.error(t("كوبون غير صالح", "Invalid coupon code"));
         setDiscount(0);
       }
     } catch (err) {
-      toast.error(t("حدث خطأ أثناء التحقق من الكوبون", "Error validating coupon"));
+      toast.error(
+        t("حدث خطأ أثناء التحقق من الكوبون", "Error validating coupon")
+      );
     } finally {
       setCouponLoading(false);
     }
@@ -111,31 +120,25 @@ const PaymentPage = () => {
   const handleProcessPayment = async () => {
     try {
       setLoading(true);
-      
-      // Faking the real logic. In real app, create order, get payment URL, redirect.
-      await new Promise(res => setTimeout(res, 1500));
-      
-      // If free, skip payment gateway
-      if (isCurrentlyFree) {
-        toast.success(
-          type === "membership" 
-            ? t("تم التسجيل بالعضوية بنجاح!", "Membership registered successfully!")
-            : t("تم الاشتراك في ورشة العمل بنجاح!", "Successfully subscribed to the workshop!")
-        );
-        navigate(type === "membership" ? "/profile" : "/workshops");
+
+      const payload = {
+        membership_type: item.key,
+        payment_method: selectedMethod,
+      };
+
+      const res = await paymentService.createMembership(payload);
+
+      const paymentUrl = res?.payment_url;
+
+      if (!paymentUrl) {
+        toast.error("Payment URL not found");
         return;
       }
 
-      // Simulate redirect to payment gateway based on selected method
-      toast.success(t("جاري التوجيه لبوابة الدفع...", "Redirecting to payment gateway..."));
-      
-      // Demo: fake success after redirect
-      setTimeout(() => {
-        navigate(type === "membership" ? "/profile" : "/workshops");
-      }, 1000);
-
+      window.location.href = paymentUrl;
     } catch (err) {
-      toast.error(t("حدث خطأ في عملية الدفع", "Payment process failed"));
+      console.error(err);
+      toast.error("Payment failed");
     } finally {
       setLoading(false);
     }
@@ -149,7 +152,10 @@ const PaymentPage = () => {
             {t("إتمام عملية الدفع", "Complete Payment")}
           </h1>
           <p className="text-muted-foreground">
-            {t("الرجاء مراجعة التفاصيل واختيار طريقة الدفع المناسبة", "Please review details and select your preferred payment method")}
+            {t(
+              "الرجاء مراجعة التفاصيل واختيار طريقة الدفع المناسبة",
+              "Please review details and select your preferred payment method"
+            )}
           </p>
         </div>
 
@@ -181,14 +187,20 @@ const PaymentPage = () => {
                         }`}
                       >
                         <div className="flex justify-between items-center w-full">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${method.bg} ${method.color} ${method.border} border`}>
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center ${method.bg} ${method.color} ${method.border} border`}
+                          >
                             <method.icon className="w-5 h-5" />
                           </div>
                           {isSelected && (
                             <CheckCircle2 className="w-5 h-5 text-primary" />
                           )}
                         </div>
-                        <span className={`font-semibold ${isSelected ? "text-primary" : ""}`}>
+                        <span
+                          className={`font-semibold ${
+                            isSelected ? "text-primary" : ""
+                          }`}
+                        >
                           {method.name}
                         </span>
                       </button>
@@ -225,22 +237,33 @@ const PaymentPage = () => {
               <div className="space-y-4 mb-6">
                 <div className="p-4 rounded-xl bg-muted/50 border border-border">
                   <span className="text-xs font-medium text-primary mb-1 block">
-                    {type === "membership" ? t("اشتراك عضوية", "Membership Subscription") : t("تسجيل ورشة عمل", "Workshop Registration")}
+                    {type === "membership"
+                      ? t("اشتراك عضوية", "Membership Subscription")
+                      : t("تسجيل ورشة عمل", "Workshop Registration")}
                   </span>
                   <h3 className="font-bold text-base leading-snug">
-                    {t(item.nameAr || item.titleAr, item.nameEn || item.titleEn)}
+                    {t(
+                      item.nameAr || item.titleAr,
+                      item.nameEn || item.titleEn
+                    )}
                   </h3>
                 </div>
 
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">{t("السعر الأساسي", "Base Price")}</span>
-                  <span className="font-medium">{basePrice} {t("ريال", "SAR")}</span>
+                  <span className="text-muted-foreground">
+                    {t("السعر الأساسي", "Base Price")}
+                  </span>
+                  <span className="font-medium">
+                    {basePrice} {t("ريال", "SAR")}
+                  </span>
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between items-center text-sm text-emerald-600 dark:text-emerald-400">
                     <span>{t("الخصم", "Discount")}</span>
-                    <span className="font-medium">-{basePrice * discount} {t("ريال", "SAR")}</span>
+                    <span className="font-medium">
+                      -{basePrice * discount} {t("ريال", "SAR")}
+                    </span>
                   </div>
                 )}
               </div>
@@ -275,10 +298,14 @@ const PaymentPage = () => {
 
               <div className="pt-6 border-t border-border mb-8">
                 <div className="flex justify-between items-center">
-                  <span className="text-base font-bold">{t("الإجمالي", "Total")}</span>
+                  <span className="text-base font-bold">
+                    {t("الإجمالي", "Total")}
+                  </span>
                   <div className="text-right">
                     <span className="text-2xl font-bold text-primary">
-                      {finalPrice === 0 ? t("مجاني", "Free") : `${finalPrice} ${t("ريال", "SAR")}`}
+                      {finalPrice === 0
+                        ? t("مجاني", "Free")
+                        : `${finalPrice} ${t("ريال", "SAR")}`}
                     </span>
                   </div>
                 </div>
@@ -294,8 +321,8 @@ const PaymentPage = () => {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    {isCurrentlyFree 
-                      ? type === "membership" 
+                    {isCurrentlyFree
+                      ? type === "membership"
                         ? t("تأكيد التسجيل", "Confirm Registration")
                         : t("تأكيد الحضور", "Confirm Attendance")
                       : t("إتمام الدفع", "Proceed to Payment")}

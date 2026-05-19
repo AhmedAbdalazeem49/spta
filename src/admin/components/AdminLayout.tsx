@@ -17,7 +17,6 @@ import {
   LogOut,
   Mail,
   Menu,
-  Settings,
   Ticket,
   User,
   Users,
@@ -65,12 +64,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       labelAr: "أكواد الخصم",
       labelEn: "Coupons",
     },
-    // {
-    //   path: "/admin/visitors",
-    //   icon: Eye,
-    //   labelAr: "الزائرين",
-    //   labelEn: "Visitors",
-    // },
+    {
+      path: "/admin/memberships",
+      icon: Crown,
+      labelAr: "الأعضاء",
+      labelEn: "Memberships",
+    },
   ];
 
   const isActive = (path: string) => {

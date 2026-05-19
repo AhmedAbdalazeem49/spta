@@ -24,7 +24,6 @@ const AdminDashboardPage = () => {
     workshops: 0,
     memberships: 0,
     certificates: 0,
-    visitors: 0,
     coupons: 0,
   });
 
@@ -35,13 +34,11 @@ const AdminDashboardPage = () => {
           usersRes,
           workshopsRes,
           membershipsRes,
-          visitorsRes,
           couponsRes,
         ] = await Promise.allSettled([
           api.get("/admin/users"),
           api.get("/workshops"),
           api.get("/admin/memberships"),
-          api.get("/admin/visitors"),
           api.get("/promo-codes"),
         ]);
 
@@ -69,12 +66,6 @@ const AdminDashboardPage = () => {
             couponsRes.status === "fulfilled"
               ? couponsRes.value.data?.data?.length ||
                 couponsRes.value.data?.length ||
-                0
-              : 0,
-          visitors:
-            visitorsRes.status === "fulfilled"
-              ? visitorsRes.value.data?.data?.length ||
-                visitorsRes.value.data?.length ||
                 0
               : 0,
         });

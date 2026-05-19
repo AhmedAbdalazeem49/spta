@@ -1,38 +1,62 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import AOS from 'aos';
-import Layout from '@/components/layout/Layout';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
+import { CertificateCard } from "@/components/admin/certificates/CertificateCard";
+import DigitalMembershipCard from "@/components/DigitalMembershipCard";
+import Layout from "@/components/layout/Layout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useToast } from "@/hooks/use-toast";
+import api from "@/services/api";
+import { Certificate } from "@/types/certificate";
+import AOS from "aos";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  User, Award, Calendar, Mail, Settings, Download, Eye, Clock,
-  CheckCircle, XCircle, AlertCircle, GraduationCap, Building2,
-  Phone, MapPin, FileText, Bell, Shield, Crown, ArrowRight,
-  Edit, Loader2, Save, RefreshCw
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Link, useNavigate } from 'react-router-dom';
-import api from '@/services/api';
+  AlertCircle,
+  ArrowRight,
+  Award,
+  Bell,
+  Building2,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Copy,
+  Download,
+  Edit,
+  Eye,
+  FileText,
+  GraduationCap,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  RefreshCw,
+  Save,
+  Settings,
+  Shield,
+  User,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-interface ActiveMembership {
+export interface ActiveMembership {
   id: number;
-  membership_id: number;
+  user_id?: number;
+
+  membership_type: string; // "active | affiliate | intern | student"
+  membership_number?: string;
+
   starts_at: string;
   ends_at: string;
   status: string;
-  membership?: {
-    id: number;
-    name: string;
-    name_ar?: string;
-    price?: number;
-  };
+
+  created_at?: string;
+  updated_at?: string;
 }
 
 const ProfilePage = () => {
@@ -40,26 +64,28 @@ const ProfilePage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('overview');
-  const [activeMembership, setActiveMembership] = useState<ActiveMembership | null>(null);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [activeMembership, setActiveMembership] =
+    useState<ActiveMembership | null>(null);
   const [membershipLoading, setMembershipLoading] = useState(true);
   const [membershipError, setMembershipError] = useState(false);
   const [workshops, setWorkshops] = useState<any[]>([]);
-const [certificates, setCertificates] = useState<any[]>([]);
+  const [certificates, setCertificates] = useState<any[]>([]);
+  const [showCardModal, setShowCardModal] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
+  const [showCertDetails, setShowCertDetails] = useState(false);
+  const [showCertPreview, setShowCertPreview] = useState(false);
 
   // Profile edit state
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editForm, setEditForm] = useState({
-    name: '', name_ar: '', phone: '', employer: '',
-    specialization: '', sub_specialization: '',
-  });
-
-  const [emailSettings, setEmailSettings] = useState({
-    newsletters: true,
-    workshopReminders: true,
-    membershipAlerts: true,
-    promotions: false,
+    name: "",
+    name_ar: "",
+    phone: "",
+    employer: "",
+    specialization: "",
+    sub_specialization: "",
   });
 
   useEffect(() => {
@@ -70,12 +96,12 @@ const [certificates, setCertificates] = useState<any[]>([]);
   useEffect(() => {
     if (user) {
       setEditForm({
-        name: user.name || '',
-        name_ar: user.name_ar || '',
-        phone: user.phone || '',
-        employer: user.employer || '',
-        specialization: user.specialization || '',
-        sub_specialization: user.sub_specialization || '',
+        name: user.name || "",
+        name_ar: user.name_ar || "",
+        phone: user.phone || "",
+        employer: user.employer || "",
+        specialization: user.specialization || "",
+        sub_specialization: user.sub_specialization || "",
       });
     }
   }, [user]);
@@ -83,7 +109,7 @@ const [certificates, setCertificates] = useState<any[]>([]);
   const fetchMembership = async () => {
     setMembershipLoading(true);
     try {
-      const res = await api.get('/my-membership');
+      const res = await api.get("/membership/my-membership");
       const data = res.data?.data || res.data;
       setActiveMembership(data || null);
     } catch {
@@ -95,39 +121,42 @@ const [certificates, setCertificates] = useState<any[]>([]);
   };
 
   useEffect(() => {
-  fetchWorkshops();
-  fetchCertificates();
-}, []);
+    fetchWorkshops();
+    fetchCertificates();
+  }, []);
 
-const fetchWorkshops = async () => {
-  try {
-    const res = await api.get('/my-workshops');
-    setWorkshops(res.data.data || []);
-  } catch {
-    setWorkshops([]);
-  }
-};
+  const fetchWorkshops = async () => {
+    try {
+      const res = await api.get("/my-workshops");
+      setWorkshops(res.data.data || []);
+    } catch {
+      setWorkshops([]);
+    }
+  };
 
-const fetchCertificates = async () => {
-  try {
-    const res = await api.get('/my-certificates');
-    setCertificates(res.data.data || []);
-  } catch {
-    setCertificates([]);
-  }
-};
+  const fetchCertificates = async () => {
+    try {
+      const res = await api.get("/my-certificates");
+      setCertificates(res.data.data || []);
+    } catch {
+      setCertificates([]);
+    }
+  };
 
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
-      await api.put('/profile/update', editForm);
-      toast({ title: t('تم بنجاح', 'Success'), description: t('تم تحديث الملف الشخصي', 'Profile updated') });
+      await api.put("/profile/update", editForm);
+      toast({
+        title: t("تم بنجاح", "Success"),
+        description: t("تم تحديث الملف الشخصي", "Profile updated"),
+      });
       setIsEditing(false);
     } catch (err: any) {
       toast({
-        title: t('خطأ', 'Error'),
-        description: err.response?.data?.message || t('حدث خطأ', 'Error'),
-        variant: 'destructive',
+        title: t("خطأ", "Error"),
+        description: err.response?.data?.message || t("حدث خطأ", "Error"),
+        variant: "destructive",
       });
     } finally {
       setIsSaving(false);
@@ -135,10 +164,28 @@ const fetchCertificates = async () => {
   };
 
   const getStatusBadge = (status: string) => {
-    const configs: Record<string, { color: string; icon: any; labelAr: string; labelEn: string }> = {
-      active: { color: 'bg-green-accent/10 text-green-accent border-green-accent/30', icon: CheckCircle, labelAr: 'نشط', labelEn: 'Active' },
-      expired: { color: 'bg-destructive/10 text-destructive border-destructive/30', icon: XCircle, labelAr: 'منتهي', labelEn: 'Expired' },
-      pending: { color: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/30', icon: AlertCircle, labelAr: 'قيد الانتظار', labelEn: 'Pending' },
+    const configs: Record<
+      string,
+      { color: string; icon: any; labelAr: string; labelEn: string }
+    > = {
+      active: {
+        color: "bg-green-accent/10 text-green-accent border-green-accent/30",
+        icon: CheckCircle,
+        labelAr: "نشط",
+        labelEn: "Active",
+      },
+      expired: {
+        color: "bg-destructive/10 text-destructive border-destructive/30",
+        icon: XCircle,
+        labelAr: "منتهي",
+        labelEn: "Expired",
+      },
+      pending: {
+        color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
+        icon: AlertCircle,
+        labelAr: "قيد الانتظار",
+        labelEn: "Pending",
+      },
     };
     const config = configs[status] || configs.pending;
     const Icon = config.icon;
@@ -151,11 +198,39 @@ const fetchCertificates = async () => {
   };
 
   const tabs = [
-  { id: 'overview', labelAr: 'نظرة عامة', labelEn: 'Overview', icon: User },
-  { id: 'workshops', labelAr: 'ورش العمل', labelEn: 'Workshops', icon: GraduationCap },
-  { id: 'certificates', labelAr: 'الشهادات', labelEn: 'Certificates', icon: Award },
-  { id: 'edit', labelAr: 'تعديل الملف', labelEn: 'Edit Profile', icon: Edit },
-];
+    { id: "overview", labelAr: "نظرة عامة", labelEn: "Overview", icon: User },
+    {
+      id: "workshops",
+      labelAr: "ورش العمل",
+      labelEn: "Workshops",
+      icon: GraduationCap,
+    },
+    {
+      id: "certificates",
+      labelAr: "الشهادات",
+      labelEn: "Certificates",
+      icon: Award,
+    },
+    { id: "edit", labelAr: "تعديل الملف", labelEn: "Edit Profile", icon: Edit },
+  ];
+
+  const openCertDetails = (cert: Certificate) => {
+    setSelectedCert(cert);
+    setShowCertDetails(true);
+  };
+
+  const openCertPreview = (cert: Certificate) => {
+    setSelectedCert(cert);
+    setShowCertPreview(true);
+  };
+
+  const handleCopyLink = (url: string) => {
+    navigator.clipboard.writeText(url);
+    toast({
+      title: t("تم النسخ", "Copied"),
+      description: t("تم نسخ رابط التحقق", "Verification link copied"),
+    });
+  };
 
   return (
     <Layout>
@@ -258,21 +333,8 @@ const fetchCertificates = async () => {
                             <p className="text-sm text-muted-foreground">
                               {t("نوع العضوية", "Membership Type")}
                             </p>
-                            <p className="font-semibold"></p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Award className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              {t("نوع العضوية", "Membership Type")}
-                            </p>
                             <p className="font-semibold">
-                              {activeMembership?.membership?.name_ar ||
-                                activeMembership?.membership?.name ||
-                                "—"}
+                              {activeMembership?.membership_type}
                             </p>
                           </div>
                         </div>
@@ -332,28 +394,41 @@ const fetchCertificates = async () => {
                       </div>
                     </div>
                     <div className="mt-6 pt-6 border-t border-border flex flex-wrap gap-2">
-                      <Button
-                        onClick={() => navigate('/membership/subscribe')}
-                        className="gap-2"
-                      >
-                        <RefreshCw className="w-4 h-4" />
-                        {activeMembership
-                          ? t("تجديد العضوية", "Renew Membership")
-                          : t("اشترك الآن", "Subscribe Now")}
-                      </Button>
+                      {/* Only show subscribe button when NOT subscribed */}
+                      {!activeMembership && (
+                        <Button
+                          onClick={() => navigate("/membership")}
+                          className="gap-2"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          {t("اشترك بالعضوية", "Subscribe Now")}
+                        </Button>
+                      )}
+
+                      {/* Renew button only when subscribed */}
                       {activeMembership && (
-                        <Button asChild variant="outline" className="gap-2">
-                          <Link to="/membership/card">
-                            <FileText className="w-4 h-4" />
-                            {t("بطاقة العضوية", "Membership Card")}
-                          </Link>
+                        <Button
+                          onClick={() => navigate("/membership")}
+                          variant="outline"
+                          className="gap-2 hidden"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          {t("تجديد العضوية", "Renew Membership")}
+                        </Button>
+                      )}
+
+                      {activeMembership && (
+                        <Button
+                          onClick={() => setShowCardModal(true)}
+                          className="gap-2"
+                        >
+                          <FileText className="w-4 h-4" />
+                          {t("البطاقة الرقمية", "Membership Card")}
                         </Button>
                       )}
                     </div>
                   </CardContent>
                 </Card>
-
-
 
                 {/* Personal Info */}
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -503,6 +578,7 @@ const fetchCertificates = async () => {
             )}
 
             {/* Certificates Tab */}
+            {/* Certificates Tab */}
             {activeTab === "certificates" && (
               <motion.div
                 key="certificates"
@@ -510,36 +586,43 @@ const fetchCertificates = async () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
               >
                 {certificates.length === 0 ? (
-                  <Card className="card-hover">
-                    <CardContent className="py-16 text-center">
-                      <Crown className="w-10 h-10 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-xl font-bold mb-2">
-                        {t("لا توجد شهادات بعد", "No Certificates Yet")}
-                      </h3>
-                    </CardContent>
-                  </Card>
+                  <div className="flex flex-col items-center justify-center py-24 text-center">
+                    <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center mb-4">
+                      <Award className="w-10 h-10 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">
+                      {t("لا توجد شهادات بعد", "No Certificates Yet")}
+                    </h3>
+                    <p className="text-muted-foreground text-sm max-w-xs">
+                      {t(
+                        "ستظهر شهاداتك هنا بعد إتمام ورش العمل",
+                        "Your certificates will appear here after completing workshops"
+                      )}
+                    </p>
+                  </div>
                 ) : (
-                  certificates.map((cert, index) => (
-                    <Card key={cert.id} className="card-hover group">
-                      <CardContent className="p-6">
-                        <h3 className="font-semibold text-lg mb-2">
-                          {cert.title_ar || cert.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          {new Date(cert.issue_date).toLocaleDateString(
-                            isRTL ? "ar-SA" : "en-US"
-                          )}
-                        </p>
-                        <Button size="sm" className="gap-2">
-                          <Download className="w-4 h-4" />
-                          {t("تحميل", "Download")}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <AnimatePresence>
+                      {certificates.map((cert, index) => (
+                        <motion.div
+                          key={cert.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <CertificateCard
+                            cert={cert}
+                            onOpenDetails={openCertDetails}
+                            onOpenPreview={openCertPreview}
+                            onCopyLink={handleCopyLink}
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
                 )}
               </motion.div>
             )}
@@ -654,6 +737,211 @@ const fetchCertificates = async () => {
           </AnimatePresence>
         </div>
       </section>
+
+      {/* Digital Card Modal */}
+      {showCardModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowCardModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="bg-background rounded-3xl shadow-2xl w-full max-w-lg p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowCardModal(false)}
+              className="absolute top-4 end-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+            >
+              <XCircle className="w-4 h-4 text-muted-foreground" />
+            </button>
+
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              {t("بطاقة العضوية الرقمية", "Digital Membership Card")}
+            </h2>
+
+            <DigitalMembershipCard
+              member={{
+                fullName: user?.name || "",
+                fullNameEn: user?.name || "",
+                membershipNumber: activeMembership?.membership_number || "—",
+                membershipType:
+                  (activeMembership?.membership_type as any) || "active",
+                expiryDate: activeMembership?.ends_at || "",
+                workplace: user?.employer || "",
+                workplaceEn: user?.employer || "",
+              }}
+              showControls={true}
+              showSignature={true}
+              showStamp={true}
+            />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Certificate Details Modal */}
+      {showCertDetails && selectedCert && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowCertDetails(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="bg-background rounded-3xl shadow-2xl w-full max-w-md p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowCertDetails(false)}
+              className="absolute top-4 end-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+            >
+              <XCircle className="w-4 h-4 text-muted-foreground" />
+            </button>
+
+            <div className="flex items-center gap-2 mb-6">
+              <Award className="w-5 h-5 text-primary" />
+              <h2 className="text-xl font-bold">
+                {t("تفاصيل الشهادة", "Certificate Details")}
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                {
+                  label: t("الاسم", "Name"),
+                  value: selectedCert.recipientNameAr || selectedCert.recipientNameEn,
+                },
+                {
+                  label: t("رقم الشهادة", "Certificate ID"),
+                  value: selectedCert.id,
+                  mono: true,
+                },
+                {
+                  label: t("تاريخ الإصدار", "Issue Date"),
+                  value: selectedCert.issue_date
+                    ? new Date(selectedCert.issue_date).toLocaleDateString(
+                        isRTL ? "ar-SA" : "en-US"
+                      )
+                    : "—",
+                },
+                {
+                  label: t("الساعات التدريبية", "Training Hours"),
+                  value: selectedCert.hours
+                    ? `${selectedCert.hours} ${t("ساعة", "hrs")}`
+                    : "—",
+                },
+                { label: t("الحالة", "Status"), value: selectedCert.status },
+              ].map((row, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between items-center py-2 border-b border-border last:border-0"
+                >
+                  <span className="text-sm text-muted-foreground">
+                    {row.label}
+                  </span>
+                  <span
+                    className={`text-sm font-medium ${
+                      row.mono ? "font-mono" : ""
+                    }`}
+                  >
+                    {row.value || "—"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Certificate Preview Modal */}
+      {showCertPreview && selectedCert && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowCertPreview(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="bg-background rounded-3xl shadow-2xl w-full max-w-2xl p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowCertPreview(false)}
+              className="absolute top-4 end-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+            >
+              <XCircle className="w-4 h-4 text-muted-foreground" />
+            </button>
+
+            <div className="flex items-center gap-2 mb-6">
+              <Award className="w-5 h-5 text-primary" />
+              <h2 className="text-xl font-bold">
+                {t("معاينة الشهادة", "Certificate Preview")}
+              </h2>
+            </div>
+
+            {/* Certificate visual */}
+            <div className="relative bg-gradient-to-br from-midnight to-dark-navy rounded-2xl p-8 text-white text-center overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-10"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2.5l5 3.5-5 3.5z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E")`,
+                }}
+              />
+              <div className="relative z-10">
+                <Award className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
+                <p className="text-sm opacity-60 mb-1">
+                  {t("شهادة حضور", "Certificate of Attendance")}
+                </p>
+                <h3 className="text-2xl font-bold mb-2">{user?.name}</h3>
+                <p className="opacity-70 mb-4">
+                  {t("أتم بنجاح", "has successfully completed")}
+                </p>
+                <h4 className="text-xl font-semibold mb-6 text-yellow-300">
+                  {selectedCert.recipientNameAr || selectedCert.recipientNameEn}
+                </h4>
+                <div className="flex justify-center gap-8 text-sm opacity-70">
+                  <span>
+                    {selectedCert.issue_date
+                      ? new Date(selectedCert.issue_date).toLocaleDateString(
+                          isRTL ? "ar-SA" : "en-US"
+                        )
+                      : "—"}
+                  </span>
+                  {selectedCert.hours && (
+                    <span>
+                      {selectedCert.hours} {t("ساعات", "hrs")}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-4">
+              <Button className="flex-1 gap-2">
+                <Download className="w-4 h-4" />
+                {t("تحميل PDF", "Download PDF")}
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 gap-2"
+                onClick={() => handleCopyLink(selectedCert.id?.toString())}
+              >
+                <Copy className="w-4 h-4" />
+                {t("نسخ الرابط", "Copy Link")}
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </Layout>
   );
 };

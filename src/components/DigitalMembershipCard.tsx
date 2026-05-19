@@ -22,7 +22,7 @@ interface MemberData {
   fullName: string;
   fullNameEn: string;
   membershipNumber: string;
-  membershipType: 'active' | 'associate' | 'student' | 'intern';
+  membershipType: "active" | "affiliate" | "student" | "intern";
   expiryDate: string;
   workplace: string;
   workplaceEn: string;
@@ -75,16 +75,16 @@ const cardStyles: CardStyle[] = [
 
 const membershipIcons = {
   active: Crown,
-  associate: Users,
+  affiliate: Users,
   student: GraduationCap,
   intern: Star,
 };
 
 const membershipLabels = {
-  active: { ar: 'عضو عامل', en: 'Active Member' },
-  associate: { ar: 'عضو منتسب', en: 'Associate Member' },
-  student: { ar: 'طالب', en: 'Student' },
-  intern: { ar: 'طالب امتياز', en: 'Intern Student' },
+  active: { ar: "عضو عامل", en: "Active Member" },
+  affiliate: { ar: "عضو منتسب", en: "affiliate Member" },
+  student: { ar: "طالب", en: "Student" },
+  intern: { ar: "طالب امتياز", en: "Intern Student" },
 };
 
 interface DigitalMembershipCardProps {
@@ -282,7 +282,7 @@ const DigitalMembershipCard = ({
       </p>
 
       {/* Action Buttons */}
-      {showControls && (
+      {/* {showControls && (
         <div className="flex flex-wrap justify-center gap-3">
           <Button variant="outline" className="gap-2" onClick={() => window.print()}>
             <Printer className="w-4 h-4" />
@@ -297,7 +297,7 @@ const DigitalMembershipCard = ({
             {t('تحميل PDF', 'Download PDF')}
           </Button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

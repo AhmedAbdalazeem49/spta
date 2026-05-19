@@ -221,7 +221,7 @@ const Navbar = () => {
                     }`}
                   >
                     <User className="w-4 h-4" />
-                    {user?.name?.split(" ")[0] || t("حسابي", "My Account")}
+                    {/* {user?.name?.split(" ")[0] || t("حسابي", "My Account")} */}
                   </Button>
                 </Link>
                 <Button

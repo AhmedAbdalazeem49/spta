@@ -32,7 +32,7 @@ const PoliciesPage = () => {
       title: t("العضوية", "Membership"),
       content: t(
         "تنقسم العضوية في الجمعية إلى:\n\n- العضوية العاملة: للممارسين المرخصين\n- العضوية الشرفية: للشخصيات المميزة\n- عضوية الانتساب: للطلاب والمهتمين\n\nيجب على جميع الأعضاء الالتزام بأخلاقيات المهنة ولوائح الجمعية.",
-        "Membership in the association is divided into:\n\n- Active Membership: For licensed practitioners\n- Honorary Membership: For distinguished individuals\n- Associate Membership: For students and interested parties\n\nAll members must adhere to professional ethics and association regulations."
+        "Membership in the association is divided into:\n\n- Active Membership: For licensed practitioners\n- Honorary Membership: For distinguished individuals\n- affiliate Membership: For students and interested parties\n\nAll members must adhere to professional ethics and association regulations."
       ),
     },
     {

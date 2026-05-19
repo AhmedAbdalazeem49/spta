@@ -1,14 +1,20 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import api from "@/services/api";
+import AuthHero from "@/components/auth/AuthHero";
+import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Layout from "@/components/layout/Layout";
-import AuthHero from "@/components/auth/AuthHero";
-import { motion } from "framer-motion";
-import { AlertCircle, CheckCircle2, Loader2, Mail, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
+import api from "@/services/api";
+import { motion } from "framer-motion";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  ShieldCheck,
+} from "lucide-react";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const VerifyOtpPage = () => {
   const { t } = useLanguage();
@@ -42,15 +48,23 @@ const VerifyOtpPage = () => {
 
       toast({
         title: t("تم التحقق بنجاح", "Verification Successful"),
-        description: t("تم تفعيل حسابك بنجاح.", "Your account has been activated successfully."),
+        description: t(
+          "تم تفعيل حسابك بنجاح.",
+          "Your account has been activated successfully."
+        ),
       });
 
       // go to home or membership
-      navigate("/membership");
+      navigate("/profile");
     } catch (err: any) {
       toast({
         title: t("رمز غير صالح", "Invalid OTP"),
-        description: err.response?.data?.message || t("الرمز الذي أدخلته غير صحيح.", "The code you entered is incorrect."),
+        description:
+          err.response?.data?.message ||
+          t(
+            "الرمز الذي أدخلته غير صحيح.",
+            "The code you entered is incorrect."
+          ),
         variant: "destructive",
       });
     } finally {
@@ -68,7 +82,7 @@ const VerifyOtpPage = () => {
       />
 
       <section className="py-16 -mt-10 relative z-10">
-        <div className="container-custom max-w-md">
+        <div className="container-custom max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

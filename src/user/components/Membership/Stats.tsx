@@ -15,7 +15,7 @@ export default function Stats() {
     female: 2078,
     active: 4521,
     honorary: 45,
-    associate: 668,
+    affiliate: 668,
   };
 
   // Counter animation
@@ -50,8 +50,6 @@ export default function Stats() {
 
   return (
     <section>
-
-
       {/* Stats Section */}
       <section className="section-padding bg-background">
         <div className="container-custom">
@@ -137,8 +135,8 @@ export default function Stats() {
               },
               {
                 icon: UserCheck,
-                label: t("عضوية الانتساب", "Associate Members"),
-                count: stats.associate,
+                label: t("عضوية الانتساب", "affiliate Members"),
+                count: stats.affiliate,
                 color: "from-purple-500 to-indigo-600",
               },
             ].map((item, index) => (
