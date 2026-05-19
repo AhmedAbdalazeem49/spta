@@ -87,15 +87,16 @@ const Navbar = () => {
       icon: Users,
     },
     {
-      label: t("البطاقة الرقمية", "Digital Card"),
-      path: "/card",
-      icon: Users,
-    },
-    {
       label: t("ورش العمل", "Workshops"),
       path: "/workshops",
       icon: GraduationCap,
     },
+    {
+      label: t("البطاقة الرقمية", "Digital Card"),
+      path: "/card",
+      icon: Users,
+    },
+
     // {
     //   label: t("التخصصات", "Specializations"),
     //   path: "/specializations",

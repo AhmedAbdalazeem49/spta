@@ -332,14 +332,14 @@ const WorkshopsPage = () => {
           >
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
               <GraduationCap className="w-5 h-5 text-green-accent" />
-              <span className="text-blue-pale text-sm font-medium">
+              <span className="text-white text-sm font-medium">
                 {t("تطوير مهني مستمر", "Continuous Professional Development")}
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
               {t("ورش العمل والدورات", "Workshops & Courses")}
             </h1>
-            <p className="text-xl text-blue-pale max-w-2xl mx-auto">
+            <p className="text-xl text-white max-w-2xl mx-auto">
               {t(
                 "تعلم من خبراء المجال وطور مهاراتك المهنية",
                 "Learn from industry experts and develop your professional skills"
