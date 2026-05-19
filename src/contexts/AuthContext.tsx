@@ -22,7 +22,6 @@ interface User {
   employer?: string;
   membership_type?: string;
   status?: UserStatus;
-  is_admin?: boolean;
   role?: string;
   email_verified_at?: string | null;
 }

@@ -22,7 +22,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const isAdmin = (user as any)?.role === 'admin' || (user as any)?.is_admin;
+  const isAdmin = user?.role === 'system_admin' || user?.role === 'branch_manager' || (user as any)?.role === 'admin';
   if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/30">

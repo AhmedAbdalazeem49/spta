@@ -9,7 +9,6 @@ export interface UserItem {
   sub_specialization?: string;
   employer?: string;
   role?: string;
-  is_admin?: boolean;
   status?: "pending" | "approved" | "rejected" | "active";
   classification_number?: string;
   membership_type?: string;

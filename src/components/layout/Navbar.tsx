@@ -200,7 +200,8 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 {((user as any)?.role === "admin" ||
-                  (user as any)?.is_admin) && (
+                  (user as any)?.role === "system_admin" ||
+                  (user as any)?.role === "branch_manager") && (
                   <Link to="/admin">
                     <Button
                       variant="ghost"
