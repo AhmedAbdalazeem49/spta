@@ -50,7 +50,6 @@ export interface RegisterData {
   specialization?: string;
   sub_specialization?: string;
   employer?: string;
-  membership_type: string;
   promo_code?: string;
   password: string;
   password_confirmation: string;

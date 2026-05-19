@@ -221,9 +221,11 @@ const SignupPage = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => set("phone", e.target.value)}
-                        className={`pl-10 ${errors.phone ? "border-destructive" : ""}`}
+                        className={`pl-10 ${
+                          errors.phone ? "border-destructive" : ""
+                        }`}
                         dir="ltr"
-                        placeholder="+966 5XXXXXXXX"
+                        placeholder="+XXX XXXXXXXXX"
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1.5">
@@ -273,7 +275,10 @@ const SignupPage = () => {
               <div className="border-t border-border pt-6">
                 <div>
                   <Label className="text-sm font-medium mb-1.5 block">
-                    {t("رقم التصنيف (اختياري)", "Classification Number (Optional)")}
+                    {t(
+                      "رقم التصنيف (اختياري)",
+                      "Classification Number (Optional)"
+                    )}
                   </Label>
                   <Input
                     value={formData.classificationNumber}
@@ -366,4 +371,3 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
-

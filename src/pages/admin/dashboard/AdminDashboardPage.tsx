@@ -122,13 +122,7 @@ const AdminDashboardPage = () => {
       color: "from-purple-500 to-purple-700",
       link: "/admin/coupons",
     },
-    {
-      title: t("عدد الزوار", "Visitors"),
-      count: stats.visitors,
-      icon: Eye,
-      color: "from-orange-400 to-orange-600",
-      link: "/admin/visitors",
-    },
+
   ];
 
   return (
