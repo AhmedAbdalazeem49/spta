@@ -15,6 +15,7 @@ import { WorkshopDetailsModal } from "@/components/admin/workshops/WorkshopDetai
 import {
   emptyWorkshopForm,
   WorkshopFormModal,
+  type WorkshopForm,
 } from "@/components/admin/workshops/WorkshopFormModal";
 import { WorkshopsTable } from "@/components/admin/workshops/WorkshopsTable";
 import { WorkshopSubscriptionsModal } from "@/components/admin/workshops/WorkshopSubscriptionsModal";
@@ -35,6 +36,7 @@ const AdminWorkshopsPage = () => {
   const [selected, setSelected] = useState<Workshop | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [originalForm, setOriginalForm] = useState(emptyWorkshopForm);
 
   const [form, setForm] = useState({ ...emptyWorkshopForm });
 
@@ -65,27 +67,60 @@ const AdminWorkshopsPage = () => {
     setIsFormOpen(true);
   };
 
-const openEdit = (w: Workshop) => {
-  setEditMode(true);
-  setSelected(w);
+  // Add this state near your other states
 
-  setForm({
-    title: w.title || "",
-    description: w.description || "",
-    doctor_name: w.doctor_name || "",
-    location: w.location || "",
-    date: w.date || "",
-    time: w.time || "",
-    regular_price: String(w.regular_price || ""),
-    member_price: String(w.member_price || ""),
-    total_capacity: String(w.total_capacity || ""),
-    status: w.status || "open",
-    duration_minutes: w.duration_minutes || 60,
-    image: null,
-  });
+  const openEdit = (w: Workshop) => {
+    const populated = {
+      title: w.title || "",
+      description: w.description || "",
+      doctor_name: w.doctor_name || "",
+      location: w.location || "",
+      date: w.date || "",
+      time: w.time || "",
+      regular_price: String(w.regular_price || ""),
+      member_price: String(w.member_price || ""),
+      total_capacity: String(w.total_capacity || ""),
+      status: w.status || "open",
+      duration_minutes: w.duration_minutes || 60,
+      image: null,
+    } satisfies WorkshopForm;
 
-  setIsFormOpen(true);
-};
+    setForm(populated);
+    setOriginalForm(populated); // snapshot for diffing
+    setSelected(w);
+    setEditMode(true);
+    setIsFormOpen(true);
+  };
+
+  // Compute what changed (pass this to the modal)
+  const getChanges = () => {
+    const watchedFields = [
+      "date",
+      "time",
+      "location",
+      "status",
+      "title",
+    ] as const;
+    const changes: Record<string, { old: string; new: string }> = {};
+
+    for (const field of watchedFields) {
+      const oldVal = String(originalForm[field] ?? "");
+      const newVal = String(form[field] ?? "");
+      if (oldVal !== newVal) {
+        changes[field] = { old: oldVal, new: newVal };
+      }
+    }
+    return changes;
+  };
+
+  const changes = getChanges();
+  const hasChanges = Object.keys(changes).length > 0;
+
+  const changeType = (() => {
+    if (changes.status?.new === "postponed") return "postponed";
+    if (changes.date) return "date_changed";
+    return "general";
+  })();
 
   const openView = (w: Workshop) => {
     setSelected(w);
@@ -97,35 +132,35 @@ const openEdit = (w: Workshop) => {
     setIsSubscriptionsOpen(true);
   };
 
-const handleSave = async (formData: FormData) => {
-  setIsSaving(true);
-  try {
-    if (editMode && selected) {
-      formData.append("_method", "PUT");
-      await api.post(`/workshops/${selected.id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      toast({ title: t("تم التحديث", "Updated successfully") });
-    } else {
-      await api.post("/workshops", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      toast({ title: t("تم الإنشاء", "Created successfully") });
-    }
+  const handleSave = async (formData: FormData) => {
+    setIsSaving(true);
+    try {
+      if (editMode && selected) {
+        formData.append("_method", "PUT");
+        await api.post(`/workshops/${selected.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast({ title: t("تم التحديث", "Updated successfully") });
+      } else {
+        await api.post("/workshops", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast({ title: t("تم الإنشاء", "Created successfully") });
+      }
 
-    setIsFormOpen(false);
-    fetchWorkshops();
-  } catch (err: any) {
-    toast({
-      title: t("خطأ", "Error"),
-      description:
-        err.response?.data?.message || t("حدث خطأ", "An error occurred"),
-      variant: "destructive",
-    });
-  } finally {
-    setIsSaving(false);
-  }
-};
+      setIsFormOpen(false);
+      fetchWorkshops();
+    } catch (err: any) {
+      toast({
+        title: t("خطأ", "Error"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!selected) return;
@@ -249,6 +284,10 @@ const handleSave = async (formData: FormData) => {
         editMode={editMode}
         isSaving={isSaving}
         onSave={handleSave}
+        changes={changes}
+        changeType={changeType}
+        hasChanges={hasChanges}
+        workshopId={selected?.id}
       />
 
       <WorkshopDeleteModal

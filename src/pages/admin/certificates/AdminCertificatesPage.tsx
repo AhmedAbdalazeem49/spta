@@ -1,3 +1,4 @@
+import { CertificateEditModal } from "@/components/admin/certificates/CertificateEditModal";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -61,11 +62,32 @@ const AdminCertificatesPage = () => {
   // Certificate settings dialog
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [certificateSettings, setCertificateSettings] = useState({
-    signatureImageUrl: "",
-    stampImageUrl: "",
-    customText: "",
-    template: "modern",
+    signature_image: null as File | string | null,
+    stamp_image: null as File | string | null,
+    chairman_name: "",
+    custom_text: "",
   });
+
+  const fetchCertificateSettings = async () => {
+    try {
+      const res = await api.get("/certificate-settings");
+      const data = res.data?.data;
+
+      setCertificateSettings({
+        signature_image: data?.signature_image || null,
+        stamp_image: data?.stamp_image || null,
+        chairman_name: data?.chairman_name || "",
+        custom_text: data?.custom_text || "",
+      });
+    } catch (err) {
+      console.error("Failed loading settings", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCertificates();
+    fetchCertificateSettings();
+  }, []);
 
   // Add Certificate dialog
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -80,6 +102,35 @@ const AdminCertificatesPage = () => {
   const [recipientsLoading, setRecipientsLoading] = useState(false);
   const [workshopSearch, setWorkshopSearch] = useState("");
   const [recipientSearch, setRecipientSearch] = useState("");
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Certificate>>({});
+
+  const handleUpdate = async () => {
+    if (!editForm?.id) return;
+
+    try {
+      const { data } = await api.put(
+        `/certificates/${editForm.id}/update`,
+        editForm
+      );
+
+      console.log("Updated:", data);
+
+      setEditOpen(false);
+
+      // optional: refresh list
+      // fetchCertificates();
+    } catch (error: any) {
+      console.error("Update failed:", error?.response?.data || error.message);
+    }
+  };
+
+  const handleOpenEdit = (cert: Certificate) => {
+    setEditForm(cert);
+    setEditOpen(true);
+  };
 
   useEffect(() => {
     fetchCertificates();
@@ -328,7 +379,7 @@ const AdminCertificatesPage = () => {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
               <AnimatePresence>
                 {filtered.map((cert, index) => (
                   <motion.div
@@ -355,6 +406,7 @@ const AdminCertificatesPage = () => {
               certificates={filtered}
               onOpenDetails={openDetails}
               onOpenPreview={openPreview}
+              onOpenEdit={handleOpenEdit}
             />
           )}
         </TabsContent>
@@ -377,12 +429,6 @@ const AdminCertificatesPage = () => {
         onOpenChange={setIsViewOpen}
         certificate={selected}
         onPreview={openPreview}
-      />
-
-      <CertificatePreviewModal
-        isOpen={isPreviewOpen}
-        onOpenChange={setIsPreviewOpen}
-        certificate={selected}
       />
 
       <CertificateAddModal
@@ -412,13 +458,28 @@ const AdminCertificatesPage = () => {
         previewHours={previewHours}
       />
 
-      {/* <CertificateSettingsModal
+      <CertificateEditModal
+        isOpen={editOpen}
+        onOpenChange={setEditOpen}
+        form={editForm}
+        setForm={setEditForm}
+        onSave={handleUpdate}
+      />
+
+
+      <CertificateSettingsModal
         isOpen={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
         settings={certificateSettings}
         setSettings={setCertificateSettings}
-        onSave={() => setIsSettingsOpen(false)}
-      /> */}
+      />
+
+      <CertificatePreviewModal
+        isOpen={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        certificate={selected}
+        settings={certificateSettings}
+      />
     </div>
   );
 };

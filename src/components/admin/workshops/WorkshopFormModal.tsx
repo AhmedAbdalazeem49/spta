@@ -1,3 +1,4 @@
+import { api } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -44,7 +45,7 @@ export const emptyWorkshopForm = {
   image: null as File | null,
 };
 
-type WorkshopForm = typeof emptyWorkshopForm;
+export type WorkshopForm = typeof emptyWorkshopForm;
 type FieldErrors = Partial<Record<keyof WorkshopForm, string>>;
 
 interface WorkshopFormModalProps {
@@ -56,6 +57,11 @@ interface WorkshopFormModalProps {
   isSaving: boolean;
   /** Receives a ready-to-send FormData — just call api.post/put inside */
   onSave: (formData: FormData) => void;
+
+  changes: Record<string, { old: string; new: string }>;
+  changeType: "postponed" | "date_changed" | "general";
+  hasChanges: boolean;
+  workshopId?: number;
 }
 
 // ─── Validation ───────────────────────────────────────────────────────────────
@@ -220,6 +226,10 @@ export const WorkshopFormModal = ({
   editMode,
   isSaving,
   onSave,
+  changes,
+  changeType,
+  hasChanges,
+  workshopId,
 }: WorkshopFormModalProps) => {
   const { t } = useLanguage();
 
@@ -228,6 +238,39 @@ export const WorkshopFormModal = ({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const [isNotifying, setIsNotifying] = useState(false);
+  const [notified, setNotified] = useState(false);
+  const [cooldown, setCooldown] = useState(0); // seconds remaining
+
+  const handleNotifySubscribers = async () => {
+    if (!workshopId) return;
+    setIsNotifying(true);
+    try {
+      await api.post(`/workshops/${workshopId}/notify-subscribers`, {
+        change_type: changeType,
+        changes,
+      });
+      setNotified(true);
+      setCooldown(60); // start 60-second cooldown
+
+      // tick down every second
+      const interval = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setNotified(false); // re-enable button
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsNotifying(false);
+    }
+  };
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -737,33 +780,91 @@ export const WorkshopFormModal = ({
             </Field>
 
             {/* Postpone warning */}
+            {/* Notify banner — shows whenever anything changed in edit mode */}
             <AnimatePresence>
-              {form.status === "postponed" && editMode && (
+              {editMode && hasChanges && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="bg-amber-500/10 border border-amber-500/25 p-4 rounded-xl flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-semibold text-sm text-amber-700 dark:text-amber-400">
-                        {t("تم تأجيل الورشة", "Workshop Postponed")}
+                  <div
+                    className={`
+        border p-4 rounded-xl flex items-start justify-between gap-3
+        ${
+          changeType === "postponed"
+            ? "bg-amber-500/10 border-amber-500/25"
+            : "bg-blue-500/10 border-blue-500/25"
+        }
+      `}
+                  >
+                    <div className="flex-1">
+                      <p
+                        className={`font-semibold text-sm ${
+                          changeType === "postponed"
+                            ? "text-amber-700 dark:text-amber-400"
+                            : "text-blue-700 dark:text-blue-400"
+                        }`}
+                      >
+                        {changeType === "postponed"
+                          ? t("تم تأجيل الورشة", "Workshop Postponed")
+                          : changeType === "date_changed"
+                          ? t("تم تغيير الموعد", "Schedule Changed")
+                          : t("تم تحديث بيانات الورشة", "Workshop Updated")}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+
+                      {/* List the actual changes */}
+                      <ul className="mt-1.5 space-y-0.5">
+                        {Object.entries(changes).map(
+                          ([field, { old: o, new: n }]) => (
+                            <li
+                              key={field}
+                              className="text-[11px] text-muted-foreground"
+                            >
+                              <span className="font-medium">{field}</span>: {o}{" "}
+                              → {n}
+                            </li>
+                          )
+                        )}
+                      </ul>
+
+                      <p className="text-xs text-muted-foreground mt-1.5">
                         {t(
-                          "يجب إشعار جميع المشتركين بالتغيير",
-                          "All subscribers must be notified of the change"
+                          "يجب إشعار جميع المشتركين بالتغييرات",
+                          "All subscribers should be notified of these changes"
                         )}
                       </p>
                     </div>
+
                     <Button
                       size="sm"
                       variant="outline"
-                      className="shrink-0 gap-1.5 border-amber-500/30 text-amber-600 hover:bg-amber-500/10 text-xs"
+                      onClick={handleNotifySubscribers}
+                      disabled={isNotifying || notified}
+                      className={`shrink-0 gap-1.5 text-xs ${
+                        notified
+                          ? "border-emerald-500/30 text-emerald-600"
+                          : changeType === "postponed"
+                          ? "border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                          : "border-blue-500/30 text-blue-600 hover:bg-blue-500/10"
+                      }`}
                     >
-                      <Bell className="w-3.5 h-3.5" />
-                      {t("إشعار المشتركين", "Notify Subscribers")}
+                      {isNotifying ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : notified ? (
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      ) : (
+                        <Bell className="w-3.5 h-3.5" />
+                      )}
+                      {isNotifying
+                        ? t("جاري الإرسال...", "Sending...")
+                        : notified
+                        ? t(
+                            `إعادة الإرسال بعد ${cooldown}s`,
+                            `Resend in ${cooldown}s`
+                          )
+                        : t("إشعار المشتركين", "Notify Subscribers")}
                     </Button>
                   </div>
                 </motion.div>

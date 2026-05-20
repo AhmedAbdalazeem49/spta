@@ -12,6 +12,7 @@ export interface Certificate {
   issueDate?: string;
   hours?: number;
   status?: string;
+  serial_number?: string;
   verification_url?: string;
   verificationUrl?: string;
 }

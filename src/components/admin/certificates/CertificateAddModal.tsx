@@ -1,14 +1,48 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Certificate, Recipient, Workshop } from "@/types/certificate";
-import { getCertificateDate, getCertificateName, getCertificateWorkshop } from "@/utils/certificateUtils";
+import {
+  getCertificateDate,
+  getCertificateName,
+  getCertificateWorkshop,
+} from "@/utils/certificateUtils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Award, BookOpen, Calendar, CheckCircle, Clock, GraduationCap, Hash, Loader2, Plus, QrCode, Signature, Sparkles, Stamp, User, UserSearch , Search } from "lucide-react";
+import {
+  Award,
+  BookOpen,
+  Calendar,
+  CheckCircle,
+  Clock,
+  GraduationCap,
+  Hash,
+  Loader2,
+  Plus,
+  QrCode,
+  Search,
+  Signature,
+  Sparkles,
+  Stamp,
+  User,
+  UserSearch,
+} from "lucide-react";
 import { useState } from "react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 

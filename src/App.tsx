@@ -10,6 +10,7 @@ import Chatbot from "./components/Chatbot";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Public pages
+import WorkshopAttendancePage from "./pages/WorkshopAttendancePage";
 import AboutPage from "./user/pages/AboutPage";
 import BookletsPage from "./user/pages/BookletsPage";
 import BrochuresPage from "./user/pages/BrochuresPage";
@@ -117,10 +118,15 @@ const App = () => (
                 path="/conferences/:id"
                 element={<ConferenceDetailPage />}
               />
+              {/* attendance Page */}
+              <Route
+                path="/workshop/:id/attendance"
+                element={<WorkshopAttendancePage />}
+              />
 
               {/* Public certificate verification */}
               <Route
-                path="/certificates/verify/"
+                path="/certificates/verify/:serial_number"
                 element={<CertificateVerifyPage />}
               />
               {/* Auth */}

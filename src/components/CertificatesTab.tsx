@@ -2,26 +2,22 @@ import CertificateTemplate, {
   CertTemplate,
 } from "@/components/CertificateTemplate";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import { downloadElementAsPdf, printElement } from "@/lib/certificate-export";
+import { downloadElementAsPdf } from "@/lib/certificate-export";
 import api from "@/services/api";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
   AlertCircle,
   Award,
   Download,
   Loader2,
   Palette,
-  Printer,
-  Search,
-  Share2,
   Shield,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -89,8 +85,6 @@ const CertificatesTab = () => {
   const setCertTemplate = (id: string | number, tpl: CertTemplate) =>
     setTemplateMap((prev) => ({ ...prev, [String(id)]: tpl }));
 
-
-
   // ── Actions ──────────────────────────────────────────────────────────────────
 
   const handleDownload = async (cert: Certificate) => {
@@ -114,24 +108,17 @@ const CertificatesTab = () => {
   };
 
 
+  const handleCopyLink = async (cert: Certificate) => {
+    const link = `${window.location.origin}/certificate/verify/${
+      cert.verification_code || cert.id
+    }`;
 
-  const handleShare = async (cert: Certificate) => {
-    const verifyUrl = `${window.location.origin}/certificates/verify/${cert.verification_code}`;
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: t(
-            "شهادة من الجمعية السعودية للعلاج الطبيعي",
-            "Certificate from SPTA"
-          ),
-          text: `${cert.workshop_title} - ${cert.verification_code}`,
-          url: verifyUrl,
-        });
-      } else {
-        await navigator.clipboard.writeText(verifyUrl);
-        toast({ title: t("تم نسخ رابط التحقق", "Verification link copied") });
-      }
-    } catch {}
+    await navigator.clipboard.writeText(link);
+
+    toast({
+      title: "Copied",
+      description: "Certificate link copied successfully",
+    });
   };
 
   // ── Render ───────────────────────────────────────────────────────────────────
@@ -244,7 +231,7 @@ const CertificatesTab = () => {
                     {/* Certificate preview */}
                     <div
                       ref={(node) => (certRefs.current[String(cert.id)] = node)}
-                      className="w-full"
+                      className="w-full ل"
                     >
                       <CertificateTemplate cert={cert} template={tpl} />
                     </div>
@@ -297,14 +284,8 @@ const CertificatesTab = () => {
                           {t("تحميل PDF", "Download PDF")}
                         </Button>
 
-                        <Button
-                          onClick={() => handleShare(cert)}
-                          variant="outline"
-                          size="sm"
-                          className="flex-1 gap-1.5 text-xs h-8"
-                        >
-                          <Share2 className="w-3.5 h-3.5" />
-                          {t("مشاركة", "Share")}
+                        <Button onClick={() => handleCopyLink(cert)}>
+                          Copy Link
                         </Button>
                       </div>
 

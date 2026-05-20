@@ -2,137 +2,237 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Certificate } from "@/types/certificate";
-import { getCertificateDate, getCertificateName, getCertificateWorkshop } from "@/utils/certificateUtils";
+import api from "@/services/api";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle, Eye, QrCode, Search, Shield, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Eye,
+  QrCode,
+  Search,
+  Shield,
+  XCircle,
+  Loader2,
+  ArrowLeft,
+} from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface CertificateQuickVerifyProps {
+interface Certificate {
+  id: number | string;
+  serial_number: string;
+  recipient_name?: string;
+  workshop_title?: string;
+  issue_date?: string;
+  hours?: number;
+}
+
+interface Props {
   verifyCode: string;
   setVerifyCode: (code: string) => void;
-  verifyResult: "success" | "error" | null;
-  setVerifyResult: (result: "success" | "error" | null) => void;
-  selected: Certificate | null;
-  onVerify: () => void;
-  onPreview: (cert: Certificate) => void;
 }
 
 export const CertificateQuickVerify = ({
   verifyCode,
   setVerifyCode,
-  verifyResult,
-  setVerifyResult,
-  selected,
-  onVerify,
-  onPreview,
-}: CertificateQuickVerifyProps) => {
+}: Props) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<Certificate | null>(null);
+  const [error, setError] = useState(false);
+
+  // ================= VERIFY =================
+  const onVerify = async () => {
+    if (!verifyCode) return;
+
+    try {
+      setLoading(true);
+      setError(false);
+      setResult(null);
+
+      const res = await api.get(`/certificates/verify/${verifyCode}`);
+
+      const payload = res.data?.data;
+
+      if (!payload) {
+        setError(true);
+        return;
+      }
+
+      setResult(payload);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className="max-w-2xl mx-auto overflow-hidden">
       <div className="h-2 bg-gradient-to-r from-primary via-blue-light to-green-accent" />
       <CardContent className="p-8">
+        {/* ================= HEADER ================= */}
         <div className="text-center mb-6">
           <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-primary" />
           </div>
+
           <h2 className="text-2xl font-bold mb-2">
             {t("التحقق من الشهادة", "Verify Certificate")}
           </h2>
+
           <p className="text-muted-foreground">
             {t(
               "أدخل رقم الشهادة للتحقق من صحتها",
-              "Enter certificate number to verify its authenticity"
+              "Enter certificate serial number"
             )}
           </p>
         </div>
 
+        {/* ================= INPUT ================= */}
         <div className="flex gap-3">
           <div className="relative flex-1">
             <QrCode className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+
             <Input
-              placeholder={t("مثال: CERT-2024-001", "e.g., CERT-2024-001")}
+              placeholder="CERT-XXXXXX"
               value={verifyCode}
               onChange={(e) => {
                 setVerifyCode(e.target.value);
-                setVerifyResult(null);
+                setError(false);
+                setResult(null);
               }}
               className="ps-12 h-12 text-lg"
               onKeyDown={(e) => e.key === "Enter" && onVerify()}
             />
           </div>
+
           <Button
             onClick={onVerify}
+            disabled={loading}
             className="h-12 px-8 bg-green-accent hover:bg-green-light gap-2"
           >
-            <Search className="w-5 h-5" />
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Search className="w-5 h-5" />
+            )}
+
             {t("تحقق", "Verify")}
           </Button>
         </div>
 
+        {/* ================= RESULT ================= */}
         <AnimatePresence>
-          {verifyResult && (
+          {(loading || result || error) && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className={`mt-6 p-4 rounded-xl ${
-                verifyResult === "success"
-                  ? "bg-green-accent/10 border border-green-accent/30"
-                  : "bg-destructive/10 border border-destructive/30"
-              }`}
+              className="mt-6"
             >
-              {verifyResult === "success" && selected ? (
-                <div className="flex items-start gap-4">
-                  <CheckCircle className="w-8 h-8 text-green-accent flex-shrink-0" />
-                  <div className="flex-1">
-                    <h3 className="font-bold text-green-accent mb-2">
-                      {t("شهادة موثقة ✓", "Certificate Verified ✓")}
-                    </h3>
-                    <div className="grid sm:grid-cols-2 gap-2 text-sm">
-                      <p>
-                        <strong>{t("الاسم:", "Name:")}</strong>{" "}
-                        {getCertificateName(selected, t)}
-                      </p>
-                      <p>
-                        <strong>{t("الورشة:", "Workshop:")}</strong>{" "}
-                        {getCertificateWorkshop(selected, t)}
-                      </p>
-                      <p>
-                        <strong>{t("التاريخ:", "Date:")}</strong>{" "}
-                        {getCertificateDate(selected)}
-                      </p>
-                      {selected.hours && (
+              {/* LOADING */}
+              {loading && (
+                <div className="p-6 rounded-xl border bg-muted/30 flex items-center gap-3">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  <p className="text-sm text-muted-foreground">
+                    {t("جاري التحقق من الشهادة...", "Verifying certificate...")}
+                  </p>
+                </div>
+              )}
+
+              {/* SUCCESS */}
+              {result && (
+                <div className="p-5 rounded-xl bg-green-50 border border-green-200">
+                  <div className="flex items-start gap-4">
+                    <CheckCircle className="w-8 h-8 text-green-600" />
+
+                    <div className="flex-1 space-y-2">
+                      <h3 className="font-bold text-green-700">
+                        {t("شهادة موثقة ✓", "Certificate Verified ✓")}
+                      </h3>
+
+                      <div className="text-sm space-y-1 text-muted-foreground">
                         <p>
-                          <strong>{t("الساعات:", "Hours:")}</strong>{" "}
-                          {selected.hours}
+                          <strong>{t("الاسم:", "Name:")}</strong>{" "}
+                          {result.recipient_name}
                         </p>
-                      )}
+                        <p>
+                          <strong>{t("الورشة:", "Workshop:")}</strong>{" "}
+                          {result.workshop_title}
+                        </p>
+                        <p>
+                          <strong>{t("التاريخ:", "Date:")}</strong>{" "}
+                          {result.issue_date}
+                        </p>
+                        {result.hours && (
+                          <p>
+                            <strong>{t("الساعات:", "Hours:")}</strong>{" "}
+                            {result.hours}
+                          </p>
+                        )}
+                        <p>
+                          <strong>{t("الرقم:", "Serial:")}</strong>{" "}
+                          {result.serial_number}
+                        </p>
+                      </div>
+
+                      {/* ACTIONS */}
+                      <div className="flex gap-2 pt-3">
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            navigate(
+                              `/certificates/verify/${result.serial_number}`
+                            )
+                          }
+                        >
+                          <Eye className="w-4 h-4 me-1" />
+                          {t("عرض كامل", "Full View")}
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setResult(null);
+                            setVerifyCode("");
+                          }}
+                        >
+                          {t("تحقق جديد", "New Check")}
+                        </Button>
+                      </div>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="mt-3 gap-1"
-                      onClick={() => onPreview(selected)}
-                    >
-                      <Eye className="w-4 h-4" />
-                      {t("معاينة الشهادة", "Preview Certificate")}
-                    </Button>
                   </div>
                 </div>
-              ) : (
-                <div className="flex items-center gap-4">
-                  <XCircle className="w-8 h-8 text-destructive flex-shrink-0" />
-                  <div>
-                    <h3 className="font-bold text-destructive">
-                      {t("شهادة غير موجودة", "Certificate Not Found")}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t(
-                        "تأكد من صحة رقم الشهادة المدخل",
-                        "Please check the certificate number and try again"
-                      )}
-                    </p>
+              )}
+
+              {/* ERROR */}
+              {error && (
+                <div className="p-5 rounded-xl bg-red-50 border border-red-200">
+                  <div className="flex items-start gap-4">
+                    <XCircle className="w-8 h-8 text-red-600" />
+
+                    <div className="flex-1 space-y-2">
+                      <h3 className="font-bold text-red-600">
+                        {t("شهادة غير موجودة", "Not Found")}
+                      </h3>
+
+                      <p className="text-sm text-muted-foreground">
+                        {t(
+                          "تأكد من رقم الشهادة وحاول مرة أخرى",
+                          "Please check the serial number"
+                        )}
+                      </p>
+
+                      <div className="flex gap-2 pt-3">
+                        <Button size="sm" onClick={() => setError(false)}>
+                          {t("إعادة المحاولة", "Retry")}
+                        </Button>
+
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

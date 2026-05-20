@@ -321,23 +321,24 @@ export const WorkshopSubscriptionsModal = ({
                       <td className="p-3">
                         <Badge>{sub.payment_status}</Badge>
                       </td>
-
-                      <td className="p-3 flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => updateAttendance(sub.id, "attended")}
+                      <td className="p-3">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
+      ${
+        sub.attendance_status === "attended"
+          ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+          : sub.attendance_status === "absent"
+          ? "bg-red-100 text-red-700 border border-red-200"
+          : "bg-gray-100 text-gray-600 border border-gray-200"
+      }
+    `}
                         >
-                          {t("حاضر", "Present")}
-                        </Button>
-
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => updateAttendance(sub.id, "absent")}
-                        >
-                          {t("غائب", "Absent")}
-                        </Button>
+                          {sub.attendance_status === "attended"
+                            ? "Attended"
+                            : sub.attendance_status === "absent"
+                            ? "Absent"
+                            : sub.attendance_status}
+                        </span>
                       </td>
 
                       <td className="p-3">

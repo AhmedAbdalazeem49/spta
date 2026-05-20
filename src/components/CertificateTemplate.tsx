@@ -1,7 +1,8 @@
+import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Award, CheckCircle2, Stamp } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Badge } from "@/components/ui/badge";
+import QRCode from "react-qr-code";
 
 export type CertTemplate = "classic" | "modern" | "elegant" | "minimal";
 
@@ -26,199 +27,197 @@ interface Props {
 const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const { t } = useLanguage();
 
+  // 🔥 FIXED QR (same working link everywhere)
+  const qrValue = cert.verification_code
+    ? `http://localhost:5173/certificate/verify/${cert.verification_code}`
+    : `http://localhost:5173/certificate/verify/${cert.id}`;
+
   const Header = (
     <p className="text-xs uppercase tracking-widest text-muted-foreground">
-      {t("الجمعية السعودية للعلاج الطبيعي", "Saudi Physical Therapy Association")}
+      {t(
+        "الجمعية السعودية للعلاج الطبيعي",
+        "Saudi Physical Therapy Association"
+      )}
     </p>
   );
 
-  const VerifiedBadge = cert.status === "verified" && (
-    <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 mt-2">
-      <CheckCircle2 className="w-3 h-3 me-1" />
-      {t("موثقة", "Verified")}
-    </Badge>
-  );
 
-  const Signatures = (
-    <div className="absolute bottom-6 right-8 left-8 flex justify-between items-end px-4">
-      {cert.stamp_url && (
-        <div className="text-start">
-          <img src={cert.stamp_url} alt="Stamp" className="h-16 w-16 opacity-60 mix-blend-multiply" />
-        </div>
-      )}
-      {cert.chairman_name && (
-        <div className="text-center">
-          {cert.signature_url && (
-            <img src={cert.signature_url} alt="Signature" className="h-10 mx-auto mb-1 opacity-80 mix-blend-multiply" />
-          )}
-          <div className="h-px w-24 bg-current opacity-30 mx-auto mb-1" />
-          <p className="text-xs opacity-70">{t("رئيس الجمعية", "Chairman")}</p>
-          <p className="text-sm font-semibold">{cert.chairman_name}</p>
-        </div>
-      )}
+
+  const VerifiedBadge =
+    cert.status === "verified" ? (
+      <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 mt-2">
+        <CheckCircle2 className="w-3 h-3 me-1" />
+        {t("موثقة", "Verified")}
+      </Badge>
+    ) : null;
+
+  // =========================
+  // SIGNATURE + STAMP BLOCK (FIXED)
+  // =========================
+  const SignatureBlock = (
+    <div className="absolute bottom-6 right-8 left-8 flex justify-between items-end px-6">
+      {/* STAMP */}
+      <div className="text-center">
+        <img
+          src={
+            cert.stamp_url ||
+            "https://via.placeholder.com/120x120.png?text=STAMP"
+          }
+          alt="stamp"
+          className="h-20 w-20 object-contain opacity-90"
+        />
+        <p className="text-[10px] mt-2 opacity-70">
+          {t("الختم الرسمي", "Official Stamp")}
+        </p>
+      </div>
+
+      {/* CHAIRMAN + SIGNATURE */}
+      <div className="text-center flex flex-col items-center">
+        <img
+          src={
+            cert.signature_url ||
+            "https://via.placeholder.com/160x60.png?text=SIGNATURE"
+          }
+          alt="signature"
+          className="h-12 object-contain mb-1"
+        />
+
+        <div className="h-px w-28 bg-current opacity-30 mb-1" />
+
+        <p className="text-xs opacity-70">
+          {t("التوقيع الرسمي", "Official Signature")}
+        </p>
+
+        <p className="text-sm font-semibold">
+          {cert.chairman_name || t("رئيس الجمعية", "Chairman")}
+        </p>
+      </div>
     </div>
   );
 
+  // =========================
+  // MODERN
+  // =========================
   if (template === "modern") {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative bg-gradient-to-br from-primary via-primary/90 to-primary p-10 text-primary-foreground overflow-hidden min-h-[340px]"
-      >
-        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-white/5 blur-3xl" />
-        <div className="relative text-center space-y-3">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center">
-            <Award className="w-7 h-7" />
-          </div>
-          <p className="text-xs uppercase tracking-widest text-primary-foreground/70">
-            {t("الجمعية السعودية للعلاج الطبيعي", "Saudi Physical Therapy Association")}
-          </p>
+      <motion.div className="relative bg-gradient-to-br from-primary to-primary/80 p-10 text-white min-h-[380px] overflow-hidden">
+        <div className="text-center space-y-3">
+          <Award className="w-10 h-10 mx-auto" />
+
+          {Header}
+
           <h3 className="text-2xl font-bold">
-            {t("شهادة إنجاز", "Certificate of Achievement")}
+            {t("شهادة إتمام", "Certificate of Completion")}
           </h3>
-          <p className="text-sm text-primary-foreground/80">
-            {t("تشهد بأن", "Awarded to")}
-          </p>
-          <p className="text-2xl font-bold">{cert.recipient_name}</p>
-          <p className="text-sm text-primary-foreground/80">
-            {t("لإتمام", "for completing")}
-          </p>
-          <p className="font-semibold text-base">{cert.workshop_title}</p>
-          <div className="flex justify-center gap-4 text-xs text-primary-foreground/70 pt-2">
-            <span>{cert.issue_date}</span>
-            {cert.hours && <span>· {cert.hours} {t("ساعة", "hours")}</span>}
+
+          <p className="text-lg font-semibold">{cert.recipient_name}</p>
+
+          <p className="opacity-80">{cert.workshop_title}</p>
+
+          <div className="text-sm mt-2">
+            {cert.hours} {t("ساعة تدريبية", "Training Hours")}
+          </div>
+
+          <div className="mt-4 bg-white p-2 inline-block rounded-lg">
+            <QRCode value={qrValue} size={90} />
           </div>
         </div>
-        
-        {/* Modern Signatures - custom style for dark bg */}
-        <div className="absolute bottom-6 right-8 left-8 flex justify-between items-end px-4">
-          {cert.stamp_url && (
-            <div className="text-start">
-              <img src={cert.stamp_url} alt="Stamp" className="h-16 w-16 opacity-80 mix-blend-screen" />
-            </div>
-          )}
-          {cert.chairman_name && (
-            <div className="text-center">
-              {cert.signature_url && (
-                <img src={cert.signature_url} alt="Signature" className="h-10 mx-auto mb-1 opacity-90 mix-blend-screen" />
-              )}
-              <div className="h-px w-24 bg-primary-foreground opacity-30 mx-auto mb-1" />
-              <p className="text-xs text-primary-foreground/70">{t("رئيس الجمعية", "Chairman")}</p>
-              <p className="text-sm font-semibold text-primary-foreground">{cert.chairman_name}</p>
-            </div>
-          )}
-        </div>
+
+        {SignatureBlock}
       </motion.div>
     );
   }
 
+  // =========================
+  // ELEGANT
+  // =========================
   if (template === "elegant") {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative bg-gradient-to-b from-amber-50 via-white to-amber-50 dark:from-amber-950/20 dark:via-background dark:to-amber-950/20 p-10 min-h-[340px]"
-      >
-        {/* Ornate borders */}
-        <div className="absolute inset-4 border-2 border-amber-600/40 rounded-sm" />
-        <div className="absolute inset-5 border border-amber-600/20 rounded-sm" />
-        <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-s-2 border-amber-600" />
-        <div className="absolute top-3 right-3 w-8 h-8 border-t-2 border-e-2 border-amber-600" />
-        <div className="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-s-2 border-amber-600" />
-        <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-e-2 border-amber-600" />
-
-        <div className="relative text-center space-y-3 py-4">
+      <motion.div className="relative bg-amber-50 p-10 min-h-[380px] border">
+        <div className="text-center space-y-3">
           <Stamp className="w-10 h-10 mx-auto text-amber-700" />
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-700">
+
+          {Header}
+
+          <h3 className="text-xl font-bold text-amber-900">
             {t("شهادة تقدير", "Certificate of Excellence")}
-          </p>
-          <div className="h-px w-32 mx-auto bg-amber-600/50" />
-          <p className="text-sm italic text-muted-foreground">
-            {t("تتشرف الجمعية بمنح هذه الشهادة إلى", "Proudly presented to")}
-          </p>
-          <p className="text-2xl font-serif font-bold text-amber-900 dark:text-amber-300">
-            {cert.recipient_name}
-          </p>
-          <div className="h-px w-24 mx-auto bg-amber-600/50" />
-          <p className="text-sm font-semibold">{cert.workshop_title}</p>
+          </h3>
+
+          <p className="text-lg font-semibold">{cert.recipient_name}</p>
+
+          <p className="text-sm">{cert.workshop_title}</p>
+
           <p className="text-xs text-muted-foreground">
-            {cert.issue_date} {cert.hours && `· ${cert.hours} ${t("ساعة", "hours")}`}
+            {cert.issue_date} • {cert.hours} {t("ساعة", "hours")}
           </p>
-          {VerifiedBadge}
+
+          <div className="mt-3 bg-white p-2 inline-block rounded">
+            <QRCode value={qrValue} size={80} />
+          </div>
         </div>
-        {Signatures}
+
+        {SignatureBlock}
       </motion.div>
     );
   }
 
+  // =========================
+  // MINIMAL
+  // =========================
   if (template === "minimal") {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative bg-background p-10 border-s-4 border-primary min-h-[340px]"
-      >
-        <div className="space-y-4">
-          {Header}
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">
-              {t("شهادة", "Certificate")}
-            </p>
-            <h3 className="text-xl font-bold">{cert.workshop_title}</h3>
-          </div>
-          <div className="h-px w-12 bg-primary" />
-          <div className="space-y-0.5">
-            <p className="text-xs text-muted-foreground">
-              {t("ممنوحة إلى", "Awarded to")}
-            </p>
-            <p className="text-2xl font-bold text-primary">{cert.recipient_name}</p>
-          </div>
-          <div className="flex items-center justify-between pt-4 text-xs text-muted-foreground border-t">
-            <span>{cert.issue_date}</span>
-            {cert.hours && <span>{cert.hours} {t("ساعة", "hours")}</span>}
-          </div>
-          {VerifiedBadge}
+      <motion.div className="relative p-10 border-l-4 border-primary min-h-[360px]">
+        {Header}
+
+        <h3 className="text-lg font-bold mt-2">{cert.workshop_title}</h3>
+
+        <p className="text-2xl font-bold text-primary mt-4">
+          {cert.recipient_name}
+        </p>
+
+        <p className="text-sm mt-2">
+          {cert.hours} {t("ساعة تدريبية", "hours")}
+        </p>
+
+        <div className="mt-4">
+          <QRCode value={qrValue} size={90} />
         </div>
-        {Signatures}
+
+        {SignatureBlock}
       </motion.div>
     );
   }
 
-  // Classic (default)
+  // =========================
+  // CLASSIC (DEFAULT)
+  // =========================
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative bg-gradient-to-br from-primary/5 via-accent/5 to-primary/10 p-8 min-h-[340px]"
-    >
-      <div className="absolute inset-3 border-2 border-primary/20 rounded-lg" />
-      <div className="absolute inset-4 border border-accent/10 rounded-lg" />
+    <motion.div className="relative bg-gradient-to-br from-gray-50 to-white p-10 min-h-[400px] border rounded-lg">
+      <div className="text-center space-y-3">
+        <Award className="w-10 h-10 mx-auto text-primary" />
 
-      <div className="relative text-center space-y-3 py-4">
-        <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-          <Award className="w-7 h-7 text-primary-foreground" />
-        </div>
         {Header}
-        <h3 className="text-lg font-bold mt-2">
+
+        <h3 className="text-xl font-bold">
           {t("شهادة حضور", "Certificate of Attendance")}
         </h3>
-        <p className="text-sm text-muted-foreground">
-          {t("تشهد الجمعية بأن", "This certifies that")}
-        </p>
-        <p className="text-xl font-bold text-primary">{cert.recipient_name}</p>
-        <p className="text-sm text-muted-foreground">
-          {t("قد أتم بنجاح حضور", "has successfully completed")}
-        </p>
+
+        <p className="text-sm text-muted-foreground">{cert.recipient_name}</p>
+
         <p className="font-semibold">{cert.workshop_title}</p>
-        <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-2">
-          <span>{cert.issue_date}</span>
-          {cert.hours && <span>{cert.hours} {t("ساعة", "hours")}</span>}
+
+        <p className="text-xs text-muted-foreground">
+          {cert.issue_date} • {cert.hours} {t("ساعة", "hours")}
+        </p>
+
+        <div className="mt-4">
+          <QRCode value={qrValue} size={90} />
         </div>
+
         {VerifiedBadge}
       </div>
-      {Signatures}
+
+      {SignatureBlock}
     </motion.div>
   );
 };

@@ -32,6 +32,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import QRCode from "react-qr-code";
 import { useNavigate } from "react-router-dom";
 
 import { LoginRequiredModal } from "@/components/workshops/LoginRequiredModal";
@@ -50,6 +51,7 @@ const WorkshopsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [registeredIds, setRegisteredIds] = useState<number[]>([]);
+
 
   // Modals
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -95,7 +97,6 @@ const WorkshopsPage = () => {
     fetchMyWorkshops();
   }, []);
 
-
   // ── Filters ───────────────────────────────────────────────────────────────────
 
   const filteredWorkshops = workshops.filter((w) => {
@@ -107,6 +108,7 @@ const WorkshopsPage = () => {
 
     return matchesSearch && matchesStatus;
   });
+
 
 
   // ── Status badge ──────────────────────────────────────────────────────────────
@@ -288,9 +290,9 @@ const WorkshopsPage = () => {
               ) : (
                 <div className="grid md:grid-cols-2 gap-6">
                   <AnimatePresence>
-                    
                     {filteredWorkshops.map((workshop, index) => {
                       const isRegistered = registeredIds.includes(workshop.id);
+                      const attendanceUrl = `${window.location.origin}/workshop/${workshop.id}/attendance`;
                       const imgSrc = getWorkshopImage(workshop);
                       return (
                         <motion.div
@@ -413,6 +415,24 @@ const WorkshopsPage = () => {
                                     {workshop.regular_price} {t("ر.س", "SAR")}
                                   </p>
                                 </div>
+                              </div>
+
+                              <div className="my-4 flex flex-col items-center gap-2 ">
+                                <div className="bg-white p-2 rounded-lg shadow-sm">
+                                  <QRCode
+                                    value={attendanceUrl}
+                                    size={90}
+                                    bgColor="#ffffff"
+                                    fgColor="#000000"
+                                  />
+                                </div>
+
+                                <p className="text-[11px] text-muted-foreground text-center">
+                                  {t(
+                                    "امسح لتسجيل الحضور",
+                                    "Scan to mark attendance"
+                                  )}
+                                </p>
                               </div>
 
                               <Button

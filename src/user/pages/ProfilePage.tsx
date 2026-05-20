@@ -288,6 +288,22 @@ const ProfilePage = () => {
                             </p>
                           </div>
                         </div>
+
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <CheckCircle className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              {t("الحالة", "Status")}
+                            </p>
+                            {activeMembership?.status
+                              ? getStatusBadge(activeMembership.status)
+                              : "—"}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                             <Calendar className="w-5 h-5 text-primary" />
@@ -307,8 +323,6 @@ const ProfilePage = () => {
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div className="space-y-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-green-accent/10 flex items-center justify-center">
                             <Clock className="w-5 h-5 text-green-accent" />
@@ -326,19 +340,6 @@ const ProfilePage = () => {
                                   )
                                 : "—"}
                             </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              {t("الحالة", "Status")}
-                            </p>
-                            {activeMembership?.status
-                              ? getStatusBadge(activeMembership.status)
-                              : "—"}
                           </div>
                         </div>
                       </div>
@@ -369,7 +370,7 @@ const ProfilePage = () => {
                 </Card>
 
                 {/* Personal Info */}
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
                   {[
                     {
                       icon: Mail,
@@ -403,22 +404,41 @@ const ProfilePage = () => {
                     },
                   ].map((item, i) => {
                     const Icon = item.icon;
+
                     return (
                       <div
                         key={i}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 hover:bg-muted/60 transition-colors"
+                        className="group relative rounded-2xl border border-border/60 bg-background/60 backdrop-blur-md p-4 transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-primary" />
+                        {/* subtle glow */}
+                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-primary/5 to-transparent" />
+
+                        <div className="relative flex items-start gap-4">
+                          {/* Icon */}
+                          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-primary/10 group-hover:bg-primary/15 transition-colors">
+                            <Icon className="w-5 h-5 text-primary" />
+                          </div>
+
+                          {/* Content */}
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                              {item.label}
+                            </p>
+
+                            <p className="mt-1 text-sm font-semibold text-foreground truncate">
+                              {item.value ? (
+                                item.value
+                              ) : (
+                                <span className="text-muted-foreground font-normal">
+                                  —
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            {item.label}
-                          </p>
-                          <p className="font-medium text-sm">
-                            {item.value || "—"}
-                          </p>
-                        </div>
+
+                        {/* bottom accent line */}
+                        <div className="absolute bottom-0 left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                     );
                   })}

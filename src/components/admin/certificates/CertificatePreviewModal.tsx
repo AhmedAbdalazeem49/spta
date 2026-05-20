@@ -1,123 +1,351 @@
+import { useEffect, useRef, useState } from "react";
+
+import { api } from "@/api";
+
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
+import QRCode from "react-qr-code";
+
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import { useLanguage } from "@/contexts/LanguageContext";
+
 import { Certificate } from "@/types/certificate";
-import { getCertificateDate, getCertificateName, getCertificateWorkshop } from "@/utils/certificateUtils";
-import { Award, Download, Printer, QrCode, Signature, Stamp } from "lucide-react";
-import React, { useRef } from "react";
+
+import {
+  getCertificateDate,
+  getCertificateName,
+  getCertificateWorkshop,
+} from "@/utils/certificateUtils";
+
+import { Award, Download, Loader2, Printer } from "lucide-react";
 
 interface CertificatePreviewModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   certificate: Certificate | null;
+  settings: CertificateSettings;
 }
 
-export const CertificatePreviewModal = ({ isOpen, onOpenChange, certificate }: CertificatePreviewModalProps) => {
+interface CertificateSettings {
+  signature_image: string | null;
+  stamp_image: string | null;
+  chairman_name: string;
+  custom_text: string;
+}
+
+export const CertificatePreviewModal = ({
+  isOpen,
+  onOpenChange,
+  certificate,
+}: CertificatePreviewModalProps) => {
   const { t } = useLanguage();
-  const printRef = useRef<HTMLDivElement>(null);
 
-  if (!certificate) return null;
+  const certificateRef = useRef<HTMLDivElement>(null);
 
+  const [settings, setSettings] = useState<CertificateSettings>({
+    signature_image: null,
+    stamp_image: null,
+    chairman_name: "",
+    custom_text: "",
+  });
+
+  const [loadingSettings, setLoadingSettings] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+
+  // =========================
+  // FETCH SETTINGS
+  // =========================
+  useEffect(() => {
+    if (isOpen) {
+    }
+  }, [isOpen]);
+
+  // =========================
+  // STORAGE URL
+  // =========================
+  const storageUrl = (path?: string | null) => {
+    if (!path) return "";
+
+    if (path.startsWith("http")) {
+      return path;
+    }
+
+    return `http://localhost:8000/storage/${path}`;
+  };
+
+  // =========================
+  // QR URL
+  // =========================
+  const qrValue = certificate?.serial_number
+    ? `http://localhost:5173/certificate/verify/${certificate.serial_number}`
+    : "";
+
+  // =========================
+  // PRINT
+  // =========================
   const handlePrint = () => {
     window.print();
   };
 
-  const handleDownloadPdf = () => {
-    // TODO: Implement PDF generation
+  // =========================
+  // PDF DOWNLOAD
+  // =========================
+  const handleDownloadPdf = async () => {
+    if (!certificateRef.current) return;
+
+    try {
+      setDownloadingPdf(true);
+
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null,
+      });
+
+      const imageData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+
+      pdf.addImage(imageData, "PNG", 0, 0, canvas.width, canvas.height);
+
+      pdf.save(
+        `${certificate.serial_number || `certificate-${certificate.id}`}.pdf`
+      );
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+    } finally {
+      setDownloadingPdf(false);
+    }
   };
+
+  if (!certificate) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto print:max-w-none print:m-0 print:p-0">
-        <DialogHeader className="print:hidden">
-          <DialogTitle className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-primary" />
-            {t("معاينة الشهادة", "Certificate Preview")}
-          </DialogTitle>
+      <DialogContent className="sm:max-w-7xl p-0 overflow-hidden border-0 bg-transparent shadow-none">
+        <DialogHeader className="hidden">
+          <DialogTitle>Certificate Preview</DialogTitle>
         </DialogHeader>
 
-        <div className="relative print:m-0 print:p-0" ref={printRef}>
-          <div className="aspect-[1.4/1] bg-gradient-to-br from-midnight via-dark-navy to-navy-light rounded-2xl p-8 text-primary-foreground overflow-hidden print:rounded-none print:h-screen print:w-screen">
+        {loadingSettings ? (
+          <div className="h-[500px] flex items-center justify-center bg-background rounded-3xl">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <>
+            {/* CERTIFICATE */}
             <div
-              className="absolute inset-0 opacity-10"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0l50 50-50 50L0 50z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E")`,
-              }}
-            />
+              ref={certificateRef}
+              className="relative overflow-hidden rounded-[32px] shadow-2xl border border-white/10"
+            >
+              {/* BACKGROUND */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#07111f] via-[#0d1b33] to-[#14294d]" />
 
-            <div className="relative h-full flex flex-col">
-              {/* Header */}
-              <div className="text-center mb-6">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center">
-                    <Award className="w-8 h-8 text-green-accent" />
-                  </div>
-                </div>
-                <h2 className="text-3xl font-bold mb-2">
-                  {t("شهادة حضور", "Certificate of Attendance")}
-                </h2>
-                <p className="text-blue-pale">
-                  {t("الجمعية السعودية للعلاج الطبيعي", "Saudi Physical Therapy Association")}
-                </p>
-              </div>
+              {/* PATTERN */}
+              <div
+                className="absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage: `
+                    radial-gradient(circle at 25px 25px, white 2px, transparent 0),
+                    radial-gradient(circle at 75px 75px, white 2px, transparent 0)
+                  `,
+                  backgroundSize: "100px 100px",
+                }}
+              />
 
-              {/* Body */}
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <p className="text-lg mb-4">
-                  {t("تشهد الجمعية بأن", "This is to certify that")}
-                </p>
-                <h3 className="text-4xl font-bold mb-4 text-green-accent">
-                  {getCertificateName(certificate, t)}
-                </h3>
-                <p className="text-lg mb-2">
-                  {t("قد أتم بنجاح حضور", "has successfully completed")}
-                </p>
-                <h4 className="text-2xl font-semibold mb-4">
-                  {getCertificateWorkshop(certificate, t)}
-                </h4>
-                <p className="text-blue-pale">
-                  {t("بتاريخ", "on")} {getCertificateDate(certificate)}
-                  {certificate.hours
-                    ? ` • ${certificate.hours} ${t("ساعات تدريبية", "training hours")}`
-                    : ""}
-                </p>
-              </div>
+              {/* OUTER BORDER */}
+              <div className="absolute inset-5 rounded-[28px] border border-yellow-400/30" />
 
-              {/* Footer */}
-              <div className="flex items-end justify-between">
-                <div className="text-center">
-                  <div className="w-24 h-16 border-b-2 border-blue-pale/50 mb-2 flex items-end justify-center">
-                    <Signature className="w-8 h-8 text-blue-pale/50" />
+              {/* INNER LIGHT */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.10),transparent_60%)]" />
+
+              {/* CONTENT */}
+              <div className="relative z-10 px-20 py-16 min-h-[900px] flex flex-col text-white">
+                {/* HEADER */}
+                <div className="flex items-center justify-between">
+                  <div className="w-28 h-28 rounded-full border border-yellow-400/30 bg-white/5 backdrop-blur-md flex items-center justify-center">
+                    <Award className="w-14 h-14 text-yellow-300" />
                   </div>
-                  <p className="text-sm text-blue-pale">{t("التوقيع", "Signature")}</p>
+
+                  <div className="text-center">
+                    <h1 className="text-6xl font-black tracking-wide text-yellow-300">
+                      {t("شهادة حضور", "Certificate")}
+                    </h1>
+
+                    <p className="mt-4 text-xl text-blue-100">
+                      {t(
+                        "الجمعية السعودية للعلاج الطبيعي",
+                        "Saudi Physical Therapy Association"
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="w-28" />
                 </div>
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-white rounded-lg p-2 mb-2">
-                    <QrCode className="w-full h-full text-navy" />
+
+                {/* BODY */}
+                <div className="flex-1 flex flex-col items-center justify-center text-center py-14">
+                  <p className="text-2xl text-blue-100 mb-6">
+                    {t(
+                      "تشهد الجمعية بأن",
+                      "This certificate is proudly presented to"
+                    )}
+                  </p>
+
+                  <h2 className="text-7xl font-black text-yellow-300 mb-10 leading-tight drop-shadow-2xl">
+                    {getCertificateName(certificate, t)}
+                  </h2>
+
+                  <p className="text-2xl text-blue-100 mb-4">
+                    {t(
+                      "قد أتم بنجاح حضور الورشة التدريبية",
+                      "Has successfully completed the training workshop"
+                    )}
+                  </p>
+
+                  <h3 className="text-5xl font-bold mb-8 max-w-5xl leading-relaxed">
+                    {getCertificateWorkshop(certificate, t)}
+                  </h3>
+
+                  <div className="flex flex-wrap items-center justify-center gap-5 text-xl text-blue-100">
+                    <span>
+                      {t("بتاريخ", "Date")}:
+                      <span className="text-white font-bold ms-2">
+                        {getCertificateDate(certificate)}
+                      </span>
+                    </span>
+
+                    {certificate.hours && (
+                      <>
+                        <span className="text-yellow-300">•</span>
+
+                        <span>
+                          {certificate.hours}{" "}
+                          {t("ساعات تدريبية", "Training Hours")}
+                        </span>
+                      </>
+                    )}
                   </div>
-                  <p className="text-xs text-blue-pale">{certificate.id}</p>
+
+                  {/* CUSTOM TEXT */}
+                  {settings.custom_text && (
+                    <div className="mt-12 max-w-4xl">
+                      <p className="text-lg leading-10 text-blue-100 italic">
+                        {settings.custom_text}
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <div className="text-center">
-                  <div className="w-24 h-16 border-b-2 border-blue-pale/50 mb-2 flex items-end justify-center">
-                    <Stamp className="w-8 h-8 text-blue-pale/50" />
+
+                {/* FOOTER */}
+                <div className="grid grid-cols-3 items-end gap-10 pt-12">
+                  {/* SIGNATURE */}
+                  <div className="text-center">
+                    <div className="h-32 flex items-end justify-center mb-4">
+                      {settings.signature_image ? (
+                        <img
+                          src={storageUrl(settings.signature_image)}
+                          alt="signature"
+                          crossOrigin="anonymous"
+                          className="max-h-28 object-contain drop-shadow-2xl"
+                        />
+                      ) : (
+                        <div className="w-52 border-b border-white/30" />
+                      )}
+                    </div>
+
+                    <div className="w-52 h-px bg-white/30 mx-auto mb-3" />
+
+                    <p className="text-2xl font-bold text-yellow-300">
+                      {settings.chairman_name || t("رئيس الجمعية", "Chairman")}
+                    </p>
+
+                    <p className="text-sm text-blue-200 mt-2 tracking-wide">
+                      {t("التوقيع الرسمي", "Official Signature")}
+                    </p>
                   </div>
-                  <p className="text-sm text-blue-pale">{t("الختم", "Stamp")}</p>
+
+                  {/* QR */}
+                  <div className="flex flex-col items-center">
+                    <div className="bg-white rounded-3xl p-4 shadow-2xl">
+                      <QRCode
+                        value={qrValue}
+                        size={150}
+                        bgColor="#ffffff"
+                        fgColor="#000000"
+                      />
+                    </div>
+
+                    <div className="mt-5 text-center">
+                      <p className="text-xs uppercase tracking-[4px] text-blue-200">
+                        {t("رقم الشهادة", "Certificate Serial")}
+                      </p>
+
+                      <p className="text-2xl font-bold text-yellow-300 mt-2">
+                        {certificate.serial_number || `CERT-${certificate.id}`}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* STAMP */}
+                  <div className="text-center">
+                    <div className="h-32 flex items-end justify-center mb-4">
+                      {settings.stamp_image ? (
+                        <img
+                          src={storageUrl(settings.stamp_image)}
+                          alt="stamp"
+                          crossOrigin="anonymous"
+                          className="max-h-28 object-contain opacity-95 drop-shadow-2xl"
+                        />
+                      ) : (
+                        <div className="w-28 h-28 rounded-full border border-dashed border-white/30" />
+                      )}
+                    </div>
+
+                    <p className="text-sm text-blue-200 tracking-wide">
+                      {t("الختم الرسمي", "Official Stamp")}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <DialogFooter className="gap-2 print:hidden">
-          <Button variant="outline" className="gap-2" onClick={handlePrint}>
-            <Printer className="w-4 h-4" />
-            {t("طباعة", "Print")}
-          </Button>
-          <Button className="bg-green-accent hover:bg-green-light gap-2" onClick={handleDownloadPdf}>
-            <Download className="w-4 h-4" />
-            {t("تحميل PDF", "Download PDF")}
-          </Button>
-        </DialogFooter>
+            {/* ACTIONS */}
+            <DialogFooter className="bg-background border-t p-5 flex-row justify-end gap-3">
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                {t("إغلاق", "Close")}
+              </Button>
+
+              <Button
+                onClick={handleDownloadPdf}
+                disabled={downloadingPdf}
+                className="bg-green-600 hover:bg-green-700 gap-2"
+              >
+                {downloadingPdf ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+
+                {t("تحميل PDF", "Download PDF")}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
