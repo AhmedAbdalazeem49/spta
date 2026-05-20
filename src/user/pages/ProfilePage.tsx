@@ -1,4 +1,4 @@
-import { CertificateCard } from "@/components/admin/certificates/CertificateCard";
+import CertificatesTab from "@/components/CertificatesTab";
 import DigitalMembershipCard from "@/components/DigitalMembershipCard";
 import Layout from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,7 @@ import api from "@/services/api";
 import { Certificate } from "@/types/certificate";
 import AOS from "aos";
 import { AnimatePresence, motion } from "framer-motion";
+
 import {
   AlertCircle,
   ArrowRight,
@@ -108,11 +109,15 @@ const ProfilePage = () => {
 
   const fetchMembership = async () => {
     setMembershipLoading(true);
+
     try {
       const res = await api.get("/membership/my-membership");
-      const data = res.data?.data || res.data;
-      setActiveMembership(data || null);
-    } catch {
+
+      const data = res.data?.data;
+
+      // ensure only valid object is stored
+      setActiveMembership(data ?? null);
+    } catch (error) {
       setActiveMembership(null);
       setMembershipError(true);
     } finally {
@@ -121,8 +126,15 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    fetchWorkshops();
-    fetchCertificates();
+    const loadData = async () => {
+      await Promise.all([
+        fetchWorkshops(),
+        fetchCertificates(),
+        fetchMembership(),
+      ]);
+    };
+
+    loadData();
   }, []);
 
   const fetchWorkshops = async () => {
@@ -405,18 +417,6 @@ const ProfilePage = () => {
                         </Button>
                       )}
 
-                      {/* Renew button only when subscribed */}
-                      {activeMembership && (
-                        <Button
-                          onClick={() => navigate("/membership")}
-                          variant="outline"
-                          className="gap-2 hidden"
-                        >
-                          <RefreshCw className="w-4 h-4" />
-                          {t("تجديد العضوية", "Renew Membership")}
-                        </Button>
-                      )}
-
                       {activeMembership && (
                         <Button
                           onClick={() => setShowCardModal(true)}
@@ -578,54 +578,7 @@ const ProfilePage = () => {
             )}
 
             {/* Certificates Tab */}
-            {/* Certificates Tab */}
-            {activeTab === "certificates" && (
-              <motion.div
-                key="certificates"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                {certificates.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-24 text-center">
-                    <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center mb-4">
-                      <Award className="w-10 h-10 text-muted-foreground" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">
-                      {t("لا توجد شهادات بعد", "No Certificates Yet")}
-                    </h3>
-                    <p className="text-muted-foreground text-sm max-w-xs">
-                      {t(
-                        "ستظهر شهاداتك هنا بعد إتمام ورش العمل",
-                        "Your certificates will appear here after completing workshops"
-                      )}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <AnimatePresence>
-                      {certificates.map((cert, index) => (
-                        <motion.div
-                          key={cert.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
-                          transition={{ delay: index * 0.05 }}
-                        >
-                          <CertificateCard
-                            cert={cert}
-                            onOpenDetails={openCertDetails}
-                            onOpenPreview={openCertPreview}
-                            onCopyLink={handleCopyLink}
-                          />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                )}
-              </motion.div>
-            )}
+            {activeTab === "certificates" && <CertificatesTab />}
 
             {/* Edit Profile Tab */}
             {activeTab === "edit" && (
@@ -780,165 +733,6 @@ const ProfilePage = () => {
               showSignature={true}
               showStamp={true}
             />
-          </motion.div>
-        </div>
-      )}
-
-      {/* Certificate Details Modal */}
-      {showCertDetails && selectedCert && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowCertDetails(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
-            className="bg-background rounded-3xl shadow-2xl w-full max-w-md p-6 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowCertDetails(false)}
-              className="absolute top-4 end-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
-            >
-              <XCircle className="w-4 h-4 text-muted-foreground" />
-            </button>
-
-            <div className="flex items-center gap-2 mb-6">
-              <Award className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-bold">
-                {t("تفاصيل الشهادة", "Certificate Details")}
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              {[
-                {
-                  label: t("الاسم", "Name"),
-                  value: selectedCert.recipientNameAr || selectedCert.recipientNameEn,
-                },
-                {
-                  label: t("رقم الشهادة", "Certificate ID"),
-                  value: selectedCert.id,
-                  mono: true,
-                },
-                {
-                  label: t("تاريخ الإصدار", "Issue Date"),
-                  value: selectedCert.issue_date
-                    ? new Date(selectedCert.issue_date).toLocaleDateString(
-                        isRTL ? "ar-SA" : "en-US"
-                      )
-                    : "—",
-                },
-                {
-                  label: t("الساعات التدريبية", "Training Hours"),
-                  value: selectedCert.hours
-                    ? `${selectedCert.hours} ${t("ساعة", "hrs")}`
-                    : "—",
-                },
-                { label: t("الحالة", "Status"), value: selectedCert.status },
-              ].map((row, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center py-2 border-b border-border last:border-0"
-                >
-                  <span className="text-sm text-muted-foreground">
-                    {row.label}
-                  </span>
-                  <span
-                    className={`text-sm font-medium ${
-                      row.mono ? "font-mono" : ""
-                    }`}
-                  >
-                    {row.value || "—"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Certificate Preview Modal */}
-      {showCertPreview && selectedCert && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowCertPreview(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
-            className="bg-background rounded-3xl shadow-2xl w-full max-w-2xl p-6 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowCertPreview(false)}
-              className="absolute top-4 end-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
-            >
-              <XCircle className="w-4 h-4 text-muted-foreground" />
-            </button>
-
-            <div className="flex items-center gap-2 mb-6">
-              <Award className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-bold">
-                {t("معاينة الشهادة", "Certificate Preview")}
-              </h2>
-            </div>
-
-            {/* Certificate visual */}
-            <div className="relative bg-gradient-to-br from-midnight to-dark-navy rounded-2xl p-8 text-white text-center overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2.5l5 3.5-5 3.5z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E")`,
-                }}
-              />
-              <div className="relative z-10">
-                <Award className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
-                <p className="text-sm opacity-60 mb-1">
-                  {t("شهادة حضور", "Certificate of Attendance")}
-                </p>
-                <h3 className="text-2xl font-bold mb-2">{user?.name}</h3>
-                <p className="opacity-70 mb-4">
-                  {t("أتم بنجاح", "has successfully completed")}
-                </p>
-                <h4 className="text-xl font-semibold mb-6 text-yellow-300">
-                  {selectedCert.recipientNameAr || selectedCert.recipientNameEn}
-                </h4>
-                <div className="flex justify-center gap-8 text-sm opacity-70">
-                  <span>
-                    {selectedCert.issue_date
-                      ? new Date(selectedCert.issue_date).toLocaleDateString(
-                          isRTL ? "ar-SA" : "en-US"
-                        )
-                      : "—"}
-                  </span>
-                  {selectedCert.hours && (
-                    <span>
-                      {selectedCert.hours} {t("ساعات", "hrs")}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-2 mt-4">
-              <Button className="flex-1 gap-2">
-                <Download className="w-4 h-4" />
-                {t("تحميل PDF", "Download PDF")}
-              </Button>
-              <Button
-                variant="outline"
-                className="flex-1 gap-2"
-                onClick={() => handleCopyLink(selectedCert.id?.toString())}
-              >
-                <Copy className="w-4 h-4" />
-                {t("نسخ الرابط", "Copy Link")}
-              </Button>
-            </div>
           </motion.div>
         </div>
       )}

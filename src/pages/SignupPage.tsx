@@ -94,7 +94,6 @@ const RULES = {
     return null;
   },
   subSpecialization: (v: string) => {
-    if (!v.trim()) return "التخصص الدقيق مطلوب";
     if (v.length > 255) return "النص طويل جداً";
     return null;
   },
@@ -342,9 +341,9 @@ const SignupPage = () => {
         email: formData.email,
         phone: formData.phone,
         national_id: formData.nationalId,
-        classification_number: formData.classificationNumber || undefined,
+        classification_number: formData.classificationNumber || null,
         specialization: formData.specialization,
-        sub_specialization: formData.subSpecialization || undefined,
+        sub_specialization: formData.subSpecialization || null,
         employer: formData.workplace,
         password: formData.password,
         password_confirmation: formData.confirmPassword,

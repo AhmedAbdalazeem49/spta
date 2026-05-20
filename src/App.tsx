@@ -58,7 +58,6 @@ import AdminMembershipsPage from "./pages/admin/Memberships/AdminMembershipsPage
 import PaymentPage from "./pages/PaymentPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
 import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
-import CertificateViewPage from "./user/pages/CertificateViewPage";
 import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
 import Membership from "./user/pages/Membership";
@@ -118,19 +117,11 @@ const App = () => (
                 path="/conferences/:id"
                 element={<ConferenceDetailPage />}
               />
-              {/* Certificates (user) */}
-              <Route
-                path="/certificates"
-                element={
-                  <ProtectedRoute>
-                    <CertificateViewPage />
-                  </ProtectedRoute>
-                }
-              />
+
               {/* Public certificate verification */}
               <Route
                 path="/certificates/verify/"
-                element={<CertificateViewPage />}
+                element={<CertificateVerifyPage />}
               />
               {/* Auth */}
               <Route path="/login" element={<LoginPage />} />
