@@ -122,11 +122,13 @@ const PaymentPage = () => {
       setLoading(true);
 
       const payload = {
-        membership_type: item.key,
+        type: type === "workshop" ? "workshop" : "membership",
+        reference_id: item.key,
         payment_method: selectedMethod,
+        promo_code: couponCode || null,
       };
 
-      const res = await paymentService.createMembership(payload);
+      const res = await paymentService.create(payload);
 
       const paymentUrl = res?.payment_url;
 

@@ -6,50 +6,41 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
+import WorkshopsTab from "@/components/WorkshopsTab";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
-import { Certificate } from "@/types/certificate";
 import AOS from "aos";
 import { AnimatePresence, motion } from "framer-motion";
 
 import {
   AlertCircle,
-  ArrowRight,
   Award,
-  Bell,
   Building2,
   Calendar,
   CheckCircle,
   Clock,
-  Copy,
-  Download,
   Edit,
-  Eye,
   FileText,
   GraduationCap,
   Loader2,
   Mail,
-  MapPin,
   Phone,
   RefreshCw,
   Save,
-  Settings,
   Shield,
   User,
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export interface ActiveMembership {
   id: number;
   user_id?: number;
 
-  membership_type: string; // "active | affiliate | intern | student"
+  membership_type: string;
   membership_number?: string;
 
   starts_at: string;
@@ -70,12 +61,7 @@ const ProfilePage = () => {
     useState<ActiveMembership | null>(null);
   const [membershipLoading, setMembershipLoading] = useState(true);
   const [membershipError, setMembershipError] = useState(false);
-  const [workshops, setWorkshops] = useState<any[]>([]);
-  const [certificates, setCertificates] = useState<any[]>([]);
   const [showCardModal, setShowCardModal] = useState(false);
-  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
-  const [showCertDetails, setShowCertDetails] = useState(false);
-  const [showCertPreview, setShowCertPreview] = useState(false);
 
   // Profile edit state
   const [isEditing, setIsEditing] = useState(false);
@@ -122,36 +108,6 @@ const ProfilePage = () => {
       setMembershipError(true);
     } finally {
       setMembershipLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const loadData = async () => {
-      await Promise.all([
-        fetchWorkshops(),
-        fetchCertificates(),
-        fetchMembership(),
-      ]);
-    };
-
-    loadData();
-  }, []);
-
-  const fetchWorkshops = async () => {
-    try {
-      const res = await api.get("/my-workshops");
-      setWorkshops(res.data.data || []);
-    } catch {
-      setWorkshops([]);
-    }
-  };
-
-  const fetchCertificates = async () => {
-    try {
-      const res = await api.get("/my-certificates");
-      setCertificates(res.data.data || []);
-    } catch {
-      setCertificates([]);
     }
   };
 
@@ -225,24 +181,6 @@ const ProfilePage = () => {
     },
     { id: "edit", labelAr: "تعديل الملف", labelEn: "Edit Profile", icon: Edit },
   ];
-
-  const openCertDetails = (cert: Certificate) => {
-    setSelectedCert(cert);
-    setShowCertDetails(true);
-  };
-
-  const openCertPreview = (cert: Certificate) => {
-    setSelectedCert(cert);
-    setShowCertPreview(true);
-  };
-
-  const handleCopyLink = (url: string) => {
-    navigator.clipboard.writeText(url);
-    toast({
-      title: t("تم النسخ", "Copied"),
-      description: t("تم نسخ رابط التحقق", "Verification link copied"),
-    });
-  };
 
   return (
     <Layout>
@@ -488,94 +426,8 @@ const ProfilePage = () => {
               </motion.div>
             )}
 
-            {/* Workshops Tab */}
-            {activeTab === "workshops" && (
-              <motion.div
-                key="membership"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card className="overflow-hidden" data-aos="fade-up">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <GraduationCap className="w-5 h-5 text-primary" />
-                      {t("ورش العمل المسجل بها", "Registered Workshops")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead className="bg-muted/50">
-                          <tr>
-                            <th className="text-start p-4 font-semibold">
-                              {t("اسم الورشة", "Workshop Name")}
-                            </th>
-                            <th className="text-start p-4 font-semibold">
-                              {t("التاريخ", "Date")}
-                            </th>
-                            <th className="text-start p-4 font-semibold">
-                              {t("الحالة", "Status")}
-                            </th>
-                            <th className="text-start p-4 font-semibold">
-                              {t("الإجراءات", "Actions")}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {workshops.map((workshop, index) => (
-                            <tr
-                              key={workshop.id}
-                              className="border-t border-border hover:bg-muted/30 transition-colors"
-                              data-aos="fade-up"
-                              data-aos-delay={index * 100}
-                            >
-                              <td className="p-4">
-                                <p className="font-medium">
-                                  {t(workshop.titleAr, workshop.titleEn)}
-                                </p>
-                              </td>
-                              <td className="p-4">
-                                {new Date(workshop.date).toLocaleDateString(
-                                  isRTL ? "ar-SA" : "en-US"
-                                )}
-                              </td>
-                              <td className="p-4">
-                                <Badge
-                                  variant="outline"
-                                  className={
-                                    workshop.status === "completed"
-                                      ? "bg-green-accent/10 text-green-accent border-green-accent/30"
-                                      : "bg-blue-light/10 text-blue-light border-blue-light/30"
-                                  }
-                                >
-                                  {workshop.status === "completed"
-                                    ? t("مكتملة", "Completed")
-                                    : t("قادمة", "Upcoming")}
-                                </Badge>
-                              </td>
-                              <td className="p-4">
-                                {workshop.certificateAvailable && (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="gap-2"
-                                  >
-                                    <Download className="w-4 h-4" />
-                                    {t("الشهادة", "Certificate")}
-                                  </Button>
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )}
+            {/* Certificates Tab */}
+            {activeTab === "workshops" && <WorkshopsTab />}
 
             {/* Certificates Tab */}
             {activeTab === "certificates" && <CertificatesTab />}

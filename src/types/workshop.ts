@@ -1,15 +1,18 @@
 export interface Workshop {
   id: number;
-  title?: string;
-  description?: string;
-  doctor_name?: string;
-  location?: string;
-  date?: string;
-  time?: string;
-  regular_price?: number;
-  member_price?: number;
-  total_capacity?: number;
-  status?: "open" | "closed" | "completed" | "postponed";
-  duration_minutes?: number;
+  title: string;
+  description: string;
+  doctor_name: string;
+  location: string;
+  date: string;
+  time: string;
+  duration_minutes: number;
+  regular_price: string | number;
+  member_price: string | number;
+  total_capacity: number;
+  registered_count?: number;
+  status: "open" | "closed" | "completed" | "postponed";
   image?: string | null;
+  image_url?: string | null;
+  is_registered?: boolean;
 }

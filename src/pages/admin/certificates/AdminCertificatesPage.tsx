@@ -33,7 +33,6 @@ import { CertificateFilters } from "@/components/admin/certificates/CertificateF
 import { CertificatePreviewModal } from "@/components/admin/certificates/CertificatePreviewModal";
 import { CertificateQuickVerify } from "@/components/admin/certificates/CertificateQuickVerify";
 import { CertificateSettingsModal } from "@/components/admin/certificates/CertificateSettingsModal";
-import { CertificateTemplates } from "@/components/admin/certificates/CertificateTemplates";
 import { CertificatesTable } from "@/components/admin/certificates/CertificatesTable";
 
 const AdminCertificatesPage = () => {
@@ -305,10 +304,6 @@ const AdminCertificatesPage = () => {
             <Shield className="w-4 h-4" />
             {t("التحقق السريع", "Quick Verify")}
           </TabsTrigger>
-          <TabsTrigger value="templates" className="gap-2">
-            <FileText className="w-4 h-4" />
-            {t("القوالب", "Templates")}
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="certificates" className="space-y-6">
@@ -375,15 +370,6 @@ const AdminCertificatesPage = () => {
             onPreview={openPreview}
           />
         </TabsContent>
-
-        <TabsContent value="templates" className="space-y-6">
-          <CertificateTemplates
-            currentTemplate={certificateSettings.template}
-            onSelectTemplate={(t) =>
-              setCertificateSettings({ ...certificateSettings, template: t })
-            }
-          />
-        </TabsContent>
       </Tabs>
 
       <CertificateDetailsModal
@@ -426,13 +412,13 @@ const AdminCertificatesPage = () => {
         previewHours={previewHours}
       />
 
-      <CertificateSettingsModal
+      {/* <CertificateSettingsModal
         isOpen={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
         settings={certificateSettings}
         setSettings={setCertificateSettings}
         onSave={() => setIsSettingsOpen(false)}
-      />
+      /> */}
     </div>
   );
 };
