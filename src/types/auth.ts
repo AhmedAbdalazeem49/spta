@@ -13,6 +13,18 @@ export interface User {
   email_verified_at?: string | null;
   membership_type?: string | null;
   created_at?: string;
+  membership_status?: "active" | "inactive";
+  active_membership?: {
+    id: number;
+    user_id: number;
+    membership_type: string;
+    membership_number: string;
+    starts_at: string;
+    ends_at: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+  } | null;
 }
 
 export interface LoginPayload {

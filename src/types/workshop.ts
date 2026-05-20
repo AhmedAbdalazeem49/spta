@@ -9,6 +9,7 @@ export interface Workshop {
   regular_price?: number;
   member_price?: number;
   total_capacity?: number;
-  status?: "open" | "closed" | "completed" | "postponed" | "full";
+  status?: "open" | "closed" | "completed" | "postponed";
   duration_minutes?: number;
+  image?: string | null;
 }

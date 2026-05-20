@@ -65,24 +65,27 @@ const AdminWorkshopsPage = () => {
     setIsFormOpen(true);
   };
 
-  const openEdit = (w: Workshop) => {
-    setEditMode(true);
-    setSelected(w);
-    setForm({
-      title: w.title || "",
-      description: w.description || "",
-      doctor_name: w.doctor_name || "",
-      location: w.location || "",
-      date: w.date || "",
-      time: w.time || "",
-      regular_price: String(w.regular_price || ""),
-      member_price: String(w.member_price || ""),
-      total_capacity: String(w.total_capacity || ""),
-      status: w.status || "open",
-      duration_minutes: w.duration_minutes || 60,
-    });
-    setIsFormOpen(true);
-  };
+const openEdit = (w: Workshop) => {
+  setEditMode(true);
+  setSelected(w);
+
+  setForm({
+    title: w.title || "",
+    description: w.description || "",
+    doctor_name: w.doctor_name || "",
+    location: w.location || "",
+    date: w.date || "",
+    time: w.time || "",
+    regular_price: String(w.regular_price || ""),
+    member_price: String(w.member_price || ""),
+    total_capacity: String(w.total_capacity || ""),
+    status: w.status || "open",
+    duration_minutes: w.duration_minutes || 60,
+    image: null,
+  });
+
+  setIsFormOpen(true);
+};
 
   const openView = (w: Workshop) => {
     setSelected(w);
@@ -94,38 +97,35 @@ const AdminWorkshopsPage = () => {
     setIsSubscriptionsOpen(true);
   };
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      const payload = {
-        ...form,
-        regular_price: parseFloat(String(form.regular_price)),
-        member_price: parseFloat(String(form.member_price)),
-        total_capacity: parseInt(String(form.total_capacity), 10),
-        duration_minutes: parseInt(String(form.duration_minutes), 10),
-      };
-
-      if (editMode && selected) {
-        await api.put(`/workshops/${selected.id}`, payload);
-        toast({ title: t("تم التحديث", "Updated successfully") });
-      } else {
-        await api.post("/workshops", payload);
-        toast({ title: t("تم الإنشاء", "Created successfully") });
-      }
-
-      setIsFormOpen(false);
-      fetchWorkshops();
-    } catch (err: any) {
-      toast({
-        title: t("خطأ", "Error"),
-        description:
-          err.response?.data?.message || t("حدث خطأ", "An error occurred"),
-        variant: "destructive",
+const handleSave = async (formData: FormData) => {
+  setIsSaving(true);
+  try {
+    if (editMode && selected) {
+      formData.append("_method", "PUT");
+      await api.post(`/workshops/${selected.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-    } finally {
-      setIsSaving(false);
+      toast({ title: t("تم التحديث", "Updated successfully") });
+    } else {
+      await api.post("/workshops", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast({ title: t("تم الإنشاء", "Created successfully") });
     }
-  };
+
+    setIsFormOpen(false);
+    fetchWorkshops();
+  } catch (err: any) {
+    toast({
+      title: t("خطأ", "Error"),
+      description:
+        err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+      variant: "destructive",
+    });
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   const handleDelete = async () => {
     if (!selected) return;

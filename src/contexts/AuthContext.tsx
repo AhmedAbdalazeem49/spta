@@ -20,10 +20,26 @@ interface User {
   specialization?: string;
   sub_specialization?: string;
   employer?: string;
+
   membership_type?: string;
   status?: UserStatus;
   role?: string;
   email_verified_at?: string | null;
+
+  // 🔥 ADD THESE
+  membership_status?: "active" | "inactive";
+
+  active_membership?: {
+    id: number;
+    user_id: number;
+    membership_type: string;
+    membership_number: string;
+    starts_at: string;
+    ends_at: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+  } | null;
 }
 
 interface AuthContextType {
