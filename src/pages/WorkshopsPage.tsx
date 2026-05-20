@@ -59,6 +59,7 @@ interface Workshop {
   status: "open" | "closed" | "completed" | "postponed";
   image?: string | null;
   image_url?: string | null;
+  is_registered?: boolean;
 }
 
 // ─── Login-required modal ─────────────────────────────────────────────────────
@@ -239,6 +240,7 @@ const RegistrationModal = ({
   onSuccess,
 }: RegistrationModalProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
   const [promoResult, setPromoResult] = useState<{
     discount: number;
@@ -294,19 +296,33 @@ const RegistrationModal = ({
     if (!workshop) return;
     setIsSubmitting(true);
     try {
-      await api.post("/workshops/register", {
+      const res = await api.post("/workshops/register", {
         workshop_id: workshop.id,
         promo_code: promoCode || undefined,
       });
+
+      const registrationData = res.data?.data;
+
+      if (registrationData?.final_price > 0 && registrationData?.status === "pending") {
+        handleClose();
+        navigate("/payment", {
+          state: {
+            type: "workshop",
+            item: {
+              key: workshop.id,
+              nameEn: workshop.title,
+              nameAr: workshop.title,
+              price: registrationData.final_price,
+              priceValue: registrationData.final_price,
+            },
+          },
+        });
+        return;
+      }
+
       toast({
         title: t("تم التسجيل بنجاح!", "Registered Successfully!"),
-        description:
-          finalPrice > 0
-            ? t(
-                "سيتم التواصل معك لإتمام الدفع",
-                "You will be contacted to complete payment"
-              )
-            : t("تم تأكيد تسجيلك", "Your registration is confirmed"),
+        description: t("تم تأكيد تسجيلك", "Your registration is confirmed"),
       });
       handleClose();
       onSuccess();
@@ -933,10 +949,15 @@ const WorkshopsPage = () => {
 
                               <Button
                                 className="w-full gap-2"
-                                disabled={workshop.status !== "open"}
+                                disabled={workshop.status !== "open" || workshop.is_registered}
                                 onClick={() => openRegistration(workshop)}
                               >
-                                {workshop.status === "open" ? (
+                                {workshop.is_registered ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4" />
+                                    {t("تم التسجيل", "Registered")}
+                                  </>
+                                ) : workshop.status === "open" ? (
                                   <>
                                     <CheckCircle className="w-4 h-4" />
                                     {t("التسجيل الآن", "Register Now")}
