@@ -133,7 +133,7 @@ const App = () => (
 
               {/* Public certificate verification */}
               <Route
-                path="/certificates/verify/:serial_number"
+                path="/certificate/verify/:serial_number"
                 element={<CertificateVerifyPage />}
               />
               {/* Auth */}
