@@ -21,7 +21,6 @@ interface WorkshopRegistration {
     location?: string;
     date?: string;
     time?: string;
-    duration_minutes?: number;
     regular_price?: string;
     member_price?: string;
     total_capacity?: number;
@@ -211,9 +210,7 @@ if (loading) {
                     <div className="col-span-2">📍 {reg.workshop.location}</div>
                   )}
 
-                  {reg.workshop.duration_minutes && (
-                    <div>⏱ {reg.workshop.duration_minutes} min</div>
-                  )}
+
 
                   {reg.workshop.total_capacity && (
                     <div>👥 Capacity: {reg.workshop.total_capacity}</div>

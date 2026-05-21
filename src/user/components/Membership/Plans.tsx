@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Sparkles } from "lucide-react";
 
 type MembershipKey = "active" | "affiliate" | "student" | "intern";
 
@@ -16,20 +16,20 @@ export interface Plan {
 
 const planStyles: Record<MembershipKey, { accent: string; glow: string }> = {
   active: {
-    accent: "from-blue-600 to-blue-500",
-    glow: "group-hover:shadow-blue-100 dark:group-hover:shadow-blue-900/30",
+    accent: "from-blue-600 via-blue-500 to-indigo-500",
+    glow: "group-hover:shadow-blue-500/20",
   },
   affiliate: {
-    accent: "from-amber-500 to-yellow-400",
-    glow: "group-hover:shadow-amber-100 dark:group-hover:shadow-amber-900/30",
+    accent: "from-amber-500 via-yellow-400 to-orange-400",
+    glow: "group-hover:shadow-amber-500/20",
   },
   student: {
-    accent: "from-teal-600 to-emerald-500",
-    glow: "group-hover:shadow-teal-100 dark:group-hover:shadow-teal-900/30",
+    accent: "from-emerald-600 via-teal-500 to-cyan-500",
+    glow: "group-hover:shadow-emerald-500/20",
   },
   intern: {
-    accent: "from-purple-600 to-indigo-500",
-    glow: "group-hover:shadow-purple-100 dark:group-hover:shadow-purple-900/30",
+    accent: "from-purple-600 via-indigo-500 to-violet-500",
+    glow: "group-hover:shadow-purple-500/20",
   },
 };
 
@@ -39,40 +39,65 @@ const plans: Plan[] = [
     nameAr: "عضو عامل",
     nameEn: "Active Member",
     price: 250,
-    descriptionAr: "للأعضاء العاملين داخل الجمعية",
-    descriptionEn: "For active professional members",
-    featuresAr: ["صلاحيات كاملة", "التصويت", "حضور الاجتماعات"],
-    featuresEn: ["Full access", "Voting rights", "Meetings access"],
+    descriptionAr: "عضوية احترافية كاملة الصلاحيات داخل الجمعية",
+    descriptionEn: "Full professional membership with complete access",
+    featuresAr: [
+      "صلاحيات كاملة",
+      "التصويت على القرارات",
+      "حضور الاجتماعات",
+      "شهادة عضوية رسمية",
+    ],
+    featuresEn: [
+      "Full access",
+      "Voting rights",
+      "Meetings access",
+      "Official certificate",
+    ],
   },
   {
     key: "affiliate",
     nameAr: "عضو منتسب",
-    nameEn: "affiliate Member",
+    nameEn: "Affiliate Member",
     price: 200,
-    descriptionAr: "للمنتسبين للمجال",
-    descriptionEn: "For affiliate professionals",
-    featuresAr: ["مشاركة جزئية", "فعاليات محدودة"],
-    featuresEn: ["Partial access", "Limited events"],
+    descriptionAr: "عضوية للمنتسبين في المجال الصحي",
+    descriptionEn: "Membership for affiliated professionals",
+    featuresAr: ["مشاركة جزئية", "فعاليات مختارة", "ورش عمل", "دعم مهني"],
+    featuresEn: [
+      "Partial access",
+      "Selected events",
+      "Workshops",
+      "Professional support",
+    ],
   },
   {
     key: "intern",
     nameAr: "طالب امتياز",
     nameEn: "Intern Student",
     price: 150,
-    descriptionAr: "طلاب الامتياز",
-    descriptionEn: "Intern students",
-    featuresAr: ["تدريب عملي", "تقييمات"],
-    featuresEn: ["Practical training", "Evaluations"],
+    descriptionAr: "لطلاب التدريب العملي والامتياز",
+    descriptionEn: "For internship and clinical training students",
+    featuresAr: ["تدريب عملي", "تقييمات", "إشراف أكاديمي", "خبرة ميدانية"],
+    featuresEn: [
+      "Practical training",
+      "Evaluations",
+      "Academic supervision",
+      "Field experience",
+    ],
   },
   {
     key: "student",
     nameAr: "طالب",
     nameEn: "Student",
     price: 100,
-    descriptionAr: "للطلاب في المجال",
-    descriptionEn: "For students",
-    featuresAr: ["تدريب", "ورش عمل"],
-    featuresEn: ["Training", "Workshops"],
+    descriptionAr: "عضوية للطلاب في التخصص",
+    descriptionEn: "Student membership for learners",
+    featuresAr: ["ورش عمل", "تدريب", "مواد تعليمية", "فعاليات طلابية"],
+    featuresEn: [
+      "Workshops",
+      "Training",
+      "Learning materials",
+      "Student events",
+    ],
   },
 ];
 
@@ -86,7 +111,7 @@ export default function Plans({
   onSelect: (plan: Plan) => void;
 }) {
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
       {plans.map((plan, index) => {
         const style = planStyles[plan.key];
 
@@ -97,55 +122,92 @@ export default function Plans({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{
-              duration: 0.5,
+              duration: 0.6,
               delay: index * 0.12,
-              ease: "easeOut",
             }}
-            className="h-full"
+            className="group relative"
           >
+            {/* CARD */}
             <div
-              className={`group relative h-full flex flex-col rounded-3xl border border-border/60 bg-background
-              overflow-hidden transition-all duration-500
-              hover:-translate-y-2 hover:shadow-2xl ${style.glow}`}
+              className={`
+                relative overflow-hidden rounded-3xl border border-border/60
+                bg-gradient-to-b from-background to-background/60
+                shadow-lg hover:shadow-2xl transition-all duration-500
+                hover:-translate-y-2 ${style.glow}
+              `}
             >
-              {/* Top accent */}
-              <div
-                className={`h-1.5 w-full bg-gradient-to-r ${style.accent}`}
-              />
+              {/* TOP GRADIENT BAR */}
+              <div className={`h-2 w-full bg-gradient-to-r ${style.accent}`} />
 
-              <div className="flex flex-col flex-1 p-8">
-                {/* Title */}
-                <h3 className="text-xl font-bold mb-1">
-                  {t(plan.nameAr, plan.nameEn)}
-                </h3>
+              {/* GLOW BACKGROUND */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500">
+                <div
+                  className={`absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl bg-gradient-to-r ${style.accent} opacity-20`}
+                />
+              </div>
 
-                <p className="text-sm text-muted-foreground mb-4">
-                  {t(plan.descriptionAr, plan.descriptionEn)}
-                </p>
+              <div className="relative p-10 flex flex-col h-full">
+                {/* HEADER */}
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold">
+                      {t(plan.nameAr, plan.nameEn)}
+                    </h3>
 
-                {/* Price */}
-                <div className="mb-6 pb-6 border-b border-border/50">
-                  <p className="text-3xl font-bold text-primary">
-                    {plan.price} {t("ريال", "SAR")}
-                  </p>
+                    <p className="text-muted-foreground mt-2 text-sm leading-relaxed max-w-md">
+                      {t(plan.descriptionAr, plan.descriptionEn)}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-primary text-sm font-medium">
+                    <Sparkles className="w-4 h-4" />
+                    {plan.key.toUpperCase()}
+                  </div>
                 </div>
 
-                {/* Features */}
-                <ul className="space-y-3 flex-1 mb-8">
+                {/* PRICE */}
+                <div className="mb-8">
+                  <div className="flex items-end gap-2">
+                    <span className="text-5xl font-black text-primary">
+                      {plan.price}
+                    </span>
+                    <span className="text-muted-foreground mb-2">
+                      {t("ريال", "SAR")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* FEATURES */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
                   {(isRTL ? plan.featuresAr : plan.featuresEn).map((f, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 text-sm bg-muted/30 rounded-xl p-3"
+                    >
                       <Check className="w-4 h-4 text-primary mt-0.5" />
                       <span className="text-muted-foreground">{f}</span>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
 
+                {/* ACTION */}
                 <button
                   onClick={() => onSelect(plan)}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition"
+                  className={`
+                    relative overflow-hidden w-full rounded-2xl px-6 py-4
+                    font-semibold text-white transition-all duration-300
+                    bg-gradient-to-r ${style.accent}
+                    hover:scale-[1.02] active:scale-[0.98]
+                    shadow-lg
+                  `}
                 >
-                  {t("تسجيل بالعضوية", "Register Membership")}
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {t("اشترك الآن", "Register Now")}
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+
+                  {/* BUTTON GLOW */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition bg-white blur-xl" />
                 </button>
               </div>
             </div>

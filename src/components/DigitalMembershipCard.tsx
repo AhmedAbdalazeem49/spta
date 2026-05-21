@@ -1,22 +1,27 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  CheckCircle, 
-  Download, 
-  Share2,
-  QrCode,
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import QRCode from "react-qr-code";
+
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
+import {
+  Award,
+  CheckCircle,
   Crown,
-  Users,
-  GraduationCap,
-  Star,
-  Sparkles,
-  Printer,
+  Download,
   FileImage,
-  FileText
-} from 'lucide-react';
+  FileText,
+  GraduationCap,
+  ScanLine,
+  Shield,
+  Sparkles,
+  Star,
+  Users,
+} from "lucide-react";
 
 interface MemberData {
   fullName: string;
@@ -29,47 +34,40 @@ interface MemberData {
   profileImage?: string;
 }
 
+interface CertificateSettings {
+  chairman_name?: string;
+  signature_image?: string;
+}
+
 interface CardStyle {
   id: string;
   name: string;
   nameAr: string;
   gradient: string;
-  pattern: string;
   textColor: string;
 }
 
 const cardStyles: CardStyle[] = [
   {
-    id: 'royal',
-    name: 'Royal Navy',
-    nameAr: 'الملكي',
-    gradient: 'from-primary via-primary to-primary',
-    pattern: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-    textColor: 'text-white',
+    id: "royal",
+    name: "Royal Navy",
+    nameAr: "الملكي",
+    gradient: "from-[#071B3B] via-[#0A234D] to-[#123A75]",
+    textColor: "text-white",
   },
   {
-    id: 'emerald',
-    name: 'Emerald Premium',
-    nameAr: 'الزمردي',
-    gradient: 'from-emerald-800 via-emerald-700 to-teal-600',
-    pattern: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/svg%3E")`,
-    textColor: 'text-white',
+    id: "emerald",
+    name: "Emerald",
+    nameAr: "الزمردي",
+    gradient: "from-[#064E3B] via-[#065F46] to-[#0F766E]",
+    textColor: "text-white",
   },
   {
-    id: 'gold',
-    name: 'Gold Elite',
-    nameAr: 'الذهبي',
-    gradient: 'from-amber-700 via-yellow-600 to-amber-500',
-    pattern: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-    textColor: 'text-white',
-  },
-  {
-    id: 'modern',
-    name: 'Modern Glass',
-    nameAr: 'العصري',
-    gradient: 'from-slate-900 via-slate-800 to-slate-700',
-    pattern: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-    textColor: 'text-white',
+    id: "gold",
+    name: "Gold Elite",
+    nameAr: "الذهبي",
+    gradient: "from-[#7C5800] via-[#B88900] to-[#EAB308]",
+    textColor: "text-white",
   },
 ];
 
@@ -82,222 +80,448 @@ const membershipIcons = {
 
 const membershipLabels = {
   active: { ar: "عضو عامل", en: "Active Member" },
-  affiliate: { ar: "عضو منتسب", en: "affiliate Member" },
+  affiliate: { ar: "عضو منتسب", en: "Affiliate Member" },
   student: { ar: "طالب", en: "Student" },
   intern: { ar: "طالب امتياز", en: "Intern Student" },
 };
 
 interface DigitalMembershipCardProps {
   member: MemberData;
+  certificateSettings?: CertificateSettings;
   showControls?: boolean;
   showSignature?: boolean;
   showStamp?: boolean;
-  onStyleChange?: (styleId: string) => void;
 }
 
 const DigitalMembershipCard = ({
   member,
-  showControls = false,
-  showSignature = true,
-  showStamp = true,
-  onStyleChange,
+  certificateSettings,
+  showControls = true,
 }: DigitalMembershipCardProps) => {
   const { t, isRTL } = useLanguage();
+
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const [selectedStyle, setSelectedStyle] = useState(cardStyles[0]);
   const [isFlipped, setIsFlipped] = useState(false);
 
   const Icon = membershipIcons[member.membershipType];
   const membershipLabel = membershipLabels[member.membershipType];
 
-  const handleStyleChange = (style: CardStyle) => {
-    setSelectedStyle(style);
-    onStyleChange?.(style.id);
+  /* ============================= */
+  /* DOWNLOAD IMAGE */
+  /* ============================= */
+
+  const downloadAsImage = async () => {
+    if (!cardRef.current) return;
+
+    const canvas = await html2canvas(cardRef.current, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: null,
+    });
+
+    const link = document.createElement("a");
+
+    link.download = `membership-card-${member.membershipNumber}.png`;
+
+    link.href = canvas.toDataURL("image/png");
+
+    link.click();
   };
 
+  /* ============================= */
+  /* DOWNLOAD PDF */
+  /* ============================= */
+
+  const downloadAsPDF = async () => {
+    if (!cardRef.current) return;
+
+    const canvas = await html2canvas(cardRef.current, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: null,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "px",
+      format: [860, 540],
+    });
+
+    pdf.addImage(imgData, "PNG", 0, 0, 860, 540);
+
+    pdf.save(`membership-card-${member.membershipNumber}.pdf`);
+  };
+
+
   return (
-    <div className="space-y-6">
-      {/* Style Selector */}
+    <div className="space-y-8">
+      {/* STYLE SELECTOR */}
       {showControls && (
         <div className="flex flex-wrap justify-center gap-3">
           {cardStyles.map((style) => (
-            <Button
+            <button
               key={style.id}
-              variant={selectedStyle.id === style.id ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => handleStyleChange(style)}
-              className="gap-2"
+              onClick={() => setSelectedStyle(style)}
+              className={`group relative overflow-hidden rounded-2xl border px-5 py-3 transition-all duration-300 ${
+                selectedStyle.id === style.id
+                  ? "border-primary shadow-lg scale-105"
+                  : "border-border hover:border-primary/40"
+              }`}
             >
-              <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${style.gradient}`} />
-              {t(style.nameAr, style.name)}
-            </Button>
+              <div
+                className={`absolute inset-0 bg-gradient-to-r ${style.gradient} opacity-10`}
+              />
+
+              <div className="relative flex items-center gap-3">
+                <div
+                  className={`w-5 h-5 rounded-full bg-gradient-to-r ${style.gradient}`}
+                />
+
+                <span className="font-medium text-sm">
+                  {t(style.nameAr, style.name)}
+                </span>
+              </div>
+            </button>
           ))}
         </div>
       )}
 
-      {/* Card Container */}
-      <div 
-        className="perspective-1000 mx-auto cursor-pointer"
-        style={{ maxWidth: '420px' }}
-        onClick={() => setIsFlipped(!isFlipped)}
-      >
-        <motion.div
-          className="relative preserve-3d transition-transform duration-700"
-          animate={{ rotateY: isFlipped ? 180 : 0 }}
-          style={{ transformStyle: 'preserve-3d' }}
+      {/* CARD */}
+      <div className="flex justify-center">
+        <div
+          className="perspective-[2000px]"
+          onClick={() => setIsFlipped(!isFlipped)}
         >
-          {/* Front Side */}
-          <div 
-            className={`relative w-full aspect-[1.6/1] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br ${selectedStyle.gradient} ${selectedStyle.textColor}`}
-            style={{ backfaceVisibility: 'hidden' }}
+          <motion.div
+            animate={{ rotateY: isFlipped ? 180 : 0 }}
+            transition={{ duration: 0.8 }}
+            style={{ transformStyle: "preserve-3d" }}
+            className="relative cursor-pointer"
           >
-            {/* Pattern Overlay */}
-            <div 
-              className="absolute inset-0 opacity-50"
-              style={{ backgroundImage: selectedStyle.pattern }}
-            />
-            
-            {/* Shine Effect */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" />
-            
-            {/* Content */}
-            <div className="relative z-10 h-full p-6 flex flex-col">
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold opacity-90">
-                    {t('الجمعية السعودية للعلاج الطبيعي', 'SPTA')}
-                  </h3>
-                  <p className="text-sm opacity-70">
-                    {t('Saudi Physical Therapy Association', 'Saudi Physical Therapy Association')}
-                  </p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <Icon className="w-6 h-6" />
-                </div>
+            {/* FRONT */}
+            <div
+              ref={cardRef}
+              style={{ backfaceVisibility: "hidden" }}
+              className={`
+                relative
+                w-[860px]
+                h-[540px]
+                rounded-[36px]
+                overflow-hidden
+                shadow-[0_25px_80px_rgba(0,0,0,0.45)]
+                bg-gradient-to-br
+                ${selectedStyle.gradient}
+                ${selectedStyle.textColor}
+              `}
+            >
+              {/* BACKGROUND */}
+              <div className="absolute inset-0">
+                <div className="absolute -top-20 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
+
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_35%)]" />
               </div>
 
-              {/* Member Info */}
-              <div className="flex-1 flex items-center gap-4 my-4">
-                {/* Profile Image */}
-                <div className="w-20 h-20 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-3xl font-bold overflow-hidden border-2 border-white/30">
-                  {member.profileImage ? (
-                    <img src={member.profileImage} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    member.fullName.charAt(0)
-                  )}
-                </div>
-                
-                <div className="flex-1">
-                  <h2 className="text-xl font-bold mb-1">
-                    {t(member.fullName, member.fullNameEn)}
-                  </h2>
-                  <p className="text-sm opacity-80 mb-2">
-                    {t(member.workplace, member.workplaceEn)}
-                  </p>
-                  <Badge className="bg-white/20 text-current border-white/30 gap-1">
-                    <Icon className="w-3 h-3" />
-                    {t(membershipLabel.ar, membershipLabel.en)}
+              {/* PATTERN */}
+              <div className="absolute inset-0 opacity-[0.05]">
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)",
+                    backgroundSize: "30px 30px",
+                  }}
+                />
+              </div>
+
+              {/* CONTENT */}
+              <div className="relative z-10 h-full p-10 flex flex-col">
+                {/* TOP */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-center">
+                        <Shield className="w-8 h-8" />
+                      </div>
+
+                      <div>
+                        <h2 className="text-2xl font-bold">
+                          {t(
+                            "الجمعية السعودية للعلاج الطبيعي",
+                            "Saudi Physical Therapy Association"
+                          )}
+                        </h2>
+
+                        <p className="text-white/70 mt-1">
+                          {t(
+                            "البطاقة الرقمية الرسمية",
+                            "Official Digital Membership Card"
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Badge className="bg-emerald-500/20 border border-emerald-300/20 text-white px-4 py-2 rounded-full">
+                    <CheckCircle className="w-4 h-4 me-2" />
+                    {t("عضوية موثقة", "Verified Membership")}
                   </Badge>
                 </div>
-              </div>
 
-              {/* Footer */}
-              <div className="flex items-end justify-between">
-                <div>
-                  <p className="text-xs opacity-60 mb-1">{t('رقم العضوية', 'Membership No.')}</p>
-                  <p className="font-mono font-bold tracking-wider">{member.membershipNumber}</p>
+                {/* CENTER */}
+                <div className="flex-1 flex items-center justify-between gap-10">
+                  {/* LEFT */}
+                  <div className="flex items-center gap-6">
+                    {/* IMAGE */}
+                    {/* <div className="relative">
+                      <div className="absolute inset-0 rounded-3xl bg-white/20 blur-xl" />
+
+                      <div className="relative w-40 h-40 rounded-3xl overflow-hidden border-4 border-white/20 shadow-2xl bg-white/10 backdrop-blur-xl">
+                        {member.profileImage ? (
+                          <img
+                            src={member.profileImage}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-5xl font-bold">
+                            {member.fullName.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                    </div> */}
+
+                    {/* INFO */}
+                    <div className="space-y-5">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-white/50 mb-2">
+                          {t("اسم العضو", "Member")}
+                        </p>
+
+                        <h1 className="text-4xl font-black leading-tight">
+                          {t(member.fullName, member.fullNameEn)}
+                        </h1>
+                      </div>
+
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-white/50 mb-2">
+                          {t("جهة العمل", "Workplace")}
+                        </p>
+
+                        <p className="text-xl text-white/90">
+                          {t(member.workplace, member.workplaceEn)}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <Badge className="bg-white/10 border border-white/10 text-white px-5 py-2 rounded-full text-sm">
+                          <Icon className="w-4 h-4 me-2" />
+                          {t(membershipLabel.ar, membershipLabel.en)}
+                        </Badge>
+
+                        <Badge className="bg-primary/20 border border-primary/20 text-white px-5 py-2 rounded-full text-sm">
+                          #{member.membershipNumber}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* RIGHT */}
+                  <div className="flex flex-col items-center">
+                    {/* QR */}
+                    <div className="bg-white p-5 rounded-3xl shadow-2xl">
+                      <QRCode
+                        value={`${window.location.origin}/verify-membership/${member.membershipNumber}`}
+                        size={180}
+                        bgColor="#ffffff"
+                        fgColor="#000000"
+                        level="H"
+                      />
+                    </div>
+
+                    <div className="mt-4 text-center">
+                      <div className="flex items-center justify-center gap-2 text-white/70 text-sm">
+                        <ScanLine className="w-4 h-4" />
+
+                        {t("امسح للتحقق من العضوية", "Scan to verify")}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-end">
-                  <p className="text-xs opacity-60 mb-1">{t('صالحة حتى', 'Valid Until')}</p>
-                  <p className="font-bold">
-                    {new Date(member.expiryDate).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', { 
-                      year: 'numeric', 
-                      month: 'short' 
-                    })}
+
+                {/* FOOTER */}
+                <div className="flex items-end justify-between">
+                  {/* LEFT */}
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                      {t("تاريخ الانتهاء", "Expiry Date")}
+                    </p>
+
+                    <p className="text-2xl font-bold">
+                      {new Date(member.expiryDate).toLocaleDateString(
+                        isRTL ? "ar-SA" : "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </p>
+                  </div>
+
+                  {/* RIGHT */}
+                  <div className="flex items-end gap-8">
+                    {/* SIGNATURE */}
+                    <div className="text-center">
+                      {certificateSettings?.signature_image && (
+                        <div className=" px-5 py-2 shadow-xl mb-2">
+                          <img
+                            src={`http://127.0.0.1:8000${certificateSettings.signature_image}`}
+                            alt="signature"
+                            className="h-16 object-contain"
+                          />
+                        </div>
+                      )}
+
+                      <p className="text-sm font-semibold">
+                        {certificateSettings?.chairman_name || "Chairman"}
+                      </p>
+
+                      <p className="text-xs text-white/60 mt-1">
+                        {t("رئيس مجلس الإدارة", "Chairman")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* BACK SIDE */}
+            <div
+              style={{
+                backfaceVisibility: "hidden",
+                transform: "rotateY(180deg)",
+              }}
+              className={`
+                absolute
+                inset-0
+                w-[860px]
+                h-[540px]
+                rounded-[36px]
+                overflow-hidden
+                shadow-[0_25px_80px_rgba(0,0,0,0.45)]
+                bg-gradient-to-br
+                ${selectedStyle.gradient}
+                ${selectedStyle.textColor}
+              `}
+            >
+              <div className="relative h-full p-12 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-4xl font-black mb-3">
+                    {t("التحقق الرقمي", "Digital Verification")}
+                  </h2>
+
+                  <p className="text-white/70 text-lg max-w-xl leading-relaxed">
+                    {t(
+                      "هذه البطاقة رقمية وموثقة ويمكن التحقق من صحتها عبر رمز QR أو نظام التحقق الإلكتروني الخاص بالجمعية.",
+                      "This card is digitally verified and can be validated through QR verification."
+                    )}
                   </p>
                 </div>
-              </div>
 
-              {/* Verified Badge */}
-              <div className="absolute top-4 end-4">
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="flex items-center gap-1 bg-green-accent/90 text-white px-2 py-1 rounded-full text-xs font-medium"
-                >
-                  <CheckCircle className="w-3 h-3" />
-                  {t('موثق', 'Verified')}
-                </motion.div>
-              </div>
-            </div>
-          </div>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-5">
+                    <div>
+                      <p className="text-sm text-white/50 uppercase tracking-[0.25em] mb-2">
+                        {t("رقم العضوية", "Membership Number")}
+                      </p>
 
-          {/* Back Side */}
-          <div 
-            className={`absolute inset-0 w-full aspect-[1.6/1] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br ${selectedStyle.gradient} ${selectedStyle.textColor}`}
-            style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-          >
-            <div 
-              className="absolute inset-0 opacity-50"
-              style={{ backgroundImage: selectedStyle.pattern }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" />
-            
-            <div className="relative z-10 h-full p-6 flex flex-col items-center justify-center">
-              {/* QR Code Placeholder */}
-              <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <QrCode className="w-24 h-24 text-navy-dark" />
-              </div>
-              
-              <p className="text-sm opacity-80 text-center mb-4">
-                {t('امسح للتحقق من صحة العضوية', 'Scan to verify membership')}
-              </p>
-
-              {/* Signature & Stamp */}
-              <div className="flex items-center gap-8">
-                {showSignature && (
-                  <div className="text-center">
-                    <div className="h-8 mb-1 font-cursive text-lg italic opacity-80">
-                      {t('التوقيع', 'Signature')}
+                      <h3 className="text-4xl font-black tracking-widest">
+                        {member.membershipNumber}
+                      </h3>
                     </div>
-                    <div className="w-24 h-0.5 bg-current opacity-40" />
-                    <p className="text-xs opacity-60 mt-1">{t('رئيس الجمعية', 'President')}</p>
+
+                    <div>
+                      <p className="text-sm text-white/50 uppercase tracking-[0.25em] mb-2">
+                        {t("نوع العضوية", "Membership Type")}
+                      </p>
+
+                      <h3 className="text-2xl font-bold">
+                        {t(membershipLabel.ar, membershipLabel.en)}
+                      </h3>
+                    </div>
                   </div>
-                )}
-                
-                {showStamp && (
-                  <div className="w-16 h-16 rounded-full border-2 border-current opacity-40 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6" />
+
+                  <div className="w-28 h-20 flex items-center justify-center">
+                    {certificateSettings?.signature_image ? (
+                      <img
+                        src={
+                          certificateSettings.signature_image.startsWith("http")
+                            ? certificateSettings.signature_image
+                            : `${import.meta.env.VITE_API_URL.replace(
+                                "/api",
+                                ""
+                              )}${certificateSettings.signature_image}`
+                        }
+                        alt="signature"
+                        className="h-16 object-contain drop-shadow-lg"
+                      />
+                    ) : (
+                      <div className="text-white/40 text-xs text-center">
+                        No Signature
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
+
+                <div className="flex items-center justify-between border-t border-white/10 pt-6">
+                  <div className="text-white/60">
+                    © {new Date().getFullYear()} SPTA
+                  </div>
+
+                  <div className="flex items-center gap-2 text-white/60">
+                    <Sparkles className="w-4 h-4" />
+                    Secure Digital Card
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
-      {/* Click hint */}
-      <p className="text-center text-sm text-muted-foreground">
-        {t('اضغط على البطاقة لقلبها', 'Click the card to flip it')}
+      {/* HINT */}
+      <p className="text-center text-muted-foreground">
+        {t("اضغط على البطاقة لقلبها", "Click the card to flip")}
       </p>
 
-      {/* Action Buttons */}
-      {/* {showControls && (
-        <div className="flex flex-wrap justify-center gap-3">
-          <Button variant="outline" className="gap-2" onClick={() => window.print()}>
-            <Printer className="w-4 h-4" />
-            {t('طباعة', 'Print')}
-          </Button>
-          <Button variant="outline" className="gap-2">
+      {/* ACTIONS */}
+      {showControls && (
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button
+            onClick={downloadAsImage}
+            variant="outline"
+            className="rounded-2xl gap-2 h-12 px-6"
+          >
             <FileImage className="w-4 h-4" />
-            {t('تحميل كصورة', 'Download Image')}
+
+            {t("تحميل كصورة", "Download Image")}
           </Button>
-          <Button variant="outline" className="gap-2">
+
+          <Button
+            onClick={downloadAsPDF}
+            className="rounded-2xl gap-2 h-12 px-6 shadow-xl"
+          >
             <FileText className="w-4 h-4" />
-            {t('تحميل PDF', 'Download PDF')}
+
+            {t("تحميل PDF", "Download PDF")}
           </Button>
         </div>
-      )} */}
+      )}
     </div>
   );
 };

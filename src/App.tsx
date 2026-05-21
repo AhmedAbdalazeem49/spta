@@ -62,6 +62,7 @@ import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
 import Membership from "./user/pages/Membership";
+import VerifyMembershipPage from "./pages/VerifyMembershipPage";
 
 const queryClient = new QueryClient();
 
@@ -122,6 +123,12 @@ const App = () => (
               <Route
                 path="/workshop/:id/attendance"
                 element={<WorkshopAttendancePage />}
+              />
+
+              {/* Verify Membership Page */}
+              <Route
+                path="/verify-membership/:code"
+                element={<VerifyMembershipPage />}
               />
 
               {/* Public certificate verification */}

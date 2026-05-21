@@ -43,7 +43,6 @@ import {
   User,
   UserSearch,
 } from "lucide-react";
-import { useState } from "react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 
 export const EMPTY_FORM = {
@@ -54,7 +53,6 @@ export const EMPTY_FORM = {
   manualRecipientName: "",
   manualWorkshopTitle: "",
   issueDate: "",
-  hours: "",
   status: "pending",
 };
 
@@ -82,7 +80,6 @@ interface CertificateAddModalProps {
   previewName: string;
   previewWorkshop: string;
   previewDate: string;
-  previewHours: string;
 }
 
 export const CertificateAddModal = ({
@@ -109,7 +106,6 @@ export const CertificateAddModal = ({
   previewName,
   previewWorkshop,
   previewDate,
-  previewHours,
 }: CertificateAddModalProps) => {
   const { t, isRTL } = useLanguage();
 
@@ -306,7 +302,6 @@ export const CertificateAddModal = ({
                             ...f,
                             workshopId: String(w.id),
                             manualWorkshopTitle: "",
-                            hours: w.hours ? String(w.hours) : f.hours,
                             issueDate: f.issueDate || w.date || "",
                           }))
                         }
@@ -325,7 +320,6 @@ export const CertificateAddModal = ({
                           </p>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             {w.date && <span>{w.date}</span>}
-                            {w.hours && <span>• {w.hours}h</span>}
                           </div>
                         </div>
                         {form.workshopId === String(w.id) && (
@@ -370,7 +364,7 @@ export const CertificateAddModal = ({
                   </h3>
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-3">
+                <div className="grid sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <Label className="text-xs flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
@@ -384,21 +378,7 @@ export const CertificateAddModal = ({
                       }
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {t("عدد الساعات", "Hours")}
-                    </Label>
-                    <Input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={form.hours}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, hours: e.target.value }))
-                      }
-                    />
-                  </div>
+
                   <div className="space-y-1.5">
                     <Label className="text-xs flex items-center gap-1">
                       <CheckCircle className="w-3 h-3" />
@@ -499,8 +479,6 @@ export const CertificateAddModal = ({
                     <p className="text-xs text-blue-pale">
                       {previewDate !== "—" &&
                         `${t("بتاريخ", "on")} ${previewDate}`}
-                      {previewHours &&
-                        ` • ${previewHours} ${t("ساعات", "hours")}`}
                     </p>
                   </div>
                   <div className="flex items-end justify-between">
@@ -549,13 +527,6 @@ export const CertificateAddModal = ({
                     icon: Calendar,
                     label: t("التاريخ", "Date"),
                     value: previewDate,
-                  },
-                  {
-                    icon: Clock,
-                    label: t("الساعات", "Hours"),
-                    value: previewHours
-                      ? `${previewHours} ${t("ساعات", "h")}`
-                      : "—",
                   },
                 ].map((item, i) => (
                   <div

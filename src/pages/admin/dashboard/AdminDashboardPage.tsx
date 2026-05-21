@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Award,
   Crown,
-  Eye,
   GraduationCap,
   Ticket,
   TrendingUp,
@@ -35,11 +34,13 @@ const AdminDashboardPage = () => {
           workshopsRes,
           membershipsRes,
           couponsRes,
+          certificateRes,
         ] = await Promise.allSettled([
           api.get("/admin/users"),
           api.get("/workshops"),
           api.get("/admin/memberships"),
           api.get("/promo-codes"),
+          api.get("/certificates"),
         ]);
 
         setStats({
@@ -61,7 +62,12 @@ const AdminDashboardPage = () => {
                 membershipsRes.value.data?.length ||
                 0
               : 0,
-          certificates: 0,
+          certificates:
+            certificateRes.status === "fulfilled"
+              ? certificateRes.value.data?.data?.length ||
+                certificateRes.value.data?.length ||
+                0
+              : 0,
           coupons:
             couponsRes.status === "fulfilled"
               ? couponsRes.value.data?.data?.length ||
@@ -96,7 +102,8 @@ const AdminDashboardPage = () => {
       title: t("العضويات", "Memberships"),
       count: stats.memberships,
       icon: Crown,
-      color: "from-mint to-teal",
+      color: "from-purple-500 to-purple-700",
+
       link: "/admin/memberships",
     },
     {
@@ -110,10 +117,9 @@ const AdminDashboardPage = () => {
       title: t("أكواد الخصم", "Coupons"),
       count: stats.coupons,
       icon: Ticket,
-      color: "from-purple-500 to-purple-700",
+      color: "from-mint to-teal",
       link: "/admin/coupons",
     },
-
   ];
 
   return (

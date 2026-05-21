@@ -41,7 +41,6 @@ export const emptyWorkshopForm = {
   member_price: "",
   total_capacity: "",
   status: "open" as "open" | "closed" | "completed" | "postponed",
-  duration_minutes: 60,
   image: null as File | null,
 };
 
@@ -134,8 +133,6 @@ function validate(
       "Capacity must be ≥ 1"
     );
 
-  if (!form.duration_minutes || form.duration_minutes < 15)
-    errors.duration_minutes = t("الحد الأدنى 15 دقيقة", "Min 15 minutes");
 
   if (form.image) {
     const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -318,7 +315,6 @@ export const WorkshopFormModal = ({
     fd.append("regular_price", form.regular_price);
     fd.append("member_price", form.member_price);
     fd.append("total_capacity", form.total_capacity);
-    fd.append("duration_minutes", String(form.duration_minutes));
     fd.append("status", form.status);
 
     if (form.image instanceof File) {
@@ -351,9 +347,8 @@ export const WorkshopFormModal = ({
     form.regular_price,
     form.member_price,
     form.total_capacity,
-    form.duration_minutes,
   ].filter(Boolean).length;
-  const progress = Math.round((completedFields / 10) * 100);
+  const progress = Math.round((completedFields / 9) * 100);
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
@@ -497,7 +492,7 @@ export const WorkshopFormModal = ({
               />
             </Field>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <Field
                 label={t("التاريخ", "Date")}
                 error={err("date")}
@@ -533,24 +528,6 @@ export const WorkshopFormModal = ({
                 />
               </Field>
 
-              <Field
-                label={t("المدة (دقيقة)", "Duration (min)")}
-                error={err("duration_minutes")}
-                required
-                icon={<Clock className="w-3 h-3" />}
-              >
-                <input
-                  type="number"
-                  min={15}
-                  className={cls("duration_minutes")}
-                  value={form.duration_minutes}
-                  onChange={(e) =>
-                    update("duration_minutes", parseInt(e.target.value) || 0)
-                  }
-                  onBlur={() => touch("duration_minutes")}
-                  placeholder="60"
-                />
-              </Field>
             </div>
           </Section>
 

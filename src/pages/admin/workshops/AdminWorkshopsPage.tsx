@@ -81,7 +81,6 @@ const AdminWorkshopsPage = () => {
       member_price: String(w.member_price || ""),
       total_capacity: String(w.total_capacity || ""),
       status: w.status || "open",
-      duration_minutes: w.duration_minutes || 60,
       image: null,
     } satisfies WorkshopForm;
 

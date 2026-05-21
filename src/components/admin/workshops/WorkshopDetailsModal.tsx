@@ -92,20 +92,6 @@ export const WorkshopDetailsModal = ({
             </div>
 
             <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/40">
-              <Timer className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  {t("المدة", "Duration")}
-                </p>
-                <p className="text-sm font-medium">
-                  {selected.duration_minutes
-                    ? `${selected.duration_minutes} ${t("دقيقة", "min")}`
-                    : "—"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/40">
               <Users className="w-4 h-4 text-primary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground">

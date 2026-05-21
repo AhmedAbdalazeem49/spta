@@ -13,26 +13,24 @@ import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 import AOS from "aos";
 import { AnimatePresence, motion } from "framer-motion";
+import QRCode from "react-qr-code";
 
 import {
-  AlertCircle,
   Award,
   Building2,
-  Calendar,
   CheckCircle,
-  Clock,
-  Edit,
+  Download,
   FileText,
   GraduationCap,
-  Loader2,
   Mail,
   Phone,
+  QrCode,
   RefreshCw,
-  Save,
   Shield,
   User,
-  XCircle,
 } from "lucide-react";
+
+import { AlertCircle, Edit, Loader2, Save, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -74,6 +72,22 @@ const ProfilePage = () => {
     specialization: "",
     sub_specialization: "",
   });
+
+  const [certificateSettings, setCertificateSettings] = useState<any>(null);
+
+  useEffect(() => {
+    fetchCertificateSettings();
+  }, []);
+
+  const fetchCertificateSettings = async () => {
+    try {
+      const response = await api.get("/certificate-settings");
+
+      setCertificateSettings(response.data?.data || response.data);
+    } catch (error) {
+      console.error("Failed to fetch certificate settings", error);
+    }
+  };
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
@@ -263,114 +277,290 @@ const ProfilePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
+                className="space-y-10"
               >
-                {/* Membership Status Card */}
-                <Card className="card-hover lg:col-span-2" data-aos="fade-up">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="flex items-center gap-2 text-xl">
-                      <Shield className="w-5 h-5 text-primary" />
-                      {t("حالة العضوية", "Membership Status")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Award className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              {t("نوع العضوية", "Membership Type")}
-                            </p>
-                            <p className="font-semibold">
-                              {activeMembership?.membership_type}
-                            </p>
-                          </div>
-                        </div>
+                {/* Premium Membership Card */}
+                <Card
+                  className="relative overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-primary/90 text-white"
+                  data-aos="fade-up"
+                >
+                  {/* Background Effects */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute -top-32 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-32 -left-20 w-72 h-72 bg-primary/30 rounded-full blur-3xl" />
 
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              {t("الحالة", "Status")}
-                            </p>
-                            {activeMembership?.status
-                              ? getStatusBadge(activeMembership.status)
-                              : "—"}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Calendar className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              {t("تاريخ الانضمام", "Join Date")}
-                            </p>
-                            <p className="font-semibold">
-                              {activeMembership?.starts_at
-                                ? new Date(
-                                    activeMembership.starts_at
-                                  ).toLocaleDateString(
-                                    isRTL ? "ar-SA" : "en-US"
-                                  )
-                                : "—"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-green-accent/10 flex items-center justify-center">
-                            <Clock className="w-5 h-5 text-green-accent" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              {t("تاريخ الانتهاء", "Expiry Date")}
-                            </p>
-                            <p className="font-semibold">
-                              {activeMembership?.ends_at
-                                ? new Date(
-                                    activeMembership.ends_at
-                                  ).toLocaleDateString(
-                                    isRTL ? "ar-SA" : "en-US"
-                                  )
-                                : "—"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                    {/* Premium Pattern */}
+                    <div className="absolute inset-0 opacity-[0.04]">
+                      <div
+                        className="w-full h-full"
+                        style={{
+                          backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)
+              `,
+                          backgroundSize: "30px 30px",
+                        }}
+                      />
                     </div>
-                    <div className="mt-6 pt-6 border-t border-border flex flex-wrap gap-2">
-                      {/* Only show subscribe button when NOT subscribed */}
-                      {!activeMembership && (
-                        <Button
-                          onClick={() => navigate("/membership")}
-                          className="gap-2"
-                        >
-                          <RefreshCw className="w-4 h-4" />
-                          {t("اشترك بالعضوية", "Subscribe Now")}
-                        </Button>
-                      )}
+                  </div>
 
-                      {activeMembership && (
-                        <Button
-                          onClick={() => setShowCardModal(true)}
-                          className="gap-2"
-                        >
-                          <FileText className="w-4 h-4" />
-                          {t("البطاقة الرقمية", "Membership Card")}
-                        </Button>
-                      )}
+                  <CardContent className="relative p-0">
+                    <div className="grid lg:grid-cols-[1.3fr_420px]">
+                      {/* Left Content */}
+                      <div className="p-8 lg:p-10">
+                        {/* Header */}
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center gap-3 mb-5">
+                              <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-lg">
+                                <Shield className="w-7 h-7 text-white" />
+                              </div>
+
+                              <div>
+                                <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">
+                                  {t("بطاقة العضوية", "Membership Card")}
+                                </h2>
+
+                                <p className="text-white/70 mt-1 text-sm">
+                                  {t(
+                                    "الهوية الرقمية الرسمية للعضو",
+                                    "Official Digital Member Identity"
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Status Badge */}
+                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/15 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                              <CheckCircle className="w-4 h-4 text-emerald-300" />
+
+                              {activeMembership?.status
+                                ? getStatusBadge(activeMembership.status)
+                                : t("غير مشترك", "Not Subscribed")}
+                            </div>
+                          </div>
+
+                          {/* Membership Type */}
+                          {activeMembership && (
+                            <div className="hidden sm:flex flex-col items-end">
+                              <span className="text-white/60 text-xs uppercase tracking-[0.3em] mb-2">
+                                {t("نوع العضوية", "Membership")}
+                              </span>
+
+                              <div className="px-5 py-2.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-lg">
+                                <span className="font-semibold text-base">
+                                  {activeMembership?.membership_type ||
+                                    "Member"}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Divider */}
+                        <div className="h-px w-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 my-8" />
+
+                        {/* Member Information */}
+                        <div className="grid sm:grid-cols-1 gap-6">
+                          <div className="space-y-5">
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("اسم العضو", "Member Name")}
+                              </p>
+
+                              <h3 className="text-xl font-bold text-white">
+                                {user?.name || "—"}
+                              </h3>
+                            </div>
+
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("البريد الإلكتروني", "Email")}
+                              </p>
+
+                              <p className="text-white/85">
+                                {user?.email || "—"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("رقم الهوية", "National ID")}
+                              </p>
+
+                              <p className="text-white/85 tracking-widest">
+                                {user?.national_id || "—"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-5">
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("تاريخ الانضمام", "Join Date")}
+                              </p>
+
+                              <p className="text-white/85">
+                                {activeMembership?.starts_at
+                                  ? new Date(
+                                      activeMembership.starts_at
+                                    ).toLocaleDateString(
+                                      isRTL ? "ar-SA" : "en-US"
+                                    )
+                                  : "—"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("تاريخ الانتهاء", "Expiry Date")}
+                              </p>
+
+                              <p className="text-white/85">
+                                {activeMembership?.ends_at
+                                  ? new Date(
+                                      activeMembership.ends_at
+                                    ).toLocaleDateString(
+                                      isRTL ? "ar-SA" : "en-US"
+                                    )
+                                  : "—"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("رقم العضوية", "Membership ID")}
+                              </p>
+
+                              <p className="text-white tracking-[0.3em] font-semibold">
+                                #{activeMembership?.membership_number || "0000"}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="mt-10 flex flex-wrap items-center gap-4">
+                          {!activeMembership ? (
+                            <Button
+                              onClick={() => navigate("/membership")}
+                              size="lg"
+                              className="rounded-2xl bg-white text-slate-900 hover:bg-white/90 shadow-xl gap-2"
+                            >
+                              <RefreshCw className="w-4 h-4" />
+
+                              {t("اشترك الآن", "Subscribe Now")}
+                            </Button>
+                          ) : (
+                            <>
+                              <Button
+                                onClick={() => setShowCardModal(true)}
+                                size="lg"
+                                className="rounded-2xl bg-white text-slate-900 hover:bg-white/90 shadow-xl gap-2"
+                              >
+                                <FileText className="w-4 h-4" />
+
+                                {t("عرض البطاقة", "View Card")}
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Right Side */}
+                      <div className="relative border-t lg:border-t-0 lg:border-s border-white/10 bg-black/10 backdrop-blur-xl p-8 flex flex-col justify-between">
+                        {/* QR Section */}
+                        <div>
+                          <div className="flex items-center justify-between mb-6">
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
+                                {t("التحقق الرقمي", "Digital Verification")}
+                              </p>
+
+                              <h3 className="font-semibold text-lg">
+                                {t("رمز الاستجابة السريعة", "QR Verification")}
+                              </h3>
+                            </div>
+
+                            <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center">
+                              <QrCode className="w-6 h-6 text-white" />
+                            </div>
+                          </div>
+
+                          {/* QR Card */}
+                          <div className="rounded-3xl bg-white p-5 shadow-2xl w-fit mx-auto">
+                            <QRCode
+                              value={`${window.location.origin}/verify-membership/${activeMembership?.membership_number}`}
+                              size={180}
+                              bgColor="#ffffff"
+                              fgColor="#000000"
+                              level="H"
+                            />
+                          </div>
+
+                          <p className="text-center text-sm text-white/60 mt-5 leading-relaxed">
+                            {t(
+                              "قم بمسح الرمز للتحقق من العضوية وعرض بيانات البطاقة الرسمية",
+                              "Scan to verify membership and display official member card"
+                            )}
+                          </p>
+                        </div>
+
+                        {/* Certificate Settings */}
+                        <div className="mt-10">
+                          <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5">
+                            <div className="flex items-center gap-3 mb-5">
+                              <Award className="w-5 h-5 text-primary" />
+
+                              <h4 className="font-semibold">
+                                {t(
+                                  "اعتماد الشهادة الرسمية",
+                                  "Official Certificate Approval"
+                                )}
+                              </h4>
+                            </div>
+
+                            {/* Signature */}
+                            <div className="space-y-5">
+                              <div>
+                                <p className="text-xs text-white/50 uppercase tracking-[0.2em] mb-2">
+                                  {t("اسم رئيس المجلس", "Chairman Name")}
+                                </p>
+
+                                <p className="font-semibold text-white">
+                                  {certificateSettings?.chairman_name || "—"}
+                                </p>
+                              </div>
+
+                              <div>
+                                <p className="text-xs text-white/50 uppercase tracking-[0.2em] mb-3">
+                                  {t("التوقيع الرسمي", "Official Signature")}
+                                </p>
+
+                                {certificateSettings?.signature_image ? (
+                                  <div className="w-full rounded-2xl bg-white p-3 inline-flex shadow-lg">
+                                    <img
+                                      src={`http://127.0.0.1:8000${certificateSettings.signature_image}`}
+                                      alt="signature"
+                                      className="w-full h-16 object-cover"
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="h-16 rounded-2xl border border-dashed border-white/20 flex items-center justify-center text-white/40 text-sm">
+                                    {t("لا يوجد توقيع", "No Signature")}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Personal Info */}
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {[
                     {
                       icon: Mail,
@@ -406,26 +596,28 @@ const ProfilePage = () => {
                     const Icon = item.icon;
 
                     return (
-                      <div
+                      <motion.div
                         key={i}
-                        className="group relative rounded-2xl border border-border/60 bg-background/60 backdrop-blur-md p-4 transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5"
+                        whileHover={{ y: -4 }}
+                        transition={{ duration: 0.2 }}
+                        className="group relative overflow-hidden rounded-3xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-sm hover:shadow-xl transition-all duration-300"
                       >
-                        {/* subtle glow */}
-                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-primary/5 to-transparent" />
+                        {/* Glow */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                         <div className="relative flex items-start gap-4">
                           {/* Icon */}
-                          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-primary/10 group-hover:bg-primary/15 transition-colors">
-                            <Icon className="w-5 h-5 text-primary" />
+                          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                            <Icon className="w-6 h-6 text-primary" />
                           </div>
 
                           {/* Content */}
                           <div className="min-w-0 flex-1">
-                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                               {item.label}
                             </p>
 
-                            <p className="mt-1 text-sm font-semibold text-foreground truncate">
+                            <p className="mt-2 text-sm font-semibold text-foreground break-words leading-relaxed">
                               {item.value ? (
                                 item.value
                               ) : (
@@ -437,9 +629,9 @@ const ProfilePage = () => {
                           </div>
                         </div>
 
-                        {/* bottom accent line */}
-                        <div className="absolute bottom-0 left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
+                        {/* Accent Line */}
+                        <div className="absolute bottom-0 left-6 right-6 h-[2px] rounded-full bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -601,6 +793,7 @@ const ProfilePage = () => {
                 workplace: user?.employer || "",
                 workplaceEn: user?.employer || "",
               }}
+              certificateSettings={certificateSettings}
               showControls={true}
               showSignature={true}
               showStamp={true}

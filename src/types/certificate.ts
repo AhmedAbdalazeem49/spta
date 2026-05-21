@@ -18,12 +18,23 @@ export interface Certificate {
 }
 
 export interface Workshop {
-  id: string | number;
-  title?: string;
+  id: number;
+  title: string;
   titleAr?: string;
   titleEn?: string;
+  description?: string;
+  doctor_name?: string;
+  location?: string;
   date?: string;
-  hours?: number;
+  time?: string;
+  regular_price?: string | number;
+  member_price?: string | number;
+  total_capacity?: number;
+  registered_count?: number;
+  status?: "open" | "closed" | "completed" | "postponed";
+  image?: string | null;
+  image_url?: string | null;
+  is_registered?: boolean;
 }
 
 export interface Recipient {

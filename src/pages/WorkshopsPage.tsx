@@ -360,11 +360,6 @@ const WorkshopsPage = () => {
                                     isRTL ? "ar-SA" : "en-US"
                                   )}
                                 </div>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                  <Clock className="w-4 h-4 text-primary shrink-0" />
-                                  {workshop.time?.slice(0, 5)} ·{" "}
-                                  {formatDuration(workshop.duration_minutes)}
-                                </div>
                                 <div className="flex items-center gap-2 text-muted-foreground col-span-2">
                                   <MapPin className="w-4 h-4 text-primary shrink-0" />
                                   {workshop.location}

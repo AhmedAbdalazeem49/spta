@@ -7,20 +7,11 @@ import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 import { Certificate, Recipient, Workshop } from "@/types/certificate";
 import {
-  getCertificateDate,
   getCertificateName,
-  getCertificateVerificationUrl,
   getCertificateWorkshop,
 } from "@/utils/certificateUtils";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  AlertCircle,
-  Award,
-  FileText,
-  Plus,
-  Settings,
-  Shield,
-} from "lucide-react";
+import { AlertCircle, Award, Plus, Settings, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Components
@@ -35,6 +26,16 @@ import { CertificatePreviewModal } from "@/components/admin/certificates/Certifi
 import { CertificateQuickVerify } from "@/components/admin/certificates/CertificateQuickVerify";
 import { CertificateSettingsModal } from "@/components/admin/certificates/CertificateSettingsModal";
 import { CertificatesTable } from "@/components/admin/certificates/CertificatesTable";
+import { CertificateStatusBadge } from "@/components/admin/certificates/CertificateStatusBadge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AlertTriangle, Eye, X } from "lucide-react";
 
 const AdminCertificatesPage = () => {
   const { t } = useLanguage();
@@ -55,9 +56,6 @@ const AdminCertificatesPage = () => {
 
   // Quick verify
   const [verifyCode, setVerifyCode] = useState("");
-  const [verifyResult, setVerifyResult] = useState<"success" | "error" | null>(
-    null
-  );
 
   // Certificate settings dialog
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -71,7 +69,9 @@ const AdminCertificatesPage = () => {
   const fetchCertificateSettings = async () => {
     try {
       const res = await api.get("/certificate-settings");
-      const data = res.data?.data;
+
+      // ✅ handle both { data: { ... } } and { id, signature_image, ... } shapes
+      const data = res.data?.data ?? res.data;
 
       setCertificateSettings({
         signature_image: data?.signature_image || null,
@@ -102,9 +102,10 @@ const AdminCertificatesPage = () => {
   const [recipientsLoading, setRecipientsLoading] = useState(false);
   const [workshopSearch, setWorkshopSearch] = useState("");
   const [recipientSearch, setRecipientSearch] = useState("");
+  const [isDuplicateOpen, setIsDuplicateOpen] = useState(false);
+  const [duplicateCert, setDuplicateCert] = useState<Certificate | null>(null);
 
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const [editForm, setEditForm] = useState<Partial<Certificate>>({});
 
   const handleUpdate = async () => {
@@ -216,9 +217,7 @@ const AdminCertificatesPage = () => {
     t("— اسم الورشة —", "— Workshop Title —");
 
   const previewDate = form.issueDate || (selectedWorkshop?.date ?? "") || "—";
-  const previewHours =
-    form.hours ||
-    (selectedWorkshop?.hours ? String(selectedWorkshop.hours) : "");
+
 
   const handleAddOpen = () => {
     setForm({ ...EMPTY_FORM });
@@ -233,13 +232,14 @@ const AdminCertificatesPage = () => {
       toast({
         title: t("بيانات ناقصة", "Missing data"),
         description: t(
-          "يرجى اختيار المستلم والورشة على الأقل",
-          "Please select at least a recipient and workshop"
+          "يرجى اختيار المستلم والورشة",
+          "Please select recipient and workshop"
         ),
         variant: "destructive",
       });
       return;
     }
+
     setIsSubmitting(true);
     try {
       await api.post("/admin/certificates", {
@@ -248,9 +248,9 @@ const AdminCertificatesPage = () => {
         recipient_name: form.manualRecipientName || undefined,
         workshop_title: form.manualWorkshopTitle || undefined,
         issue_date: previewDate !== "—" ? previewDate : undefined,
-        hours: previewHours ? Number(previewHours) : undefined,
         status: form.status,
       });
+
       toast({
         title: t("تم إنشاء الشهادة", "Certificate Created"),
         description: t(
@@ -260,7 +260,14 @@ const AdminCertificatesPage = () => {
       });
       setIsAddOpen(false);
       fetchCertificates();
-    } catch {
+    } catch (error: any) {
+      // ✅ 409 = duplicate certificate
+      if (error?.response?.status === 409) {
+        setDuplicateCert(error.response.data.data);
+        setIsDuplicateOpen(true);
+        setIsAddOpen(false);
+        return;
+      }
       toast({
         title: t("حدث خطأ", "Error"),
         description: t("فشل إنشاء الشهادة", "Failed to create certificate"),
@@ -282,18 +289,6 @@ const AdminCertificatesPage = () => {
     const matchesStatus = filterStatus === "all" || c.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
-
-  const handleVerify = () => {
-    const found = certificates.find(
-      (c) => String(c.id).toUpperCase() === verifyCode.toUpperCase()
-    );
-    if (found && found.status === "verified") {
-      setVerifyResult("success");
-      setSelected(found);
-    } else {
-      setVerifyResult("error");
-    }
-  };
 
   const handleCopyLink = (url: string) => {
     navigator.clipboard.writeText(url);
@@ -344,7 +339,6 @@ const AdminCertificatesPage = () => {
           </Button>
         </div>
       </div>
-
       <Tabs defaultValue="certificates" className="space-y-6">
         <TabsList>
           <TabsTrigger value="certificates" className="gap-2">
@@ -415,22 +409,15 @@ const AdminCertificatesPage = () => {
           <CertificateQuickVerify
             verifyCode={verifyCode}
             setVerifyCode={setVerifyCode}
-            verifyResult={verifyResult}
-            setVerifyResult={setVerifyResult}
-            selected={selected}
-            onVerify={handleVerify}
-            onPreview={openPreview}
           />
         </TabsContent>
       </Tabs>
-
       <CertificateDetailsModal
         isOpen={isViewOpen}
         onOpenChange={setIsViewOpen}
         certificate={selected}
         onPreview={openPreview}
       />
-
       <CertificateAddModal
         isOpen={isAddOpen}
         onOpenChange={setIsAddOpen}
@@ -455,9 +442,7 @@ const AdminCertificatesPage = () => {
         previewName={previewName}
         previewWorkshop={previewWorkshop}
         previewDate={previewDate}
-        previewHours={previewHours}
       />
-
       <CertificateEditModal
         isOpen={editOpen}
         onOpenChange={setEditOpen}
@@ -465,21 +450,95 @@ const AdminCertificatesPage = () => {
         setForm={setEditForm}
         onSave={handleUpdate}
       />
-
-
       <CertificateSettingsModal
         isOpen={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
         settings={certificateSettings}
         setSettings={setCertificateSettings}
       />
-
       <CertificatePreviewModal
         isOpen={isPreviewOpen}
         onOpenChange={setIsPreviewOpen}
         certificate={selected}
         settings={certificateSettings}
       />
+      <Dialog open={isDuplicateOpen} onOpenChange={setIsDuplicateOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 text-lg">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-amber-600" />
+              </div>
+              {t("شهادة موجودة مسبقاً", "Certificate Already Exists")}
+            </DialogTitle>
+            <DialogDescription>
+              {t(
+                "يمتلك هذا المستخدم شهادة لهذه الورشة بالفعل. لا يمكن إنشاء شهادة مكررة.",
+                "This user already has a certificate for this workshop. Duplicate certificates are not allowed."
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          {duplicateCert && (
+            <div className="rounded-xl border bg-muted/30 p-4 space-y-2 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("المستلم", "Recipient")}
+                </span>
+                <span className="font-medium">
+                  {duplicateCert.recipient_name}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("الورشة", "Workshop")}
+                </span>
+                <span className="font-medium text-end max-w-[60%] truncate">
+                  {duplicateCert.workshop_title}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("رقم الشهادة", "Serial")}
+                </span>
+                <span className="font-mono text-xs text-primary">
+                  {duplicateCert.serial_number}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("الحالة", "Status")}
+                </span>
+                <CertificateStatusBadge status={duplicateCert.status} />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsDuplicateOpen(false)}
+              className="gap-2"
+            >
+              <X className="w-4 h-4" />
+              {t("إغلاق", "Close")}
+            </Button>
+            {duplicateCert && (
+              <Button
+                onClick={() => {
+                  setIsDuplicateOpen(false);
+                  openPreview(duplicateCert);
+                }}
+                className="gap-2"
+              >
+                <Eye className="w-4 h-4" />
+                {t("عرض الشهادة", "View Certificate")}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      ;
     </div>
   );
 };

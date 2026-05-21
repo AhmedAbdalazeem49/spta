@@ -12,7 +12,15 @@ import api from "@/services/api";
 import { Workshop } from "@/types/workshop";
 import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
-import { FileSpreadsheet, Loader2, Medal, Users } from "lucide-react";
+import {
+  CheckCircle2,
+  FileSpreadsheet,
+  Loader2,
+  Medal,
+  Users,
+  XCircle,
+  Clock,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 
@@ -23,13 +31,17 @@ interface WorkshopSubscriptionsModalProps {
 }
 
 interface Subscriber {
-  id: string;
+  id: string; // registration id
+  user_id: string; // actual user id — needed for certificate API
   name: string;
+  name_ar?: string;
   email: string;
   phone: string;
+  membership_type?: string;
   classification_number?: string;
   payment_status: "paid" | "free" | "pending";
-  attendance_status: "attended" | "absent" | "pending";
+  registration_status: string; // confirmed / cancelled / pending
+  attendance: "attended" | "absent" | "pending"; // ✅ from reg.attendance field
   certificate_issued: boolean;
   registration_date: string;
 }
@@ -45,40 +57,42 @@ export const WorkshopSubscriptionsModal = ({
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [issuingId, setIssuingId] = useState<string | null>(null);
 
-  // ----------------------------
-  // FETCH DATA
-  // ----------------------------
+  // ─── FETCH ───────────────────────────────────────────────
   const fetchSubscribers = async () => {
     if (!workshop?.id) return;
-
     setIsLoading(true);
     try {
       const res = await api.get(`/admin/workshops/${workshop.id}/subscribers`);
-
-      const mapped = res.data.data.map((reg: any) => ({
-        id: reg.id,
+      const mapped: Subscriber[] = res.data.data.map((reg: any) => ({
+        id: String(reg.id),
+        user_id: String(reg.user_id),
         name: reg.user?.name || "-",
+        name_ar: reg.user?.name_ar,
         email: reg.user?.email || "-",
         phone: reg.user?.phone || "-",
+        membership_type: reg.user?.active_membership?.membership_type,
         classification_number: reg.user?.classification_number,
-        payment_status: reg.price > 0 ? "paid" : "free",
-        attendance_status:
-          reg.status === "confirmed"
+        payment_status: parseFloat(reg.price) > 0 ? "paid" : "free",
+        registration_status: reg.status,
+        // ✅ use reg.attendance directly — NOT reg.status
+        attendance:
+          reg.attendance === "attended"
             ? "attended"
-            : reg.status === "cancelled"
+            : reg.attendance === "absent"
             ? "absent"
             : "pending",
         certificate_issued: reg.certificate_issued ?? false,
         registration_date: reg.created_at,
       }));
-
       setSubscribers(mapped);
     } catch (err) {
       console.error(err);
       toast({
         title: "Error",
         description: "Failed to load subscribers",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -86,275 +100,437 @@ export const WorkshopSubscriptionsModal = ({
   };
 
   useEffect(() => {
-    if (isOpen && workshop) {
-      fetchSubscribers();
-    }
+    if (isOpen && workshop) fetchSubscribers();
   }, [isOpen, workshop]);
 
-  // ----------------------------
-  // ATTENDANCE UPDATE
-  // ----------------------------
-  const updateAttendance = async (userId: string, attendance: string) => {
+  // ─── ATTENDANCE TOGGLE ───────────────────────────────────
+  const toggleAttendance = async (sub: Subscriber) => {
+    const next =
+      sub.attendance === "attended"
+        ? "absent"
+        : sub.attendance === "absent"
+        ? "pending"
+        : "attended";
     try {
       await api.post(`/admin/workshops/${workshop?.id}/attendance`, {
-        user_id: userId,
-        attendance,
+        user_id: sub.user_id,
+        attendance: next,
       });
-
       setSubscribers((prev) =>
         prev.map((s) =>
-          s.id === userId ? { ...s, attendance_status: status as any } : s
+          s.id === sub.id ? { ...s, attendance: next as any } : s
         )
       );
-
       toast({
         title: t("تم التحديث", "Updated"),
         description: t("تم تغيير حالة الحضور", "Attendance updated"),
       });
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update attendance",
+        variant: "destructive",
       });
     }
   };
 
-  // ----------------------------
-  // CERTIFICATE
-  // ----------------------------
-  const handleIssueCertificate = async (subId: string) => {
+  // ─── SINGLE CERTIFICATE ──────────────────────────────────
+  const handleIssueCertificate = async (sub: Subscriber) => {
+    setIssuingId(sub.id);
     try {
-      await api.post(`/admin/workshops/${workshop?.id}/certificates/generate`, {
-        subscriber_id: subId,
+      await api.post("/admin/certificates", {
+        recipient_id: sub.user_id,
+        workshop_id: String(workshop?.id),
+        status: "verified",
       });
 
       setSubscribers((prev) =>
         prev.map((s) =>
-          s.id === subId ? { ...s, certificate_issued: true } : s
+          s.id === sub.id ? { ...s, certificate_issued: true } : s
         )
       );
-
-      toast({
-        title: t("تم إصدار الشهادة", "Certificate issued"),
-      });
-    } catch (err) {
+      toast({ title: t("تم إصدار الشهادة", "Certificate Issued") });
+    } catch (err: any) {
+      // 409 = already has one — still mark as issued in UI
+      if (err?.response?.status === 409) {
+        setSubscribers((prev) =>
+          prev.map((s) =>
+            s.id === sub.id ? { ...s, certificate_issued: true } : s
+          )
+        );
+        toast({
+          title: t("شهادة موجودة", "Already Issued"),
+          description: t(
+            "يمتلك هذا المستخدم شهادة لهذه الورشة مسبقاً",
+            "This user already has a certificate for this workshop"
+          ),
+        });
+        return;
+      }
       toast({
         title: "Error",
         description: "Failed to issue certificate",
-      });
-    }
-  };
-
-  // ----------------------------
-  // BULK CERTIFICATE
-  // ----------------------------
-  const handleBulkIssueCertificates = async () => {
-    setIsGenerating(true);
-    try {
-      await api.post(
-        `/admin/workshops/${workshop?.id}/certificates/generate-bulk`
-      );
-
-      setSubscribers((prev) =>
-        prev.map((s) =>
-          s.attendance_status === "attended"
-            ? { ...s, certificate_issued: true }
-            : s
-        )
-      );
-
-      toast({
-        title: t("تم الإصدار", "Completed"),
-        description: t(
-          "تم إصدار الشهادات لجميع الحاضرين",
-          "Certificates issued"
-        ),
-      });
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: "Bulk issue failed",
+        variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
+      setIssuingId(null);
     }
   };
 
-  // ----------------------------
-  // FRONTEND EXCEL (CSV)
-  // ----------------------------
+  // ─── BULK CERTIFICATE ────────────────────────────────────
+  const handleBulkIssueCertificates = async () => {
+    const attended = subscribers.filter(
+      (s) => s.attendance === "attended" && !s.certificate_issued
+    );
 
+    if (attended.length === 0) {
+      toast({
+        title: t("لا يوجد", "Nothing to issue"),
+        description: t(
+          "لا يوجد حاضرون بدون شهادة",
+          "All attended subscribers already have certificates"
+        ),
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    let successCount = 0;
+    let skipCount = 0;
+
+    for (const sub of attended) {
+      try {
+        await api.post("/admin/certificates", {
+          recipient_id: sub.user_id,
+          workshop_id: String(workshop?.id),
+          status: "verified",
+        });
+        successCount++;
+      } catch (err: any) {
+        if (err?.response?.status === 409) {
+          skipCount++;
+        }
+      }
+    }
+
+    // Refresh to get accurate certificate_issued flags
+    await fetchSubscribers();
+    setIsGenerating(false);
+
+    toast({
+      title: t("تم الإصدار", "Bulk Issue Complete"),
+      description: t(
+        `تم إصدار ${successCount} شهادة${
+          skipCount > 0 ? `، ${skipCount} موجودة مسبقاً` : ""
+        }`,
+        `Issued ${successCount} certificate(s)${
+          skipCount > 0 ? `, ${skipCount} already existed` : ""
+        }`
+      ),
+    });
+  };
+
+  // ─── EXCEL EXPORT ────────────────────────────────────────
   const handleExportExcel = () => {
     const worksheetData = [
       [
-        "👤 Name",
-        "📧 Email",
-        "📱 Phone",
-        "💳 Payment Status",
-        "🎓 Attendance",
-        "📅 Registration Date",
+        "Name",
+        "Name (AR)",
+        "Email",
+        "Phone",
+        "Membership",
+        "Payment",
+        "Registration",
+        "Attendance",
+        "Certificate",
+        "Date",
       ],
       ...subscribers.map((s) => [
         s.name,
+        s.name_ar || "",
         s.email,
         s.phone,
+        s.membership_type || "",
         s.payment_status,
-        s.attendance_status,
+        s.registration_status,
+        s.attendance,
+        s.certificate_issued ? "Issued" : "Not Issued",
         new Date(s.registration_date).toLocaleString(),
       ]),
     ];
 
-    // Create worksheet
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-
-    // Column width tuning (THIS is what makes it readable)
     worksheet["!cols"] = [
-      { wch: 35 }, // Name
-      { wch: 35 }, // Email
-      { wch: 20 }, // Phone
-      { wch: 20 }, // Payment
-      { wch: 20 }, // Attendance
-      { wch: 20 }, // Date
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 35 },
+      { wch: 18 },
+      { wch: 16 },
+      { wch: 12 },
+      { wch: 14 },
+      { wch: 14 },
+      { wch: 14 },
+      { wch: 22 },
     ];
-
-    // Create workbook
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Workshop Subscribers");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Subscribers");
+    const buf = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(
+      new Blob([buf], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+      `workshop-${workshop?.id}-subscribers.xlsx`
+    );
+  };
 
-    // Generate file
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
+  // ─── HELPERS ─────────────────────────────────────────────
+  const attendanceConfig = {
+    attended: {
+      label: t("حاضر", "Attended"),
+      className: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    },
+    absent: {
+      label: t("غائب", "Absent"),
+      className: "bg-red-100 text-red-700 border-red-200",
+    },
+    pending: {
+      label: t("لم يحدد", "Pending"),
+      className: "bg-gray-100 text-gray-600 border-gray-200",
+    },
+  };
 
-    const file = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
-    saveAs(file, `workshop-${workshop?.id}-subscribers.xlsx`);
+  const paymentConfig = {
+    paid: {
+      label: t("مدفوع", "Paid"),
+      className: "bg-blue-100 text-blue-700 border-blue-200",
+    },
+    free: {
+      label: t("مجاني", "Free"),
+      className: "bg-purple-100 text-purple-700 border-purple-200",
+    },
+    pending: {
+      label: t("معلق", "Pending"),
+      className: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    },
   };
 
   if (!workshop) return null;
 
+  const attendedCount = subscribers.filter(
+    (s) => s.attendance === "attended"
+  ).length;
+  const certIssuedCount = subscribers.filter(
+    (s) => s.certificate_issued
+  ).length;
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="fixed w-screen h-screen max-w-none p-0 flex flex-col overflow-hidden bg-background">
-        {/* HEADER */}
-        <DialogHeader className="p-6 border-b flex flex-row justify-between items-center">
-          <div>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <Users className="w-5 h-5 text-primary" />
-              {t("اشتراكات الورشة", "Workshop Subscribers")}
-            </DialogTitle>
-            <p className="text-sm text-muted-foreground">{workshop.title}</p>
-          </div>
+        {/* ── HEADER ── */}
+        <DialogHeader className="p-6 border-b shrink-0">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <DialogTitle className="flex items-center gap-2 text-xl">
+                <Users className="w-5 h-5 text-primary" />
+                {t("اشتراكات الورشة", "Workshop Subscribers")}
+              </DialogTitle>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {workshop.title}
+              </p>
 
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleExportExcel}
-              className="gap-2"
-            >
-              <FileSpreadsheet className="w-4 h-4" />
-              Excel
-            </Button>
+              {/* Stats row */}
+              <div className="flex items-center gap-4 mt-3 text-sm">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <Users className="w-3.5 h-3.5" />
+                  {t("الإجمالي", "Total")}:{" "}
+                  <strong>{subscribers.length}</strong>
+                </span>
+                <span className="flex items-center gap-1.5 text-emerald-600">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {t("حاضر", "Attended")}: <strong>{attendedCount}</strong>
+                </span>
+                <span className="flex items-center gap-1.5 text-primary">
+                  <Medal className="w-3.5 h-3.5" />
+                  {t("شهادات", "Certificates")}:{" "}
+                  <strong>{certIssuedCount}</strong>
+                </span>
+              </div>
+            </div>
 
-            <Button
-              onClick={handleBulkIssueCertificates}
-              disabled={isGenerating}
-              className="gap-2"
-            >
-              {isGenerating ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Medal className="w-4 h-4" />
-              )}
-              {t("إصدار الشهادات", "Certificates")}
-            </Button>
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant="outline"
+                onClick={handleExportExcel}
+                className="gap-2"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                Excel
+              </Button>
+              <Button
+                onClick={handleBulkIssueCertificates}
+                disabled={isGenerating}
+                className="gap-2"
+              >
+                {isGenerating ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Medal className="w-4 h-4" />
+                )}
+                {t("إصدار للحاضرين", "Issue to Attended")}
+              </Button>
+            </div>
           </div>
         </DialogHeader>
 
-        {/* BODY */}
+        {/* ── BODY ── */}
         <div className="flex-1 overflow-auto p-6 bg-muted/10">
-          {/* LOADING */}
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           ) : subscribers.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
+              <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
               {t("لا يوجد مشتركون", "No subscribers yet")}
             </div>
           ) : (
             <div className="rounded-xl border bg-background overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50">
+                <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
-                    <th className="p-3 text-right">User</th>
-                    <th className="p-3 text-right">Contact</th>
-                    <th className="p-3 text-right">Payment</th>
-                    <th className="p-3 text-right">Attendance</th>
-                    <th className="p-3 text-right">Actions</th>
+                    <th className="p-3 text-start font-medium">
+                      {t("المستخدم", "User")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("التواصل", "Contact")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("الدفع", "Payment")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("التسجيل", "Registration")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("الحضور", "Attendance")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("الشهادة", "Certificate")}
+                    </th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {subscribers.map((sub) => (
-                    <motion.tr
-                      key={sub.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="border-t"
-                    >
-                      <td className="p-3">
-                        <div className="font-medium">{sub.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {sub.registration_date}
-                        </div>
-                      </td>
+                  {subscribers.map((sub) => {
+                    const att = attendanceConfig[sub.attendance];
+                    const pay = paymentConfig[sub.payment_status];
+                    return (
+                      <motion.tr
+                        key={sub.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="border-t hover:bg-muted/20 transition-colors"
+                      >
+                        {/* User */}
+                        <td className="p-3">
+                          <p className="font-medium">{sub.name}</p>
+                          {sub.name_ar && (
+                            <p className="text-xs text-muted-foreground">
+                              {sub.name_ar}
+                            </p>
+                          )}
+                          {sub.membership_type && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] mt-0.5"
+                            >
+                              {sub.membership_type}
+                            </Badge>
+                          )}
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {new Date(
+                              sub.registration_date
+                            ).toLocaleDateString()}
+                          </p>
+                        </td>
 
-                      <td className="p-3">
-                        <div>{sub.email}</div>
-                        <div className="text-xs">{sub.phone}</div>
-                      </td>
+                        {/* Contact */}
+                        <td className="p-3">
+                          <p className="text-sm">{sub.email}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {sub.phone}
+                          </p>
+                        </td>
 
-                      <td className="p-3">
-                        <Badge>{sub.payment_status}</Badge>
-                      </td>
-                      <td className="p-3">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
-      ${
-        sub.attendance_status === "attended"
-          ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-          : sub.attendance_status === "absent"
-          ? "bg-red-100 text-red-700 border border-red-200"
-          : "bg-gray-100 text-gray-600 border border-gray-200"
-      }
-    `}
-                        >
-                          {sub.attendance_status === "attended"
-                            ? "Attended"
-                            : sub.attendance_status === "absent"
-                            ? "Absent"
-                            : sub.attendance_status}
-                        </span>
-                      </td>
-
-                      <td className="p-3">
-                        {sub.certificate_issued ? (
-                          <Badge>{t("تم الإصدار", "Issued")}</Badge>
-                        ) : (
-                          <Button
-                            size="sm"
-                            onClick={() => handleIssueCertificate(sub.id)}
+                        {/* Payment */}
+                        <td className="p-3">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${pay.className}`}
                           >
-                            {t("شهادة", "Certificate")}
-                          </Button>
-                        )}
-                      </td>
-                    </motion.tr>
-                  ))}
+                            {pay.label}
+                          </span>
+                        </td>
+
+                        {/* Registration status */}
+                        <td className="p-3">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                              sub.registration_status === "confirmed"
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : sub.registration_status === "cancelled"
+                                ? "bg-red-50 text-red-700 border-red-200"
+                                : "bg-gray-50 text-gray-600 border-gray-200"
+                            }`}
+                          >
+                            {sub.registration_status}
+                          </span>
+                        </td>
+
+                        {/* Attendance — clickable to cycle */}
+                        <td className="p-3">
+                          <button
+                            onClick={() => toggleAttendance(sub)}
+                            title={t("انقر للتغيير", "Click to change")}
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-opacity hover:opacity-75 ${att.className}`}
+                          >
+                            {sub.attendance === "attended" && (
+                              <CheckCircle2 className="w-3 h-3" />
+                            )}
+                            {sub.attendance === "absent" && (
+                              <XCircle className="w-3 h-3" />
+                            )}
+                            {sub.attendance === "pending" && (
+                              <Clock className="w-3 h-3" />
+                            )}
+                            {att.label}
+                          </button>
+                        </td>
+
+                        {/* Certificate */}
+                        <td className="p-3">
+                          {sub.certificate_issued ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3" />
+                              {t("تم الإصدار", "Issued")}
+                            </span>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={issuingId === sub.id}
+                              onClick={() => handleIssueCertificate(sub)}
+                              className="h-7 text-xs gap-1"
+                            >
+                              {issuingId === sub.id ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Medal className="w-3 h-3" />
+                              )}
+                              {t("إصدار", "Issue")}
+                            </Button>
+                          )}
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
