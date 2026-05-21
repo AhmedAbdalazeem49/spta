@@ -53,11 +53,11 @@ export const CertificatePreviewModal = ({
 
     // ✅ Strip the /storage/ prefix and route through Laravel API
     const path = value.replace(/^\/storage\//, "");
-    return `http://localhost:8000/api/files/${path}`;
+    return `https://spta-one.vercel.app/api/files/${path}`;
   };
 
   const qrValue = certificate?.serial_number
-    ? `http://localhost:5173/certificate/verify/${certificate.serial_number}`
+    ? `https://spta-one.vercel.app/certificate/verify/${certificate.serial_number}`
     : "";
 
   const handleDownloadPdf = async () => {
