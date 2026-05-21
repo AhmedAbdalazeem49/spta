@@ -89,10 +89,10 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const settings = useSettings();
 
   const qrValue = cert.serial_number
-    ? `http://localhost:5173/certificate/verify/${cert.serial_number}`
+    ? `https://spta-one.vercel.app/certificate/verify/${cert.serial_number}`
     : cert.verification_code
-    ? `http://localhost:5173/certificate/verify/${cert.verification_code}`
-    : `http://localhost:5173/certificate/verify/${cert.id}`;
+    ? `https://spta-one.vercel.app/certificate/verify/${cert.verification_code}`
+    : `https://spta-one.vercel.app/certificate/verify/${cert.id}`;
 
   const recipientName =
     cert.recipient_name ||
