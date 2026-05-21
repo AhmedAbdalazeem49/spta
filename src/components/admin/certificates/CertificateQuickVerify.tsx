@@ -177,7 +177,7 @@ export const CertificateQuickVerify = ({
                           size="sm"
                           onClick={() =>
                             navigate(
-                              `/certificates/verify/${result.serial_number}`
+                              `/certificate/verify/${result.serial_number}`
                             )
                           }
                         >
