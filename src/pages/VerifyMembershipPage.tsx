@@ -76,13 +76,99 @@ export default function VerifyMembershipPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
-        <div className="text-center">
-          <XCircle className="w-16 h-16 mx-auto text-red-500 mb-4" />
-          <h2 className="text-xl font-bold">Invalid Membership</h2>
-          <p className="text-white/60 mt-2">{error}</p>
+      <Layout>
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white flex items-center justify-center px-6 py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="w-full max-w-xl"
+          >
+            <div className="relative overflow-hidden rounded-3xl border border-red-500/20 bg-white/5 backdrop-blur-xl shadow-2xl">
+              {/* TOP GLOW */}
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent pointer-events-none" />
+
+              <div className="relative p-8 md:p-10">
+                {/* ICON */}
+                <div className="flex justify-center mb-6">
+                  <div className="w-24 h-24 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                    <XCircle className="w-14 h-14 text-red-500" />
+                  </div>
+                </div>
+
+                {/* TITLE */}
+                <div className="text-center space-y-3" dir="rtl">
+                  <h1 className="text-3xl font-bold tracking-tight">
+                    تعذر التحقق من العضوية
+                  </h1>
+
+                  <p className="text-white/70 leading-relaxed max-w-md mx-auto">
+                    لم نتمكن من التحقق من العضوية المطلوبة. قد يكون الرابط غير
+                    صالح، أو منتهي الصلاحية، أو تم حذف العضوية، أو أن العضوية
+                    غير نشطة حالياً في نظام التحقق الخاص بـ SPTA.
+                  </p>
+                </div>
+
+                {/* ERROR BOX */}
+                <div
+                  className="mt-8 rounded-2xl border border-red-500/20 bg-red-500/5 p-4"
+                  dir="rtl"
+                >
+                  <p className="text-sm text-red-200 text-center">
+                    {error ||
+                      "لم يتم العثور على العضوية أو أن رمز التحقق غير صالح"}
+                  </p>
+                </div>
+
+                {/* HELP TEXT */}
+                <div
+                  className="mt-6 space-y-2 text-sm text-white/50 text-center"
+                  dir="rtl"
+                >
+                  <p>قد يحدث هذا للأسباب التالية:</p>
+
+                  <div className="space-y-1">
+                    <p>• رمز QR أو رابط التحقق غير صحيح</p>
+                    <p>• انتهت صلاحية العضوية</p>
+                    <p>• تم إيقاف العضوية أو تعطيلها</p>
+                    <p>• لم تعد بيانات العضوية موجودة في النظام</p>
+                  </div>
+                </div>
+
+                {/* ACTION BUTTONS */}
+                <div className="mt-10 grid sm:grid-cols-2 gap-4">
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="h-12 rounded-xl bg-primary hover:opacity-90 transition font-medium"
+                  >
+                    إعادة المحاولة
+                  </button>
+
+                  <button
+                    onClick={() => (window.location.href = "/")}
+                    className="h-12 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition font-medium"
+                  >
+                    العودة للرئيسية
+                  </button>
+                </div>
+
+                {/* SUPPORT */}
+                <div
+                  className="mt-8 pt-6 border-t border-white/10 text-center"
+                  dir="rtl"
+                >
+                  <p className="text-sm text-white/50">هل تحتاج إلى مساعدة؟</p>
+
+                  <p className="text-sm text-white/80 mt-1 leading-relaxed">
+                    يرجى التواصل مع إدارة الجمعية أو فريق الدعم الفني للمساعدة
+                    في التحقق من العضوية.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
