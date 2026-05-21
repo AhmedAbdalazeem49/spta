@@ -51,6 +51,7 @@ const AdminUsersPage = () => {
     sub_specialization: "",
     employer: "",
     role: "member",
+    is_admin: false,
     password: "",
     password_confirmation: "",
   });
@@ -144,6 +145,7 @@ const AdminUsersPage = () => {
       sub_specialization: u.sub_specialization || "",
       employer: u.employer || "",
       role: u.role || "member",
+      is_admin: u.is_admin == 1 || u.is_admin === true,
       password: "",
       password_confirmation: "",
     });

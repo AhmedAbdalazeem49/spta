@@ -9,6 +9,7 @@ export interface UserItem {
   sub_specialization?: string;
   employer?: string;
   role?: string;
+  is_admin?: boolean | 0 | 1;
 
   status?: "pending" | "approved" | "rejected" | "active";
 
@@ -19,7 +20,6 @@ export interface UserItem {
   created_at?: string;
   updated_at?: string;
 
-  // 🔥 ADD THESE (from your API)
   membership_status?: "active" | "inactive";
 
   active_membership?: {
@@ -45,6 +45,7 @@ export interface EditForm {
   sub_specialization: string;
   employer: string;
   role: string;
+  is_admin: boolean;
   password: string;
   password_confirmation: string;
 }
@@ -59,6 +60,7 @@ export interface AddForm {
   sub_specialization: string;
   employer: string;
   role: string;
+  is_admin: boolean;
   password: string;
   password_confirmation: string;
 }
@@ -73,6 +75,7 @@ export const defaultAddForm: AddForm = {
   sub_specialization: "",
   employer: "",
   role: "member",
+  is_admin: false,
   password: "",
   password_confirmation: "",
 };

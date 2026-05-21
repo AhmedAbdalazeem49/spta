@@ -1,11 +1,39 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AddForm } from "@/types/user";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, Building2, CheckCircle2, CreditCard, Lock, Mail, Phone, Shield, User, UserPlus, XCircle, Loader2 } from "lucide-react";
+import {
+  Briefcase,
+  Building2,
+  CheckCircle2,
+  CreditCard,
+  Loader2,
+  Lock,
+  Mail,
+  Phone,
+  Shield,
+  User,
+  UserPlus,
+  Users,
+  XCircle,
+} from "lucide-react";
 
 interface UserAddModalProps {
   isOpen: boolean;
@@ -315,7 +343,9 @@ export const UserAddModal = ({
                 <div className="relative">
                   <Select
                     value={addForm.role}
-                    onValueChange={(val) => setAddForm({ ...addForm, role: val })}
+                    onValueChange={(val) =>
+                      setAddForm({ ...addForm, role: val })
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue />

@@ -540,7 +540,7 @@ const ProfilePage = () => {
                                 {certificateSettings?.signature_image ? (
                                   <div className="w-full rounded-2xl bg-white p-3 inline-flex shadow-lg">
                                     <img
-                                      src={`http://127.0.0.1:8000${certificateSettings.signature_image}`}
+                                      src={`https://spta.prower.store${certificateSettings.signature_image}`}
                                       alt="signature"
                                       className="w-full h-16 object-cover"
                                     />

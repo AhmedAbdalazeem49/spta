@@ -1,25 +1,25 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import api from "@/services/api";
-import { motion, AnimatePresence } from "framer-motion";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import api from "@/services/api";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
-  CheckCircle2,
-  XCircle,
-  Loader2,
   ArrowLeft,
-  User,
-  GraduationCap,
   Calendar,
+  CheckCircle2,
+  GraduationCap,
+  Loader2,
   Shield,
+  User,
+  XCircle,
 } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/layout/Layout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const WorkshopAttendancePage = () => {
   const { id } = useParams();
@@ -83,31 +83,33 @@ const WorkshopAttendancePage = () => {
   // ================= ERROR =================
   if (status === "error") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-background p-4">
-        <Card className="max-w-md w-full border-red-200">
-          <CardContent className="p-8 text-center space-y-4">
-            <XCircle className="w-14 h-14 mx-auto text-red-500" />
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-background p-4">
+          <Card className="max-w-md w-full border-red-200">
+            <CardContent className="p-8 text-center space-y-4">
+              <XCircle className="w-14 h-14 mx-auto text-red-500" />
 
-            <h2 className="text-xl font-bold">
-              {t("فشل تسجيل الحضور", "Attendance Failed")}
-            </h2>
+              <h2 className="text-xl font-bold">
+                {t("فشل تسجيل الحضور", "Attendance Failed")}
+              </h2>
 
-            <p className="text-sm text-muted-foreground">
-              {t(
-                "حدث خطأ أثناء تسجيل الحضور أو الرابط غير صالح",
-                "Invalid QR or attendance request failed"
-              )}
-            </p>
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  "تأكد من صحة الرابط أو أنك مشترك في هذه الورشة",
+                  "Please ensure the QR is valid or you are enrolled in this workshop"
+                )}
+              </p>
 
-            <div className="flex gap-2 justify-center pt-4">
-              <Button onClick={() => navigate("/workshops")}>
-                <ArrowLeft className="w-4 h-4 me-2" />
-                {t("العودة", "Back")}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              <div className="flex gap-2 justify-center pt-4">
+                <Button onClick={() => navigate("/workshops")}>
+                  <ArrowLeft className="w-4 h-4 me-2" />
+                  {t("العودة", "Back")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
     );
   }
 

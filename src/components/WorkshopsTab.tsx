@@ -157,7 +157,7 @@ if (loading) {
               {reg.workshop.image && (
                 <div className="h-60 w-full overflow-hidden">
                   <img
-                    src={`http://127.0.0.1:8000/storage/${reg.workshop.image}`}
+                    src={`https://spta.prower.store/storage/${reg.workshop.image}`}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -209,8 +209,6 @@ if (loading) {
                   {reg.workshop.location && (
                     <div className="col-span-2">📍 {reg.workshop.location}</div>
                   )}
-
-
 
                   {reg.workshop.total_capacity && (
                     <div>👥 Capacity: {reg.workshop.total_capacity}</div>

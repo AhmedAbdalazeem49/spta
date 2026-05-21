@@ -20,6 +20,7 @@ interface User {
   specialization?: string;
   sub_specialization?: string;
   employer?: string;
+  is_admin?: boolean | 0 | 1;
 
   membership_type?: string;
   status?: UserStatus;

@@ -150,7 +150,7 @@ const Navbar = () => {
                   key={item.path}
                   className="relative"
                   onMouseEnter={() =>
-                    item.children  && setActiveDropdown(item.path)
+                    item.children && setActiveDropdown(item.path)
                   }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
@@ -199,9 +199,7 @@ const Navbar = () => {
           <div className="flex items-center gap-1">
             {isAuthenticated ? (
               <>
-                {((user as any)?.role === "admin" ||
-                  (user as any)?.role === "system_admin" ||
-                  (user as any)?.role === "branch_manager") && (
+                {user?.is_admin == 1 && (
                   <Link to="/admin">
                     <Button
                       variant="ghost"
@@ -213,6 +211,7 @@ const Navbar = () => {
                     </Button>
                   </Link>
                 )}
+
                 <Link to="/profile">
                   <Button
                     variant={isScrolled ? "default" : "outline"}

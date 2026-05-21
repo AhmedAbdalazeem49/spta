@@ -9,6 +9,7 @@ export interface User {
   national_id?: string;
   classification_number?: string;
   role: UserRole;
+  is_admin?: boolean | 0 | 1;
   status: UserStatus;
   email_verified_at?: string | null;
   membership_type?: string | null;
