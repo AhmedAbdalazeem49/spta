@@ -60,12 +60,6 @@ export const CertificateCard = ({ cert, onOpenDetails, onOpenPreview, onCopyLink
               <Calendar className="w-4 h-4 text-primary shrink-0" />
               {date}
             </div>
-            {cert.hours && (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Clock className="w-4 h-4 text-primary shrink-0" />
-                {cert.hours} {t("ساعات تدريبية", "training hours")}
-              </div>
-            )}
           </div>
         </div>
 

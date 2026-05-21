@@ -17,7 +17,6 @@ interface Cert {
   issue_date?: string;
   issued_at?: string;
   workshop_date?: string;
-  hours?: number;
   status?: string;
   verification_code?: string;
 }
@@ -130,19 +129,13 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
     </Badge>
   ) : null;
 
-  // Pills for date + hours
+  // Pills for date
   const MetaRow = (
     <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
       <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-black/5 border border-black/10">
         <Calendar className="w-3 h-3" />
         {issueDate}
       </span>
-      {cert.hours && (
-        <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 font-semibold">
-          <Clock className="w-3 h-3" />
-          {cert.hours} {t("ساعة تدريبية", "Training Hours")}
-        </span>
-      )}
       {VerifiedBadge}
     </div>
   );
@@ -289,12 +282,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               <Calendar className="w-3 h-3" />
               {issueDate}
             </span>
-            {cert.hours && (
-              <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-400/15 border border-yellow-400/30 text-yellow-200 text-xs font-semibold">
-                <Clock className="w-3 h-3" />
-                {cert.hours} {t("ساعة", "hrs")}
-              </span>
-            )}
           </div>
 
           {isVerified && (
@@ -358,12 +345,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               <Calendar className="w-3 h-3" />
               {issueDate}
             </span>
-            {cert.hours && (
-              <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-600/10 border border-amber-600/25 text-amber-800 text-xs font-semibold">
-                <Clock className="w-3 h-3" />
-                {cert.hours} {t("ساعة تدريبية", "Training Hours")}
-              </span>
-            )}
             {VerifiedBadge}
           </div>
         </div>
@@ -407,12 +388,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             <Calendar className="w-3 h-3" />
             {issueDate}
           </span>
-          {cert.hours && (
-            <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-primary/8 text-primary border border-primary/20 text-xs font-semibold">
-              <Clock className="w-3 h-3" />
-              {cert.hours} {t("ساعة تدريبية", "Training Hours")}
-            </span>
-          )}
           {VerifiedBadge}
         </div>
 

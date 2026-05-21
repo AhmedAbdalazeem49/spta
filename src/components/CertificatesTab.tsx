@@ -26,7 +26,6 @@ interface Certificate {
   recipient_name?: string;
   workshop_title?: string;
   issue_date?: string;
-  hours?: number;
   status?: string;
   verification_code?: string;
   template?: CertTemplate;

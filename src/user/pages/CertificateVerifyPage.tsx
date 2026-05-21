@@ -22,7 +22,6 @@ interface VerificationResult {
   recipient_name?: string;
   workshop_title?: string;
   issue_date?: string;
-  hours?: number;
   status?: string;
 }
 
@@ -166,7 +165,6 @@ const CertificateVerifyPage = () => {
                     recipient_name: data?.recipient_name,
                     workshop_title: data?.workshop_title,
                     issue_date: data?.issue_date,
-                    hours: data?.hours,
                     status: data?.status || "verified",
                   }}
                   template="classic"
@@ -210,13 +208,6 @@ const CertificateVerifyPage = () => {
                         {t("التاريخ", "Date")}
                       </span>
                       <span>{data?.issue_date}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {t("الساعات", "Hours")}
-                      </span>
-                      <span>{data?.hours ?? "-"}</span>
                     </div>
 
                     <div className="flex justify-between">

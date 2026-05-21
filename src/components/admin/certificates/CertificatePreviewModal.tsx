@@ -170,15 +170,6 @@ export const CertificatePreviewModal = ({
                       {getCertificateDate(certificate)}
                     </span>
                   </span>
-                  {certificate.hours && (
-                    <>
-                      <span className="text-yellow-300">•</span>
-                      <span>
-                        {certificate.hours}{" "}
-                        {t("ساعات تدريبية", "Training Hours")}
-                      </span>
-                    </>
-                  )}
                 </div>
 
                 {/* CUSTOM TEXT — ✅ now visible because settings come from parent */}

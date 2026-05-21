@@ -10,7 +10,6 @@ export interface Certificate {
   workshopDate?: string;
   issue_date?: string;
   issueDate?: string;
-  hours?: number;
   status?: string;
   serial_number?: string;
   verification_url?: string;

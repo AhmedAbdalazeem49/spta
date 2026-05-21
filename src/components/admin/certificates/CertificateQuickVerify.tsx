@@ -23,7 +23,6 @@ interface Certificate {
   recipient_name?: string;
   workshop_title?: string;
   issue_date?: string;
-  hours?: number;
 }
 
 interface Props {
@@ -166,12 +165,6 @@ export const CertificateQuickVerify = ({
                           <strong>{t("التاريخ:", "Date:")}</strong>{" "}
                           {result.issue_date}
                         </p>
-                        {result.hours && (
-                          <p>
-                            <strong>{t("الساعات:", "Hours:")}</strong>{" "}
-                            {result.hours}
-                          </p>
-                        )}
                         <p>
                           <strong>{t("الرقم:", "Serial:")}</strong>{" "}
                           {result.serial_number}

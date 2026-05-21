@@ -50,13 +50,6 @@ export const CertificateDetailsModal = ({ isOpen, onOpenChange, certificate, onP
               label: t("التاريخ", "Date"),
               value: getCertificateDate(certificate),
             },
-            {
-              icon: Clock,
-              label: t("الساعات", "Hours"),
-              value: certificate.hours
-                ? `${certificate.hours} ${t("ساعات", "hours")}`
-                : "—",
-            },
           ].map((item, i) => (
             <div
               key={i}
