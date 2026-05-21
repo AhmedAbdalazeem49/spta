@@ -60,7 +60,7 @@ export const CertificateSettingsModal = ({
     if (!value) return undefined;
     if (value instanceof File) return URL.createObjectURL(value);
     if (value.startsWith("http")) return value;
-    return `https://spta-one.vercel.app${value}`;
+    return `https://spta.prower.store${value}`;
   };
 
   // SAVE

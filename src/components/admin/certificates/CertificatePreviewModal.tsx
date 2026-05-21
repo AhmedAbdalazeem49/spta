@@ -53,7 +53,7 @@ export const CertificatePreviewModal = ({
 
     // ✅ Strip the /storage/ prefix and route through Laravel API
     const path = value.replace(/^\/storage\//, "");
-    return `https://spta-one.vercel.app/api/files/${path}`;
+    return `https://spta.prower.store/api/files/${path}`;
   };
 
   const qrValue = certificate?.serial_number

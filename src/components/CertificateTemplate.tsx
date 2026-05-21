@@ -39,7 +39,7 @@ const storageUrl = (path: string | null | undefined): string => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
   const clean = path.replace(/^\/storage\//, "");
-  return `https://spta-one.vercel.app/api/files/${clean}`;
+  return `https://spta.prower.store/api/files/${clean}`;
 };
 
 const formatDate = (raw?: string): string => {
