@@ -166,7 +166,7 @@ export const UsersTable = ({
                     );
                   })()}
                 </td>
-                <td className="p-4">
+                <td className="p-4 hidden">
                   <div className="flex items-center gap-1 flex-wrap">
                     {(u.status === "pending" ||
                       (!u.status && !u.email_verified_at)) && (
