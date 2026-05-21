@@ -271,7 +271,7 @@ const PaymentPage = () => {
               </div>
 
               {/* Promo Code Section */}
-              <div className="mb-6 pt-6 border-t border-border">
+              <div className="mb-6 pt-6 border-t border-border hidden">
                 <label className="text-sm font-medium mb-2 flex items-center gap-2">
                   <Tag className="w-4 h-4" />
                   {t("كوبون الخصم", "Promo Code")}
