@@ -166,9 +166,9 @@ export const UsersTable = ({
                     );
                   })()}
                 </td>
-                <td className="p-4 hidden">
+                <td className="p-4">
                   <div className="flex items-center gap-1 flex-wrap">
-                    {(u.status === "pending" ||
+                    {/* {(u.status === "pending" ||
                       (!u.status && !u.email_verified_at)) && (
                       <>
                         <Button
@@ -202,7 +202,7 @@ export const UsersTable = ({
                           </span>
                         </Button>
                       </>
-                    )}
+                    )} */}
                     <Button
                       size="sm"
                       variant="ghost"
