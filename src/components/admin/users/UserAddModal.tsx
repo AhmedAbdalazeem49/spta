@@ -344,20 +344,23 @@ export const UserAddModal = ({
                   <Select
                     value={addForm.role}
                     onValueChange={(val) =>
-                      setAddForm({ ...addForm, role: val })
+                      setAddForm({
+                        ...addForm,
+                        role: val as "system_admin" | "branch_admin" | "user",
+                      })
                     }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="member">
+                      <SelectItem value="user">
                         <div className="flex items-center gap-2">
                           <Users className="w-4 h-4 text-muted-foreground" />
                           <span>{t("عضو", "Member")}</span>
                         </div>
                       </SelectItem>
-                      <SelectItem value="branch_manager">
+                      <SelectItem value="branch_admin">
                         <div className="flex items-center gap-2">
                           <Building2 className="w-4 h-4 text-blue-500" />
                           <span>{t("مدير فرع", "Branch Manager")}</span>
@@ -417,7 +420,7 @@ export const UserAddModal = ({
                     <span className="font-medium">
                       {addForm.role === "system_admin"
                         ? t("مدير النظام", "System Admin")
-                        : addForm.role === "branch_manager"
+                        : addForm.role === "branch_admin"
                         ? t("مدير فرع", "Branch Manager")
                         : t("عضو", "Member")}
                     </span>

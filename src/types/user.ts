@@ -8,8 +8,7 @@ export interface UserItem {
   specialization?: string;
   sub_specialization?: string;
   employer?: string;
-  role?: string;
-  is_admin?: boolean | 0 | 1;
+  role: "system_admin" | "branch_admin" | "user";
 
   status?: "pending" | "approved" | "rejected" | "active";
 
@@ -44,8 +43,7 @@ export interface EditForm {
   specialization: string;
   sub_specialization: string;
   employer: string;
-  role: string;
-  is_admin: boolean;
+  role: "system_admin" | "branch_admin" | "user";
   password: string;
   password_confirmation: string;
 }
@@ -59,8 +57,7 @@ export interface AddForm {
   specialization: string;
   sub_specialization: string;
   employer: string;
-  role: string;
-  is_admin: boolean;
+  role: "system_admin" | "branch_admin" | "user";
   password: string;
   password_confirmation: string;
 }
@@ -74,8 +71,7 @@ export const defaultAddForm: AddForm = {
   specialization: "",
   sub_specialization: "",
   employer: "",
-  role: "member",
-  is_admin: false,
+  role: "user",
   password: "",
   password_confirmation: "",
 };

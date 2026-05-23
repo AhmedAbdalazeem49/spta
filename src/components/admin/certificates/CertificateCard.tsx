@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Certificate } from "@/types/certificate";
 import { getCertificateDate, getCertificateName, getCertificateVerificationUrl, getCertificateWorkshop } from "@/utils/certificateUtils";
-import { Award, Calendar, Clock, Copy, Eye, GraduationCap } from "lucide-react";
+import { Award, Calendar, Copy, Eye, GraduationCap } from "lucide-react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 
 interface CertificateCardProps {

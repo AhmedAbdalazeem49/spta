@@ -118,12 +118,12 @@ export const UsersTable = ({
                 </td>
                 <td className="p-4">
                   <Badge
-                    variant={u.role === "system_admin" ? "default" : u.role === "branch_manager" ? "outline" : "secondary"}
-                    className={`text-xs ${u.role === "branch_manager" ? "border-blue-500 text-blue-500" : ""}`}
+                    variant={u.role === "system_admin" ? "default" : u.role === "branch_admin" ? "outline" : "secondary"}
+                    className={`text-xs ${u.role === "branch_admin" ? "border-blue-500 text-blue-500" : ""}`}
                   >
                     {u.role === "system_admin" 
                       ? t("مدير النظام", "System Admin") 
-                      : u.role === "branch_manager" 
+                      : u.role === "branch_admin" 
                       ? t("مدير فرع", "Branch Manager") 
                       : t("عضو", "Member")}
                   </Badge>
@@ -136,24 +136,14 @@ export const UsersTable = ({
                       { label: string; cls: string; Icon: any }
                     > = {
                       pending: {
-                        label: t("قيد المراجعة", "Pending"),
+                        label: t(" للتفعيل", "Need Verify"),
                         cls: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
                         Icon: Clock,
                       },
                       approved: {
-                        label: t("موافق", "Approved"),
-                        cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
-                        Icon: BadgeCheck,
-                      },
-                      active: {
                         label: t("نشط", "Active"),
                         cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
-                        Icon: CheckCircle2,
-                      },
-                      rejected: {
-                        label: t("مرفوض", "Rejected"),
-                        cls: "bg-red-500/10 text-red-600 border-red-500/30",
-                        Icon: XCircle,
+                        Icon: BadgeCheck,
                       },
                     };
                     const c = config[status] || config.pending;
@@ -168,41 +158,6 @@ export const UsersTable = ({
                 </td>
                 <td className="p-4">
                   <div className="flex items-center gap-1 flex-wrap">
-                    {/* {(u.status === "pending" ||
-                      (!u.status && !u.email_verified_at)) && (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 gap-1 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
-                          onClick={() => onUpdateStatus(u.id, "approved")}
-                          disabled={updatingId === u.id}
-                          title={t("تفعيل", "Verify & Approve")}
-                        >
-                          {updatingId === u.id ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <BadgeCheck className="w-3.5 h-3.5" />
-                          )}
-                          <span className="hidden md:inline text-xs">
-                            {t("تفعيل", "Verify")}
-                          </span>
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 gap-1 text-red-600 border-red-500/30 hover:bg-red-500/10"
-                          onClick={() => onUpdateStatus(u.id, "rejected")}
-                          disabled={updatingId === u.id}
-                          title={t("رفض", "Reject")}
-                        >
-                          <XCircle className="w-3.5 h-3.5" />
-                          <span className="hidden md:inline text-xs">
-                            {t("رفض", "Reject")}
-                          </span>
-                        </Button>
-                      </>
-                    )} */}
                     <Button
                       size="sm"
                       variant="ghost"

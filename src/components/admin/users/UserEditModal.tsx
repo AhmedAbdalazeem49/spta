@@ -173,7 +173,12 @@ export const UserEditModal = ({
               <div className="relative">
                 <Select
                   value={editForm.role}
-                  onValueChange={(val) => setEditForm({ ...editForm, role: val })}
+                  onValueChange={(val) =>
+                    setEditForm({
+                      ...editForm,
+                      role: val as "system_admin" | "branch_admin" | "user",
+                    })
+                  }
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue />
@@ -185,7 +190,7 @@ export const UserEditModal = ({
                         <span>{t("عضو", "Member")}</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="branch_manager">
+                    <SelectItem value="branch_admin">
                       <div className="flex items-center gap-2">
                         <Building2 className="w-4 h-4 text-blue-500" />
                         <span>{t("مدير فرع", "Branch Manager")}</span>

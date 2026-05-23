@@ -22,7 +22,6 @@ import {
   AlertCircle,
   Calendar,
   CheckCircle,
-  Clock,
   GraduationCap,
   ImageOff,
   MapPin,
@@ -32,8 +31,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import QRCode from "react-qr-code";
-import { useNavigate } from "react-router-dom";
+
 
 import { LoginRequiredModal } from "@/components/workshops/LoginRequiredModal";
 import { RegistrationModal } from "@/components/workshops/RegistrationModal";
@@ -292,7 +290,7 @@ const WorkshopsPage = () => {
                   <AnimatePresence>
                     {filteredWorkshops.map((workshop, index) => {
                       const isRegistered = registeredIds.includes(workshop.id);
-                      const attendanceUrl = `${window.location.origin}/workshop/${workshop.id}/attendance`;
+                      
                       const imgSrc = getWorkshopImage(workshop);
                       return (
                         <motion.div
@@ -412,23 +410,7 @@ const WorkshopsPage = () => {
                                 </div>
                               </div>
 
-                              <div className="my-4 flex flex-col items-center gap-2 ">
-                                <div className="bg-white p-2 rounded-lg shadow-sm">
-                                  <QRCode
-                                    value={attendanceUrl}
-                                    size={90}
-                                    bgColor="#ffffff"
-                                    fgColor="#000000"
-                                  />
-                                </div>
 
-                                <p className="text-[11px] text-muted-foreground text-center">
-                                  {t(
-                                    "امسح لتسجيل الحضور",
-                                    "Scan to mark attendance"
-                                  )}
-                                </p>
-                              </div>
 
                               <Button
                                 className="w-full gap-2"

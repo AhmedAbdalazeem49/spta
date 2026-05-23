@@ -20,11 +20,10 @@ interface User {
   specialization?: string;
   sub_specialization?: string;
   employer?: string;
-  is_admin?: boolean | 0 | 1;
+  role: "system_admin" | "branch_admin" | "user";
 
   membership_type?: string;
   status?: UserStatus;
-  role?: string;
   email_verified_at?: string | null;
 
   // 🔥 ADD THESE

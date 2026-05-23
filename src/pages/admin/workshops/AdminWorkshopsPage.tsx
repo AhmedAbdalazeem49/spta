@@ -47,7 +47,7 @@ const AdminWorkshopsPage = () => {
   const fetchWorkshops = async () => {
     setIsLoading(true);
     try {
-      const res = await api.get("/workshops");
+      const res = await api.get("/admin/workshops");
       setWorkshops(res.data?.data || []);
     } catch (err) {
       toast({
@@ -136,12 +136,12 @@ const AdminWorkshopsPage = () => {
     try {
       if (editMode && selected) {
         formData.append("_method", "PUT");
-        await api.post(`/workshops/${selected.id}`, formData, {
+        await api.post(`/admin/workshops/${selected.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         toast({ title: t("تم التحديث", "Updated successfully") });
       } else {
-        await api.post("/workshops", formData, {
+        await api.post("/admin/workshops", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         toast({ title: t("تم الإنشاء", "Created successfully") });
@@ -165,7 +165,7 @@ const AdminWorkshopsPage = () => {
     if (!selected) return;
     setIsSaving(true);
     try {
-      await api.delete(`/workshops/${selected.id}`);
+      await api.delete(`/admin/workshops/${selected.id}`);
       toast({ title: t("تم الحذف", "Deleted successfully") });
       setIsDeleteOpen(false);
       setSelected(null);

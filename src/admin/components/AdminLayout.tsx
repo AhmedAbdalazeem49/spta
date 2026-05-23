@@ -33,44 +33,52 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const isSystemAdmin = user?.role === "system_admin";
+
   const navItems = [
     {
       path: "/admin",
       icon: LayoutDashboard,
       labelAr: "لوحة التحكم",
       labelEn: "Dashboard",
+      systemAdminOnly: false,
     },
     {
       path: "/admin/users",
       icon: Users,
       labelAr: "المستخدمون",
       labelEn: "Users",
+      systemAdminOnly: true,
     },
     {
       path: "/admin/workshops",
       icon: GraduationCap,
       labelAr: "ورش العمل",
       labelEn: "Workshops",
+      systemAdminOnly: false,
     },
     {
       path: "/admin/certificates",
       icon: Award,
       labelAr: "الشهادات",
       labelEn: "Certificates",
+      systemAdminOnly: false,
     },
     {
       path: "/admin/coupons",
       icon: Ticket,
       labelAr: "أكواد الخصم",
       labelEn: "Coupons",
+      systemAdminOnly: false,
     },
     {
       path: "/admin/memberships",
       icon: Crown,
       labelAr: "الأعضاء",
       labelEn: "Memberships",
+      systemAdminOnly: true,
     },
-  ];
+  ].filter((item) => !item.systemAdminOnly || isSystemAdmin);
 
   const isActive = (path: string) => {
     if (path === "/admin") return location.pathname === "/admin";

@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import api from "@/services/api";
 import { motion } from "framer-motion";
-import { Award, CheckCircle2, Clock, Calendar, Stamp } from "lucide-react";
+import { Award, Stamp } from "lucide-react";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 
@@ -18,7 +18,6 @@ interface Cert {
   issued_at?: string;
   workshop_date?: string;
   status?: string;
-  verification_code?: string;
 }
 
 interface CertificateSettings {
@@ -44,7 +43,7 @@ const storageUrl = (path: string | null | undefined): string => {
 const formatDate = (raw?: string): string => {
   if (!raw) return "—";
   try {
-    return new Date(raw).toLocaleDateString("ar-SA", {
+    return new Date(raw).toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -89,13 +88,9 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
 
   const qrValue = cert.serial_number
     ? `https://spta-one.vercel.app/certificate/verify/${cert.serial_number}`
-    : cert.verification_code
-    ? `https://spta-one.vercel.app/certificate/verify/${cert.verification_code}`
     : `https://spta-one.vercel.app/certificate/verify/${cert.id}`;
 
-  const recipientName =
-    cert.recipient_name ||
-    "—";
+  const recipientName = cert.recipient_name || "—";
 
   const workshopTitle =
     t(cert.workshop_title_ar || "", cert.workshop_title || "") ||
@@ -116,27 +111,29 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
       style={{ letterSpacing: "0.18em" }}
     >
       {t(
-        "الجمعية السعودية للعلاج الطبيعي",
+        "Saudi Physical Therapy Association",
         "Saudi Physical Therapy Association"
       )}
     </p>
   );
 
   const VerifiedBadge = isVerified ? (
-    <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
-      <CheckCircle2 className="w-3 h-3 me-1" />
-      {t("موثقة", "Verified")}
-    </Badge>
+    <Badge className=" text-emerald-600 bg-transparent">{t("Verified", "Verified")}</Badge>
   ) : null;
 
   // Pills for date
   const MetaRow = (
     <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-      <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-black/5 border border-black/10">
-        <Calendar className="w-3 h-3" />
+      <span className="flex items-center gap-1 px-3 py-1 text-xs">
         {issueDate}
       </span>
       {VerifiedBadge}
+
+      {cert.serial_number && (
+        <span className="flex items-center gap-1 px-3 py-1 font-mono tracking-wide">
+          {cert.serial_number}
+        </span>
+      )}
     </div>
   );
 
@@ -154,7 +151,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
       }`}
     >
       {/* Stamp */}
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center gap-1 w-44">
         {settings.stamp_image ? (
           <img
             src={storageUrl(settings.stamp_image)}
@@ -178,7 +175,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             dark ? "text-white/40" : "text-black/40"
           }`}
         >
-          {t("الختم الرسمي", "Official Stamp")}
+          {t("Official Stamp", "Official Stamp")}
         </p>
       </div>
 
@@ -192,7 +189,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             dark ? "text-white/40" : "text-black/40"
           }`}
         >
-          {t("امسح للتحقق", "Scan to Verify")}
+          {t("", "")}
         </p>
       </div>
 
@@ -215,7 +212,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         <div
           className={`h-px w-28 ${dark ? "bg-white/20" : "bg-black/15"} mt-0.5`}
         />
-        <p
+        {/* <p
           className={`text-xs font-semibold ${
             dark ? "text-white/90" : "text-gray-800"
           }`}
@@ -224,14 +221,14 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           }}
         >
           {settings.chairman_name || t("رئيس الجمعية", "Chairman")}
-        </p>
+        </p> */}
         <p
           className={`text-[9px] text-center leading-tight ${
             dark ? "text-white/45" : "text-black/45"
           }`}
         >
           {t(
-            "رئيس الجمعية السعودية للعلاج الطبيعي",
+            "President, Saudi Physical Therapy Association",
             "President, Saudi Physical Therapy Association"
           )}
         </p>
@@ -263,31 +260,36 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           <Award className="w-9 h-9 mx-auto opacity-80" />
           {OrgHeader}
           <h3 className="text-xl font-black tracking-wide">
-            {t("شهادة إتمام", "Certificate of Completion")}
+            {t("Certificate of Completion", "Certificate of Completion")}
           </h3>
 
           <p className="text-xs opacity-60">
-            {t("يُشهد بأن", "This is to certify that")}
+            {t("This is to certify that", "This is to certify that")}
           </p>
           <p className="text-2xl font-bold">{recipientName}</p>
 
           <p className="text-sm opacity-80 max-w-xs mx-auto leading-snug">
-            {t("أتم بنجاح", "has successfully completed")}{" "}
+            {t("has successfully completed", "has successfully completed")}{" "}
             <span className="font-semibold">"{workshopTitle}"</span>
           </p>
 
           {/* Meta */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">
-              <Calendar className="w-3 h-3" />
+            <span className="flex items-center gap-1 px-3 py-1 text-xs">
               {issueDate}
             </span>
           </div>
 
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+            <span className="flex items-center gap-1 px-3 py-1 text-xs">
+              {cert.serial_number}
+            </span>
+          </div>
+
+
           {isVerified && (
-            <Badge className="bg-emerald-400/15 text-emerald-300 border-emerald-400/30">
-              <CheckCircle2 className="w-3 h-3 me-1" />
-              {t("موثقة", "Verified")}
+            <Badge className=" text-white bg-transparent">
+              {t("Verified", "Verified")}
             </Badge>
           )}
         </div>
@@ -324,27 +326,27 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           <Stamp className="w-8 h-8 mx-auto text-amber-600" />
           <p className="text-[10px] uppercase tracking-widest text-amber-700/60">
             {t(
-              "الجمعية السعودية للعلاج الطبيعي",
+              "Saudi Physical Therapy Association",
               "Saudi Physical Therapy Association"
             )}
           </p>
           <h3 className="text-xl font-black text-amber-900">
-            {t("شهادة تقدير", "Certificate of Excellence")}
+            {t("Certificate of Excellence", "Certificate of Excellence")}
           </h3>
           <p className="text-xs text-amber-700/70">
-            {t("يُشهد بأن", "This is to certify that")}
+            {t("This is to certify that", "This is to certify that")}
           </p>
           <p className="text-2xl font-bold text-amber-900">{recipientName}</p>
           <p className="text-sm text-amber-800/80 max-w-xs mx-auto leading-snug">
-            {t("أتم بنجاح", "has successfully completed")}{" "}
+            {t("has successfully completed", "has successfully completed")}{" "}
             <span className="font-semibold">"{workshopTitle}"</span>
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 border border-amber-300/50 text-amber-800 text-xs">
-              <Calendar className="w-3 h-3" />
+            <span className="flex items-center gap-1 px-3 py-1 text-xs">
               {issueDate}
             </span>
+            {cert.serial_number}
             {VerifiedBadge}
           </div>
         </div>
@@ -367,27 +369,27 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
       >
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
           {t(
-            "الجمعية السعودية للعلاج الطبيعي",
+            "Saudi Physical Therapy Association",
             "Saudi Physical Therapy Association"
           )}
         </p>
 
         <p className="text-xs text-muted-foreground mb-1">
-          {t("يُشهد بأن", "This is to certify that")}
+          {t("This is to certify that", "This is to certify that")}
         </p>
         <p className="text-3xl font-black text-primary leading-tight mb-1">
           {recipientName}
         </p>
         <p className="text-sm font-medium text-foreground/80 mb-3 max-w-sm leading-snug">
-          {t("أتم بنجاح", "has successfully completed")}{" "}
+          {t("has successfully completed", "has successfully completed")}{" "}
           <span className="font-bold">"{workshopTitle}"</span>
         </p>
 
         <div className="flex flex-wrap gap-2 mb-1">
-          <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-muted text-xs">
-            <Calendar className="w-3 h-3" />
+          <span className="flex items-center gap-1 px-3 py-1 text-xs">
             {issueDate}
           </span>
+          {cert.serial_number}
           {VerifiedBadge}
         </div>
 
@@ -417,17 +419,17 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         {OrgHeader}
 
         <h3 className="text-xl font-black text-foreground">
-          {t("شهادة حضور", "Certificate of Attendance")}
+          {t("Certificate of Attendance", "Certificate of Attendance")}
         </h3>
 
         <p className="text-xs text-muted-foreground">
-          {t("يُشهد بأن", "This is to certify that")}
+          {t("This is to certify that", "This is to certify that")}
         </p>
 
         <p className="text-2xl font-bold text-primary">{recipientName}</p>
 
         <p className="text-sm text-foreground/75 max-w-xs mx-auto leading-snug">
-          {t("أتم بنجاح حضور", "has successfully attended")}{" "}
+          {t("has successfully attended", "has successfully attended")}{" "}
           <span className="font-semibold text-foreground">
             "{workshopTitle}"
           </span>

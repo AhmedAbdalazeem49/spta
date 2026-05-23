@@ -1,3 +1,4 @@
+import { api } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,21 +19,21 @@ import {
 } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
+  AlertCircle,
+  Building2,
   CheckCircle,
   Edit,
   Gift,
+  GraduationCap,
+  Loader2,
   Percent,
   Plus,
   Sparkles,
-  AlertCircle,
-  Building2,
   Users,
-  GraduationCap,
-  Loader2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { api } from "@/api";
 
+import { useAuth } from "@/contexts/AuthContext";
 
 // --------------------
 // TYPES
@@ -69,7 +70,7 @@ interface Props {
 // API FETCH (WORKSHOPS)
 // --------------------
 export async function fetchWorkshops(): Promise<Workshop[]> {
-  const res = await api.get("/workshops");
+  const res = await api.get("/admin/workshops");
 
   // Laravel standard response support
   return res.data?.data ?? res.data ?? [];
@@ -89,6 +90,8 @@ export const PromoCodeFormModal = ({
   const [error, setError] = useState<string | null>(null);
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [loadingWorkshops, setLoadingWorkshops] = useState(false);
+  const { user } = useAuth();
+  const isSystemAdmin = user?.role === "system_admin";
 
   // --------------------
   // LOAD WORKSHOPS
@@ -301,9 +304,14 @@ export const PromoCodeFormModal = ({
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
+
               <SelectContent>
-                <SelectItem value="all">🌍 {t("الكل", "All")}</SelectItem>
-                <SelectItem value="membership">👤 Membership</SelectItem>
+                {isSystemAdmin && (
+                  <SelectItem value="all">🌍 {t("الكل", "All")}</SelectItem>
+                )}
+                {isSystemAdmin && (
+                  <SelectItem value="membership">👤 Membership</SelectItem>
+                )}
                 <SelectItem value="workshop">🎓 Workshop</SelectItem>
               </SelectContent>
             </Select>

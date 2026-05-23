@@ -319,9 +319,7 @@ export const WorkshopSubscriptionsModal = ({
   const attendedCount = subscribers.filter(
     (s) => s.attendance === "attended"
   ).length;
-  const certIssuedCount = subscribers.filter(
-    (s) => s.certificate_issued
-  ).length;
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -348,11 +346,6 @@ export const WorkshopSubscriptionsModal = ({
                 <span className="flex items-center gap-1.5 text-emerald-600">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   {t("حاضر", "Attended")}: <strong>{attendedCount}</strong>
-                </span>
-                <span className="flex items-center gap-1.5 text-primary">
-                  <Medal className="w-3.5 h-3.5" />
-                  {t("شهادات", "Certificates")}:{" "}
-                  <strong>{certIssuedCount}</strong>
                 </span>
               </div>
             </div>

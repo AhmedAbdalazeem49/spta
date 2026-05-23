@@ -21,16 +21,17 @@ import {
   Clock,
   Crown,
   Edit,
+  CreditCard,
+  ShieldAlert,
+  UserCheck,
   Eye,
   GraduationCap,
   Hash,
   Loader2,
   Plus,
-  RefreshCw,
   Search,
   Shield,
   Trash2,
-  User,
   Users,
   XCircle,
 } from "lucide-react";
@@ -700,54 +701,142 @@ const MembershipAddModal = ({
 
 // ─── Delete Modal ─────────────────────────────────────────────────────────────
 
-const MembershipDeleteModal = ({
+
+
+interface MembershipDeleteModalProps {
+  isOpen: boolean;
+  onOpenChange: (v: boolean) => void;
+  onDelete: () => void;
+  isDeleting: boolean;
+  membership: any | null;
+}
+
+export const MembershipDeleteModal = ({
   isOpen,
   onOpenChange,
   onDelete,
   isDeleting,
   membership,
-}: {
-  isOpen: boolean;
-  onOpenChange: (v: boolean) => void;
-  onDelete: () => void;
-  isDeleting: boolean;
-  membership: MembershipItem | null;
-}) => {
+}: MembershipDeleteModalProps) => {
   const { t } = useLanguage();
+
+  const formatDate = (d?: string) => (d ? d.split("T")[0] : "");
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="rounded-2xl">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-            <Trash2 className="w-5 h-5" />
-            {t("حذف العضوية", "Delete Membership")}
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-start">
-            {t(
-              "هل أنت متأكد من حذف هذه العضوية؟ لا يمكن التراجع عن هذا الإجراء.",
-              "Are you sure you want to delete this membership? This action cannot be undone."
-            )}
-            {membership && (
-              <span className="block mt-2 font-mono font-semibold text-foreground">
-                {membership.membership_number}
-              </span>
-            )}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="gap-2">
-          <AlertDialogCancel>{t("إلغاء", "Cancel")}</AlertDialogCancel>
+      <AlertDialogContent className="p-0 overflow-hidden rounded-[28px] border border-red-200/30 shadow-2xl max-w-2xl">
+        {/* ───────── HEADER ───────── */}
+        <div className="relative bg-gradient-to-br from-red-600 via-red-700 to-red-900 text-white p-6">
+          <div className="absolute -top-20 -right-20 w-72 h-72 bg-white/10 blur-3xl rounded-full" />
+
+          <AlertDialogHeader className="relative">
+            <AlertDialogTitle className="flex items-center gap-3 text-2xl font-black">
+              <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center">
+                <ShieldAlert className="w-6 h-6 text-yellow-300" />
+              </div>
+
+              {t("تأكيد حذف العضوية", "Delete Membership")}
+            </AlertDialogTitle>
+
+            <AlertDialogDescription className="text-red-100 mt-2">
+              {t(
+                "سيتم حذف العضوية بشكل نهائي من النظام",
+                "This membership will be permanently removed from the system"
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+        </div>
+
+        {/* ───────── CONTENT ───────── */}
+        <div className="p-6 space-y-5">
+          {/* MEMBERSHIP CARD */}
+          {membership && (
+            <div className="rounded-2xl border bg-muted/30 p-5 space-y-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[3px] text-muted-foreground">
+                    Membership Number
+                  </p>
+
+                  <h3 className="text-lg font-black mt-1">
+                    {membership.membership_number}
+                  </h3>
+                </div>
+
+                <span className="px-3 py-1 text-xs rounded-full bg-red-500/10 text-red-600">
+                  {membership.status}
+                </span>
+              </div>
+
+              {/* DETAILS GRID */}
+              <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground">
+                {membership.membership_type && (
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4" />
+                    Type: {membership.membership_type}
+                  </div>
+                )}
+
+                {membership.starts_at && (
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    Start: {formatDate(membership.starts_at)}
+                  </div>
+                )}
+
+                {membership.ends_at && (
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    End: {formatDate(membership.ends_at)}
+                  </div>
+                )}
+
+                {membership.id && (
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="w-4 h-4" />
+                    ID: {membership.id}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* WARNING BOX */}
+          <div className="rounded-2xl border border-red-200/40 bg-red-50 p-4 flex items-start gap-3">
+            <ShieldAlert className="w-5 h-5 text-red-600 mt-0.5" />
+
+            <div>
+              <p className="font-semibold text-red-700">
+                {t("تحذير خطير", "Critical Warning")}
+              </p>
+
+              <p className="text-sm text-red-600 mt-1">
+                {t(
+                  "سيتم حذف العضوية وجميع بياناتها بشكل نهائي ولا يمكن استرجاعها",
+                  "This membership and all its data will be permanently deleted and cannot be recovered"
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ───────── ACTIONS ───────── */}
+        <AlertDialogFooter className="p-5 border-t bg-background flex-row justify-end gap-3">
+          <AlertDialogCancel className="rounded-xl">
+            {t("إلغاء", "Cancel")}
+          </AlertDialogCancel>
+
           <AlertDialogAction
             onClick={onDelete}
             disabled={isDeleting}
-            className="bg-destructive hover:bg-destructive/90 gap-2"
+            className="bg-red-600 hover:bg-red-700 gap-2 rounded-xl shadow-lg"
           >
             {isDeleting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Trash2 className="w-4 h-4" />
             )}
-            {t("حذف", "Delete")}
+            {t("حذف نهائي", "Delete Permanently")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

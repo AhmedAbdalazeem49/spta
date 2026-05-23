@@ -21,7 +21,8 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const isAdmin = user?.is_admin == 1;
+  const isAdmin =
+    user?.role === "system_admin" || user?.role === "branch_admin";
 
   if (!isAdmin) {
     return (

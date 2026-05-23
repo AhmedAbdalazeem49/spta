@@ -75,7 +75,7 @@ export const CertificateSettingsModal = ({
       if (settings.stamp_image instanceof File)
         formData.append("stamp_image", settings.stamp_image);
 
-      const res = await api.post("/certificate-settings", formData, {
+      const res = await api.post("/admin/certificate-settings", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

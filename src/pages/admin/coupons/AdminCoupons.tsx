@@ -49,7 +49,7 @@ const AdminPromoCodes = () => {
   const fetchCoupons = async () => {
     setIsLoading(true);
     try {
-      const res = await api.get("/promo-codes");
+      const res = await api.get("admin/promo-codes");
       const raw: any[] = res.data?.data ?? [];
       setCoupons(raw.map(mapApiCoupon));
     } catch (err) {
@@ -125,7 +125,7 @@ const AdminPromoCodes = () => {
   const handleCreate = async () => {
     setIsSubmitting(true);
     try {
-      const res = await api.post("/promo-codes", buildPayload());
+      const res = await api.post("admin/promo-codes", buildPayload());
       setCoupons((prev) => [mapApiCoupon(res.data.data), ...prev]);
       setIsCreateOpen(false);
     } finally {
@@ -139,7 +139,7 @@ const AdminPromoCodes = () => {
     setIsSubmitting(true);
     try {
       const res = await api.put(
-        `/promo-codes/${selectedCoupon.id}`,
+        `admin/promo-codes/${selectedCoupon.id}`,
         buildPayload()
       );
 
@@ -159,7 +159,7 @@ const AdminPromoCodes = () => {
   const handleDelete = async () => {
     if (!selectedCoupon) return;
 
-    await api.delete(`/promo-codes/${selectedCoupon.id}`);
+    await api.delete(`admin/promo-codes/${selectedCoupon.id}`);
 
     setCoupons((prev) => prev.filter((c) => c.id !== selectedCoupon.id));
 
@@ -185,7 +185,7 @@ const AdminPromoCodes = () => {
 
 
       {/* FILTERS */}
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-3">
         <Input
           placeholder="Search code..."
           value={searchQuery}
@@ -193,7 +193,7 @@ const AdminPromoCodes = () => {
         />
 
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -204,7 +204,7 @@ const AdminPromoCodes = () => {
         </Select>
 
         <Select value={filterScope} onValueChange={setFilterScope}>
-          <SelectTrigger className="w-44">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

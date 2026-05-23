@@ -143,6 +143,9 @@ function validate(
       );
   }
 
+  if (!form.image)
+    errors.image = t("الصورة التعريفية للورشة مطلوبة", "Image is required");
+
   return errors;
 }
 
@@ -238,7 +241,7 @@ export const WorkshopFormModal = ({
 
   const [isNotifying, setIsNotifying] = useState(false);
   const [notified, setNotified] = useState(false);
-  const [cooldown, setCooldown] = useState(0); // seconds remaining
+  const [cooldown, setCooldown] = useState(0);
 
   const handleNotifySubscribers = async () => {
     if (!workshopId) return;

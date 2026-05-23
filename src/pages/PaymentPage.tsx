@@ -1,24 +1,26 @@
+import { api } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { paymentService } from "@/services/payment.service";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
+  AlertCircle,
   ArrowRight,
   CheckCircle2,
   CreditCard,
   Loader2,
   Lock,
+  PartyPopper,
   Receipt,
   Smartphone,
   Tag,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
-// Define payment methods
 const PAYMENT_METHODS = [
   {
     id: "mada",
@@ -54,13 +56,109 @@ const PAYMENT_METHODS = [
   },
 ];
 
+// ── Error Modal ───────────────────────────────────────────────────────────────
+const ErrorModal = ({
+  open,
+  message,
+  onClose,
+}: {
+  open: boolean;
+  message: string;
+  onClose: () => void;
+}) => (
+  <AnimatePresence>
+    {open && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-black/50"
+          onClick={onClose}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="relative bg-background rounded-2xl shadow-xl p-6 w-full max-w-sm border border-border"
+        >
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <div className="flex flex-col items-center text-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center">
+              <AlertCircle className="w-7 h-7 text-red-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-1">خطأ في الكوبون</h3>
+              <p className="text-muted-foreground text-sm">{message}</p>
+            </div>
+            <Button className="w-full" onClick={onClose}>
+              حسناً
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);
+
+// ── Free Registration Success Modal ──────────────────────────────────────────
+const FreeSuccessModal = ({
+  open,
+  onGoToProfile,
+}: {
+  open: boolean;
+  onGoToProfile: () => void;
+}) => (
+  <AnimatePresence>
+    {open && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-black/50"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="relative bg-background rounded-2xl shadow-xl p-6 w-full max-w-sm border border-border"
+        >
+          <div className="flex flex-col items-center text-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center">
+              <PartyPopper className="w-7 h-7 text-emerald-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-1">تم التسجيل بنجاح!</h3>
+              <p className="text-muted-foreground text-sm">
+                لقد تم تسجيلك في الورشة بنجاح. يمكنك متابعة تفاصيل تسجيلاتك من
+                صفحة الملف الشخصي.
+              </p>
+            </div>
+            <Button className="w-full" onClick={onGoToProfile}>
+              الذهاب إلى الملف الشخصي
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);
+
+// ── Main Page ─────────────────────────────────────────────────────────────────
 const PaymentPage = () => {
   const { t, isRTL } = useLanguage();
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const type = location.state?.type; // "membership" | "workshop"
+  const type = location.state?.type;
   const item = location.state?.item;
 
   const [loading, setLoading] = useState(false);
@@ -68,10 +166,16 @@ const PaymentPage = () => {
 
   const [couponCode, setCouponCode] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
-  const [discount, setDiscount] = useState(0); // Value from 0 to 1
+  const [discount, setDiscount] = useState(0);
   const [isFree, setIsFree] = useState(item?.isFree || item?.price === 0);
 
-  // If no item, redirect back
+  // Modals
+  const [errorModal, setErrorModal] = useState<{
+    open: boolean;
+    message: string;
+  }>({ open: false, message: "" });
+  const [freeSuccessModal, setFreeSuccessModal] = useState(false);
+
   if (!item) {
     navigate("/");
     return null;
@@ -81,36 +185,53 @@ const PaymentPage = () => {
   const finalPrice = Math.max(0, basePrice - basePrice * discount);
   const isCurrentlyFree = isFree || finalPrice === 0;
 
+  const showError = (message: string) => setErrorModal({ open: true, message });
+
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
-
     setCouponLoading(true);
     try {
-      // Fake API call to validate coupon
-      await new Promise((res) => setTimeout(res, 800));
+      const res = await api.post("/promo-codes/validate", {
+        code: couponCode,
+        applies_to: type === "workshop" ? "workshop" : "membership",
+        applies_to_id: item?.key || null,
+      });
 
-      // Demo logic:
-      if (couponCode.toUpperCase() === "FREE100") {
+      const promo = res.data?.data;
+
+      if (promo.type === "free" || promo.discount_percentage === 100) {
         setDiscount(1);
         setIsFree(true);
-        toast.success(
-          t(
-            "تم تطبيق الكوبون المجاني بنجاح!",
-            "Free coupon applied successfully!"
-          )
-        );
-      } else if (couponCode.toUpperCase() === "DISCOUNT50") {
-        setDiscount(0.5);
-        toast.success(
-          t("تم تطبيق خصم 50% بنجاح!", "50% discount applied successfully!")
-        );
       } else {
-        toast.error(t("كوبون غير صالح", "Invalid coupon code"));
-        setDiscount(0);
+        setDiscount(promo.discount_percentage / 100);
       }
-    } catch (err) {
-      toast.error(
-        t("حدث خطأ أثناء التحقق من الكوبون", "Error validating coupon")
+    } catch (err: any) {
+      const msg = err.response?.data?.message;
+      setDiscount(0);
+      setIsFree(false);
+
+      const errorMessages: Record<string, string> = {
+        "Promo not started yet": t(
+          "الكوبون لم يبدأ بعد",
+          "Promo not started yet"
+        ),
+        "Promo expired": t("انتهت صلاحية الكوبون", "Promo expired"),
+        "Promo usage limit reached": t(
+          "تم استنفاد الحد المسموح به",
+          "Usage limit reached"
+        ),
+        "Promo not valid for this type": t(
+          "الكوبون غير صالح لهذا النوع",
+          "Promo not valid for this type"
+        ),
+        "Promo not valid for this item": t(
+          "الكوبون غير صالح لهذه الورشة",
+          "Promo not valid for this item"
+        ),
+      };
+
+      showError(
+        errorMessages[msg] ?? t("كوبون غير صالح", "Invalid coupon code")
       );
     } finally {
       setCouponLoading(false);
@@ -120,27 +241,38 @@ const PaymentPage = () => {
   const handleProcessPayment = async () => {
     try {
       setLoading(true);
-
       const payload = {
-        type: type === "workshop" ? "workshop" : "membership",
+        type: (type === "workshop" ? "workshop" : "membership") as
+          | "workshop"
+          | "membership",
         reference_id: item.key,
         payment_method: selectedMethod,
-        promo_code: couponCode || null,
+        promo_code: couponCode || undefined,
       };
 
       const res = await paymentService.create(payload);
-
       const paymentUrl = res?.payment_url;
+      // free registration — show success modal instead of hitting payment
+
+      if (!paymentUrl && isCurrentlyFree) {
+        setFreeSuccessModal(true);
+        return;
+      }
 
       if (!paymentUrl) {
-        toast.error("Payment URL not found");
+        showError(t("لم يتم العثور على رابط الدفع", "Payment URL not found"));
         return;
       }
 
       window.location.href = paymentUrl;
     } catch (err) {
       console.error(err);
-      toast.error("Payment failed");
+      showError(
+        t(
+          "فشلت عملية الدفع، يرجى المحاولة مرة أخرى",
+          "Payment failed, please try again"
+        )
+      );
     } finally {
       setLoading(false);
     }
@@ -148,6 +280,17 @@ const PaymentPage = () => {
 
   return (
     <div className="min-h-screen bg-muted/30 py-12 lg:py-24">
+      {/* Modals */}
+      <ErrorModal
+        open={errorModal.open}
+        message={errorModal.message}
+        onClose={() => setErrorModal({ open: false, message: "" })}
+      />
+      <FreeSuccessModal
+        open={freeSuccessModal}
+        onGoToProfile={() => navigate("/profile")}
+      />
+
       <div className="container-custom max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">
@@ -162,7 +305,6 @@ const PaymentPage = () => {
         </div>
 
         <div className="grid lg:grid-cols-5 gap-8">
-          {/* Main Payment Section */}
           <div className="lg:col-span-3 space-y-6">
             {!isCurrentlyFree && (
               <motion.div
@@ -174,7 +316,6 @@ const PaymentPage = () => {
                   <CreditCard className="w-5 h-5 text-primary" />
                   {t("طرق الدفع", "Payment Methods")}
                 </h2>
-
                 <div className="grid sm:grid-cols-2 gap-4">
                   {PAYMENT_METHODS.map((method) => {
                     const isSelected = selectedMethod === method.id;
@@ -212,7 +353,6 @@ const PaymentPage = () => {
               </motion.div>
             )}
 
-            {/* Security Note */}
             <div className="flex items-center gap-3 p-4 rounded-xl bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800/50 text-sm">
               <Lock className="w-5 h-5 shrink-0" />
               <p>
@@ -224,7 +364,6 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -270,8 +409,7 @@ const PaymentPage = () => {
                 )}
               </div>
 
-              {/* Promo Code Section */}
-              <div className="mb-6 pt-6 border-t border-border hidden">
+              <div className="mb-6 pt-6 border-t border-border">
                 <label className="text-sm font-medium mb-2 flex items-center gap-2">
                   <Tag className="w-4 h-4" />
                   {t("كوبون الخصم", "Promo Code")}
@@ -303,13 +441,11 @@ const PaymentPage = () => {
                   <span className="text-base font-bold">
                     {t("الإجمالي", "Total")}
                   </span>
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-primary">
-                      {finalPrice === 0
-                        ? t("مجاني", "Free")
-                        : `${finalPrice} ${t("ريال", "SAR")}`}
-                    </span>
-                  </div>
+                  <span className="text-2xl font-bold text-primary">
+                    {finalPrice === 0
+                      ? t("مجاني", "Free")
+                      : `${finalPrice} ${t("ريال", "SAR")}`}
+                  </span>
                 </div>
               </div>
 

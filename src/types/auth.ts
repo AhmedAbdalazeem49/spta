@@ -1,5 +1,5 @@
 export type UserStatus = "pending" | "approved" | "rejected" | "active";
-export type UserRole = "admin" | "user";
+export type UserRole = "system_admin" | "branch_admin" | "user";
 
 export interface User {
   id: number;
@@ -9,7 +9,6 @@ export interface User {
   national_id?: string;
   classification_number?: string;
   role: UserRole;
-  is_admin?: boolean | 0 | 1;
   status: UserStatus;
   email_verified_at?: string | null;
   membership_type?: string | null;

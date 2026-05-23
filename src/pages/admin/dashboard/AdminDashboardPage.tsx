@@ -1,6 +1,7 @@
 // AdminDashboardPage.tsx
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import api from "@/services/api";
 import { motion } from "framer-motion";
@@ -18,6 +19,9 @@ import { Link } from "react-router-dom";
 
 const AdminDashboardPage = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const isSystemAdmin = user?.role === "system_admin";
+  const isBranchAdmin = user?.role === "branch_admin";
   const [stats, setStats] = useState({
     users: 0,
     workshops: 0,
@@ -37,10 +41,10 @@ const AdminDashboardPage = () => {
           certificateRes,
         ] = await Promise.allSettled([
           api.get("/admin/users"),
-          api.get("/workshops"),
+          api.get("/admin/workshops"),
           api.get("/admin/memberships"),
-          api.get("/promo-codes"),
-          api.get("/certificates"),
+          api.get("/admin/promo-codes"),
+          api.get("admin/certificates"),
         ]);
 
         setStats({
@@ -90,6 +94,7 @@ const AdminDashboardPage = () => {
       icon: Users,
       color: "from-brand-blue to-deep-blue",
       link: "/admin/users",
+      systemAdminOnly: true,
     },
     {
       title: t("ورش العمل", "Workshops"),
@@ -97,14 +102,15 @@ const AdminDashboardPage = () => {
       icon: GraduationCap,
       color: "from-teal to-aqua-teal",
       link: "/admin/workshops",
+      systemAdminOnly: false,
     },
     {
       title: t("العضويات", "Memberships"),
       count: stats.memberships,
       icon: Crown,
       color: "from-purple-500 to-purple-700",
-
       link: "/admin/memberships",
+      systemAdminOnly: true,
     },
     {
       title: t("الشهادات", "Certificates"),
@@ -112,6 +118,7 @@ const AdminDashboardPage = () => {
       icon: Award,
       color: "from-deep-blue to-midnight",
       link: "/admin/certificates",
+      systemAdminOnly: false,
     },
     {
       title: t("أكواد الخصم", "Coupons"),
@@ -119,8 +126,9 @@ const AdminDashboardPage = () => {
       icon: Ticket,
       color: "from-mint to-teal",
       link: "/admin/coupons",
+      systemAdminOnly: false,
     },
-  ];
+  ].filter((card) => !card.systemAdminOnly || isSystemAdmin);
 
   return (
     <div className="space-y-6">

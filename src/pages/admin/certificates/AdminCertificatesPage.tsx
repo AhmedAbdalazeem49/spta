@@ -2,6 +2,7 @@ import { CertificateEditModal } from "@/components/admin/certificates/Certificat
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
@@ -40,7 +41,7 @@ import { AlertTriangle, Eye, X } from "lucide-react";
 const AdminCertificatesPage = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
-
+  const { user } = useAuth();
   // Data state
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -218,7 +219,6 @@ const AdminCertificatesPage = () => {
 
   const previewDate = form.issueDate || (selectedWorkshop?.date ?? "") || "—";
 
-
   const handleAddOpen = () => {
     setForm({ ...EMPTY_FORM });
     setAddStep("form");
@@ -322,21 +322,23 @@ const AdminCertificatesPage = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button
+          {/* <Button
             onClick={handleAddOpen}
             className="gap-2 bg-primary hover:bg-primary/90"
           >
             <Plus className="w-4 h-4" />
             {t("إضافة شهادة", "Add Certificate")}
-          </Button>
-          <Button
-            onClick={() => setIsSettingsOpen(true)}
-            variant="outline"
-            className="gap-2"
-          >
-            <Settings className="w-4 h-4" />
-            {t("إعدادات الشهادة", "Certificate Settings")}
-          </Button>
+          </Button> */}
+          {user?.role === "system_admin" && (
+            <Button
+              onClick={() => setIsSettingsOpen(true)}
+              variant="outline"
+              className="gap-2"
+            >
+              <Settings className="w-4 h-4" />
+              {t("إعدادات الشهادة", "Certificate Settings")}
+            </Button>
+          )}
         </div>
       </div>
       <Tabs defaultValue="certificates" className="space-y-6">

@@ -165,9 +165,9 @@ const CertificateVerifyPage = () => {
                     recipient_name: data?.recipient_name,
                     workshop_title: data?.workshop_title,
                     issue_date: data?.issue_date,
-                    status: data?.status || "verified",
+                    status: data?.status || "Not Verified",
                   }}
-                  template="classic"
+                  template="modern"
                 />
               </motion.div>
 
@@ -182,10 +182,7 @@ const CertificateVerifyPage = () => {
                       </span>
                     </div>
 
-                    <Badge className="bg-green-100 text-green-700">
-                      <CheckCircle2 className="w-3 h-3 mr-1" />
-                      {t("صالحة", "Valid")}
-                    </Badge>
+                    
                   </div>
 
                   <div className="grid gap-3 text-sm">
@@ -207,7 +204,7 @@ const CertificateVerifyPage = () => {
                       <span className="text-muted-foreground">
                         {t("التاريخ", "Date")}
                       </span>
-                      <span>{data?.issue_date}</span>
+                      <span>{data?.issue_date?.split("T")[0]}</span>
                     </div>
 
                     <div className="flex justify-between">

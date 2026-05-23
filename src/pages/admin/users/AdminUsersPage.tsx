@@ -50,8 +50,7 @@ const AdminUsersPage = () => {
     specialization: "",
     sub_specialization: "",
     employer: "",
-    role: "member",
-    is_admin: false,
+    role: "user",
     password: "",
     password_confirmation: "",
   });
@@ -144,8 +143,7 @@ const AdminUsersPage = () => {
       specialization: u.specialization || "",
       sub_specialization: u.sub_specialization || "",
       employer: u.employer || "",
-      role: u.role || "member",
-      is_admin: u.is_admin == 1 || u.is_admin === true,
+      role: u.role || "user",
       password: "",
       password_confirmation: "",
     });
@@ -429,6 +427,7 @@ const AdminUsersPage = () => {
         onOpenChange={setIsDeleteOpen}
         onDelete={handleDelete}
         isDeleting={isDeleting}
+        selected={selectedUser}
       />
     </div>
   );

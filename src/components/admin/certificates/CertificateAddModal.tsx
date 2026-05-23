@@ -442,18 +442,21 @@ export const CertificateAddModal = ({
                   <div className="text-center mb-4">
                     <Award className="w-8 h-8 mx-auto mb-1 text-green-accent" />
                     <h2 className="text-xl font-bold">
-                      {t("شهادة حضور", "Certificate of Attendance")}
+                      {t(
+                        "Certificate of Attendance",
+                        "Certificate of Attendance"
+                      )}
                     </h2>
                     <p className="text-xs text-blue-pale">
                       {t(
-                        "الجمعية السعودية للعلاج الطبيعي",
+                        "Saudi Physical Therapy Association",
                         "Saudi Physical Therapy Association"
                       )}
                     </p>
                   </div>
                   <div className="flex-1 flex flex-col items-center justify-center text-center">
                     <p className="text-sm mb-2 text-blue-pale">
-                      {t("تشهد الجمعية بأن", "This is to certify that")}
+                      {t("This is to certify that", "This is to certify that")}
                     </p>
                     <h3
                       className={`text-2xl font-bold mb-2 ${
@@ -465,7 +468,10 @@ export const CertificateAddModal = ({
                       {previewName}
                     </h3>
                     <p className="text-sm mb-1 text-blue-pale">
-                      {t("قد أتم بنجاح حضور", "has successfully completed")}
+                      {t(
+                        "has successfully completed",
+                        "has successfully completed"
+                      )}
                     </p>
                     <h4
                       className={`text-lg font-semibold mb-2 ${
@@ -477,8 +483,7 @@ export const CertificateAddModal = ({
                       {previewWorkshop}
                     </h4>
                     <p className="text-xs text-blue-pale">
-                      {previewDate !== "—" &&
-                        `${t("بتاريخ", "on")} ${previewDate}`}
+                      {previewDate !== "—" && `${t("on", "on")} ${previewDate}`}
                     </p>
                   </div>
                   <div className="flex items-end justify-between">
@@ -487,23 +492,21 @@ export const CertificateAddModal = ({
                         <Signature className="w-5 h-5 text-blue-pale/40" />
                       </div>
                       <p className="text-xs text-blue-pale">
-                        {t("التوقيع", "Signature")}
+                        {t("Signature", "Signature")}
                       </p>
                     </div>
                     <div className="text-center">
                       <div className="w-12 h-12 bg-white rounded p-1 mb-1">
                         <QrCode className="w-full h-full text-navy" />
                       </div>
-                      <p className="text-xs text-blue-pale">
-                        {t("رمز التحقق", "QR")}
-                      </p>
+                      <p className="text-xs text-blue-pale">{t("QR", "QR")}</p>
                     </div>
                     <div className="text-center">
                       <div className="w-16 h-10 border-b border-blue-pale/40 mb-1 flex items-end justify-center">
                         <Stamp className="w-5 h-5 text-blue-pale/40" />
                       </div>
                       <p className="text-xs text-blue-pale">
-                        {t("الختم", "Stamp")}
+                        {t("Stamp", "Stamp")}
                       </p>
                     </div>
                   </div>

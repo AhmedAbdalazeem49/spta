@@ -8,8 +8,7 @@ import {
   getCertificateWorkshop,
 } from "@/utils/certificateUtils";
 import { motion } from "framer-motion";
-import { Award, Eye, Pencil } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Eye } from "lucide-react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 
 interface CertificatesTableProps {
@@ -98,13 +97,13 @@ export const CertificatesTable = ({
                       <Eye className="w-4 h-4" />
                     </Button>
 
-                    <Button
+                    {/* <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => onOpenPreview(c)}
                     >
                       <Award className="w-4 h-4" />
-                    </Button>
+                    </Button> */}
 
                     {/* <Button
                       size="sm"

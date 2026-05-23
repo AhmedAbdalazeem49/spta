@@ -20,8 +20,9 @@ export const paymentService = {
       return data?.data ?? data;
     } else {
       const { data } = await api.post("/membership/subscribe", {
-        membership_type: payload.reference_id, // ← reference_id holds the type e.g. "intern"
+        membership_type: payload.reference_id,
         payment_method: payload.payment_method,
+        promo_code: payload.promo_code ?? undefined,
       });
       return data?.data ?? data;
     }

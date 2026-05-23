@@ -61,7 +61,7 @@ export const UserViewModal = ({ isOpen, onOpenChange, user }: UserViewModalProps
             {
               icon: Shield,
               label: t("الدور", "Role"),
-              value: user.role === "system_admin" ? t("مدير النظام", "System Admin") : user.role === "branch_manager" ? t("مدير فرع", "Branch Manager") : t("عضو", "Member"),
+              value: user.role === "system_admin" ? t("مدير النظام", "System Admin") : user.role === "branch_admin" ? t("مدير فرع", "Branch Manager") : t("عضو", "Member"),
             },
           ].map((item, i) => (
             <div

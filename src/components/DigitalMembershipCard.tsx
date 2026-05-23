@@ -501,7 +501,7 @@ const DigitalMembershipCard = ({
 
       {/* ACTIONS */}
       {showControls && (
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex-wrap justify-center gap-4 hidden">
           <Button
             onClick={downloadAsImage}
             variant="outline"

@@ -9,7 +9,6 @@ import {
   Percent,
   Sparkles,
   Ticket,
-  TrendingUp,
   Users,
 } from "lucide-react";
 
@@ -117,26 +116,6 @@ export const CouponsAnalytics = ({ coupons }: CouponsAnalyticsProps) => {
         </Card>
       </div>
 
-      {/* USAGE OVERVIEW */}
-      <Card className="border-muted/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <TrendingUp className="w-4 h-4 text-primary" />
-            {t("معدل الاستخدام", "Usage Rate")}
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-3">
-          <Progress value={usageRate} className="h-2" />
-
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>
-              {t("إجمالي الاستخدام", "Total usage")}: {totalUsage}
-            </span>
-            <span>{usageRate}%</span>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* TOP COUPONS */}
       <Card className="border-muted/50">

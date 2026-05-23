@@ -149,9 +149,6 @@ const Navbar = () => {
                 <div
                   key={item.path}
                   className="relative"
-                  onMouseEnter={() =>
-                    item.children && setActiveDropdown(item.path)
-                  }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <Link
@@ -165,31 +162,7 @@ const Navbar = () => {
                     }`}
                   >
                     {item.label}
-                    {item.children && <ChevronDown className="w-4 h-4" />}
                   </Link>
-
-                  <AnimatePresence>
-                    {item.children && activeDropdown === item.path && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className={`absolute top-full ${
-                          isRTL ? "right-0" : "left-0"
-                        } mt-2 w-56 bg-card rounded-xl shadow-lg border border-border overflow-hidden`}
-                      >
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.path}
-                            to={child.path}
-                            className="block px-4 py-3 text-foreground hover:bg-secondary transition-colors"
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
               );
             })}
@@ -199,7 +172,8 @@ const Navbar = () => {
           <div className="flex items-center gap-1">
             {isAuthenticated ? (
               <>
-                {user?.is_admin == 1 && (
+                {(user?.role === "system_admin" ||
+                  user?.role === "branch_admin") && (
                   <Link to="/admin">
                     <Button
                       variant="ghost"
@@ -340,63 +314,21 @@ const Navbar = () => {
                       location.pathname === item.path ||
                       location.pathname.startsWith(item.path + "/");
 
-                    const isOpen = mobileDropdown === item.path;
-
                     return (
                       <div key={item.path} className="space-y-1">
-                        {/* Parent */}
                         <button
-                          onClick={() =>
-                            item.children
-                              ? setMobileDropdown(isOpen ? null : item.path)
-                              : setIsMobileMenuOpen(false)
-                          }
-                          className={`w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium transition ${
+                          onClick={() => {
+                            navigate(item.path);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center px-4 py-3 rounded-lg font-medium transition ${
                             isActive
                               ? "bg-primary text-primary-foreground"
                               : "hover:bg-secondary"
                           }`}
                         >
                           <span>{item.label}</span>
-                          {item.children && (
-                            <motion.span
-                              animate={{ rotate: isOpen ? 180 : 0 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <ChevronDown className="w-4 h-4" />
-                            </motion.span>
-                          )}
                         </button>
-
-                        {/* Dropdown */}
-                        <AnimatePresence>
-                          {item.children && isOpen && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.25 }}
-                              className="overflow-hidden pl-4"
-                            >
-                              <div
-                                className={`space-y-1 ${
-                                  isRTL ? "border-r pr-4" : "border-l pl-4"
-                                } border-border`}
-                              >
-                                {item.children.map((child) => (
-                                  <Link
-                                    key={child.path}
-                                    to={child.path}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="block px-4 py-2 text-sm rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground transition"
-                                  >
-                                    {child.label}
-                                  </Link>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </div>
                     );
                   })}

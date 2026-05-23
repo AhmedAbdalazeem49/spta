@@ -638,7 +638,7 @@ const ProfilePage = () => {
               </motion.div>
             )}
 
-            {/* Certificates Tab */}
+            {/* Workshops Tab */}
             {activeTab === "workshops" && <WorkshopsTab />}
 
             {/* Certificates Tab */}
