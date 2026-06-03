@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Workshop } from "@/types/workshop";
 import { motion } from "framer-motion";
@@ -21,6 +22,8 @@ export const WorkshopsTable = ({
   onOpenSubscriptions,
 }: WorkshopsTableProps) => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const isSystemAdmin = user?.role === "system_admin";
 
   return (
     <div className="overflow-x-auto">
@@ -132,15 +135,17 @@ export const WorkshopsTable = ({
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                    onClick={() => onOpenDelete(w)}
-                    title={t("حذف", "Delete")}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  {isSystemAdmin && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => onOpenDelete(w)}
+                      title={t("حذف", "Delete")}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
                 </div>
               </td>
             </motion.tr>
