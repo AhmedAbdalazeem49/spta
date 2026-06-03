@@ -44,12 +44,14 @@ const AdminPromoCodes = () => {
 
   useEffect(() => {
     fetchCoupons();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCoupons = async () => {
     setIsLoading(true);
     try {
       const res = await api.get("admin/promo-codes");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const raw: any[] = res.data?.data ?? [];
       setCoupons(raw.map(mapApiCoupon));
     } catch (err) {

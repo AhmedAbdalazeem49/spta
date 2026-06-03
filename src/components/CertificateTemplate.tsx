@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Award, Stamp } from "lucide-react";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
+import Logo from "/spta-logo.png";
 
 export type CertTemplate = "classic" | "modern" | "elegant" | "minimal";
 
@@ -25,6 +26,7 @@ interface CertificateSettings {
   stamp_image: string | null;
   chairman_name: string;
   custom_text: string;
+  partner_logo: string | null;
 }
 
 interface Props {
@@ -49,7 +51,6 @@ const formatDate = (raw?: string): string => {
       year: "numeric",
     });
   } catch {
-    // fallback: strip everything after T
     return raw.split("T")[0];
   }
 };
@@ -61,6 +62,7 @@ const useSettings = () => {
     stamp_image: null,
     chairman_name: "",
     custom_text: "",
+    partner_logo: null,
   });
 
   useEffect(() => {
@@ -73,6 +75,7 @@ const useSettings = () => {
           stamp_image: d?.stamp_image ?? null,
           chairman_name: d?.chairman_name ?? "",
           custom_text: d?.custom_text ?? "",
+          partner_logo: d?.partner_logo ?? null,
         });
       })
       .catch(console.error);
@@ -98,13 +101,30 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
     "—";
 
   const issueDate = formatDate(
-    cert.issue_date || cert.issued_at || cert.workshop_date
+    cert.issue_date || cert.issued_at || cert.workshop_date,
   );
 
   const isVerified = cert.status === "verified";
 
-  // ── Reusable sub-components ───────────────────────────────
+  // ── Logo row: our logo + optional partner logo ────────────
+  const LogoRow = ({ dark = false }: { dark?: boolean }) => (
+    <div className="flex items-center justify-center gap-4">
+      <img src={Logo} alt="logo" className="h-12 object-contain" />
+      {settings.partner_logo && (
+        <>
+          <div className={`w-px h-8 ${dark ? "bg-white/20" : "bg-black/15"}`} />
+          <img
+            src={storageUrl(settings.partner_logo)}
+            alt="partner logo"
+            crossOrigin="anonymous"
+            className="h-12 object-contain"
+          />
+        </>
+      )}
+    </div>
+  );
 
+  // ── Reusable sub-components ───────────────────────────────
   const OrgHeader = (
     <p
       className="text-xs uppercase tracking-widest opacity-60"
@@ -112,23 +132,23 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
     >
       {t(
         "Saudi Physical Therapy Association",
-        "Saudi Physical Therapy Association"
+        "Saudi Physical Therapy Association",
       )}
     </p>
   );
 
   const VerifiedBadge = isVerified ? (
-    <Badge className=" text-emerald-600 bg-transparent">{t("Verified", "Verified")}</Badge>
+    <Badge className="text-emerald-600 bg-transparent">
+      {t("Verified", "Verified")}
+    </Badge>
   ) : null;
 
-  // Pills for date
   const MetaRow = (
     <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
       <span className="flex items-center gap-1 px-3 py-1 text-xs">
         {issueDate}
       </span>
       {VerifiedBadge}
-
       {cert.serial_number && (
         <span className="flex items-center gap-1 px-3 py-1 font-mono tracking-wide">
           {cert.serial_number}
@@ -137,7 +157,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
     </div>
   );
 
-  // Signature + Stamp + Chairman footer
   const Footer = ({
     dark = false,
     accentColor = "currentColor",
@@ -212,7 +231,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         <div
           className={`h-px w-28 ${dark ? "bg-white/20" : "bg-black/15"} mt-0.5`}
         />
-        {/* <p
+        <p
           className={`text-xs font-semibold ${
             dark ? "text-white/90" : "text-gray-800"
           }`}
@@ -221,7 +240,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           }}
         >
           {settings.chairman_name || t("رئيس الجمعية", "Chairman")}
-        </p> */}
+        </p>
         <p
           className={`text-[9px] text-center leading-tight ${
             dark ? "text-white/45" : "text-black/45"
@@ -229,7 +248,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         >
           {t(
             "President, Saudi Physical Therapy Association",
-            "President, Saudi Physical Therapy Association"
+            "President, Saudi Physical Therapy Association",
           )}
         </p>
       </div>
@@ -246,7 +265,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         animate={{ opacity: 1, y: 0 }}
         className="relative bg-gradient-to-br from-primary to-primary/80 p-8 text-white overflow-hidden rounded-xl"
       >
-        {/* bg pattern */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -257,7 +275,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         />
 
         <div className="relative z-10 text-center space-y-2">
-          <Award className="w-9 h-9 mx-auto opacity-80" />
+          <LogoRow dark />
           {OrgHeader}
           <h3 className="text-xl font-black tracking-wide">
             {t("Certificate of Completion", "Certificate of Completion")}
@@ -273,7 +291,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             <span className="font-semibold">"{workshopTitle}"</span>
           </p>
 
-          {/* Meta */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
             <span className="flex items-center gap-1 px-3 py-1 text-xs">
               {issueDate}
@@ -286,9 +303,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             </span>
           </div>
 
-
           {isVerified && (
-            <Badge className=" text-white bg-transparent">
+            <Badge className="text-white bg-transparent">
               {t("Verified", "Verified")}
             </Badge>
           )}
@@ -316,18 +332,18 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           boxShadow: "inset 0 0 60px rgba(217,119,6,0.04)",
         }}
       >
-        {/* frame */}
         <div
           className="absolute inset-3 rounded-lg pointer-events-none"
           style={{ border: "1px solid rgba(217,119,6,0.15)" }}
         />
 
         <div className="relative text-center space-y-2">
+          <LogoRow />
           <Stamp className="w-8 h-8 mx-auto text-amber-600" />
           <p className="text-[10px] uppercase tracking-widest text-amber-700/60">
             {t(
               "Saudi Physical Therapy Association",
-              "Saudi Physical Therapy Association"
+              "Saudi Physical Therapy Association",
             )}
           </p>
           <h3 className="text-xl font-black text-amber-900">
@@ -367,14 +383,9 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         className="relative p-8 rounded-xl bg-white border-l-4 border-primary overflow-hidden"
         style={{ boxShadow: "0 1px 20px rgba(0,0,0,0.06)" }}
       >
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-          {t(
-            "Saudi Physical Therapy Association",
-            "Saudi Physical Therapy Association"
-          )}
-        </p>
+        <LogoRow />
 
-        <p className="text-xs text-muted-foreground mb-1">
+        <p className="text-xs text-muted-foreground mb-1 mt-4">
           {t("This is to certify that", "This is to certify that")}
         </p>
         <p className="text-3xl font-black text-primary leading-tight mb-1">
@@ -408,13 +419,13 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
       className="relative bg-gradient-to-br from-gray-50 to-white p-8 rounded-xl border overflow-hidden"
       style={{ boxShadow: "0 2px 24px rgba(0,0,0,0.07)" }}
     >
-      {/* subtle corner watermark */}
       <Award
         className="absolute top-4 end-4 w-20 h-20 text-primary/5"
         strokeWidth={1}
       />
 
       <div className="relative text-center space-y-2">
+        <LogoRow />
         <Award className="w-9 h-9 mx-auto text-primary" />
         {OrgHeader}
 

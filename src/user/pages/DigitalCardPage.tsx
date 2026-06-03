@@ -10,9 +10,9 @@ import { useEffect } from "react";
 const mockMember = {
   fullName: "د. أحمد محمد عبدالعظيم",
   fullNameEn: "Dr. Ahmed Mohammed Abdalazeem",
-  membershipNumber: "SPTA-2026-00142",
+  membershipNumber: "19199",
   membershipType: "active" as const,
-  expiryDate: "2027-09-15",
+  expiryDate: "2027-09-01",
   workplace: "مستشفى الملك فيصل التخصصي",
   workplaceEn: "King Faisal Specialist Hospital",
 };

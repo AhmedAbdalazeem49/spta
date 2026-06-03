@@ -65,6 +65,7 @@ const AdminCertificatesPage = () => {
     stamp_image: null as File | string | null,
     chairman_name: "",
     custom_text: "",
+    partner_logo: null as File | string | null,
   });
 
   const fetchCertificateSettings = async () => {
@@ -79,6 +80,7 @@ const AdminCertificatesPage = () => {
         stamp_image: data?.stamp_image || null,
         chairman_name: data?.chairman_name || "",
         custom_text: data?.custom_text || "",
+        partner_logo: data?.partner_logo ?? null,
       });
     } catch (err) {
       console.error("Failed loading settings", err);
@@ -124,6 +126,7 @@ const AdminCertificatesPage = () => {
 
       // optional: refresh list
       // fetchCertificates();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Update failed:", error?.response?.data || error.message);
     }
@@ -260,6 +263,7 @@ const AdminCertificatesPage = () => {
       });
       setIsAddOpen(false);
       fetchCertificates();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // ✅ 409 = duplicate certificate
       if (error?.response?.status === 409) {

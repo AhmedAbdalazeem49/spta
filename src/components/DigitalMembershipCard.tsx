@@ -386,14 +386,6 @@ const DigitalMembershipCard = ({
                           />
                         </div>
                       )}
-
-                      <p className="text-sm font-semibold">
-                        {certificateSettings?.chairman_name || "Chairman"}
-                      </p>
-
-                      <p className="text-xs text-white/60 mt-1">
-                        {t("رئيس مجلس الإدارة", "Chairman")}
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -456,26 +448,6 @@ const DigitalMembershipCard = ({
                     </div>
                   </div>
 
-                  <div className="w-28 h-20 flex items-center justify-center">
-                    {certificateSettings?.signature_image ? (
-                      <img
-                        src={
-                          certificateSettings.signature_image.startsWith("http")
-                            ? certificateSettings.signature_image
-                            : `${import.meta.env.VITE_API_URL.replace(
-                                "/api",
-                                ""
-                              )}${certificateSettings.signature_image}`
-                        }
-                        alt="signature"
-                        className="h-16 object-contain drop-shadow-lg"
-                      />
-                    ) : (
-                      <div className="text-white/40 text-xs text-center">
-                        No Signature
-                      </div>
-                    )}
-                  </div>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-white/10 pt-6">

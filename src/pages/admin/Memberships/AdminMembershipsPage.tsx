@@ -125,6 +125,7 @@ const STATUS_OPTIONS = [
 const getStatusConfig = (status: string) => {
   const map: Record<
     string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     { color: string; icon: any; ar: string; en: string }
   > = {
     active: {
@@ -156,6 +157,7 @@ const getStatusConfig = (status: string) => {
 };
 
 const getMembershipTypeIcon = (type: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const icons: Record<string, any> = {
     active: Crown,
     affiliate: Users,
@@ -186,6 +188,7 @@ const toInputDate = (dateStr: string) => {
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const StatusBadge = ({ status, t }: { status: string; t: any }) => {
   const cfg = getStatusConfig(status);
   const Icon = cfg.icon;
@@ -486,6 +489,7 @@ const MembershipAddModal = ({
   setAddForm: (f: AddMembershipForm) => void;
   isAdding: boolean;
   onAdd: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   userSuggestions: any[];
   userSearch: string;
   setUserSearch: (v: string) => void;
@@ -629,7 +633,7 @@ const MembershipAddModal = ({
               }
               dir="ltr"
               className="font-mono"
-              placeholder="SPTA-2024-XXXXX"
+              placeholder="XXXXX"
             />
           </div>
 
@@ -708,6 +712,7 @@ interface MembershipDeleteModalProps {
   onOpenChange: (v: boolean) => void;
   onDelete: () => void;
   isDeleting: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   membership: any | null;
 }
 
@@ -1113,6 +1118,7 @@ const AdminMembershipsPage = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [addForm, setAddForm] = useState<AddMembershipForm>(defaultAddForm);
   const [userSearch, setUserSearch] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userSuggestions, setUserSuggestions] = useState<any[]>([]);
 
   // ── Fetch ──────────────────────────────────────────────────────────────────
@@ -1123,10 +1129,12 @@ const AdminMembershipsPage = () => {
       fetchMemberships(1, searchQuery, statusFilter, typeFilter);
     }, 400);
     return () => clearTimeout(timeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, statusFilter, typeFilter]);
 
   useEffect(() => {
     fetchMemberships(page, searchQuery, statusFilter, typeFilter);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const fetchMemberships = async (
@@ -1200,6 +1208,7 @@ const AdminMembershipsPage = () => {
       setMemberships((prev) =>
         prev.map((m) => (m.id === id ? { ...m, status } : m))
       );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -1235,6 +1244,7 @@ const AdminMembershipsPage = () => {
       });
       setIsEditOpen(false);
       fetchMemberships(page, searchQuery, statusFilter, typeFilter);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -1260,6 +1270,7 @@ const AdminMembershipsPage = () => {
       setSelectedMembership(null);
       fetchMemberships(1, searchQuery, statusFilter, typeFilter);
       setPage(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -1320,6 +1331,7 @@ const AdminMembershipsPage = () => {
       setIsAddOpen(false);
       fetchMemberships(1, searchQuery, statusFilter, typeFilter);
       setPage(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const errors = err.response?.data?.errors;
       const msg = errors

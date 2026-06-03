@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { api } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,7 +71,7 @@ interface Props {
 // API FETCH (WORKSHOPS)
 // --------------------
 export async function fetchWorkshops(): Promise<Workshop[]> {
-  const res = await api.get("/admin/workshops");
+  const res = await api.get("/admin/workshops/active");
 
   // Laravel standard response support
   return res.data?.data ?? res.data ?? [];
@@ -234,6 +235,7 @@ export const PromoCodeFormModal = ({
             <Label>{t("النوع", "Type")}</Label>
             <Select
               value={form.type}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onValueChange={(v) => setForm((f) => ({ ...f, type: v as any }))}
             >
               <SelectTrigger>
@@ -296,6 +298,7 @@ export const PromoCodeFormModal = ({
               onValueChange={(v) =>
                 setForm((f) => ({
                   ...f,
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   applies_to: v as any,
                   applies_to_id: null,
                 }))

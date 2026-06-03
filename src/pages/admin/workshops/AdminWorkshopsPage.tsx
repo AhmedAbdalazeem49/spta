@@ -42,6 +42,7 @@ const AdminWorkshopsPage = () => {
 
   useEffect(() => {
     fetchWorkshops();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchWorkshops = async () => {
@@ -149,6 +150,7 @@ const AdminWorkshopsPage = () => {
 
       setIsFormOpen(false);
       fetchWorkshops();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -170,6 +172,7 @@ const AdminWorkshopsPage = () => {
       setIsDeleteOpen(false);
       setSelected(null);
       fetchWorkshops();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -202,7 +205,7 @@ const AdminWorkshopsPage = () => {
           <p className="text-muted-foreground text-sm">
             {t(
               "إنشاء وتعديل وحذف ورش العمل",
-              "Create, edit and delete workshops"
+              "Create, edit and delete workshops",
             )}
           </p>
         </div>
@@ -219,7 +222,7 @@ const AdminWorkshopsPage = () => {
             <Input
               placeholder={t(
                 "بحث بالاسم أو الطبيب  ...",
-                "Search by name, doctor..."
+                "Search by name, doctor...",
               )}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -287,6 +290,7 @@ const AdminWorkshopsPage = () => {
         changeType={changeType}
         hasChanges={hasChanges}
         workshopId={selected?.id}
+        existingImage={selected?.image}
       />
 
       <WorkshopDeleteModal

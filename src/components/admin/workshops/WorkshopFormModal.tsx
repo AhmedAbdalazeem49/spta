@@ -26,10 +26,11 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState , useEffect } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const emptyWorkshopForm = {
   title: "",
   description: "",
@@ -61,6 +62,7 @@ interface WorkshopFormModalProps {
   changeType: "postponed" | "date_changed" | "general";
   hasChanges: boolean;
   workshopId?: number;
+  existingImage?: string | null;
 }
 
 // ─── Validation ───────────────────────────────────────────────────────────────
@@ -143,7 +145,7 @@ function validate(
       );
   }
 
-  if (!form.image)
+  if (!editMode && !form.image)
     errors.image = t("الصورة التعريفية للورشة مطلوبة", "Image is required");
 
   return errors;
@@ -230,6 +232,7 @@ export const WorkshopFormModal = ({
   changeType,
   hasChanges,
   workshopId,
+  existingImage,
 }: WorkshopFormModalProps) => {
   const { t } = useLanguage();
 
@@ -272,13 +275,23 @@ export const WorkshopFormModal = ({
     }
   };
 
+  useEffect(() => {
+    if (isOpen && editMode && existingImage) {
+      setImagePreview(existingImage);
+    }
+    if (!isOpen) {
+      setImagePreview(null);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
   const touch = (field: string) => setTouched((p) => new Set([...p, field]));
 
   const update = <K extends keyof WorkshopForm>(
     field: K,
-    value: WorkshopForm[K]
+    value: WorkshopForm[K],
   ) => {
     const next = { ...form, [field]: value };
     setForm(next);
@@ -379,11 +392,11 @@ export const WorkshopFormModal = ({
                   {editMode
                     ? t(
                         "عدّل بيانات الورشة أدناه",
-                        "Update workshop details below"
+                        "Update workshop details below",
                       )
                     : t(
                         "أدخل بيانات الورشة الجديدة",
-                        "Fill in the workshop details below"
+                        "Fill in the workshop details below",
                       )}
                 </p>
               </div>
@@ -468,7 +481,7 @@ export const WorkshopFormModal = ({
                 onBlur={() => touch("description")}
                 placeholder={t(
                   "وصف تفصيلي للورشة...",
-                  "Detailed workshop description..."
+                  "Detailed workshop description...",
                 )}
               />
             </Field>
@@ -530,7 +543,6 @@ export const WorkshopFormModal = ({
                   onBlur={() => touch("time")}
                 />
               </Field>
-
             </div>
           </Section>
 
@@ -609,14 +621,14 @@ export const WorkshopFormModal = ({
                       (1 -
                         Number(form.member_price) /
                           Number(form.regular_price)) *
-                        100
+                        100,
                     )}%`,
                     `Member discount: ${Math.round(
                       (1 -
                         Number(form.member_price) /
                           Number(form.regular_price)) *
-                        100
-                    )}%`
+                        100,
+                    )}%`,
                   )}
                 </motion.div>
               )}
@@ -790,8 +802,8 @@ export const WorkshopFormModal = ({
                         {changeType === "postponed"
                           ? t("تم تأجيل الورشة", "Workshop Postponed")
                           : changeType === "date_changed"
-                          ? t("تم تغيير الموعد", "Schedule Changed")
-                          : t("تم تحديث بيانات الورشة", "Workshop Updated")}
+                            ? t("تم تغيير الموعد", "Schedule Changed")
+                            : t("تم تحديث بيانات الورشة", "Workshop Updated")}
                       </p>
 
                       {/* List the actual changes */}
@@ -805,14 +817,14 @@ export const WorkshopFormModal = ({
                               <span className="font-medium">{field}</span>: {o}{" "}
                               → {n}
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
 
                       <p className="text-xs text-muted-foreground mt-1.5">
                         {t(
                           "يجب إشعار جميع المشتركين بالتغييرات",
-                          "All subscribers should be notified of these changes"
+                          "All subscribers should be notified of these changes",
                         )}
                       </p>
                     </div>
@@ -826,8 +838,8 @@ export const WorkshopFormModal = ({
                         notified
                           ? "border-emerald-500/30 text-emerald-600"
                           : changeType === "postponed"
-                          ? "border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
-                          : "border-blue-500/30 text-blue-600 hover:bg-blue-500/10"
+                            ? "border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                            : "border-blue-500/30 text-blue-600 hover:bg-blue-500/10"
                       }`}
                     >
                       {isNotifying ? (
@@ -840,11 +852,11 @@ export const WorkshopFormModal = ({
                       {isNotifying
                         ? t("جاري الإرسال...", "Sending...")
                         : notified
-                        ? t(
-                            `إعادة الإرسال بعد ${cooldown}s`,
-                            `Resend in ${cooldown}s`
-                          )
-                        : t("إشعار المشتركين", "Notify Subscribers")}
+                          ? t(
+                              `إعادة الإرسال بعد ${cooldown}s`,
+                              `Resend in ${cooldown}s`,
+                            )
+                          : t("إشعار المشتركين", "Notify Subscribers")}
                     </Button>
                   </div>
                 </motion.div>
@@ -866,7 +878,7 @@ export const WorkshopFormModal = ({
                   <p className="text-sm font-semibold text-destructive">
                     {t(
                       "يرجى تصحيح الأخطاء أدناه",
-                      "Please fix the errors above"
+                      "Please fix the errors above",
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -874,7 +886,7 @@ export const WorkshopFormModal = ({
                       `${Object.keys(errors).length} حقل يحتاج إلى مراجعة`,
                       `${Object.keys(errors).length} field${
                         Object.keys(errors).length > 1 ? "s need" : " needs"
-                      } attention`
+                      } attention`,
                     )}
                   </p>
                 </div>
@@ -914,8 +926,8 @@ export const WorkshopFormModal = ({
               {isSaving
                 ? t("جاري الحفظ...", "Saving...")
                 : editMode
-                ? t("حفظ التغييرات", "Save Changes")
-                : t("إنشاء الورشة", "Create Workshop")}
+                  ? t("حفظ التغييرات", "Save Changes")
+                  : t("إنشاء الورشة", "Create Workshop")}
             </Button>
           </div>
         </div>
