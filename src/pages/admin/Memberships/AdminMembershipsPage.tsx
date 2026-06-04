@@ -365,6 +365,7 @@ const MembershipEditModal = ({
                 setEditForm({ ...editForm, membership_number: e.target.value })
               }
               dir="ltr"
+              maxLength={5}
               className="font-mono"
             />
           </div>
@@ -634,6 +635,7 @@ const MembershipAddModal = ({
               dir="ltr"
               className="font-mono"
               placeholder="XXXXX"
+              maxLength={5}
             />
           </div>
 
