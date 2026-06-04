@@ -5,23 +5,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  BookOpen,
   Building2,
-  ChevronDown,
-  FileText,
   Globe,
   GraduationCap,
-  Library,
   LogOut,
   Menu,
   Phone,
   Shield,
-  Smartphone,
   User,
   Users,
   X,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -157,8 +152,8 @@ const Navbar = () => {
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : isScrolled
-                        ? "text-foreground hover:bg-secondary"
-                        : "text-foreground hover:bg-secondary"
+                          ? "text-foreground hover:bg-secondary"
+                          : "text-foreground hover:bg-secondary"
                     }`}
                   >
                     {item.label}

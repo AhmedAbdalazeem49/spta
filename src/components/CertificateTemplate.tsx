@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Stamp } from "lucide-react";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
-import Logo from "/spta-logo.png";
+import Logo from "/logo.png";
 
 export type CertTemplate = "modern";
 
