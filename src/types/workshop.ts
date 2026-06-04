@@ -5,6 +5,7 @@ export interface Workshop {
   doctor_name: string;
   location: string;
   date: string;
+  end_date:string;
   time: string;
   regular_price: string | number;
   member_price: string | number;

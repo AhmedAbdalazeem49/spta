@@ -81,6 +81,7 @@ const WorkshopsPage = () => {
     try {
       const res = await api.get("/my-workshops");
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ids = (res.data.data || []).map((reg: any) => reg.workshop.id);
 
       setRegisteredIds(ids);
@@ -93,6 +94,7 @@ const WorkshopsPage = () => {
     AOS.init({ duration: 800, once: true });
     fetchWorkshops();
     fetchMyWorkshops();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ── Filters ───────────────────────────────────────────────────────────────────
@@ -114,6 +116,7 @@ const WorkshopsPage = () => {
   const getStatusBadge = (status: string) => {
     const configs: Record<
       string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       { color: string; icon: any; labelAr: string; labelEn: string }
     > = {
       open: {
@@ -355,6 +358,12 @@ const WorkshopsPage = () => {
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <Calendar className="w-4 h-4 text-primary shrink-0" />
                                   {new Date(workshop.date).toLocaleDateString(
+                                    isRTL ? "ar-SA" : "en-US"
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <Calendar className="w-4 h-4 text-primary shrink-0" />
+                                  {new Date(workshop.end_date).toLocaleDateString(
                                     isRTL ? "ar-SA" : "en-US"
                                   )}
                                 </div>

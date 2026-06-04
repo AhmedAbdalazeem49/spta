@@ -37,6 +37,7 @@ export const emptyWorkshopForm = {
   doctor_name: "",
   location: "",
   date: "",
+  end_date:"",
   time: "",
   regular_price: "",
   member_price: "",
@@ -101,6 +102,21 @@ function validate(
       errors.date = t(
         "يجب أن يكون التاريخ اليوم أو بعده",
         "Date must be today or later"
+      );
+  }
+
+  if (!form.end_date) errors.end_date = t("التاريخ مطلوب", "Date is required");
+  else {
+    const d = new Date(form.end_date);
+    if (!editMode && d < today)
+      errors.end_date = t(
+        "يجب أن يكون تاريخ الانتهاء بعد تاريخ البداية أو مساوياً له",
+        "End date must be on or after the start date",
+      );
+    else if (form.date && d < new Date(form.date))
+      errors.end_date = t(
+        "يجب أن يكون تاريخ الانتهاء بعد تاريخ البداية أو مساوياً له",
+        "End date must be on or after the start date",
       );
   }
 
@@ -297,7 +313,12 @@ export const WorkshopFormModal = ({
     setForm(next);
     if (submitted || touched.has(field)) {
       const e = validate(next, editMode, t);
-      setErrors((prev) => ({ ...prev, [field]: e[field] }));
+      setErrors((prev) => ({
+        ...prev,
+        [field]: e[field],
+        // re-validate end_date whenever date changes
+        ...(field === "date" ? { end_date: e["end_date"] } : {}),
+      }));
     }
   };
 
@@ -327,6 +348,7 @@ export const WorkshopFormModal = ({
     fd.append("doctor_name", form.doctor_name);
     fd.append("location", form.location);
     fd.append("date", form.date);
+    fd.append("end_date", form.end_date);
     fd.append("time", form.time);
     fd.append("regular_price", form.regular_price);
     fd.append("member_price", form.member_price);
@@ -359,6 +381,7 @@ export const WorkshopFormModal = ({
     form.doctor_name,
     form.location,
     form.date,
+    form.end_date,
     form.time,
     form.regular_price,
     form.member_price,
@@ -508,7 +531,7 @@ export const WorkshopFormModal = ({
               />
             </Field>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <Field
                 label={t("التاريخ", "Date")}
                 error={err("date")}
@@ -526,6 +549,27 @@ export const WorkshopFormModal = ({
                   }
                   onChange={(e) => update("date", e.target.value)}
                   onBlur={() => touch("date")}
+                />
+              </Field>
+
+              <Field
+                label={t("تاريخ النهاية", "End Date")}
+                error={err("end_date")}
+                required
+                icon={<Calendar className="w-3 h-3" />}
+              >
+                <input
+                  type="date"
+                  className={cls("end_date")}
+                  value={form.end_date}
+                  min={
+                    form.date ||
+                    (!editMode
+                      ? new Date().toISOString().split("T")[0]
+                      : undefined)
+                  }
+                  onChange={(e) => update("end_date", e.target.value)}
+                  onBlur={() => touch("end_date")}
                 />
               </Field>
 

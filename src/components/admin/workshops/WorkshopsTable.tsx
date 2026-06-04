@@ -40,7 +40,7 @@ export const WorkshopsTable = ({
               {t("التاريخ والوقت", "Date & Time")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
-              {t("المقاعد", "Seats")}
+              {t("تاريخ النهاية", "End Date")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("السعر", "Price")}
@@ -83,7 +83,7 @@ export const WorkshopsTable = ({
                 </div>
               </td>
               <td className="p-4 text-sm text-muted-foreground">
-                {w.total_capacity ?? "—"}
+                {w.end_date ?? "—"}
               </td>
               <td className="p-4 text-sm">
                 <div className="flex flex-col gap-0.5">

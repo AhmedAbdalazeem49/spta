@@ -77,6 +77,7 @@ const AdminWorkshopsPage = () => {
       doctor_name: w.doctor_name || "",
       location: w.location || "",
       date: w.date || "",
+      end_date: w.end_date || "",
       time: w.time || "",
       regular_price: String(w.regular_price || ""),
       member_price: String(w.member_price || ""),
@@ -96,6 +97,7 @@ const AdminWorkshopsPage = () => {
   const getChanges = () => {
     const watchedFields = [
       "date",
+      "end_date",
       "time",
       "location",
       "status",

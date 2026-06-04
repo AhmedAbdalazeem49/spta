@@ -12,7 +12,6 @@ import {
   Clock,
   MapPin,
   Users,
-  CheckCircle2,
   XCircle
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -31,6 +30,7 @@ interface WorkshopRegistration {
     doctor_name?: string;
     location?: string;
     date?: string;
+    end_date?: string;
     time?: string;
     regular_price?: string;
     member_price?: string;
@@ -78,6 +78,7 @@ export default function WorkshopsTab() {
       });
 
       fetchWorkshops();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -219,7 +220,16 @@ export default function WorkshopsTab() {
                       <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
                         <Calendar className="w-4 h-4 text-primary" />
                         {new Date(reg.workshop.date).toLocaleDateString(
-                          "en-US"
+                          "en-US",
+                        )}
+                      </div>
+                    )}
+
+                    {reg.workshop.end_date && (
+                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        {new Date(reg.workshop.end_date).toLocaleDateString(
+                          "en-US",
                         )}
                       </div>
                     )}
@@ -231,17 +241,17 @@ export default function WorkshopsTab() {
                       </div>
                     )}
 
+                    {reg.workshop.total_capacity && (
+                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                        <Users className="w-4 h-4 text-primary" />
+                        {reg.workshop.total_capacity} seats
+                      </div>
+                    )}
+
                     {reg.workshop.location && (
                       <div className="col-span-2 rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
                         <MapPin className="w-4 h-4 text-primary" />
                         {reg.workshop.location}
-                      </div>
-                    )}
-
-                    {reg.workshop.total_capacity && (
-                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs col-span-2">
-                        <Users className="w-4 h-4 text-primary" />
-                        {reg.workshop.total_capacity} seats
                       </div>
                     )}
                   </div>
@@ -263,8 +273,8 @@ export default function WorkshopsTab() {
                         reg.attendance === "attended"
                           ? "bg-blue-500/15 text-blue-600"
                           : reg.attendance === "absent"
-                          ? "bg-red-500/15 text-red-600"
-                          : "bg-gray-500/15 text-gray-600"
+                            ? "bg-red-500/15 text-red-600"
+                            : "bg-gray-500/15 text-gray-600"
                       }
                     >
                       {reg.attendance || "pending"}
