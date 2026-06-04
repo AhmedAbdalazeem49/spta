@@ -73,6 +73,7 @@ const ProfilePage = () => {
     sub_specialization: "",
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [certificateSettings, setCertificateSettings] = useState<any>(null);
 
   useEffect(() => {
@@ -134,6 +135,7 @@ const ProfilePage = () => {
         description: t("تم تحديث الملف الشخصي", "Profile updated"),
       });
       setIsEditing(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -148,6 +150,7 @@ const ProfilePage = () => {
   const getStatusBadge = (status: string) => {
     const configs: Record<
       string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       { color: string; icon: any; labelAr: string; labelEn: string }
     > = {
       active: {
@@ -468,7 +471,7 @@ const ProfilePage = () => {
                       </div>
 
                       {/* Right Side */}
-                      <div className="relative border-t lg:border-t-0 lg:border-s border-white/10 bg-black/10 backdrop-blur-xl p-8 flex flex-col justify-between">
+                      <div className="relative border-t lg:border-t-0 lg:border-s border-white/10 bg-black/10 backdrop-blur-xl p-8 flex flex-col justify-center">
                         {/* QR Section */}
                         <div>
                           <div className="flex items-center justify-between mb-6">
@@ -507,7 +510,7 @@ const ProfilePage = () => {
                         </div>
 
                         {/* Certificate Settings */}
-                        <div className="mt-10">
+                        <div className="mt-10 hidden">
                           <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5">
                             <div className="flex items-center gap-3 mb-5">
                               <Award className="w-5 h-5 text-primary" />
@@ -788,6 +791,7 @@ const ProfilePage = () => {
                 fullNameEn: user?.name || "",
                 membershipNumber: activeMembership?.membership_number || "—",
                 membershipType:
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (activeMembership?.membership_type as any) || "active",
                 expiryDate: activeMembership?.ends_at || "",
                 workplace: user?.employer || "",

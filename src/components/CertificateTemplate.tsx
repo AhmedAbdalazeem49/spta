@@ -2,12 +2,12 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import api from "@/services/api";
 import { motion } from "framer-motion";
-import { Award, Stamp } from "lucide-react";
+import { Stamp } from "lucide-react";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Logo from "/spta-logo.png";
 
-export type CertTemplate = "classic" | "modern" | "elegant" | "minimal";
+export type CertTemplate = "modern";
 
 interface Cert {
   id: string | number;
@@ -15,6 +15,7 @@ interface Cert {
   recipient_name?: string;
   workshop_title?: string;
   workshop_title_ar?: string;
+  doctor_name?: string;
   issue_date?: string;
   issued_at?: string;
   workshop_date?: string;
@@ -91,7 +92,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
 
   const qrValue = cert.serial_number
     ? `https://spta-one.vercel.app/certificate/verify/${cert.serial_number}`
-    : `https://spta-one.vercel.app/certificate/verify/${cert.id}`;
+    : `https://spta-one.vercel.app/certificate/verify/${cert.serial_number}`;
 
   const recipientName = cert.recipient_name || "—";
 
@@ -291,6 +292,16 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             <span className="font-semibold">"{workshopTitle}"</span>
           </p>
 
+          {/* Doctor name */}
+          {cert.doctor_name && (
+            <p className="text-xs opacity-60 max-w-xs mx-auto leading-snug">
+              {t("Presented by", "Presented by")}{" "}
+              <span className="font-semibold opacity-90">
+                {cert.doctor_name}
+              </span>
+            </p>
+          )}
+
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
             <span className="flex items-center gap-1 px-3 py-1 text-xs">
               {issueDate}
@@ -316,142 +327,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
       </motion.div>
     );
   }
-
-  // ══════════════════════════════════════════
-  // ELEGANT
-  // ══════════════════════════════════════════
-  if (template === "elegant") {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative bg-amber-50 p-8 overflow-hidden rounded-xl"
-        style={{
-          background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
-          border: "1px solid rgba(217,119,6,0.2)",
-          boxShadow: "inset 0 0 60px rgba(217,119,6,0.04)",
-        }}
-      >
-        <div
-          className="absolute inset-3 rounded-lg pointer-events-none"
-          style={{ border: "1px solid rgba(217,119,6,0.15)" }}
-        />
-
-        <div className="relative text-center space-y-2">
-          <LogoRow />
-          <Stamp className="w-8 h-8 mx-auto text-amber-600" />
-          <p className="text-[10px] uppercase tracking-widest text-amber-700/60">
-            {t(
-              "Saudi Physical Therapy Association",
-              "Saudi Physical Therapy Association",
-            )}
-          </p>
-          <h3 className="text-xl font-black text-amber-900">
-            {t("Certificate of Excellence", "Certificate of Excellence")}
-          </h3>
-          <p className="text-xs text-amber-700/70">
-            {t("This is to certify that", "This is to certify that")}
-          </p>
-          <p className="text-2xl font-bold text-amber-900">{recipientName}</p>
-          <p className="text-sm text-amber-800/80 max-w-xs mx-auto leading-snug">
-            {t("has successfully completed", "has successfully completed")}{" "}
-            <span className="font-semibold">"{workshopTitle}"</span>
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            <span className="flex items-center gap-1 px-3 py-1 text-xs">
-              {issueDate}
-            </span>
-            {cert.serial_number}
-            {VerifiedBadge}
-          </div>
-        </div>
-
-        <Footer accentColor="#92400e" />
-      </motion.div>
-    );
-  }
-
-  // ══════════════════════════════════════════
-  // MINIMAL
-  // ══════════════════════════════════════════
-  if (template === "minimal") {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative p-8 rounded-xl bg-white border-l-4 border-primary overflow-hidden"
-        style={{ boxShadow: "0 1px 20px rgba(0,0,0,0.06)" }}
-      >
-        <LogoRow />
-
-        <p className="text-xs text-muted-foreground mb-1 mt-4">
-          {t("This is to certify that", "This is to certify that")}
-        </p>
-        <p className="text-3xl font-black text-primary leading-tight mb-1">
-          {recipientName}
-        </p>
-        <p className="text-sm font-medium text-foreground/80 mb-3 max-w-sm leading-snug">
-          {t("has successfully completed", "has successfully completed")}{" "}
-          <span className="font-bold">"{workshopTitle}"</span>
-        </p>
-
-        <div className="flex flex-wrap gap-2 mb-1">
-          <span className="flex items-center gap-1 px-3 py-1 text-xs">
-            {issueDate}
-          </span>
-          {cert.serial_number}
-          {VerifiedBadge}
-        </div>
-
-        <Footer />
-      </motion.div>
-    );
-  }
-
-  // ══════════════════════════════════════════
-  // CLASSIC (default)
-  // ══════════════════════════════════════════
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="relative bg-gradient-to-br from-gray-50 to-white p-8 rounded-xl border overflow-hidden"
-      style={{ boxShadow: "0 2px 24px rgba(0,0,0,0.07)" }}
-    >
-      <Award
-        className="absolute top-4 end-4 w-20 h-20 text-primary/5"
-        strokeWidth={1}
-      />
-
-      <div className="relative text-center space-y-2">
-        <LogoRow />
-        <Award className="w-9 h-9 mx-auto text-primary" />
-        {OrgHeader}
-
-        <h3 className="text-xl font-black text-foreground">
-          {t("Certificate of Attendance", "Certificate of Attendance")}
-        </h3>
-
-        <p className="text-xs text-muted-foreground">
-          {t("This is to certify that", "This is to certify that")}
-        </p>
-
-        <p className="text-2xl font-bold text-primary">{recipientName}</p>
-
-        <p className="text-sm text-foreground/75 max-w-xs mx-auto leading-snug">
-          {t("has successfully attended", "has successfully attended")}{" "}
-          <span className="font-semibold text-foreground">
-            "{workshopTitle}"
-          </span>
-        </p>
-
-        {MetaRow}
-      </div>
-
-      <Footer />
-    </motion.div>
-  );
 };
 
 export default CertificateTemplate;

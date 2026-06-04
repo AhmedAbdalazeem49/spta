@@ -14,7 +14,6 @@ import {
   Download,
   ExternalLink,
   Loader2,
-  Palette,
   Shield,
   Sparkles,
 } from "lucide-react";
@@ -33,13 +32,6 @@ interface Certificate {
   template?: CertTemplate;
 }
 
-const TEMPLATES: { key: CertTemplate; labelAr: string; labelEn: string }[] = [
-  { key: "classic", labelAr: "كلاسيكي", labelEn: "Classic" },
-  { key: "modern", labelAr: "عصري", labelEn: "Modern" },
-  { key: "elegant", labelAr: "فاخر", labelEn: "Elegant" },
-  { key: "minimal", labelAr: "بسيط", labelEn: "Minimal" },
-];
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const CertificatesTab = () => {
@@ -51,7 +43,7 @@ const CertificatesTab = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [templateMap, setTemplateMap] = useState<Record<string, CertTemplate>>(
-    {}
+    {},
   );
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -83,7 +75,7 @@ const CertificatesTab = () => {
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
   const getTemplate = (id: string | number): CertTemplate =>
-    templateMap[String(id)] || "elegant";
+    templateMap[String(id)] || "modern";
 
   const setCertTemplate = (id: string | number, tpl: CertTemplate) =>
     setTemplateMap((prev) => ({ ...prev, [String(id)]: tpl }));
@@ -320,40 +312,10 @@ const CertificatesTab = () => {
                                 year: "numeric",
                                 month: "long",
                                 day: "numeric",
-                              }
+                              },
                             )}
                           </p>
                         )}
-                      </div>
-
-                      {/* ───────────────── Template Picker ───────────────── */}
-                      <div className="rounded-2xl border border-border/50 bg-muted/20 p-4">
-                        <p className="text-xs font-semibold text-muted-foreground mb-3 flex items-center gap-2 uppercase tracking-wide">
-                          <Palette className="w-3.5 h-3.5" />
-                          Choose Certificate Style
-                        </p>
-
-                        <div className="grid grid-cols-4 gap-2">
-                          {TEMPLATES.map((tplOpt) => (
-                            <button
-                              key={tplOpt.key}
-                              onClick={() =>
-                                setCertTemplate(cert.id, tplOpt.key)
-                              }
-                              className={`
-                                rounded-xl border px-2 py-2 text-[11px] font-semibold
-                                transition-all duration-200
-                                ${
-                                  tpl === tplOpt.key
-                                    ? "bg-primary text-primary-foreground border-primary shadow-md scale-[1.03]"
-                                    : "bg-background hover:bg-muted border-border text-muted-foreground hover:text-foreground"
-                                }
-                              `}
-                            >
-                              {tplOpt.labelEn}
-                            </button>
-                          ))}
-                        </div>
                       </div>
 
                       {/* ───────────────── Action Buttons ───────────────── */}

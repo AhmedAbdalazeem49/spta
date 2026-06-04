@@ -373,21 +373,6 @@ const DigitalMembershipCard = ({
                     </p>
                   </div>
 
-                  {/* RIGHT */}
-                  <div className="flex items-end gap-8">
-                    {/* SIGNATURE */}
-                    <div className="text-center">
-                      {certificateSettings?.signature_image && (
-                        <div className=" px-5 py-2 shadow-xl mb-2">
-                          <img
-                            src={`https://spta.prower.store${certificateSettings.signature_image}`}
-                            alt="signature"
-                            className="h-16 object-contain"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
