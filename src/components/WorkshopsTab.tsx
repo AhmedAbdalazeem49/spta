@@ -168,7 +168,7 @@ export default function WorkshopsTab() {
                 {reg.workshop.image && (
                   <div className="relative h-64 w-full overflow-hidden">
                     <img
-                      src={`https://spta.prower.store/storage/${reg.workshop.image}`}
+                      src={`https://spta.techflow1.com/storage/${reg.workshop.image}`}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 

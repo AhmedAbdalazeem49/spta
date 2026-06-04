@@ -70,7 +70,7 @@ export const CertificatePreviewModal = ({
 
     const path = value.replace(/^\/storage\//, "");
 
-    return `https://spta.prower.store/api/files/${path}`;
+    return `https://spta.techflow1.com/api/files/${path}`;
   };
 
   // ───────────────────────────────────────────────────────────

@@ -327,7 +327,7 @@ const ProfilePage = () => {
                                 <p className="text-white/70 mt-1 text-sm">
                                   {t(
                                     "الهوية الرقمية الرسمية للعضو",
-                                    "Official Digital Member Identity"
+                                    "Official Digital Member Identity",
                                   )}
                                 </p>
                               </div>
@@ -406,9 +406,9 @@ const ProfilePage = () => {
                               <p className="text-white/85">
                                 {activeMembership?.starts_at
                                   ? new Date(
-                                      activeMembership.starts_at
+                                      activeMembership.starts_at,
                                     ).toLocaleDateString(
-                                      isRTL ? "ar-SA" : "en-US"
+                                      isRTL ? "ar-SA" : "en-US",
                                     )
                                   : "—"}
                               </p>
@@ -422,9 +422,9 @@ const ProfilePage = () => {
                               <p className="text-white/85">
                                 {activeMembership?.ends_at
                                   ? new Date(
-                                      activeMembership.ends_at
+                                      activeMembership.ends_at,
                                     ).toLocaleDateString(
-                                      isRTL ? "ar-SA" : "en-US"
+                                      isRTL ? "ar-SA" : "en-US",
                                     )
                                   : "—"}
                               </p>
@@ -504,7 +504,7 @@ const ProfilePage = () => {
                           <p className="text-center text-sm text-white/60 mt-5 leading-relaxed">
                             {t(
                               "قم بمسح الرمز للتحقق من العضوية وعرض بيانات البطاقة الرسمية",
-                              "Scan to verify membership and display official member card"
+                              "Scan to verify membership and display official member card",
                             )}
                           </p>
                         </div>
@@ -518,7 +518,7 @@ const ProfilePage = () => {
                               <h4 className="font-semibold">
                                 {t(
                                   "اعتماد الشهادة الرسمية",
-                                  "Official Certificate Approval"
+                                  "Official Certificate Approval",
                                 )}
                               </h4>
                             </div>
@@ -543,7 +543,7 @@ const ProfilePage = () => {
                                 {certificateSettings?.signature_image ? (
                                   <div className="w-full rounded-2xl bg-white p-3 inline-flex shadow-lg">
                                     <img
-                                      src={`https://spta.prower.store${certificateSettings.signature_image}`}
+                                      src={`https://spta.techflow1.com${certificateSettings.signature_image}`}
                                       alt="signature"
                                       className="w-full h-16 object-cover"
                                     />
@@ -670,7 +670,7 @@ const ProfilePage = () => {
                       <p className="text-sm leading-relaxed">
                         {t(
                           "لتعديل المعلومات الأساسية أو الرسمية (مثل الاسم أو رقم الهوية)، يرجى التواصل معنا عبر البريد الإلكتروني أو الواتساب وسيقوم فريق الإدارة بمساعدتك.",
-                          "If you need to modify sensitive information such as your name or official data, please contact us via email or WhatsApp and our administration team will assist you."
+                          "If you need to modify sensitive information such as your name or official data, please contact us via email or WhatsApp and our administration team will assist you.",
                         )}
                       </p>
                     </div>
