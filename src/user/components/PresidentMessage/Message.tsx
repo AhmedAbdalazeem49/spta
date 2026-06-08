@@ -149,7 +149,7 @@ export default function Message() {
                   </p>
                   <p className="text-xl font-bold text-primary">
                     {t(
-                      "عبدالفتاح سعيد القحطاني",
+                      "عبدالفتاح بن سعيد القحطاني",
                       "Abdulfattah Saeed Al-Qahtani"
                     )}
                   </p>
