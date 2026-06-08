@@ -12,21 +12,21 @@ const Quote = () => {
     {
       text: t(
         "وبذلنا الغالي والنفيس للمحافظة على صحة الإنسان وتوفير كل أسباب العيش الكريم له.",
-        "We have spared no effort to safeguard human health and provide every means for a dignified life."
+        "We have spared no effort to safeguard human health and provide every means for a dignified life.",
       ),
       author: t(
         "خادم الحرمين الشريفين الملك سلمان بن عبدالعزيز",
-        "Custodian of the Two Holy Mosques King Salman bin Abdulaziz"
+        "Custodian of the Two Holy Mosques King Salman bin Abdulaziz",
       ),
     },
     {
       text: t(
-        "نحن ننظر إلى القطاع غير الربحي على أنه قطاع مهم في دعم مسيرة التعليم والثقافة والصحة والبحث، وسنعتمد عليه بشكل رئيسي.",
-        "We view the non-profit sector as a vital pillar in supporting the advancement of education, culture, health, and research — and we will rely on it as a key driver."
+        "نحن ننظر إلى القطاع غير الربحي على أنه قطاع مهم في دعم مسيرة التعليم والثقافة والصحة والبحث، وسنعتمد عليه بشكل رئيسي",
+        "We view the non-profit sector as a vital pillar in supporting the advancement of education, culture, health, and research — and we will rely on it as a key driver.",
       ),
       author: t(
         "سمو ولي العهد الأمير محمد بن سلمان",
-        "HRH Crown Prince Mohammed bin Salman"
+        "HRH Crown Prince Mohammed bin Salman",
       ),
     },
   ];

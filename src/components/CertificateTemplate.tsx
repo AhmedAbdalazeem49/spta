@@ -20,6 +20,7 @@ interface Cert {
   issued_at?: string;
   workshop_date?: string;
   workshop_end_date?: string;
+  workshop_hours?: number;
   status?: string;
 }
 
@@ -262,7 +263,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   // ══════════════════════════════════════════
   const getDurationAndHours = () => {
     const sStr = cert.workshop_date || cert.issue_date || "";
-    const eStr = cert.workshop_end_date || cert.workshop_date || cert.issue_date || "";
+    const eStr =
+      cert.workshop_end_date || cert.workshop_date || cert.issue_date || "";
     let days = 1;
     let hours = 4;
     if (sStr && eStr) {
@@ -275,6 +277,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           days = diffDays;
           hours = days * 4;
         }
+        // eslint-disable-next-line no-empty
       } catch {}
     }
     return { days, hours };
@@ -295,7 +298,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: "radial-gradient(circle, white 1px, transparent 0)",
+            backgroundImage:
+              "radial-gradient(circle, white 1px, transparent 0)",
             backgroundSize: "28px 28px",
           }}
         />
@@ -313,14 +317,19 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           <p className="text-xs opacity-60 italic">
             {t("This is to certify that", "This is to certify that")}
           </p>
-          <p className="text-3xl font-extrabold text-white tracking-wide">{recipientName}</p>
+          <p className="text-3xl font-extrabold text-white tracking-wide">
+            {recipientName}
+          </p>
 
           <p className="text-xs opacity-60">
-            {t("has successfully attended and completed the workshop:", "has successfully attended and completed the workshop:")}
+            {t(
+              "has successfully attended and completed the workshop:",
+              "has successfully attended and completed the workshop:",
+            )}
           </p>
 
           {/* Workshop title on its own dedicated line */}
-          <div className="max-w-xl mx-auto py-3 px-6 rounded-2xl bg-white/5 border border-white/10 my-3">
+          <div className="max-w-xl mx-auto  my-3">
             <h4 className="text-lg font-bold text-yellow-300 leading-relaxed">
               {workshopTitle}
             </h4>
@@ -329,14 +338,18 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           {/* Presented by doctor */}
           {cert.doctor_name && (
             <p className="text-sm text-blue-200">
-              {t("Presented by", "Presented by")}: <span className="font-semibold text-white">{cert.doctor_name}</span>
+              {t("Presented by", "Presented by")}:{" "}
+              <span className="font-semibold text-white">
+                {cert.doctor_name}
+              </span>
             </p>
           )}
 
           {/* Duration & Hours */}
           <div className="flex justify-center items-center gap-4 text-xs bg-yellow-500/10 text-yellow-300 px-4 py-2 rounded-full w-fit mx-auto border border-yellow-500/20">
             <span>
-              {t("Duration", "Duration")}: {days} {days === 1 ? t("Day", "Day") : t("Days", "Days")}
+              {t("Duration", "Duration")}: {days}{" "}
+              {days === 1 ? t("Day", "Day") : t("Days", "Days")}
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
             <span>
@@ -345,9 +358,13 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-1 text-xs opacity-60">
-            <span>{t("Issue Date", "Issue Date")}: {issueDate}</span>
+            <span>
+              {t("Issue Date", "Issue Date")}: {issueDate}
+            </span>
             {cert.serial_number && (
-              <span>{t("Serial", "Serial")}: {cert.serial_number}</span>
+              <span>
+                {t("Serial", "Serial")}: {cert.serial_number}
+              </span>
             )}
           </div>
         </div>
@@ -374,7 +391,10 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         <div className="relative z-10 text-center space-y-4">
           <LogoRow />
           <p className="text-xs uppercase tracking-widest text-slate-500 font-semibold">
-            {t("Saudi Physical Therapy Association", "Saudi Physical Therapy Association")}
+            {t(
+              "Saudi Physical Therapy Association",
+              "Saudi Physical Therapy Association",
+            )}
           </p>
           <h3 className="text-2xl font-bold tracking-wide text-slate-900 border-b pb-2 max-w-md mx-auto border-slate-200">
             {t("Training Certificate", "Training Certificate")}
@@ -383,10 +403,15 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           <p className="text-xs text-slate-500 uppercase tracking-wider">
             {t("This is to certify that", "This is to certify that")}
           </p>
-          <p className="text-2xl font-extrabold text-slate-950">{recipientName}</p>
+          <p className="text-2xl font-extrabold text-slate-950">
+            {recipientName}
+          </p>
 
           <p className="text-xs text-slate-500">
-            {t("has successfully completed the training workshop:", "has successfully completed the training workshop:")}
+            {t(
+              "has successfully completed the training workshop:",
+              "has successfully completed the training workshop:",
+            )}
           </p>
 
           {/* Workshop title on its own dedicated line */}
@@ -399,7 +424,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           {/* Duration & Hours */}
           <div className="flex justify-center items-center gap-4 text-xs font-medium text-slate-700 bg-slate-100 px-4 py-2 rounded-lg w-fit mx-auto border border-slate-200">
             <span>
-              {t("Duration", "Duration")}: {days} {days === 1 ? t("Day", "Day") : t("Days", "Days")}
+              {t("Duration", "Duration")}: {days}{" "}
+              {days === 1 ? t("Day", "Day") : t("Days", "Days")}
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
             <span>
@@ -408,9 +434,13 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-1 text-xs text-slate-500">
-            <span>{t("Issue Date", "Issue Date")}: {issueDate}</span>
+            <span>
+              {t("Issue Date", "Issue Date")}: {issueDate}
+            </span>
             {cert.serial_number && (
-              <span>{t("Serial", "Serial")}: {cert.serial_number}</span>
+              <span>
+                {t("Serial", "Serial")}: {cert.serial_number}
+              </span>
             )}
           </div>
         </div>
@@ -435,7 +465,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: "radial-gradient(circle, white 1px, transparent 0)",
+            backgroundImage:
+              "radial-gradient(circle, white 1px, transparent 0)",
             backgroundSize: "28px 28px",
           }}
         />
@@ -450,12 +481,20 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           </h3>
 
           <p className="text-xs opacity-60 italic">
-            {t("This certificate is proudly presented to", "This certificate is proudly presented to")}
+            {t(
+              "This certificate is proudly presented to",
+              "This certificate is proudly presented to",
+            )}
           </p>
-          <p className="text-3xl font-bold text-yellow-200 font-serif tracking-wide">{recipientName}</p>
+          <p className="text-3xl font-bold text-yellow-200 font-serif tracking-wide">
+            {recipientName}
+          </p>
 
           <p className="text-xs opacity-70 leading-relaxed max-w-md mx-auto">
-            {t("in recognition of their outstanding contribution, active participation, and commitment to the success of the event:", "in recognition of their outstanding contribution, active participation, and commitment to the success of the event:")}
+            {t(
+              "in recognition of their outstanding contribution, active participation, and commitment to the success of the event:",
+              "in recognition of their outstanding contribution, active participation, and commitment to the success of the event:",
+            )}
           </p>
 
           {/* Workshop title on its own dedicated line */}
@@ -466,9 +505,13 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-1 text-xs opacity-60">
-            <span>{t("Issue Date", "Issue Date")}: {issueDate}</span>
+            <span>
+              {t("Issue Date", "Issue Date")}: {issueDate}
+            </span>
             {cert.serial_number && (
-              <span>{t("Serial", "Serial")}: {cert.serial_number}</span>
+              <span>
+                {t("Serial", "Serial")}: {cert.serial_number}
+              </span>
             )}
           </div>
         </div>
@@ -499,9 +542,10 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           }}
         />
 
-        <div className="relative z-10 text-center space-y-2">
+        <div className="relative z-10 text-center space-y-3">
           <LogoRow dark />
           {OrgHeader}
+
           <h3 className="text-xl font-black tracking-wide">
             {t("Certificate of Completion", "Certificate of Completion")}
           </h3>
@@ -509,48 +553,80 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           <p className="text-xs opacity-60">
             {t("This is to certify that", "This is to certify that")}
           </p>
+
           <p className="text-2xl font-bold">{recipientName}</p>
 
-          <p className="text-sm opacity-80 max-w-xs mx-auto leading-snug">
-            {t("has successfully completed", "has successfully completed")}{" "}
-            <span className="font-semibold">"{workshopTitle}"</span>
+          <p className="text-xs opacity-70">
+            {t(
+              "has successfully completed the workshop:",
+              "has successfully completed the workshop:",
+            )}
           </p>
+
+          {/* Workshop title — its own dedicated block */}
+          <div className="max-w-xl mx-auto ">
+            <h4 className="text-base font-bold leading-snug text-white">
+              {workshopTitle}
+            </h4>
+          </div>
 
           {/* Doctor name */}
           {cert.doctor_name && (
-            <p className="text-xs opacity-60 max-w-xs mx-auto leading-snug">
-              {t("Presented by", "Presented by")}{" "}
+            <p className="text-xs opacity-60">
+              {t("Presented by", "Presented by")}:{" "}
               <span className="font-semibold opacity-90">
                 {cert.doctor_name}
               </span>
             </p>
           )}
 
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            <span className="flex items-center gap-1 px-3 py-1 text-xs">
-              {issueDate}
+          {/* Duration + Hours row */}
+          <div className="flex justify-center items-center gap-4 text-xs font-medium rounded-full w-fit mx-auto">
+            <span>
+              {t("Duration", "Duration")}: {days}{" "}
+              {days === 1 ? t("Day", "Day") : t("Days", "Days")}
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+            <span>
+              {cert.workshop_hours ?? hours}{" "}
+              {t("Training Hours", "Training Hours")}
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            <span className="flex items-center gap-1 px-3 py-1 text-xs">
-              {cert.serial_number}
-            </span>
+          {/* Dates row */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs opacity-60">
+            {cert.workshop_date && (
+              <span>
+                {t("Start", "Start")}: {formatDate(cert.workshop_date)}
+              </span>
+            )}
+            {cert.workshop_end_date && (
+              <>
+                <span className="w-1 h-1 rounded-full bg-white/40" />
+                <span>
+                  {t("End", "End")}: {formatDate(cert.workshop_end_date)}
+                </span>
+              </>
+            )}
           </div>
 
-          {isVerified && (
-            <Badge className="text-white bg-transparent">
-              {t("Verified", "Verified")}
-            </Badge>
-          )}
+          {/* Issue date + serial */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs opacity-50">
+            {cert.serial_number && (
+              <span className="text-white">
+                {t("Serial", "Serial")}: {cert.serial_number}
+              </span>
+            )}
+          </div>
+
         </div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 mt-4">
           <Footer dark accentColor="#fde047" />
         </div>
       </motion.div>
     );
   }
-};
+};;
 
 export default CertificateTemplate;

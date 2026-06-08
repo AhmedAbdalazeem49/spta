@@ -144,11 +144,11 @@ function validate(
     );
 
   if (!form.total_capacity)
-    errors.total_capacity = t("عدد المقاعد مطلوب", "Capacity is required");
+    errors.total_capacity = t("عدد الساعات مطلوب", "Hours is required");
   else if (Number(form.total_capacity) < 1)
     errors.total_capacity = t(
-      "يجب أن يكون عدد المقاعد 1 على الأقل",
-      "Capacity must be ≥ 1"
+      "يجب أن يكون عدد الساعات 1 على الأقل",
+      "Hours must be ≥ 1"
     );
 
 
@@ -633,7 +633,7 @@ export const WorkshopFormModal = ({
               </Field>
 
               <Field
-                label={t("عدد المقاعد", "Capacity")}
+                label={t("عدد الساعات", "Hours")}
                 error={err("total_capacity")}
                 required
                 icon={<Users className="w-3 h-3" />}

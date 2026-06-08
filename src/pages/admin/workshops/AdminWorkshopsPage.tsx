@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 
 // Components
 import { WorkshopDeleteModal } from "@/components/admin/workshops/WorkshopDeleteModal";
-import { WorkshopDetailsModal } from "@/components/admin/workshops/WorkshopDetailsModal";
 import {
   emptyWorkshopForm,
   WorkshopFormModal,
@@ -273,12 +272,6 @@ const AdminWorkshopsPage = () => {
         </CardContent>
       </Card>
 
-      <WorkshopDetailsModal
-        isOpen={isViewOpen}
-        onOpenChange={setIsViewOpen}
-        selected={selected}
-        onOpenEdit={openEdit}
-      />
 
       <WorkshopFormModal
         isOpen={isFormOpen}

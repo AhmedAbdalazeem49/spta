@@ -19,7 +19,6 @@ import {
   Award,
   Building2,
   CheckCircle,
-  Download,
   FileText,
   GraduationCap,
   Mail,
@@ -772,7 +771,7 @@ const ProfilePage = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="bg-background rounded-3xl shadow-2xl w-full max-w-lg p-6 relative"
+            className="bg-background rounded-3xl shadow-2xl w-full max-w-2xl mx-auto p-6 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}

@@ -24,21 +24,35 @@ export default function About() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
               {t(
                 "الجمعية السعودية للعلاج الطبيعي",
-                "Saudi Physical Therapy Association"
+                "Saudi Physical Therapy Association",
               )}
             </h2>
 
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
               {t(
-                "تأسست الجمعية السعودية للعلاج الطبيعي لتمارس نشاطاتها في تطوير المعارف النظرية والتطبيقية , وتقديم الاستشارات والدراسات العلمية والتطبيقات للقطاعات الصحية العامة والخاصة في مجال العلاج الطبيعي .",
-                "The Saudi Physical Therapy Association was established to carry out activities aimed at developing both theoretical and practical knowledge, and to provide consultations, scientific studies, and practical applications to the public and private healthcare sectors in the field of physical therapy."
+                "تُعتبر الجمعية السعودية للعلاج الطبيعي إحدى الجمعيات العلمية التابعة لجامعة الملك سعود، والتي أُنشئت وفق القواعد المنظمة للجمعيات العلمية في الجامعات السعودية، الصادر بقرار مجلس التعليم العالي والمتوج بموافقة خادم الحرمين الشريفين رئيس مجلس الوزراء ورئيس مجلس التعليم العالي بالتوجيه السامي الكريم رقم 284/م بتاريخ 16/3/1421هـ.",
+                "The Saudi Physical Therapy Association is one of the scientific societies affiliated with King Saud University. It was established in accordance with the regulations governing scientific societies in Saudi universities, issued by the Higher Education Council and approved by the Custodian of the Two Holy Mosques, Prime Minister and President of the Higher Education Council, under Royal Decree No. 284/M dated 16/3/1421H.",
+              )}
+            </p>
+
+            <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+              {t(
+                "تمارس الجمعية نشاطاتها في تطوير المعارف النظرية والتطبيقية، وتقديم الاستشارات والدراسات العلمية والتطبيقية للقطاعات الصحية العامة والخاصة في مجال العلاج الطبيعي، ولها تمثيل في قطاعات وطنية وعالمية.",
+                "The association carries out its activities in advancing theoretical and applied knowledge, and providing consultations, scientific studies, and practical applications to both public and private healthcare sectors in the field of physical therapy. It also has representation in national and international sectors.",
               )}
             </p>
 
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               {t(
-                "تمارس الجمعية نشاطاتها في تطوير المعارف النظرية والتطبيقية، وتقديم الاستشارات والدراسات العلمية والتطبيقية للقطاعات الصحية العامة والخاصة في مجال العلاج الطبيعي.",
-                "The association carries out its activities in advancing theoretical and applied knowledge, and providing consultations and scientific studies to both public and private healthcare sectors in the field of physical therapy."
+                "للجمعية مقعد في المجلس الصحي السعودي، كما لها تمثيل عالمي في World Physiotherapy، مما يؤهلها لاستقبال التوصيات العلمية والتعاون البحثي أو التغييرات في المسارات الإكلينيكية على مستوى المملكة العربية السعودية.",
+                "The association holds a seat in the Saudi Health Council and is internationally represented in World Physiotherapy, which enables it to receive scientific recommendations and engage in research collaboration and clinical pathway developments across the Kingdom of Saudi Arabia.",
+              )}
+            </p>
+
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              {t(
+                "من أهم واجبات الجمعية مسؤوليتها المجتمعية في تقديم التوعية الصحية من خلال المشاركات المجتمعية، وتطوير مهنة العلاج الطبيعي من الجانب التعليمي والبحثي عبر التعاون المشترك بين الجمعية والمؤسسات الحكومية والخاصة، تحقيقًا لأهداف رؤية المملكة العربية السعودية 2030 لإعادة هيكلة القطاع الصحي ليكون نظامًا صحيًا شاملاً وفعالاً ومتكاملاً، قائمًا على صحة الفرد والمجتمع، وداعمًا لتكامل القطاعات الخيرية والعلمية والخاصة لخدمة المجتمع.",
+                "One of the association’s key responsibilities is its community role in promoting health awareness through community engagement, and in advancing the physical therapy profession academically and research-wise through collaboration between the association and governmental and private institutions. This aligns with Saudi Vision 2030 goals of restructuring the healthcare sector into a comprehensive, efficient, and integrated system based on the health of individuals and society, and supporting the integration of charitable, scientific, and private sectors in serving the community.",
               )}
             </p>
 

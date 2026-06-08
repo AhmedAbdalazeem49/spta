@@ -15,28 +15,28 @@ const Leadership = () => {
       icon: Crown,
     },
     {
-      name: t("أ. محمد إسماعيل منشي", "Mr. Mohammed Ismail Menshi"),
+      name: t("د. أسماء عبداللطيف الدرع", "Asmaa Abdul Latif Al-Darra"),
       role: t("نائب الرئيس", "Vice Chairman"),
       icon: Shield,
     },
     {
-      name: t("أ. شريفة عبدالله آل معلوي", "Ms. Shareefa Abdullah Al-Maalawi"),
+      name: t("أ. راكان الوابل", "Rakan Al-Wabel"),
       role: t("أمين مجلس الجمعية", "Board Secretary"),
       icon: Landmark,
     },
     {
-      name: t("أ. أنبات أحمد مجرشي", "Mr. Anbat Ahmed Mujarshi"),
+      name: t("د. نواف الحاتم", "Dr. Nawaf Al-Hatem"),
       role: t("أمين مال الجمعية", "Treasurer"),
       icon: Wallet,
     },
   ];
 
   const boardDirectors = [
-    t("د. فيصل خالد الحذيفي", "Dr. Faisal Khaled Al-Huthaifi"),
-    t("د. آلاء محمد البيشي", "Dr. Alaa Mohammed Al-Bishi"),
-    t("د. رشا منصور الغفيلي", "Dr. Rasha Mansour Al-Ghufaili"),
-    t("أ. محمد علي المويسي", "Mr. Mohammed Ali Al-Muwaisi"),
-    t("أ. ملك فايز الرويلي", "Ms. Malak Fayez Al-Ruwaili"),
+    t("د. محمد منصور الشهري", "Dr. Mohammed Mansour Al-Shahri"),
+    t("أ. هيا جاسم الدوسري", "Ms. Haya Jassim Al-Dosari"),
+    t("أ. محمد إسماعيل منشي", "Mr. Mohammed Ismail Monshi"),
+    t("أ. شريفة آل معلوي", "Ms. Sharifa Al-Ma'lawi"),
+    t("أ. شوق سعد الحربي", "Ms. Shouq Saad Al-Harbi"),
   ];
 
   return (
@@ -53,7 +53,7 @@ const Leadership = () => {
           <p className="text-muted-foreground max-w-2xl mx-auto">
             {t(
               "فريق من القادة المتميزين الملتزمين بتطوير مهنة العلاج الطبيعي في المملكة",
-              "A team of distinguished leaders committed to advancing the physical therapy profession in Saudi Arabia"
+              "A team of distinguished leaders committed to advancing the physical therapy profession in Saudi Arabia",
             )}
           </p>
         </div>

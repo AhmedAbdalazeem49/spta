@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React from "react";
 
 const Objectives = () => {
   const { t } = useLanguage();
@@ -11,27 +11,27 @@ const Objectives = () => {
   const objectives = [
     t(
       "تنمية الفكر العلمي في مجال العلاج الطبيعي والعمل على تطويره وتنشيطه.",
-      "Foster scientific thinking in physical therapy and work towards its development and advancement."
+      "Develop scientific thinking in the field of physical therapy and work on its continuous development and activation.",
     ),
     t(
       "تحقيق التواصل العلمي لأعضاء الجمعية وإتاحة الفرصة للعاملين للإسهام في حركة التقدم المعرفي.",
-      "Facilitate scientific communication among members and empower practitioners to contribute to knowledge advancement."
+      "Achieve scientific communication among association members and provide opportunities for practitioners to contribute to knowledge advancement.",
     ),
     t(
       "تقديم المشورة العلمية وإجراء الدراسات اللازمة لرفع مستوى الأداء.",
-      "Provide scientific consultation and conduct studies to elevate professional performance standards."
+      "Provide scientific consultation and conduct necessary studies to improve performance levels.",
     ),
     t(
       "تطوير الأداء العلمي والمهني لممارسي المهنة.",
-      "Enhance the scientific and professional capabilities of practitioners."
+      "Develop the scientific and professional performance of practitioners in the field.",
     ),
     t(
       "تيسير تبادل الإنتاج العلمي والرؤى المعرفية بين الهيئات الصحية داخل المملكة وخارجها.",
-      "Facilitate the exchange of scientific outputs and knowledge between healthcare institutions within and beyond the Kingdom."
+      "Facilitate the exchange of scientific output and knowledge perspectives between healthcare institutions inside and outside the Kingdom.",
     ),
     t(
       "التثقيف الصحي للمجتمع ورفع مستوى الوعي بالصحة العامة.",
-      "Promote public health education and raise awareness about community well-being."
+      "Promote health education in the community and raise public health awareness.",
     ),
   ];
 

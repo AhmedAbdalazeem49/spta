@@ -1,20 +1,12 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import QRCode from "react-qr-code";
 
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-
 import {
-  Award,
   CheckCircle,
   Crown,
-  Download,
-  FileImage,
-  FileText,
   GraduationCap,
   ScanLine,
   Shield,
@@ -95,94 +87,194 @@ interface DigitalMembershipCardProps {
 
 const DigitalMembershipCard = ({
   member,
-  certificateSettings,
   showControls = true,
 }: DigitalMembershipCardProps) => {
   const { t, isRTL } = useLanguage();
-
   const cardRef = useRef<HTMLDivElement>(null);
-
   const [selectedStyle, setSelectedStyle] = useState(cardStyles[0]);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const containerWidth = window.innerWidth;
-      if (containerWidth < 900) {
-        const width = Math.min(860, containerWidth - 32);
-        setScale(width / 860);
-      } else {
-        setScale(1);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const Icon = membershipIcons[member.membershipType];
   const membershipLabel = membershipLabels[member.membershipType];
 
-  /* ============================= */
-  /* DOWNLOAD IMAGE */
-  /* ============================= */
+  const CardFace = ({ back = false }: { back?: boolean }) => (
+    <div
+      className={`
+        absolute inset-0 rounded-2xl md:rounded-[28px] overflow-hidden
+        bg-gradient-to-br ${selectedStyle.gradient} ${selectedStyle.textColor}
+        shadow-[0_20px_60px_rgba(0,0,0,0.4)]
+      `}
+      style={{
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+        transform: back ? "rotateY(180deg)" : "rotateY(0deg)",
+      }}
+    >
+      {/* Ambient blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-12 -right-12 w-48 h-48 md:w-72 md:h-72 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]" />
+        {/* Grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+      </div>
 
-  const downloadAsImage = async () => {
-    if (!cardRef.current) return;
+      {!back ? (
+        /* ── FRONT ── */
+        <div className="relative z-10 h-full flex flex-col p-4 sm:p-6 md:p-8 gap-3 md:gap-4">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 md:gap-3 min-w-0">
+              <div className="shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-center">
+                <Shield className="w-4 h-4 md:w-6 md:h-6" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-xs sm:text-sm md:text-base font-bold leading-tight truncate">
+                  {t(
+                    "الجمعية السعودية للعلاج الطبيعي",
+                    "Saudi Physical Therapy Association",
+                  )}
+                </h2>
+                <p className="text-white/60 text-[10px] md:text-xs mt-0.5">
+                  {t(
+                    "البطاقة الرقمية الرسمية",
+                    "Official Digital Membership Card",
+                  )}
+                </p>
+              </div>
+            </div>
+            <Badge className="shrink-0 bg-emerald-500/20 border border-emerald-300/20 text-white px-2 py-1 rounded-full text-[9px] md:text-xs whitespace-nowrap">
+              <CheckCircle className="w-3 h-3 me-1" />
+              {t("موثقة", "Verified")}
+            </Badge>
+          </div>
 
-    const canvas = await html2canvas(cardRef.current, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: null,
-    });
+          {/* Center — name + qr */}
+          <div className="flex-1 flex items-center justify-between gap-3 md:gap-6 min-h-0">
+            {/* Left: name & details */}
+            <div className="flex flex-col  min-w-0 flex-1">
+              <div>
+                <h1 className="text-md sm:text-xl md:text-3xl font-black leading-tight line-clamp-2">
+                  {t(member.fullName, member.fullNameEn)}
+                </h1>
+              </div>
+              <div>
+                <p className="text-[9px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
+                  {t("جهة العمل", "Workplace")}
+                </p>
+                <p className="text-sm md:text-base text-white/85 line-clamp-2 leading-snug mb-2">
+                  {t(member.workplace, member.workplaceEn)}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <Badge className="bg-white/10 border border-white/10 text-white px-2 py-1 rounded-full text-[9px] md:text-xs">
+                  <Icon className="w-3 h-3 me-1" />
+                  {t(membershipLabel.ar, membershipLabel.en)}
+                </Badge>
+                <Badge className="bg-primary/20 border border-primary/20 text-white px-2 py-1 rounded-full text-[9px] md:text-xs">
+                  #{member.membershipNumber}
+                </Badge>
+              </div>
+            </div>
 
-    const link = document.createElement("a");
+            {/* Right: QR */}
+            <div className="shrink-0 flex flex-col items-center gap-1.5">
+              <div className="bg-white p-2 md:p-3 rounded-xl md:rounded-2xl shadow-xl">
+                <QRCode
+                  value={`${window.location.origin}/verify-membership/${member.membershipNumber}`}
+                  size={72}
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                  level="H"
+                  style={{ display: "block" }}
+                  className="w-[72px] h-[72px] sm:w-[90px] sm:h-[90px] md:w-[130px] md:h-[130px]"
+                />
+              </div>
+              {/* <div className="flex items-center gap-1 text-white/60 text-[9px] md:text-xs">
+                <ScanLine className="w-3 h-3" />
+                {t("امسح للتحقق", "Scan to verify")}
+              </div> */}
+            </div>
+          </div>
 
-    link.download = `membership-card-${member.membershipNumber}.png`;
+          {/* Footer */}
+          <div>
+            <p className="text-[9px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
+              {t("تاريخ الانتهاء", "Expiry Date")}
+            </p>
+            <p className="text-sm md:text-xl font-bold">
+              {new Date(member.expiryDate).toLocaleDateString(
+                isRTL ? "ar-SA" : "en-US",
+                { year: "numeric", month: "long", day: "numeric" },
+              )}
+            </p>
+          </div>
+        </div>
+      ) : (
+        /* ── BACK ── */
+        <div className="relative z-10 h-full flex flex-col p-4 sm:p-6 md:p-8 justify-between">
+          <div>
+            <h2 className="text-xl md:text-4xl font-black mb-2">
+              {t("التحقق الرقمي", "Digital Verification")}
+            </h2>
+            <p className="text-white/70 text-xs md:text-base max-w-sm leading-relaxed">
+              {t(
+                "هذه البطاقة رقمية وموثقة ويمكن التحقق من صحتها عبر رمز QR.",
+                "This card is digitally verified and can be validated through QR verification.",
+              )}
+            </p>
+          </div>
 
-    link.href = canvas.toDataURL("image/png");
+          <div className="space-y-3 md:space-y-5">
+            <div>
+              <p className="text-[10px] md:text-sm text-white/50 uppercase tracking-widest mb-1">
+                {t("رقم العضوية", "Membership Number")}
+              </p>
+              <h3 className="text-2xl md:text-4xl font-black tracking-widest">
+                {member.membershipNumber}
+              </h3>
+            </div>
+            <div>
+              <p className="text-[10px] md:text-sm text-white/50 uppercase tracking-widest mb-1">
+                {t("نوع العضوية", "Membership Type")}
+              </p>
+              <h3 className="text-lg md:text-2xl font-bold">
+                {t(membershipLabel.ar, membershipLabel.en)}
+              </h3>
+            </div>
+          </div>
 
-    link.click();
-  };
-
-  /* ============================= */
-  /* DOWNLOAD PDF */
-  /* ============================= */
-
-  const downloadAsPDF = async () => {
-    if (!cardRef.current) return;
-
-    const canvas = await html2canvas(cardRef.current, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: null,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "px",
-      format: [860, 540],
-    });
-
-    pdf.addImage(imgData, "PNG", 0, 0, 860, 540);
-
-    pdf.save(`membership-card-${member.membershipNumber}.pdf`);
-  };
-
+          <div className="flex items-center justify-between border-t border-white/10 pt-4">
+            <div className="text-white/50 text-xs">
+              © {new Date().getFullYear()} SPTA
+            </div>
+            <div className="flex items-center gap-1.5 text-white/50 text-xs">
+              <Sparkles className="w-3 h-3" />
+              Secure Digital Card
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <div className="space-y-8">
-      {/* STYLE SELECTOR */}
+    <div className="space-y-5 md:space-y-8 w-full">
+      {/* Style selector */}
       {showControls && (
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-3">
           {cardStyles.map((style) => (
             <button
               key={style.id}
               onClick={() => setSelectedStyle(style)}
-              className={`group relative overflow-hidden rounded-2xl border px-5 py-3 transition-all duration-300 ${
+              className={`group relative overflow-hidden rounded-xl md:rounded-2xl border px-3 py-2 md:px-5 md:py-3 transition-all duration-300 ${
                 selectedStyle.id === style.id
                   ? "border-primary shadow-lg scale-105"
                   : "border-border hover:border-primary/40"
@@ -191,13 +283,11 @@ const DigitalMembershipCard = ({
               <div
                 className={`absolute inset-0 bg-gradient-to-r ${style.gradient} opacity-10`}
               />
-
-              <div className="relative flex items-center gap-3">
+              <div className="relative flex items-center gap-2">
                 <div
-                  className={`w-5 h-5 rounded-full bg-gradient-to-r ${style.gradient}`}
+                  className={`w-4 h-4 rounded-full bg-gradient-to-r ${style.gradient}`}
                 />
-
-                <span className="font-medium text-sm">
+                <span className="font-medium text-xs md:text-sm">
                   {t(style.nameAr, style.name)}
                 </span>
               </div>
@@ -206,303 +296,33 @@ const DigitalMembershipCard = ({
         </div>
       )}
 
-      {/* CARD */}
-      <div 
-        className="w-full flex justify-center overflow-visible"
-        style={{ height: `${540 * scale}px` }}
+      {/* Card with true aspect-ratio container */}
+      <div
+        ref={cardRef}
+        className="w-full max-w-[860px] mx-auto"
+        style={{ perspective: "2000px" }}
       >
+        {/* aspect-ratio box: 860/540 ≈ 1.593 */}
         <div
-          className="perspective-[2000px] origin-top"
-          style={{ 
-            transform: `scale(${scale})`,
-            width: "860px",
-            height: "540px"
-          }}
+          className="relative w-full cursor-pointer"
+          style={{ paddingBottom: "62.8%" }}
           onClick={() => setIsFlipped(!isFlipped)}
         >
           <motion.div
             animate={{ rotateY: isFlipped ? 180 : 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
             style={{ transformStyle: "preserve-3d" }}
-            className="relative cursor-pointer w-full h-full"
+            className="absolute inset-0"
           >
-            {/* FRONT */}
-            <div
-              ref={cardRef}
-              style={{ backfaceVisibility: "hidden" }}
-              className={`
-                relative
-                w-[860px]
-                h-[540px]
-                rounded-[36px]
-                overflow-hidden
-                shadow-[0_25px_80px_rgba(0,0,0,0.45)]
-                bg-gradient-to-br
-                ${selectedStyle.gradient}
-                ${selectedStyle.textColor}
-              `}
-            >
-              {/* BACKGROUND */}
-              <div className="absolute inset-0">
-                <div className="absolute -top-20 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
-
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_35%)]" />
-              </div>
-
-              {/* PATTERN */}
-              <div className="absolute inset-0 opacity-[0.05]">
-                <div
-                  className="w-full h-full"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)",
-                    backgroundSize: "30px 30px",
-                  }}
-                />
-              </div>
-
-              {/* CONTENT */}
-              <div className="relative z-10 h-full p-10 flex flex-col">
-                {/* TOP */}
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-center">
-                        <Shield className="w-8 h-8" />
-                      </div>
-
-                      <div>
-                        <h2 className="text-2xl font-bold">
-                          {t(
-                            "الجمعية السعودية للعلاج الطبيعي",
-                            "Saudi Physical Therapy Association"
-                          )}
-                        </h2>
-
-                        <p className="text-white/70 mt-1">
-                          {t(
-                            "البطاقة الرقمية الرسمية",
-                            "Official Digital Membership Card"
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Badge className="bg-emerald-500/20 border border-emerald-300/20 text-white px-4 py-2 rounded-full">
-                    <CheckCircle className="w-4 h-4 me-2" />
-                    {t("عضوية موثقة", "Verified Membership")}
-                  </Badge>
-                </div>
-
-                {/* CENTER */}
-                <div className="flex-1 flex items-center justify-between gap-10">
-                  {/* LEFT */}
-                  <div className="flex items-center gap-6">
-                    {/* IMAGE */}
-                    {/* <div className="relative">
-                      <div className="absolute inset-0 rounded-3xl bg-white/20 blur-xl" />
-
-                      <div className="relative w-40 h-40 rounded-3xl overflow-hidden border-4 border-white/20 shadow-2xl bg-white/10 backdrop-blur-xl">
-                        {member.profileImage ? (
-                          <img
-                            src={member.profileImage}
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-5xl font-bold">
-                            {member.fullName.charAt(0)}
-                          </div>
-                        )}
-                      </div>
-                    </div> */}
-
-                    {/* INFO */}
-                    <div className="space-y-5">
-                      <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-white/50 mb-2">
-                          {t("اسم العضو", "Member")}
-                        </p>
-
-                        <h1 className="text-4xl font-black leading-tight">
-                          {t(member.fullName, member.fullNameEn)}
-                        </h1>
-                      </div>
-
-                      <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-white/50 mb-2">
-                          {t("جهة العمل", "Workplace")}
-                        </p>
-
-                        <p className="text-xl text-white/90">
-                          {t(member.workplace, member.workplaceEn)}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <Badge className="bg-white/10 border border-white/10 text-white px-5 py-2 rounded-full text-sm">
-                          <Icon className="w-4 h-4 me-2" />
-                          {t(membershipLabel.ar, membershipLabel.en)}
-                        </Badge>
-
-                        <Badge className="bg-primary/20 border border-primary/20 text-white px-5 py-2 rounded-full text-sm">
-                          #{member.membershipNumber}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* RIGHT */}
-                  <div className="flex flex-col items-center">
-                    {/* QR */}
-                    <div className="bg-white p-5 rounded-3xl shadow-2xl">
-                      <QRCode
-                        value={`${window.location.origin}/verify-membership/${member.membershipNumber}`}
-                        size={180}
-                        bgColor="#ffffff"
-                        fgColor="#000000"
-                        level="H"
-                      />
-                    </div>
-
-                    <div className="mt-4 text-center">
-                      <div className="flex items-center justify-center gap-2 text-white/70 text-sm">
-                        <ScanLine className="w-4 h-4" />
-
-                        {t("امسح للتحقق من العضوية", "Scan to verify")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* FOOTER */}
-                <div className="flex items-end justify-between">
-                  {/* LEFT */}
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
-                      {t("تاريخ الانتهاء", "Expiry Date")}
-                    </p>
-
-                    <p className="text-2xl font-bold">
-                      {new Date(member.expiryDate).toLocaleDateString(
-                        isRTL ? "ar-SA" : "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            {/* BACK SIDE */}
-            <div
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateY(180deg)",
-              }}
-              className={`
-                absolute
-                inset-0
-                w-[860px]
-                h-[540px]
-                rounded-[36px]
-                overflow-hidden
-                shadow-[0_25px_80px_rgba(0,0,0,0.45)]
-                bg-gradient-to-br
-                ${selectedStyle.gradient}
-                ${selectedStyle.textColor}
-              `}
-            >
-              <div className="relative h-full p-12 flex flex-col justify-between">
-                <div>
-                  <h2 className="text-4xl font-black mb-3">
-                    {t("التحقق الرقمي", "Digital Verification")}
-                  </h2>
-
-                  <p className="text-white/70 text-lg max-w-xl leading-relaxed">
-                    {t(
-                      "هذه البطاقة رقمية وموثقة ويمكن التحقق من صحتها عبر رمز QR أو نظام التحقق الإلكتروني الخاص بالجمعية.",
-                      "This card is digitally verified and can be validated through QR verification."
-                    )}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-5">
-                    <div>
-                      <p className="text-sm text-white/50 uppercase tracking-[0.25em] mb-2">
-                        {t("رقم العضوية", "Membership Number")}
-                      </p>
-
-                      <h3 className="text-4xl font-black tracking-widest">
-                        {member.membershipNumber}
-                      </h3>
-                    </div>
-
-                    <div>
-                      <p className="text-sm text-white/50 uppercase tracking-[0.25em] mb-2">
-                        {t("نوع العضوية", "Membership Type")}
-                      </p>
-
-                      <h3 className="text-2xl font-bold">
-                        {t(membershipLabel.ar, membershipLabel.en)}
-                      </h3>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="flex items-center justify-between border-t border-white/10 pt-6">
-                  <div className="text-white/60">
-                    © {new Date().getFullYear()} SPTA
-                  </div>
-
-                  <div className="flex items-center gap-2 text-white/60">
-                    <Sparkles className="w-4 h-4" />
-                    Secure Digital Card
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CardFace />
+            <CardFace back />
           </motion.div>
         </div>
       </div>
 
-      {/* HINT */}
-      <p className="text-center text-muted-foreground">
+      <p className="text-center text-xs md:text-sm text-muted-foreground">
         {t("اضغط على البطاقة لقلبها", "Click the card to flip")}
       </p>
-
-      {/* ACTIONS */}
-      {showControls && (
-        <div className="flex-wrap justify-center gap-4 hidden">
-          <Button
-            onClick={downloadAsImage}
-            variant="outline"
-            className="rounded-2xl gap-2 h-12 px-6"
-          >
-            <FileImage className="w-4 h-4" />
-
-            {t("تحميل كصورة", "Download Image")}
-          </Button>
-
-          <Button
-            onClick={downloadAsPDF}
-            className="rounded-2xl gap-2 h-12 px-6 shadow-xl"
-          >
-            <FileText className="w-4 h-4" />
-
-            {t("تحميل PDF", "Download PDF")}
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

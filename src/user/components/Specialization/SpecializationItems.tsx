@@ -10,14 +10,13 @@ import {
   Brain,
   ChevronRight,
   Dumbbell,
+  Eye,
   Heart,
   Sparkles,
-  Users,
   Stethoscope,
+  Users,
   Zap,
-  Eye,
 } from "lucide-react";
-import React from "react";
 import { Link } from "react-router-dom";
 
 export default function SpecializationItems() {
@@ -31,7 +30,7 @@ export default function SpecializationItems() {
       leader: t("د. رشا منصور الغفيلي", "Dr. Rasha Mansour Al-Ghufaili"),
       desc: t(
         "تخصص يهتم بصحة القلب والرئتين وتحسين كفاءة التنفس.",
-        "Focuses on heart and lung health and improving breathing efficiency."
+        "Focuses on heart and lung health and improving breathing efficiency.",
       ),
       color: "from-red-500 to-rose-600",
     },
@@ -42,7 +41,7 @@ export default function SpecializationItems() {
       leader: t("د. مشعل محمد الديحان", "Dr. Mishal Mohammed Al-Daihan"),
       desc: t(
         "يعالج اضطرابات الجهاز العصبي وتحسين الحركة والتوازن.",
-        "Treats nervous system disorders and improves mobility and balance."
+        "Treats nervous system disorders and improves mobility and balance.",
       ),
       color: "from-purple-500 to-indigo-600",
     },
@@ -53,7 +52,7 @@ export default function SpecializationItems() {
       leader: t("د. غادة محمد القديري", "Dr. Ghada Mohammed Al-Qudairi"),
       desc: t(
         "رعاية متخصصة لصحة المرأة في مختلف المراحل.",
-        "Specialized care for women’s health across all stages."
+        "Specialized care for women's health across all stages.",
       ),
       color: "from-pink-500 to-fuchsia-600",
     },
@@ -64,7 +63,7 @@ export default function SpecializationItems() {
       leader: t("د. علي متعب الشامي", "Dr. Ali Mutaib Al-Shami"),
       desc: t(
         "علاج إصابات العظام والمفاصل وإعادة التأهيل.",
-        "Treats bone and joint injuries with rehabilitation."
+        "Treats bone and joint injuries with rehabilitation.",
       ),
       color: "from-orange-500 to-amber-600",
     },
@@ -72,10 +71,10 @@ export default function SpecializationItems() {
       id: "sports",
       icon: Dumbbell,
       title: t("الطب الرياضي", "Sports Medicine"),
-      leader: t("د. مساعد محمد الزهراني", "Dr. Musaad Mohammed Al-Zahrani"),
+      leader: t("أ. راكان الوابل", "Mr. Rakan Al-Wabel"),
       desc: t(
         "تأهيل الرياضيين وتحسين الأداء البدني.",
-        "Rehabilitates athletes and enhances performance."
+        "Rehabilitates athletes and enhances performance.",
       ),
       color: "from-emerald-500 to-green-600",
     },
@@ -86,7 +85,7 @@ export default function SpecializationItems() {
       leader: t("د. نوف محمد الضويان", "Dr. Nouf Mohammed Al-Dhuwayan"),
       desc: t(
         "دعم وتأهيل مرضى الأورام لتحسين جودة الحياة.",
-        "Supports cancer patients to improve quality of life."
+        "Supports cancer patients to improve quality of life.",
       ),
       color: "from-cyan-500 to-teal-600",
     },
@@ -94,10 +93,10 @@ export default function SpecializationItems() {
       id: "lymphedema",
       icon: Stethoscope,
       title: t("المجموعة السعودية للوذمة اللمفاوية", "Saudi Lymphedema Group"),
-      leader: t("د. أسماء عبداللطيف الدرع", "Dr. Asma Abdullatif Al-Dara"),
+      leader: t("د. أسماء عبداللطيف الدرع", "Dr. Asmaa Abdul Latif Al-Darra"),
       desc: t(
         "تشخيص وعلاج الوذمة اللمفاوية بطرق متقدمة.",
-        "Advanced diagnosis and treatment of lymphedema."
+        "Advanced diagnosis and treatment of lymphedema.",
       ),
       color: "from-violet-500 to-purple-600",
     },
@@ -108,7 +107,7 @@ export default function SpecializationItems() {
       leader: t("د. مشاري صالح الغدير", "Dr. Mishari Saleh Al-Ghadeer"),
       desc: t(
         "رعاية وتأهيل الأطفال لتحسين النمو والحركة.",
-        "Care and rehabilitation for children’s development."
+        "Care and rehabilitation for children's development.",
       ),
       color: "from-sky-500 to-blue-600",
     },
@@ -119,7 +118,7 @@ export default function SpecializationItems() {
       leader: t("د. فارس عبدالله العضيبي", "Dr. Faris Abdullah Al-Adhaibi"),
       desc: t(
         "إدارة الألم المزمن وتحسين جودة الحياة.",
-        "Manages chronic pain and enhances quality of life."
+        "Manages chronic pain and enhances quality of life.",
       ),
       color: "from-amber-500 to-yellow-600",
     },
@@ -130,7 +129,7 @@ export default function SpecializationItems() {
       leader: t("أ.د. سامي العبدالوهاب", "Prof. Sami Al-Abdulwahab"),
       desc: t(
         "استخدام التقنيات الكهربائية في العلاج الطبيعي.",
-        "Uses electrical techniques in physiotherapy."
+        "Uses electrical techniques in physiotherapy.",
       ),
       color: "from-indigo-500 to-blue-700",
     },
@@ -147,7 +146,7 @@ export default function SpecializationItems() {
           <p className="text-muted-foreground max-w-2xl mx-auto">
             {t(
               "تضم الجمعية عشر مجموعات تخصصية يقودها نخبة من المتخصصين",
-              "SPTA comprises ten specialty groups led by elite specialists"
+              "SPTA comprises ten specialty groups led by elite specialists",
             )}
           </p>
         </div>

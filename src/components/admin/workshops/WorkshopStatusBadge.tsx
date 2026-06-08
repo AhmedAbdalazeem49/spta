@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const workshopStatusConfig = {
   open: {
     label_ar: "مفتوح",

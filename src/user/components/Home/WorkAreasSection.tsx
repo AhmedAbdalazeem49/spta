@@ -1,86 +1,97 @@
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import {
+  Activity,
+  ArrowRight,
+  Award,
+  BookOpen,
+  Brain,
+  Building2,
+  FileText,
   GraduationCap,
   Heart,
   Microscope,
-  BookOpen,
   Stethoscope,
   Users,
-  FileText,
-  Award,
-  ArrowRight,
-  Building2,
-  Brain,
-  Activity,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const WorkAreasSection = () => {
   const { t, isRTL } = useLanguage();
   const [activeArea, setActiveArea] = useState<number | null>(null);
 
-  const workAreas = [
-    {
-      id: 1,
-      icon: GraduationCap,
-      title: t("التعليم والتطوير", "Education & Development"),
-      subtitle: t(
-        "ورش العمل والدورات التخصصية والمحاضرات",
-        "Workshops, specialized courses, and lectures"
-      ),
-      color: "from-blue-500 to-blue-700",
-      bgPattern: "bg-gradient-to-br from-blue-500/10 to-blue-700/10",
-      stats: { number: "5000+", label: t("مستفيد", "Beneficiaries") },
-      activities: [
-        { icon: BookOpen, text: t("ورش العمل التخصصية", "Specialized Workshops") },
-        { icon: Award, text: t("الندوات والمحاضرات", "Seminars & Lectures") },
-        { icon: Users, text: t("المؤتمرات العلمية", "Scientific Conferences") },
-        { icon: FileText, text: t("تأليف وترجمة الكتب العلمية", "Authoring & Translating Scientific Books") },
-      ],
-      link: "/booklets",
-      cta: t("استعرض البرامج", "Browse Programs"),
+const workAreas = [
+  {
+    id: 1,
+    icon: Microscope,
+    title: t("البحث العلمي", "Scientific Research"),
+    subtitle: t(
+      "تشجيع إجراء البحوث العلمية والدراسات الاستشارية",
+      "Encouraging scientific research and consultancy studies",
+    ),
+    color: "from-emerald-500 to-teal-600",
+    bgPattern: "bg-gradient-to-br from-emerald-500/10 to-teal-600/10",
+    stats: {
+      number: "1",
+      label: t("مجلة علمية دولية", "International Journal"),
     },
-    {
-      id: 2,
-      icon: Heart,
-      title: t("خدمة المجتمع", "Community Service"),
-      subtitle: t("التوعية الصحية والأنشطة المجتمعية", "Health awareness and community activities"),
-      color: "from-red-500 to-rose-600",
-      bgPattern: "bg-gradient-to-br from-red-500/10 to-rose-600/10",
-      stats: { number: "13", label: t("فرعاً حول المملكة", "Branches Across KSA") },
-      activities: [
-        { icon: Stethoscope, text: t("التوعية الصحية المجتمعية", "Community Health Awareness") },
-        { icon: Activity, text: t("الأنشطة الثقافية والترفيهية", "Cultural & Recreational Activities") },
-        { icon: Building2, text: t("المشاركات في المعارض", "Exhibition Participation") },
-        { icon: Brain, text: t("التثقيف الصحي للمجتمع", "Public Health Education") },
-      ],
-      link: "/about",
-      cta: t("اكتشف المزيد", "Discover More"),
-    },
-    {
-      id: 3,
-      icon: Microscope,
-      title: t("البحث العلمي", "Scientific Research"),
-      subtitle: t(
-        "تشجيع البحوث والدراسات الاستشارية",
-        "Encouraging research and consultancy studies"
-      ),
-      color: "from-emerald-500 to-teal-600",
-      bgPattern: "bg-gradient-to-br from-emerald-500/10 to-teal-600/10",
-      stats: { number: "1", label: t("مجلة علمية دولية", "International Journal") },
-      activities: [
-        { icon: FileText, text: t("المجلة العلمية", "Scientific Journal") },
-        { icon: BookOpen, text: t("البحوث والدراسات", "Research & Studies") },
-        { icon: Award, text: t("الشراكات البحثية", "Research Partnerships") },
-        { icon: Users, text: t("التعاون مع World Physiotherapy", "World Physiotherapy Collaboration") },
-      ],
-      link: "/research",
-      cta: t("ابدأ البحث", "Start Research"),
-    },
-  ];
+    activities: [
+      {
+        icon: FileText,
+        text: t(
+          "إجراء البحوث العلمية والدراسات الاستشارية",
+          "Conducting scientific research and consultancy studies",
+        ),
+      },
+      {
+        icon: BookOpen,
+        text: t(
+          "تأليف وترجمة الكتب العلمية",
+          "Authoring and translating scientific books",
+        ),
+      },
+      {
+        icon: Award,
+        text: t(
+          "عقد الندوات العلمية وورش العمل والدورات",
+          "Holding scientific seminars, workshops, and courses",
+        ),
+      },
+      {
+        icon: FileText,
+        text: t(
+          "إصدار الدراسات والنشرات والدوريات العلمية",
+          "Publishing studies, newsletters, and scientific journals",
+        ),
+      },
+      {
+        icon: Building2,
+        text: t(
+          "المشاركة في المعارض المحلية والدولية",
+          "Participation in local and international exhibitions",
+        ),
+      },
+      {
+        icon: Users,
+        text: t(
+          "دعوة العلماء والمفكرين للمشاركة في أنشطة الجمعية",
+          "Inviting scholars and thinkers to participate in association activities",
+        ),
+      },
+      {
+        icon: Heart,
+        text: t(
+          "المساهمة في التوعية الصحية",
+          "Contributing to public health awareness",
+        ),
+      },
+    ],
+    link: "/research",
+    cta: t("ابدأ البحث", "Start Research"),
+  },
+];
 
   return (
     <section className="section-padding bg-gradient-to-b from-background via-secondary/20 to-background relative overflow-hidden">
@@ -100,7 +111,7 @@ const WorkAreasSection = () => {
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             {t(
               "نعمل في ثلاثة محاور رئيسية لتطوير مهنة العلاج الطبيعي في المملكة العربية السعودية تحقيقًا لأهداف رؤية 2030",
-              "We work across three main pillars to develop the physical therapy profession in Saudi Arabia, aligned with Vision 2030 objectives"
+              "We work across three main pillars to develop the physical therapy profession in Saudi Arabia, aligned with Vision 2030 objectives",
             )}
           </p>
         </div>
@@ -115,7 +126,9 @@ const WorkAreasSection = () => {
               onHoverEnd={() => setActiveArea(null)}
               className={`relative rounded-3xl overflow-hidden ${area.bgPattern} border border-border/50 group`}
             >
-              <motion.div className={`absolute inset-0 bg-gradient-to-br ${area.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+              <motion.div
+                className={`absolute inset-0 bg-gradient-to-br ${area.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+              />
 
               <div className="relative p-8">
                 <div className="flex items-start gap-4 mb-6">
@@ -127,8 +140,12 @@ const WorkAreasSection = () => {
                     <area.icon className="w-8 h-8 text-white" />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-1">{area.title}</h3>
-                    <p className="text-muted-foreground text-sm">{area.subtitle}</p>
+                    <h3 className="text-2xl font-bold text-foreground mb-1">
+                      {area.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {area.subtitle}
+                    </p>
                   </div>
                 </div>
 
@@ -140,10 +157,14 @@ const WorkAreasSection = () => {
                   className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-border/30"
                 >
                   <div className="flex items-center justify-center gap-3">
-                    <span className={`text-4xl font-bold bg-gradient-to-r ${area.color} bg-clip-text text-transparent`}>
+                    <span
+                      className={`text-4xl font-bold bg-gradient-to-r ${area.color} bg-clip-text text-transparent`}
+                    >
                       {area.stats.number}
                     </span>
-                    <span className="text-muted-foreground">{area.stats.label}</span>
+                    <span className="text-muted-foreground">
+                      {area.stats.label}
+                    </span>
                   </div>
                 </motion.div>
 
@@ -157,7 +178,9 @@ const WorkAreasSection = () => {
                       transition={{ delay: 0.1 * actIndex }}
                       className="flex items-center gap-3 group/item"
                     >
-                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-20 flex items-center justify-center group-hover/item:scale-110 transition-transform`}>
+                      <div
+                        className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-20 flex items-center justify-center group-hover/item:scale-110 transition-transform`}
+                      >
                         <activity.icon className="w-4 h-4 text-white" />
                       </div>
                       <span className="text-foreground/80 group-hover/item:text-foreground transition-colors">
@@ -168,14 +191,20 @@ const WorkAreasSection = () => {
                 </div>
 
                 <Link to={area.link}>
-                  <Button className={`w-full bg-gradient-to-r ${area.color} text-white border-0 hover:opacity-90 group/btn`}>
+                  <Button
+                    className={`w-full bg-gradient-to-r ${area.color} text-white border-0 hover:opacity-90 group/btn`}
+                  >
                     {area.cta}
-                    <ArrowRight className={`w-4 h-4 ${isRTL ? "rotate-180 mr-2" : "ml-2"} group-hover/btn:translate-x-1 transition-transform`} />
+                    <ArrowRight
+                      className={`w-4 h-4 ${isRTL ? "rotate-180 mr-2" : "ml-2"} group-hover/btn:translate-x-1 transition-transform`}
+                    />
                   </Button>
                 </Link>
               </div>
 
-              <motion.div className={`absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-br ${area.color} rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`} />
+              <motion.div
+                className={`absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-br ${area.color} rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
+              />
             </motion.div>
           ))}
         </div>

@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const EMPTY_FORM = {
   // Selectors
   workshopId: "",

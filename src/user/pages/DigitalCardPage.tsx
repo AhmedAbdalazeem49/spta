@@ -62,7 +62,7 @@ const DigitalCardPage = () => {
         </div>
 
         <div className="container-custom relative z-10 text-center">
-          <div data-aos="fade-up">
+          <div>
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
               <CreditCard className="w-5 h-5 text-green-accent" />
               <span className="text-white text-sm font-medium">
@@ -85,7 +85,7 @@ const DigitalCardPage = () => {
       {/* Card Preview Section */}
       <section className="py-16 bg-muted/30">
         <div className="container-custom">
-          <div className="max-w-2xl mx-auto" data-aos="fade-up">
+          <div className="max-w-2xl mx-auto">
             <DigitalMembershipCard
               member={mockMember}
               showControls={true}
@@ -101,7 +101,6 @@ const DigitalCardPage = () => {
         <div className="container-custom">
           <h2
             className="text-3xl font-bold text-center mb-12"
-            data-aos="fade-up"
           >
             {t("مميزات البطاقة الرقمية", "Digital Card Features")}
           </h2>
@@ -111,7 +110,6 @@ const DigitalCardPage = () => {
               <Card
                 key={index}
                 className="card-hover text-center"
-                data-aos="fade-up"
                 data-aos-delay={index * 100}
               >
                 <CardContent className="p-8">

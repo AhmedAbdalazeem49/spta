@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 
-type MembershipKey = "active" | "affiliate" | "student" | "intern";
+type MembershipKey = "active" | "affiliate" | "student" | "intern" | "honorary";
 
 export interface Plan {
   key: MembershipKey;
@@ -28,6 +28,10 @@ const planStyles: Record<MembershipKey, { accent: string; glow: string }> = {
     glow: "group-hover:shadow-emerald-500/20",
   },
   intern: {
+    accent: "from-purple-600 via-indigo-500 to-violet-500",
+    glow: "group-hover:shadow-purple-500/20",
+  },
+  honorary: {
     accent: "from-purple-600 via-indigo-500 to-violet-500",
     glow: "group-hover:shadow-purple-500/20",
   },
@@ -77,6 +81,24 @@ const plans: Plan[] = [
       "Training",
       "Learning materials",
       "Student events",
+    ],
+  },
+  {
+    key: "honorary",
+    nameAr: "العضوية الشرفية",
+    nameEn: "Honorary Membership",
+    price: 0,
+    descriptionAr: "تُمنح بقرار الجمعية العمومية بناءً على ترشيح مجلس الإدارة",
+    descriptionEn: "Granted by the General Assembly upon Board nomination",
+    featuresAr: [
+      "الإعفاء من سداد الاشتراك",
+      "حضور الجلسات",
+      "المشاركة في المناقشات",
+    ],
+    featuresEn: [
+      "Exempt from fees",
+      "Attend sessions",
+      "Participate in discussions",
     ],
   },
 ];
@@ -171,24 +193,40 @@ export default function Plans({
                 </div>
 
                 {/* ACTION */}
-                <button
-                  onClick={() => onSelect(plan)}
-                  className={`
-                    relative overflow-hidden w-full rounded-2xl px-6 py-4
-                    font-semibold text-white transition-all duration-300
-                    bg-gradient-to-r ${style.accent}
-                    hover:scale-[1.02] active:scale-[0.98]
-                    shadow-lg
-                  `}
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {t("اشترك الآن", "Register Now")}
+                {plan.key === "honorary" ? (
+                  <a
+                    href="/contact"
+                    className={`
+      relative overflow-hidden w-full rounded-2xl px-6 py-4
+      font-semibold text-white transition-all duration-300
+      bg-gradient-to-r ${style.accent}
+      hover:scale-[1.02] active:scale-[0.98]
+      shadow-lg flex items-center justify-center gap-2
+    `}
+                  >
+                    {t("تواصل معنا", "Contact Us")}
                     <ArrowRight className="w-4 h-4" />
-                  </span>
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => onSelect(plan)}
+                    className={`
+      relative overflow-hidden w-full rounded-2xl px-6 py-4
+      font-semibold text-white transition-all duration-300
+      bg-gradient-to-r ${style.accent}
+      hover:scale-[1.02] active:scale-[0.98]
+      shadow-lg
+    `}
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {t("اشترك الآن", "Register Now")}
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
 
-                  {/* BUTTON GLOW */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition bg-white blur-xl" />
-                </button>
+                    {/* BUTTON GLOW */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition bg-white blur-xl" />
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>
