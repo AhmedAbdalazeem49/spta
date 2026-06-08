@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import hero1 from "@/assets/spta-speaker-1.jpg";
+import hero1 from "@/assets/spta-speaker-1.jpeg";
 
 export default function Message() {
   const { t, isRTL } = useLanguage();
@@ -86,8 +86,8 @@ export default function Message() {
                   >
                     <p className="font-bold text-lg">
                       {t(
-                        "عبدالفتاح سعيد القحطاني",
-                        "Abdulfattah Saeed Al-Qahtani"
+                        "عبدالفتاح بن سعيد القحطاني",
+                        "Abdulfattah  Saeed Al-Qahtani"
                       )}
                     </p>
                     <p className="text-sm opacity-90">

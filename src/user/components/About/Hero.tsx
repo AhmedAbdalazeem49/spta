@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-import sptaSpeaker1 from "@/assets/spta-speaker-1.jpg";
+import sptaSpeaker1 from "@/assets/spta-speaker-1.jpeg";
 
 const Hero = () => {
   const { t, isRTL } = useLanguage();
