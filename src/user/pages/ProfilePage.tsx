@@ -388,7 +388,10 @@ const ProfilePage = () => {
 
                             <div>
                               <p className="text-xs uppercase tracking-[0.25em] text-white/50 mb-2">
-                                {t("رقم الهوية", "National ID")}
+                                {t(
+                                  "رقم الهوية / الإقامة",
+                                  "National ID / Iqama",
+                                )}
                               </p>
 
                               <p className="text-white/85 tracking-widest">

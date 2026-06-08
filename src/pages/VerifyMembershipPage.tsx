@@ -47,6 +47,7 @@ export default function VerifyMembershipPage() {
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
   const fetchData = async () => {
@@ -56,6 +57,7 @@ export default function VerifyMembershipPage() {
       const res = await api.get(`/membership/verify/${code}`);
 
       setData(res.data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError("Membership not found or invalid code");
     } finally {
@@ -231,7 +233,6 @@ export default function VerifyMembershipPage() {
 
               <Info icon={User} label="Full Name" value={user.name} />
               <Info icon={Building} label="Employer" value={user.employer} />
-              <Info icon={Hash} label="National ID" value={user.national_id} />
             </div>
 
             {/* MEMBERSHIP INFO */}
@@ -247,13 +248,13 @@ export default function VerifyMembershipPage() {
               <Info
                 icon={Calendar}
                 label="Start Date"
-                value={membership.starts_at}
+                value={membership.starts_at?.split("T")[0]}
               />
 
               <Info
                 icon={Calendar}
                 label="Expiry Date"
-                value={membership.ends_at}
+                value={membership.ends_at?.split("T")[0]}
               />
 
               <Info icon={Shield} label="Status" value={membership.status} />
@@ -281,6 +282,7 @@ export default function VerifyMembershipPage() {
 }
 
 /* SMALL COMPONENT */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Info({ icon: Icon, label, value }: any) {
   return (
     <div className="flex items-start gap-3">

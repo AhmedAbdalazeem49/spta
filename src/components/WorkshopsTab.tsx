@@ -15,7 +15,6 @@ import {
   XCircle
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import QRCode from "react-qr-code";
 
 interface WorkshopRegistration {
   id: number;
@@ -281,21 +280,6 @@ export default function WorkshopsTab() {
                     </Badge>
                   </div>
 
-                  {/* QR SECTION */}
-                  <div className="flex items-center justify-between rounded-2xl border border-border/40 bg-background p-4 hover:shadow-md transition">
-                    <div className="text-xs text-muted-foreground">
-                      {t("امسح للحضور", "Scan for attendance")}
-                    </div>
-
-                    <div className="bg-white p-2 rounded-xl shadow-sm hover:scale-105 transition">
-                      <QRCode
-                        value={attendanceUrl}
-                        size={80}
-                        bgColor="#fff"
-                        fgColor="#000"
-                      />
-                    </div>
-                  </div>
 
                   {/* ACTIONS */}
                   <div className="flex gap-2 pt-2">

@@ -77,7 +77,7 @@ export const UserAddModal = ({
           <DialogDescription>
             {t(
               "أدخل بيانات المستخدم الجديد. الحقول المميزة بـ * إلزامية.",
-              "Enter the new user's details. Fields marked * are required."
+              "Enter the new user's details. Fields marked * are required.",
             )}
           </DialogDescription>
         </DialogHeader>
@@ -190,17 +190,23 @@ export const UserAddModal = ({
                   />
                 </div>
               </div>
-
               <div className="space-y-1.5">
-                <Label>{t("رقم الهوية", "National ID")}</Label>
+                <Label>
+                  {t("رقم الهوية / الإقامة", "National ID / Iqama")}
+                </Label>
+
                 <div className="relative">
                   <CreditCard
                     className={`absolute top-1/2 -translate-y-1/2 ${
                       isRTL ? "right-3" : "left-3"
                     } w-4 h-4 text-muted-foreground`}
                   />
+
                   <Input
-                    placeholder={t("رقم الهوية الوطنية", "National ID number")}
+                    placeholder={t(
+                      "رقم الهوية الوطنية أو رقم الإقامة",
+                      "National ID or Iqama number",
+                    )}
                     value={addForm.national_id}
                     onChange={(e) =>
                       setAddForm({ ...addForm, national_id: e.target.value })
@@ -323,7 +329,7 @@ export const UserAddModal = ({
                         <XCircle className="w-3 h-3" />
                         {t(
                           "كلمتا المرور غير متطابقتين",
-                          "Passwords do not match"
+                          "Passwords do not match",
                         )}
                       </p>
                     )}
@@ -421,8 +427,8 @@ export const UserAddModal = ({
                       {addForm.role === "system_admin"
                         ? t("مدير النظام", "System Admin")
                         : addForm.role === "branch_admin"
-                        ? t("مدير فرع", "Branch Manager")
-                        : t("عضو", "Member")}
+                          ? t("مدير فرع", "Branch Manager")
+                          : t("عضو", "Member")}
                     </span>
                   </div>
                 </div>

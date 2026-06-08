@@ -66,8 +66,9 @@ const RULES = {
     return null;
   },
   nationalId: (v: string) => {
-    if (!v.trim()) return "رقم الهوية الوطنية مطلوب";
-    if (!/^\d{10}$/.test(v)) return "رقم الهوية يجب أن يكون 10 أرقام بالضبط";
+    if (!v.trim()) return "رقم الهوية الوطنية أو رقم الإقامة مطلوب";
+    if (!/^\d{10}$/.test(v))
+      return "رقم الهوية أو رقم الإقامة يجب أن يكون 10 أرقام بالضبط";
     return null;
   },
   email: (v: string) => {
@@ -358,6 +359,7 @@ const SignupPage = () => {
       });
 
       navigate("/verify-otp", { state: { email: formData.email } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const serverErrors = error?.response?.data?.errors;
       if (serverErrors) {
@@ -476,7 +478,7 @@ const SignupPage = () => {
                   <p className="text-xs text-amber-800 leading-relaxed">
                     {t(
                       "الرجاء إدخال اسمك الكامل (الثلاثي أو الرباعي) كما تريد ظهوره على الشهادات وبطاقات العضوية",
-                      "Please enter your full name as you want it to appear on certificates and membership cards"
+                      "Please enter your full name as you want it to appear on certificates and membership cards",
                     )}
                   </p>
                 </div>
@@ -543,8 +545,8 @@ const SignupPage = () => {
                   </Field>
 
                   <Field
-                    label="رقم الهوية الوطنية"
-                    labelEn="National ID"
+                    label="رقم الهوية الوطنية أو رقم الإقامة"
+                    labelEn="National ID or Iqama"
                     required
                     error={errors.nationalId}
                     hint={!touched.nationalId ? "10 أرقـــام" : undefined}
@@ -556,7 +558,7 @@ const SignupPage = () => {
                         onChange={(e) =>
                           set(
                             "nationalId",
-                            e.target.value.replace(/\D/g, "").slice(0, 10)
+                            e.target.value.replace(/\D/g, "").slice(0, 10),
                           )
                         }
                         onBlur={() =>
@@ -836,9 +838,9 @@ const SignupPage = () => {
                           errors.confirmPassword
                             ? "border-red-400 bg-red-50/30 focus:ring-red-200 focus:border-red-400"
                             : formData.confirmPassword &&
-                              !errors.confirmPassword
-                            ? "border-green-400 focus:ring-green-200 focus:border-green-400"
-                            : "border-border hover:border-primary/50"
+                                !errors.confirmPassword
+                              ? "border-green-400 focus:ring-green-200 focus:border-green-400"
+                              : "border-border hover:border-primary/50"
                         }`}
                         dir="ltr"
                         placeholder="Re-enter your password"
