@@ -35,29 +35,9 @@ const planStyles: Record<MembershipKey, { accent: string; glow: string }> = {
 
 const plans: Plan[] = [
   {
-    key: "active",
-    nameAr: "عضو عامل",
-    nameEn: "Active Member",
-    price: 250,
-    descriptionAr: "عضوية احترافية كاملة الصلاحيات داخل الجمعية",
-    descriptionEn: "Full professional membership with complete access",
-    featuresAr: [
-      "صلاحيات كاملة",
-      "التصويت على القرارات",
-      "حضور الاجتماعات",
-      "شهادة عضوية رسمية",
-    ],
-    featuresEn: [
-      "Full access",
-      "Voting rights",
-      "Meetings access",
-      "Official certificate",
-    ],
-  },
-  {
     key: "affiliate",
-    nameAr: "عضو منتسب",
-    nameEn: "Affiliate Member",
+    nameAr: "عضو عامل أو منتسب",
+    nameEn: "Active or Affiliate Member",
     price: 200,
     descriptionAr: "عضوية للمنتسبين في المجال الصحي",
     descriptionEn: "Membership for affiliated professionals",

@@ -54,6 +54,8 @@ export const EMPTY_FORM = {
   manualWorkshopTitle: "",
   issueDate: "",
   status: "pending",
+  template: "modern",
+  workshop_end_date: "",
 };
 
 interface CertificateAddModalProps {
@@ -405,6 +407,43 @@ export const CertificateAddModal = ({
                         </SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" />
+                      {t("قالب الشهادة", "Certificate Template")}
+                    </Label>
+                    <Select
+                      value={form.template || "modern"}
+                      onValueChange={(v) =>
+                        setForm((f) => ({ ...f, template: v }))
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="modern">Modern (Default)</SelectItem>
+                        <SelectItem value="attendance">Attendance</SelectItem>
+                        <SelectItem value="simplified">Simplified</SelectItem>
+                        <SelectItem value="appreciation">Appreciation</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {t("تاريخ نهاية الورشة", "Workshop End Date")}
+                    </Label>
+                    <Input
+                      type="date"
+                      value={form.workshop_end_date || ""}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, workshop_end_date: e.target.value }))
+                      }
+                    />
                   </div>
                 </div>
               </div>

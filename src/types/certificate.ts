@@ -14,6 +14,9 @@ export interface Certificate {
   serial_number?: string;
   verification_url?: string;
   verificationUrl?: string;
+  template?: string;
+  workshop_end_date?: string;
+  workshopEndDate?: string;
 }
 
 export interface Workshop {

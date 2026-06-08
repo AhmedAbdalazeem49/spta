@@ -252,6 +252,8 @@ const AdminCertificatesPage = () => {
         workshop_title: form.manualWorkshopTitle || undefined,
         issue_date: previewDate !== "—" ? previewDate : undefined,
         status: form.status,
+        template: form.template || "modern",
+        workshop_end_date: form.workshop_end_date || undefined,
       });
 
       toast({
@@ -466,7 +468,6 @@ const AdminCertificatesPage = () => {
         isOpen={isPreviewOpen}
         onOpenChange={setIsPreviewOpen}
         certificate={selected}
-        settings={certificateSettings}
       />
       <Dialog open={isDuplicateOpen} onOpenChange={setIsDuplicateOpen}>
         <DialogContent className="sm:max-w-md rounded-2xl">

@@ -204,8 +204,8 @@ export const UserAddModal = ({
 
                   <Input
                     placeholder={t(
-                      "رقم الهوية الوطنية أو رقم الإقامة",
-                      "National ID or Iqama number",
+                      "رقم الهوية / الإقامة",
+                      "National ID / Iqama",
                     )}
                     value={addForm.national_id}
                     onChange={(e) =>

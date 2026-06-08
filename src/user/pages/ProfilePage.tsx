@@ -595,7 +595,7 @@ const ProfilePage = () => {
                     },
                     {
                       icon: Shield,
-                      label: t("رقم الهوية", "National ID"),
+                      label: t("رقم الهوية / الإقامة", "National ID / Iqama"),
                       value: user?.national_id,
                     },
                   ].map((item, i) => {

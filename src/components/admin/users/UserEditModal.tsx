@@ -92,7 +92,7 @@ export const UserEditModal = ({
           </div>
 
           <div className="space-y-1">
-            <Label>{t("رقم الهوية", "National ID")}</Label>
+            <Label>{t("رقم الهوية / الإقامة", "National ID / Iqama")}</Label>
             <Input
               value={editForm.national_id}
               onChange={(e) =>

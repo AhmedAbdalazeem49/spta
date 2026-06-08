@@ -38,7 +38,7 @@ export const saudiPhoneField = z
 export const nationalIdField = z
   .string()
   .trim()
-  .regex(/^\d{10}$/, "National ID must be 10 digits");
+  .regex(/^\d{10}$/, "National ID / Iqama must be 10 digits");
 
 export const classificationNumberField = z
   .string()

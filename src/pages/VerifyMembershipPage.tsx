@@ -32,10 +32,6 @@ interface User {
 interface ResponseData {
   user: User;
   membership: Membership;
-  certificate_settings: {
-    chairman_name: string;
-    signature: string;
-  };
 }
 
 export default function VerifyMembershipPage() {
@@ -174,9 +170,16 @@ export default function VerifyMembershipPage() {
     );
   }
 
-  const { user, membership, certificate_settings } = data;
+  const { user, membership } = data;
 
-  const isActive = membership.status === "active";
+  const now = new Date();
+  const startDate = membership.starts_at ? new Date(membership.starts_at) : null;
+  const endDate = membership.ends_at ? new Date(membership.ends_at) : null;
+
+  const isActive =
+    membership.status === "active" &&
+    (!startDate || startDate <= now) &&
+    (!endDate || endDate >= now);
 
   return (
     <Layout>
@@ -259,21 +262,6 @@ export default function VerifyMembershipPage() {
 
               <Info icon={Shield} label="Status" value={membership.status} />
             </div>
-          </div>
-
-          {/* CERTIFICATE FOOTER */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between">
-            <div>
-              <p className="text-sm text-white/60">Chairman</p>
-              <p className="font-bold">{certificate_settings?.chairman_name}</p>
-            </div>
-
-            {certificate_settings?.signature && (
-              <img
-                src={certificate_settings.signature}
-                className="h-16 object-contain bg-white p-2 rounded-lg"
-              />
-            )}
           </div>
         </div>
       </div>

@@ -40,7 +40,7 @@ export const UserViewModal = ({ isOpen, onOpenChange, user }: UserViewModalProps
             },
             {
               icon: CreditCard,
-              label: t("الهوية", "National ID"),
+              label: t("رقم الهوية / الإقامة", "National ID / Iqama"),
               value: user.national_id || "—",
             },
             {

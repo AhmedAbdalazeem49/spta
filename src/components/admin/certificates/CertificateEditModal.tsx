@@ -215,6 +215,39 @@ export const CertificateEditModal = ({
               </p>
             </div>
 
+            {/* ───────────────── TEMPLATE ───────────────── */}
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2 text-sm font-semibold">
+                <BadgeCheck className="w-4 h-4 text-primary" />
+                {t("قالب الشهادة", "Certificate Template")}
+              </Label>
+
+              <Select
+                value={form.template || "modern"}
+                onValueChange={(v) =>
+                  setForm((f) => ({
+                    ...f,
+                    template: v,
+                  }))
+                }
+              >
+                <SelectTrigger className="h-14 rounded-2xl border-border/60 bg-background/70 backdrop-blur-sm px-5 shadow-sm">
+                  <SelectValue placeholder="Select template" />
+                </SelectTrigger>
+
+                <SelectContent className="rounded-2xl border-border/60">
+                  <SelectItem value="modern">Modern (Default)</SelectItem>
+                  <SelectItem value="attendance">Attendance</SelectItem>
+                  <SelectItem value="simplified">Simplified</SelectItem>
+                  <SelectItem value="appreciation">Appreciation</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <p className="text-xs text-muted-foreground">
+                Choose the visual layout and style of the certificate.
+              </p>
+            </div>
+
             {/* ───────────────── WORKSHOP ───────────────── */}
             <div className="space-y-3 md:col-span-2">
               <Label className="flex items-center gap-2 text-sm font-semibold">
@@ -266,11 +299,11 @@ export const CertificateEditModal = ({
               </p>
             </div>
 
-            {/* ───────────────── WORKSHOP DATE ───────────────── */}
+            {/* ───────────────── WORKSHOP START DATE ───────────────── */}
             <div className="space-y-3">
               <Label className="flex items-center gap-2 text-sm font-semibold">
                 <CalendarDays className="w-4 h-4 text-primary" />
-                {t("تاريخ الورشة", "Workshop Date")}
+                {t("تاريخ بداية الورشة", "Workshop Start Date")}
               </Label>
 
               <Input
@@ -286,7 +319,31 @@ export const CertificateEditModal = ({
               />
 
               <p className="text-xs text-muted-foreground">
-                Date when the workshop or event took place.
+                Date when the workshop or event started.
+              </p>
+            </div>
+
+            {/* ───────────────── WORKSHOP END DATE ───────────────── */}
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2 text-sm font-semibold">
+                <CalendarDays className="w-4 h-4 text-primary" />
+                {t("تاريخ نهاية الورشة", "Workshop End Date")}
+              </Label>
+
+              <Input
+                type="date"
+                value={formatDateValue(form.workshop_end_date as string)}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    workshop_end_date: e.target.value,
+                  }))
+                }
+                className="h-14 rounded-2xl border-border/60 bg-background/70 backdrop-blur-sm px-5 shadow-sm"
+              />
+
+              <p className="text-xs text-muted-foreground">
+                Date when the workshop or event ended (for multi-day calculation).
               </p>
             </div>
           </div>

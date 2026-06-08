@@ -51,7 +51,7 @@ export const UsersTable = ({
               {t("الهاتف", "Phone")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
-              {t("الهوية", "National ID")}
+              {t("رقم الهوية / الإقامة", "National ID / Iqama")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("التخصص", "Specialization")}

@@ -66,9 +66,9 @@ const RULES = {
     return null;
   },
   nationalId: (v: string) => {
-    if (!v.trim()) return "رقم الهوية الوطنية أو رقم الإقامة مطلوب";
+    if (!v.trim()) return "رقم الهوية / الإقامة مطلوب";
     if (!/^\d{10}$/.test(v))
-      return "رقم الهوية أو رقم الإقامة يجب أن يكون 10 أرقام بالضبط";
+      return "رقم الهوية / الإقامة يجب أن يكون 10 أرقام بالضبط";
     return null;
   },
   email: (v: string) => {
@@ -545,8 +545,8 @@ const SignupPage = () => {
                   </Field>
 
                   <Field
-                    label="رقم الهوية الوطنية أو رقم الإقامة"
-                    labelEn="National ID or Iqama"
+                    label="رقم الهوية / الإقامة"
+                    labelEn="National ID / Iqama"
                     required
                     error={errors.nationalId}
                     hint={!touched.nationalId ? "10 أرقـــام" : undefined}

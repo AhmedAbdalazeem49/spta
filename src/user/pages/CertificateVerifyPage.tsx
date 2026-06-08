@@ -165,9 +165,11 @@ const CertificateVerifyPage = () => {
                     recipient_name: data?.recipient_name,
                     workshop_title: data?.workshop_title,
                     issue_date: data?.issue_date,
+                    workshop_date: data?.workshop_date,
+                    workshop_end_date: data?.workshop_end_date,
                     status: data?.status || "Not Verified",
                   }}
-                  template="modern"
+                  template={(data?.template as any) || "modern"}
                 />
               </motion.div>
 

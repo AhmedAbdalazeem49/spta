@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 
 import html2canvas from "html2canvas";
@@ -104,6 +104,22 @@ const DigitalMembershipCard = ({
 
   const [selectedStyle, setSelectedStyle] = useState(cardStyles[0]);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const containerWidth = window.innerWidth;
+      if (containerWidth < 900) {
+        const width = Math.min(860, containerWidth - 32);
+        setScale(width / 860);
+      } else {
+        setScale(1);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const Icon = membershipIcons[member.membershipType];
   const membershipLabel = membershipLabels[member.membershipType];
@@ -191,16 +207,24 @@ const DigitalMembershipCard = ({
       )}
 
       {/* CARD */}
-      <div className="flex justify-center">
+      <div 
+        className="w-full flex justify-center overflow-visible"
+        style={{ height: `${540 * scale}px` }}
+      >
         <div
-          className="perspective-[2000px]"
+          className="perspective-[2000px] origin-top"
+          style={{ 
+            transform: `scale(${scale})`,
+            width: "860px",
+            height: "540px"
+          }}
           onClick={() => setIsFlipped(!isFlipped)}
         >
           <motion.div
             animate={{ rotateY: isFlipped ? 180 : 0 }}
             transition={{ duration: 0.8 }}
             style={{ transformStyle: "preserve-3d" }}
-            className="relative cursor-pointer"
+            className="relative cursor-pointer w-full h-full"
           >
             {/* FRONT */}
             <div
