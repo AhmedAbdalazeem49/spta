@@ -162,64 +162,12 @@ const CertificateVerifyPage = () => {
                 <CertificateTemplate
                   cert={{
                     id: serial_number || "1",
-                    recipient_name: data?.recipient_name,
-                    workshop_title: data?.workshop_title,
-                    issue_date: data?.issue_date,
-                    workshop_date: data?.workshop_date,
-                    workshop_end_date: data?.workshop_end_date,
-                    status: data?.status || "Not Verified",
+                    ...data,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    issue_date: data?.issue_date || (data as any)?.issued_at,
                   }}
-                  template={(data?.template as any) || "modern"}
                 />
               </motion.div>
-
-              {/* DETAILS */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <Award className="w-5 h-5 text-primary" />
-                      <span className="font-semibold">
-                        {t("شهادة موثقة", "Verified Certificate")}
-                      </span>
-                    </div>
-
-                    
-                  </div>
-
-                  <div className="grid gap-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {t("المستفيد", "Recipient")}
-                      </span>
-                      <span>{data?.recipient_name}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {t("الورشة", "Workshop")}
-                      </span>
-                      <span>{data?.workshop_title}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {t("التاريخ", "Date")}
-                      </span>
-                      <span>{data?.issue_date?.split("T")[0]}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {t("الرقم التسلسلي", "Serial")}
-                      </span>
-                      <span className="font-mono text-xs">
-                        {data?.serial_number}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           )}
         </div>

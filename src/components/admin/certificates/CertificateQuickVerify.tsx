@@ -162,10 +162,6 @@ export const CertificateQuickVerify = ({
                           {result.workshop_title}
                         </p>
                         <p>
-                          <strong>{t("التاريخ:", "Date:")}</strong>{" "}
-                          {result.issue_date?.split("T")[0]}
-                        </p>
-                        <p>
                           <strong>{t("الرقم:", "Serial:")}</strong>{" "}
                           {result.serial_number}
                         </p>

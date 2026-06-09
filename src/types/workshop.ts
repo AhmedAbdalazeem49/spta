@@ -5,7 +5,7 @@ export interface Workshop {
   doctor_name: string;
   location: string;
   date: string;
-  end_date:string;
+  end_date: string;
   time: string;
   regular_price: string | number;
   member_price: string | number;
@@ -14,5 +14,6 @@ export interface Workshop {
   status: "open" | "closed" | "completed" | "postponed";
   image?: string | null;
   image_url?: string | null;
+  partner_logo?: string | null;
   is_registered?: boolean;
 }

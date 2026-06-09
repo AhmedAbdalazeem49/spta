@@ -117,18 +117,43 @@ const AdminCertificatesPage = () => {
     try {
       const { data } = await api.put(
         `/certificates/${editForm.id}/update`,
-        editForm
+        {
+          type: editForm.type,
+          template: editForm.template,
+          recipient_name: editForm.recipient_name,
+          recipient_name_ar: editForm.recipient_name_ar,
+          workshop_title: editForm.workshop_title,
+          status: editForm.status,
+          issue_date: editForm.issue_date || editForm.issueDate,
+          start_date: editForm.start_date,
+          end_date: editForm.end_date,
+          hours: editForm.hours ? Number(editForm.hours) : undefined,
+          speaker: editForm.speaker,
+          venue: editForm.venue,
+          role: editForm.role,
+          organization_name: editForm.organization_name,
+          contribution_description: editForm.contribution_description,
+          completion_status: editForm.completion_status,
+          duration: editForm.duration,
+        }
       );
 
       console.log("Updated:", data);
+      toast({
+        title: t("تم التحديث", "Updated"),
+        description: t("تم تحديث بيانات الشهادة بنجاح", "Certificate updated successfully"),
+      });
 
       setEditOpen(false);
-
-      // optional: refresh list
-      // fetchCertificates();
+      fetchCertificates();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Update failed:", error?.response?.data || error.message);
+      toast({
+        title: t("حدث خطأ", "Error"),
+        description: t("فشل تحديث الشهادة", "Failed to update certificate"),
+        variant: "destructive",
+      });
     }
   };
 
@@ -231,12 +256,24 @@ const AdminCertificatesPage = () => {
   };
 
   const handleSubmitCertificate = async () => {
-    if (!previewName || !previewWorkshop) {
+    if (form.type !== 'appreciation_org' && !form.recipientId && !form.manualRecipientName) {
       toast({
         title: t("بيانات ناقصة", "Missing data"),
         description: t(
-          "يرجى اختيار المستلم والورشة",
-          "Please select recipient and workshop"
+          "يرجى اختيار المستلم أو إدخال الاسم يدوياً",
+          "Please select recipient or enter a name manually"
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (form.type === 'appreciation_org' && !form.organization_name) {
+      toast({
+        title: t("بيانات ناقصة", "Missing data"),
+        description: t(
+          "يرجى إدخال اسم الجهة / المنظمة",
+          "Please enter organization name"
         ),
         variant: "destructive",
       });
@@ -246,14 +283,26 @@ const AdminCertificatesPage = () => {
     setIsSubmitting(true);
     try {
       await api.post("/admin/certificates", {
+        type: form.type,
+        template: form.template || "modern",
+        status: form.status,
         workshop_id: form.workshopId || undefined,
         recipient_id: form.recipientId || undefined,
         recipient_name: form.manualRecipientName || undefined,
+        recipient_name_ar: form.recipient_name_ar || undefined,
         workshop_title: form.manualWorkshopTitle || undefined,
-        issue_date: previewDate !== "—" ? previewDate : undefined,
-        status: form.status,
-        template: form.template || "modern",
-        workshop_end_date: form.workshop_end_date || undefined,
+        issue_date: form.issueDate || undefined,
+        start_date: form.start_date || undefined,
+        end_date: form.end_date || undefined,
+        hours: form.hours ? Number(form.hours) : undefined,
+        speaker: form.speaker || undefined,
+        venue: form.venue || undefined,
+        role: form.role || undefined,
+        event_name: form.manualWorkshopTitle || undefined,
+        contribution_description: form.contribution_description || undefined,
+        completion_status: form.completion_status || undefined,
+        duration: form.duration || undefined,
+        organization_name: form.organization_name || undefined,
       });
 
       toast({
@@ -328,13 +377,13 @@ const AdminCertificatesPage = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {/* <Button
+          <Button
             onClick={handleAddOpen}
             className="gap-2 bg-primary hover:bg-primary/90"
           >
             <Plus className="w-4 h-4" />
             {t("إضافة شهادة", "Add Certificate")}
-          </Button> */}
+          </Button>
           {user?.role === "system_admin" && (
             <Button
               onClick={() => setIsSettingsOpen(true)}
@@ -347,7 +396,7 @@ const AdminCertificatesPage = () => {
           )}
         </div>
       </div>
-      <Tabs defaultValue="certificates" className="space-y-6">
+      <Tabs defaultValue="certificates" className="space-y-6" dir="rtl">
         <TabsList>
           <TabsTrigger value="certificates" className="gap-2">
             <Award className="w-4 h-4" />

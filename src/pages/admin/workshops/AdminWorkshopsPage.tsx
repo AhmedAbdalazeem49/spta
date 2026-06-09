@@ -272,7 +272,6 @@ const AdminWorkshopsPage = () => {
         </CardContent>
       </Card>
 
-
       <WorkshopFormModal
         isOpen={isFormOpen}
         onOpenChange={setIsFormOpen}
@@ -286,6 +285,7 @@ const AdminWorkshopsPage = () => {
         hasChanges={hasChanges}
         workshopId={selected?.id}
         existingImage={selected?.image}
+        existingPartnerLogo={selected?.partner_logo}
       />
 
       <WorkshopDeleteModal

@@ -1,6 +1,7 @@
 import CertificateTemplate, {
   CertTemplate,
 } from "@/components/CertificateTemplate";
+import { CertificatePreviewModal } from "@/components/admin/certificates/CertificatePreviewModal";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -46,6 +47,8 @@ const CertificatesTab = () => {
     {},
   );
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [selectedCert, setSelectedCert] = useState<any>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const certRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -264,7 +267,13 @@ const CertificatesTab = () => {
                     className="group rounded-[30px] overflow-hidden border border-border/60 bg-card shadow-sm hover:shadow-2xl transition-all duration-300"
                   >
                     {/* ───────────────── Certificate Preview ───────────────── */}
-                    <div className="relative overflow-hidden bg-muted/20">
+                    <div
+                      onClick={() => {
+                        setSelectedCert(cert);
+                        setIsPreviewOpen(true);
+                      }}
+                      className="relative overflow-hidden bg-muted/20 cursor-pointer"
+                    >
                       {/* Glow effect */}
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                         <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 blur-3xl rounded-full" />
@@ -274,7 +283,7 @@ const CertificatesTab = () => {
                         ref={(node) =>
                           (certRefs.current[String(cert.id)] = node)
                         }
-                        className="w-full"
+                        className="w-full pointer-events-none select-none"
                       >
                         <CertificateTemplate cert={cert} template={tpl} />
                       </div>
@@ -321,19 +330,16 @@ const CertificatesTab = () => {
                       {/* ───────────────── Action Buttons ───────────────── */}
                       <div className="flex items-center gap-2">
                         <Button
-                          onClick={() => handleDownload(cert)}
-                          disabled={isBusy}
+                          onClick={() => {
+                            setSelectedCert(cert);
+                            setIsPreviewOpen(true);
+                          }}
                           variant="default"
                           size="sm"
                           className="flex-1 h-10 rounded-xl gap-2 font-medium"
                         >
-                          {isBusy ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Download className="w-4 h-4" />
-                          )}
-
-                          {isBusy ? "Generating PDF..." : "Download PDF"}
+                          <Download className="w-4 h-4" />
+                          {t("معاينة وتحميل", "View & Download")}
                         </Button>
 
                         <Button
@@ -382,6 +388,11 @@ const CertificatesTab = () => {
           </div>
         </>
       )}
+      <CertificatePreviewModal
+        isOpen={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        certificate={selectedCert}
+      />
     </motion.div>
   );
 };

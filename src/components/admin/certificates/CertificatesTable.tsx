@@ -8,7 +8,7 @@ import {
   getCertificateWorkshop,
 } from "@/utils/certificateUtils";
 import { motion } from "framer-motion";
-import { Eye } from "lucide-react";
+import { Eye, Pencil, Printer } from "lucide-react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 
 interface CertificatesTableProps {
@@ -97,21 +97,22 @@ export const CertificatesTable = ({
                       <Eye className="w-4 h-4" />
                     </Button>
 
-                    {/* <Button
+                    <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => onOpenPreview(c)}
+                      title={t("طباعة", "Print")}
                     >
-                      <Award className="w-4 h-4" />
-                    </Button> */}
+                      <Printer className="w-4 h-4" />
+                    </Button>
 
-                    {/* <Button
+                    <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => onOpenEdit(c)}
                     >
                       <Pencil className="w-4 h-4" />
-                    </Button> */}
+                    </Button>
                   </td>
                 </motion.tr>
               ))}

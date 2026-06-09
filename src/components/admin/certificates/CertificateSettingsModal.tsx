@@ -28,7 +28,6 @@ export interface CertificateSettings {
   stamp_image: File | string | null;
   chairman_name: string;
   custom_text: string;
-  partner_logo: File | string | null;
 }
 
 interface Props {
@@ -49,7 +48,7 @@ export const CertificateSettingsModal = ({
 
   // FILE HANDLER
   const handleFileChange =
-    (key: "signature_image" | "stamp_image" | "partner_logo") =>
+    (key: "signature_image" | "stamp_image") =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -75,8 +74,6 @@ export const CertificateSettingsModal = ({
         formData.append("signature_image", settings.signature_image);
       if (settings.stamp_image instanceof File)
         formData.append("stamp_image", settings.stamp_image);
-      if (settings.partner_logo instanceof File)
-        formData.append("partner_logo", settings.partner_logo);
 
       const res = await api.post("/admin/certificate-settings", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -91,7 +88,6 @@ export const CertificateSettingsModal = ({
           stamp_image: data.stamp_image ?? prev.stamp_image,
           chairman_name: data.chairman_name ?? prev.chairman_name,
           custom_text: data.custom_text ?? prev.custom_text,
-          partner_logo: data.partner_logo ?? prev.partner_logo,
         }));
       }
 
@@ -105,7 +101,7 @@ export const CertificateSettingsModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl rounded-3xl border-0 shadow-2xl overflow-hidden p-0">
+      <DialogContent className="sm:max-w-xl rounded-3xl border-0 shadow-2xl overflow-hidden p-0">
         {/* Header */}
         <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b px-6 py-5">
           <DialogHeader>
@@ -128,7 +124,7 @@ export const CertificateSettingsModal = ({
         <div className="px-6 py-6">
           <div className="space-y-8">
             {/* Uploads */}
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               {/* Signature */}
               <div className="rounded-2xl border bg-muted/20 p-5 space-y-4">
                 <div className="flex items-center gap-2">
@@ -184,37 +180,6 @@ export const CertificateSettingsModal = ({
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange("stamp_image")}
-                />
-              </div>
-
-              {/* Partner Logo */}
-              <div className="rounded-2xl border bg-muted/20 p-5 space-y-4">
-                <div className="flex items-center gap-2">
-                  <Stamp className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold">
-                    {t("شعار الشريك", "Partner Logo")}
-                  </h3>
-                </div>
-                <div className="h-40 rounded-2xl border-2 border-dashed bg-background flex items-center justify-center overflow-hidden">
-                  {settings.partner_logo ? (
-                    <img
-                      src={getImagePreview(settings.partner_logo)}
-                      alt="partner logo"
-                      className="max-h-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-center text-muted-foreground">
-                      <UploadCloud className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">
-                        {t("لم يتم رفع شعار", "No logo uploaded")}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange("partner_logo")}
                 />
               </div>
             </div>

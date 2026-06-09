@@ -3,9 +3,11 @@ export interface Certificate {
   recipient_name?: string;
   recipientNameAr?: string;
   recipientNameEn?: string;
+  recipient_name_ar?: string;
   workshop_title?: string;
   workshopTitleAr?: string;
   workshopTitleEn?: string;
+  workshop_title_ar?: string;
   workshop_date?: string;
   workshopDate?: string;
   issue_date?: string;
@@ -15,8 +17,10 @@ export interface Certificate {
   verification_url?: string;
   verificationUrl?: string;
   template?: string;
+  type?: string;
   workshop_end_date?: string;
   workshopEndDate?: string;
+  payload?: any;
 }
 
 export interface Workshop {

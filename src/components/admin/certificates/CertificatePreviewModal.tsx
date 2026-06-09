@@ -62,7 +62,7 @@ export const CertificatePreviewModal = ({
           {/* CERTIFICATE */}
           <div
             ref={certificateRef}
-            className="relative overflow-hidden rounded-2xl shadow-2xl"
+            className="relative overflow-hidden rounded-2xl shadow-2xl print-certificate"
           >
             <CertificateTemplate
               cert={{
@@ -74,20 +74,25 @@ export const CertificatePreviewModal = ({
                 workshop_date: certificate.workshop_date,
                 workshop_end_date: certificate.workshop_end_date,
                 status: certificate.status,
+                payload: certificate.payload,
+                type: certificate.type,
+                partner_logo: certificate.partner_logo,
               }}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               template={(certificate.template as any) || "modern"}
             />
           </div>
 
           {/* ACTIONS */}
-          <DialogFooter className="bg-background/95 backdrop-blur-xl border-t p-6 flex flex-row justify-end gap-3 rounded-2xl">
+          <DialogFooter className="bg-background/95 backdrop-blur-xl border-t p-6 flex flex-row justify-end gap-3 rounded-2xl no-print">
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
               className="h-11 px-6 rounded-xl"
             >
-              Close
+              {t("إغلاق", "Close")}
             </Button>
+
 
             <Button
               onClick={handleDownloadPdf}
@@ -99,7 +104,7 @@ export const CertificatePreviewModal = ({
               ) : (
                 <Download className="w-4 h-4" />
               )}
-              Download PDF
+              {t("تحميل PDF", "Download PDF")}
             </Button>
           </DialogFooter>
         </div>

@@ -26,7 +26,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useRef, useState , useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,13 +37,14 @@ export const emptyWorkshopForm = {
   doctor_name: "",
   location: "",
   date: "",
-  end_date:"",
+  end_date: "",
   time: "",
   regular_price: "",
   member_price: "",
   total_capacity: "",
   status: "open" as "open" | "closed" | "completed" | "postponed",
   image: null as File | null,
+  partner_logo: null as File | null,
 };
 
 export type WorkshopForm = typeof emptyWorkshopForm;
@@ -64,6 +65,7 @@ interface WorkshopFormModalProps {
   hasChanges: boolean;
   workshopId?: number;
   existingImage?: string | null;
+  existingPartnerLogo?: string | null;
 }
 
 // ─── Validation ───────────────────────────────────────────────────────────────
@@ -71,7 +73,7 @@ interface WorkshopFormModalProps {
 function validate(
   form: WorkshopForm,
   editMode: boolean,
-  t: (ar: string, en: string) => string
+  t: (ar: string, en: string) => string,
 ): FieldErrors {
   const errors: FieldErrors = {};
   const today = new Date();
@@ -101,7 +103,7 @@ function validate(
     if (!editMode && d < today)
       errors.date = t(
         "يجب أن يكون التاريخ اليوم أو بعده",
-        "Date must be today or later"
+        "Date must be today or later",
       );
   }
 
@@ -127,7 +129,7 @@ function validate(
   else if (Number(form.regular_price) < 0)
     errors.regular_price = t(
       "يجب أن يكون السعر 0 أو أكثر",
-      "Price must be ≥ 0"
+      "Price must be ≥ 0",
     );
 
   if (form.member_price === "" || form.member_price === null)
@@ -140,7 +142,7 @@ function validate(
   )
     errors.member_price = t(
       "سعر الأعضاء يجب أن يكون أقل من أو يساوي السعر العادي",
-      "Member price must be ≤ regular price"
+      "Member price must be ≤ regular price",
     );
 
   if (!form.total_capacity)
@@ -148,16 +150,15 @@ function validate(
   else if (Number(form.total_capacity) < 1)
     errors.total_capacity = t(
       "يجب أن يكون عدد الساعات 1 على الأقل",
-      "Hours must be ≥ 1"
+      "Hours must be ≥ 1",
     );
-
 
   if (form.image) {
     const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowed.includes(form.image.type))
       errors.image = t(
         "صيغة الصورة يجب أن تكون jpg, jpeg, png, أو webp",
-        "Image must be jpg, jpeg, png, or webp"
+        "Image must be jpg, jpeg, png, or webp",
       );
   }
 
@@ -249,12 +250,16 @@ export const WorkshopFormModal = ({
   hasChanges,
   workshopId,
   existingImage,
+  existingPartnerLogo,
 }: WorkshopFormModalProps) => {
   const { t } = useLanguage();
 
   const [errors, setErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [partnerLogoPreview, setPartnerLogoPreview] = useState<string | null>(
+    null,
+  );
   const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -291,14 +296,23 @@ export const WorkshopFormModal = ({
     }
   };
 
+  // 4. Update useEffect
   useEffect(() => {
-    if (isOpen && editMode && existingImage) {
-      setImagePreview(existingImage);
+    if (isOpen && editMode) {
+      if (existingImage) setImagePreview(existingImage);
+      if (existingPartnerLogo) {
+        // handle relative path
+        const url = existingPartnerLogo.startsWith("http")
+          ? existingPartnerLogo
+          : `${import.meta.env.VITE_Storage_URL}${existingPartnerLogo}`;
+        setPartnerLogoPreview(url);
+      }
     }
     if (!isOpen) {
       setImagePreview(null);
+      setPartnerLogoPreview(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -357,6 +371,10 @@ export const WorkshopFormModal = ({
 
     if (form.image instanceof File) {
       fd.append("image", form.image);
+    }
+
+    if (form.partner_logo instanceof File) {
+      fd.append("partner_logo", form.partner_logo);
     }
 
     onSave(fd); // ← parent owns the API call
@@ -737,6 +755,81 @@ export const WorkshopFormModal = ({
                   accept="image/jpg,image/jpeg,image/png,image/webp"
                   className="hidden"
                   onChange={handleImageChange}
+                />
+              </div>
+            </Field>
+          </Section>
+
+          {/* 4b · Partner Logo (optional) */}
+          {/* 4b · Partner Logo (optional) */}
+          <Section
+            title={t("شعار الشريك (اختياري)", "Partner Logo (Optional)")}
+            icon={<ImageIcon className="w-3.5 h-3.5" />}
+          >
+            <Field
+              label={t(
+                "شعار الشريك أو الجهة المنظمة",
+                "Partner / Organizer Logo",
+              )}
+            >
+              <div
+                className="relative border-2 border-dashed rounded-xl transition-colors cursor-pointer border-border hover:border-primary/40 hover:bg-primary/3"
+                onClick={() =>
+                  document.getElementById("partner-logo-input")?.click()
+                }
+              >
+                {partnerLogoPreview ? (
+                  <div className="relative">
+                    <img
+                      src={partnerLogoPreview}
+                      alt="partner logo preview"
+                      className="w-full h-40 object-contain rounded-xl"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPartnerLogoPreview(null);
+                        update("partner_logo", null);
+                      }}
+                      className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-2 py-7 text-muted-foreground">
+                    <ImageIcon className="w-8 h-8 text-muted-foreground/40" />
+                    <div className="text-center">
+                      <p className="text-sm font-medium">
+                        {t(
+                          "انقر لرفع شعار الشريك",
+                          "Click to upload partner logo",
+                        )}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground/70 mt-0.5">
+                        PNG, SVG, WEBP
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <input
+                  id="partner-logo-input"
+                  type="file"
+                  accept="image/jpg,image/jpeg,image/png,image/webp,image/svg+xml"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    update("partner_logo", file);
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (ev) =>
+                        setPartnerLogoPreview(ev.target?.result as string);
+                      reader.readAsDataURL(file);
+                    } else {
+                      setPartnerLogoPreview(null);
+                    }
+                  }}
                 />
               </div>
             </Field>

@@ -139,6 +139,7 @@ export const WorkshopSubscriptionsModal = ({
     setIssuingId(sub.id);
     try {
       await api.post("/admin/certificates", {
+        type: "attendance",
         recipient_id: sub.user_id,
         workshop_id: String(workshop?.id),
         status: "verified",
@@ -201,6 +202,7 @@ export const WorkshopSubscriptionsModal = ({
     for (const sub of attended) {
       try {
         await api.post("/admin/certificates", {
+          type: "attendance",
           recipient_id: sub.user_id,
           workshop_id: String(workshop?.id),
           status: "verified",
