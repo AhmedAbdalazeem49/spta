@@ -174,11 +174,11 @@ const DigitalMembershipCard = ({
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
-                <Badge className="text-white text-[9px] md:text-xs">
+                <Badge className="text-white text-[9px] md:text-xs bg-transparent">
                   <Icon className="w-3 h-3 me-1" />
                   {t(membershipLabel.ar, membershipLabel.en)}
                 </Badge>
-                <Badge className=" text-white  text-[9px] md:text-xs">
+                <Badge className=" text-white  text-[9px] md:text-xs bg-transparent">
                   #{member.membershipNumber}
                 </Badge>
               </div>
@@ -221,7 +221,7 @@ const DigitalMembershipCard = ({
         /* ── BACK ── */
         <div className="relative z-10 h-full flex flex-col p-4 sm:p-6 md:p-8 justify-between">
           <div>
-            <h2 className="text-xl md:text-4xl font-black mb-2">
+            <h2 className="text-md md:text-4xl font-black mb-2">
               {t("التحقق الرقمي", "Digital Verification")}
             </h2>
             <p className="text-white/70 text-xs md:text-base max-w-sm leading-relaxed">
@@ -232,17 +232,17 @@ const DigitalMembershipCard = ({
             </p>
           </div>
 
-          <div className="space-y-3 md:space-y-5">
+          <div className="space-y-2 md:space-y-5">
             <div>
-              <p className="text-[10px] md:text-sm text-white/50 uppercase tracking-widest mb-1">
+              <p className="text-xs md:text-sm text-white/50 uppercase tracking-widest mb-1">
                 {t("رقم العضوية", "Membership Number")}
               </p>
-              <h3 className="text-2xl md:text-4xl font-black tracking-widest">
+              <h3 className="text-sm md:text-4xl font-black tracking-widest">
                 {member.membershipNumber}
               </h3>
             </div>
             <div>
-              <p className="text-[10px] md:text-sm text-white/50 uppercase tracking-widest mb-1">
+              <p className="text-xs md:text-sm text-white/50 uppercase tracking-widest mb-1">
                 {t("نوع العضوية", "Membership Type")}
               </p>
               <h3 className="text-lg md:text-2xl font-bold">
