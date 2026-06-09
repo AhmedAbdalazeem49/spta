@@ -380,7 +380,7 @@ const ProfilePage = () => {
                                 {t("البريد الإلكتروني", "Email")}
                               </p>
 
-                              <p className="text-white/85">
+                              <p className="text-white/85 break-words">
                                 {user?.email || "—"}
                               </p>
                             </div>

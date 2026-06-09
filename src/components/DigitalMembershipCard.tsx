@@ -175,10 +175,10 @@ const DigitalMembershipCard = ({
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
                 <Badge className="text-white text-[9px] md:text-xs bg-transparent">
-                  <Icon className="w-3 h-3 me-1" />
+                  <Icon className="w-3 h-3" />
                   {t(membershipLabel.ar, membershipLabel.en)}
                 </Badge>
-                <Badge className=" text-white  text-[9px] md:text-xs bg-transparent">
+                <Badge className="text-white text-[9px] md:text-xs bg-transparent">
                   #{member.membershipNumber}
                 </Badge>
               </div>
@@ -245,7 +245,7 @@ const DigitalMembershipCard = ({
               <p className="text-xs md:text-sm text-white/50 uppercase tracking-widest mb-1">
                 {t("نوع العضوية", "Membership Type")}
               </p>
-              <h3 className="text-lg md:text-2xl font-bold">
+              <h3 className="text-sm md:text-2xl font-bold">
                 {t(membershipLabel.ar, membershipLabel.en)}
               </h3>
             </div>
