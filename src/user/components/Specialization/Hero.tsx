@@ -31,11 +31,11 @@ export default function Hero() {
         >
           <Stethoscope className="w-16 h-16 mx-auto mb-6 text-accent" />
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            {t("التخصصات", "Specializations")}
+            {t("المجموعات التخصصية", "Specializations")}
           </h1>
           <p className="text-xl text-white/80">
             {t(
-              "تعرف على التخصصات المختلفة في مجال العلاج الطبيعي ومجالات العمل المتاحة",
+              "تعرف على المجموعات التخصصية المختلفة في مجال العلاج الطبيعي ومجالات العمل المتاحة",
               "Learn about different specializations in physical therapy and available work areas"
             )}
           </p>

@@ -81,7 +81,7 @@ const WorkAreasSection = () => {
         },
       ],
       stat: {
-        value: "١",
+        value: "1",
         label: t("مجلة علمية دولية", "International Journal"),
       },
     },
@@ -96,7 +96,7 @@ const WorkAreasSection = () => {
         {
           icon: GraduationCap,
           text: t(
-            "برامج التدريب المتخصصة للمعالجين الفيزيائيين",
+            "برامج متخصصة لتدريب أخصائيي العلاج الطبيعي",
             "Specialized training programs for physical therapists",
           ),
         },
@@ -129,54 +129,60 @@ const WorkAreasSection = () => {
           ),
         },
       ],
-      stat: { value: "+٥٠", label: t("ورشة عمل سنوياً", "Workshops Annually") },
+      stat: {
+        value: "+20",
+        label: t(
+          "أكثر من 20 ورشة عمل ونشاط علمي سنوياَ",
+          "More Than 20 workshops and scientific activities annually",
+        ),
+      },
     },
-    {
-      id: 2,
-      icon: Stethoscope,
-      keyword: t("الرعاية", "Care"),
-      title: t("الرعاية الصحية", "Healthcare"),
-      color: "#f59e0b",
-      glow: "rgba(245,158,11,0.15)",
-      activities: [
-        {
-          icon: Heart,
-          text: t(
-            "تعزيز معايير الرعاية الصحية",
-            "Enhancing healthcare standards",
-          ),
-        },
-        {
-          icon: Stethoscope,
-          text: t(
-            "دعم الممارسة السريرية للعلاج الطبيعي",
-            "Supporting clinical physical therapy practice",
-          ),
-        },
-        {
-          icon: Users,
-          text: t(
-            "التواصل مع المرضى والمجتمع",
-            "Engaging patients and the community",
-          ),
-        },
-        {
-          icon: Building2,
-          text: t(
-            "الشراكة مع المؤسسات الصحية",
-            "Partnership with healthcare institutions",
-          ),
-        },
-        {
-          icon: Activity,
-          text: t(
-            "مراقبة جودة الخدمات الصحية",
-            "Monitoring healthcare service quality",
-          ),
-        },
-      ],
-      stat: { value: "+٣٠٠٠", label: t("معالج مسجل", "Registered Therapists") },
-    },
+    // {
+    //   id: 2,
+    //   icon: Stethoscope,
+    //   keyword: t("الرعاية", "Care"),
+    //   title: t("الرعاية الصحية", "Healthcare"),
+    //   color: "#f59e0b",
+    //   glow: "rgba(245,158,11,0.15)",
+    //   activities: [
+    //     {
+    //       icon: Heart,
+    //       text: t(
+    //         "تعزيز معايير الرعاية الصحية",
+    //         "Enhancing healthcare standards",
+    //       ),
+    //     },
+    //     {
+    //       icon: Stethoscope,
+    //       text: t(
+    //         "دعم الممارسة السريرية للعلاج الطبيعي",
+    //         "Supporting clinical physical therapy practice",
+    //       ),
+    //     },
+    //     {
+    //       icon: Users,
+    //       text: t(
+    //         "التواصل مع المرضى والمجتمع",
+    //         "Engaging patients and the community",
+    //       ),
+    //     },
+    //     {
+    //       icon: Building2,
+    //       text: t(
+    //         "الشراكة مع المؤسسات الصحية",
+    //         "Partnership with healthcare institutions",
+    //       ),
+    //     },
+    //     {
+    //       icon: Activity,
+    //       text: t(
+    //         "مراقبة جودة الخدمات الصحية",
+    //         "Monitoring healthcare service quality",
+    //       ),
+    //     },
+    //   ],
+    //   stat: { value: "+3000", label: t("معالج مسجل", "Registered Therapists") },
+    // },
   ];
 
   const active = pillars[activeTab];

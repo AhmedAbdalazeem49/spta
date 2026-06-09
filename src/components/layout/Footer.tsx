@@ -39,7 +39,7 @@ const Footer = () => {
       },
       { label: t("الفروع", "Branches"), path: "/contact" },
       { label: t("الأخبار", "News"), path: "/news" },
-      { label: t("التخصصات", "Specializations"), path: "/specializations" },
+      { label: t("المجموعات التخصصية", "Specializations"), path: "/specializations" },
     ],
   };
 
@@ -69,7 +69,7 @@ const Footer = () => {
               <p className="text-primary-foreground/80">
                 {t(
                   "احصل على آخر الأخبار والتحديثات",
-                  "Get the latest news and updates"
+                  "Get the latest news and updates",
                 )}
               </p>
             </div>
@@ -103,7 +103,7 @@ const Footer = () => {
             <p className="text-primary-foreground/80 mb-6 leading-relaxed">
               {t(
                 "الجمعية السعودية للعلاج الطبيعي جمعية علمية تعمل علي تطوير مهنة العلاج الطبيعي في المملكة .",
-                "The Saudi Physical Therapy Association is a scientific society that works to develop the physical therapy profession in the Kingdom."
+                "The Saudi Physical Therapy Association is a scientific society that works to develop the physical therapy profession in the Kingdom.",
               )}
             </p>
           </div>
@@ -138,7 +138,7 @@ const Footer = () => {
                 <span className="text-primary-foreground/80">
                   {t(
                     "جامعة الملك سعود، الرياض",
-                    "King Saud University, Riyadh"
+                    "King Saud University, Riyadh",
                   )}
                 </span>
               </li>
@@ -171,6 +171,21 @@ const Footer = () => {
                   spta.sa
                 </a>
               </li>
+              <li className="flex items-center gap-3">
+                <Globe className="w-5 h-5 flex-shrink-0" />
+
+                <a
+                  href="https://www.inkwellinfinite.com/index.php/ijprp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                >
+                  {t(
+                    "المجلة الدولية لأبحاث العلاج الطبيعي وممارساته",
+                    "International Journal of Physical Therapy Research and Practice",
+                  )}
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -180,10 +195,6 @@ const Footer = () => {
       <div className="border-t border-primary-foreground/10">
         <div className="container-custom py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-primary-foreground/60 text-sm">
-              © {new Date().getFullYear()} SPTA.{" "}
-              {t("جميع الحقوق محفوظة", "All rights reserved")}
-            </p>
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
                 <a
@@ -210,6 +221,10 @@ const Footer = () => {
                 {t("حقوق النشر", "Copyrights")}
               </Link>
             </div>
+            <p className="text-primary-foreground/60 text-sm">
+              © {new Date().getFullYear()} SPTA.{" "}
+              {t("جميع الحقوق محفوظة", "All rights reserved")}
+            </p>
           </div>
         </div>
       </div>

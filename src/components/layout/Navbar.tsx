@@ -93,11 +93,6 @@ const Navbar = () => {
       icon: Users,
     },
 
-    // {
-    //   label: t("التخصصات", "Specializations"),
-    //   path: "/specializations",
-    //   icon: Building2,
-    // },
     {
       label: t("المجلة العلمية", "Scientific Journal"),
       path: "/journal",

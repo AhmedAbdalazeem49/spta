@@ -14,11 +14,11 @@ const HomePage = () => {
   return (
     <Layout>
       <Hero />
-      <About />
       <Quote />
-      <WorkAreasSection />
-      <Stats />
+      <About />
       <Message />
+      <Stats />
+      <WorkAreasSection />
       {/* <Research /> */}
       {/* <DownloadApp /> */}
       {/* <BranchesSection /> */}

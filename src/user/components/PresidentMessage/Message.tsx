@@ -86,7 +86,7 @@ export default function Message() {
                   >
                     <p className="font-bold text-lg">
                       {t(
-                        "الدكتور عبدالفتاح بن سعيد القحطاني",
+                        "د. عبدالفتاح بن سعيد القحطاني",
                         "Abdulfattah  Saeed Al-Qahtani",
                       )}
                     </p>
@@ -149,7 +149,7 @@ export default function Message() {
                   </p>
                   <p className="text-xl font-bold text-primary">
                     {t(
-                      "الدكتور عبدالفتاح بن سعيد القحطاني",
+                      "د. عبدالفتاح بن سعيد القحطاني",
                       "Abdulfattah Saeed Al-Qahtani",
                     )}
                   </p>

@@ -19,11 +19,11 @@ export default function Info({ journalInfo }: InfoProps) {
 
   const info = journalInfo || {
     name: t(
-      "المجلة السعودية للعلاج الطبيعي",
-      "Saudi Journal of Physical Therapy"
+      "المجلة الدولية لأبحاث العلاج الطبيعي وممارساته",
+      "International Journal of Physical Therapy Research and Practice",
     ),
     issn: "1234-5678",
-    frequency: t("ربع سنوية", "Quarterly"),
+    frequency: t("شهرياَ", "Monthly"),
     language: t("عربي / إنجليزي", "Arabic / English"),
   };
 
@@ -59,7 +59,7 @@ export default function Info({ journalInfo }: InfoProps) {
               <p className="text-muted-foreground leading-relaxed">
                 {t(
                   "المجلة السعودية للعلاج الطبيعي هي مجلة علمية محكمة تصدر عن الجمعية السعودية للعلاج الطبيعي. تهدف المجلة إلى نشر الأبحاث العلمية الأصيلة في مجال العلاج الطبيعي والتأهيل الطبي.",
-                  "The Saudi Journal of Physical Therapy is a peer-reviewed scientific journal published by SPTA. The journal aims to publish original scientific research in physical therapy and medical rehabilitation."
+                  "The Saudi Journal of Physical Therapy is a peer-reviewed scientific journal published by SPTA. The journal aims to publish original scientific research in physical therapy and medical rehabilitation.",
                 )}
               </p>
             </div>
