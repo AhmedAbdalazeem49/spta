@@ -558,8 +558,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
 
           <p className="text-xs opacity-70">
             {t(
-              "has successfully completed the workshop:",
-              "has successfully completed the workshop:",
+              "has successfully completed the workshop",
+              "has successfully completed the workshop",
             )}
           </p>
 
@@ -586,7 +586,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               {t("Duration", "Duration")}: {days}{" "}
               {days === 1 ? t("Day", "Day") : t("Days", "Days")}
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
             <span>
               {cert.workshop_hours ?? hours}{" "}
               {t("Training Hours", "Training Hours")}
@@ -595,18 +594,17 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
 
           {/* Dates row */}
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs opacity-60">
-            {cert.workshop_date && (
-              <span>
-                {t("Start", "Start")}: {formatDate(cert.workshop_date)}
-              </span>
-            )}
             {cert.workshop_end_date && (
               <>
-                <span className="w-1 h-1 rounded-full bg-white/40" />
                 <span>
                   {t("End", "End")}: {formatDate(cert.workshop_end_date)}
                 </span>
               </>
+            )}
+            {cert.workshop_date && (
+              <span>
+                {t("Start", "Start")}: {formatDate(cert.workshop_date)}
+              </span>
             )}
           </div>
 
@@ -618,7 +616,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               </span>
             )}
           </div>
-
         </div>
 
         <div className="relative z-10 mt-4">

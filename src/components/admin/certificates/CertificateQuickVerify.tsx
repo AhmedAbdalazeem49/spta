@@ -84,7 +84,7 @@ export const CertificateQuickVerify = ({
           <p className="text-muted-foreground">
             {t(
               "أدخل رقم الشهادة للتحقق من صحتها",
-              "Enter certificate serial number"
+              "Enter certificate serial number",
             )}
           </p>
         </div>
@@ -163,7 +163,7 @@ export const CertificateQuickVerify = ({
                         </p>
                         <p>
                           <strong>{t("التاريخ:", "Date:")}</strong>{" "}
-                          {result.issue_date}
+                          {result.issue_date?.split("T")[0]}
                         </p>
                         <p>
                           <strong>{t("الرقم:", "Serial:")}</strong>{" "}
@@ -177,7 +177,7 @@ export const CertificateQuickVerify = ({
                           size="sm"
                           onClick={() =>
                             navigate(
-                              `/certificate/verify/${result.serial_number}`
+                              `/certificate/verify/${result.serial_number}`,
                             )
                           }
                         >
@@ -215,7 +215,7 @@ export const CertificateQuickVerify = ({
                       <p className="text-sm text-muted-foreground">
                         {t(
                           "تأكد من رقم الشهادة وحاول مرة أخرى",
-                          "Please check the serial number"
+                          "Please check the serial number",
                         )}
                       </p>
 
@@ -223,7 +223,6 @@ export const CertificateQuickVerify = ({
                         <Button size="sm" onClick={() => setError(false)}>
                           {t("إعادة المحاولة", "Retry")}
                         </Button>
-
                       </div>
                     </div>
                   </div>

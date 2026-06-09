@@ -1,13 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
@@ -335,25 +328,6 @@ const AdminUsersPage = () => {
                 className={isRTL ? "pr-10" : "pl-10"}
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
-                  {t("كل الحالات", "All Statuses")}
-                </SelectItem>
-                <SelectItem value="pending">
-                  {t("قيد المراجعة", "Pending")}
-                </SelectItem>
-                <SelectItem value="approved">
-                  {t("موافق", "Approved")}
-                </SelectItem>
-                <SelectItem value="rejected">
-                  {t("مرفوض", "Rejected")}
-                </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardHeader>
         <CardContent className="p-0">
