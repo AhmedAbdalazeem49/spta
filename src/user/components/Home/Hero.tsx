@@ -83,7 +83,7 @@ export default function Hero() {
     );
 
   return (
-    <section className="relative h-[550px] overflow-hidden">
+    <section className="relative h-[550px] md:h-screen overflow-hidden">
       <AnimatePresence mode="wait">
         {heroSlides.map(
           (slide, index) =>
