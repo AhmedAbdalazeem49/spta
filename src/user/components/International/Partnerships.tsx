@@ -104,13 +104,6 @@ export default function Partnerships() {
               "The Saudi Physical Therapy Association places great importance on strengthening its international relations and building strategic partnerships with global professional groups under World Physiotherapy, contributing to the development of the profession, knowledge exchange, and improving clinical standards globally. The association maintains professional and scientific ties with World Physiotherapy, enabling participation in international initiatives and policy development.",
             )}
           </p>
-
-          <p className="text-sm text-muted-foreground mt-6">
-            {t(
-              "نائب المدير: جود أسامة عامودي",
-              "Deputy Director: Joud Osama Amodi",
-            )}
-          </p>
         </motion.div>
 
         {/* GROUPS */}
