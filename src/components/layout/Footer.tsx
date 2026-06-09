@@ -39,7 +39,17 @@ const Footer = () => {
       },
       { label: t("الفروع", "Branches"), path: "/contact" },
       { label: t("الأخبار", "News"), path: "/news" },
-      { label: t("المجموعات التخصصية", "Specializations"), path: "/specializations" },
+      {
+        label: t("المجموعات التخصصية", "Specializations"),
+        path: "/specializations",
+      },
+      {
+        label: t(
+          "المجلة الدولية لأبحاث العلاج الطبيعي وممارساته",
+          "International Journal of Physical Therapy Research and Practice",
+        ),
+        path: "https://www.inkwellinfinite.com/index.php/ijprp",
+      },
     ],
   };
 
@@ -169,21 +179,6 @@ const Footer = () => {
                   className="text-primary-foreground/80 hover:text-primary-foreground"
                 >
                   spta.sa
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Globe className="w-5 h-5 flex-shrink-0" />
-
-                <a
-                  href="https://www.inkwellinfinite.com/index.php/ijprp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                >
-                  {t(
-                    "المجلة الدولية لأبحاث العلاج الطبيعي وممارساته",
-                    "International Journal of Physical Therapy Research and Practice",
-                  )}
                 </a>
               </li>
             </ul>

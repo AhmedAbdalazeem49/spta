@@ -26,66 +26,84 @@ export default function SpecializationItems() {
     {
       id: "cardio",
       icon: Heart,
-      title: t("القلب والجهاز التنفسي", "Cardiopulmonary"),
+      title: t(
+        "المجموعة التخصصية لتأهيل مرضى القلب والجهاز التنفسي",
+        "Cardiopulmonary Rehabilitation Special Interest Group",
+      ),
       leader: t("د. رشا منصور الغفيلي", "Dr. Rasha Mansour Al-Ghufaili"),
       desc: t(
-        "تخصص يهتم بصحة القلب والرئتين وتحسين كفاءة التنفس.",
-        "Focuses on heart and lung health and improving breathing efficiency.",
+        "المجموعة التخصصية لتأهيل مرضى القلب والجهاز التنفسي.",
+        "Specialized group for cardiopulmonary rehabilitation.",
       ),
       color: "from-red-500 to-rose-600",
     },
     {
       id: "neuro",
       icon: Brain,
-      title: t("الأعصاب", "Neurology"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي للأعصاب",
+        "Neurological Physical Therapy Special Interest Group",
+      ),
       leader: t("د. مشعل محمد الديحان", "Dr. Mishal Mohammed Al-Daihan"),
       desc: t(
-        "يعالج اضطرابات الجهاز العصبي وتحسين الحركة والتوازن.",
-        "Treats nervous system disorders and improves mobility and balance.",
+        "المجموعة التخصصية للعلاج الطبيعي للأعصاب.",
+        "Specialized group for neurological physical therapy.",
       ),
       color: "from-purple-500 to-indigo-600",
     },
     {
       id: "women",
       icon: Users,
-      title: t("صحة المرأة", "Women's Health"),
-      leader: t("د. غادة محمد القديري", "Dr. Ghada Mohammed Al-Qudairi"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي لصحة المرأة",
+        "Women's Health Physical Therapy Special Interest Group",
+      ),
+      leader: t("أ. غادة محمد القديري", "Ms. Ghada Mohammed Al-Qudairi"),
       desc: t(
-        "رعاية متخصصة لصحة المرأة في مختلف المراحل.",
-        "Specialized care for women's health across all stages.",
+        "المجموعة التخصصية للعلاج الطبيعي لصحة المرأة.",
+        "Specialized group for women's health physical therapy.",
       ),
       color: "from-pink-500 to-fuchsia-600",
     },
     {
       id: "ortho",
       icon: Bone,
-      title: t("العظام", "Orthopedics"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي للعظام",
+        "Orthopedic Physical Therapy Special Interest Group",
+      ),
       leader: t("د. علي متعب الشامي", "Dr. Ali Mutaib Al-Shami"),
       desc: t(
-        "علاج إصابات العظام والمفاصل وإعادة التأهيل.",
-        "Treats bone and joint injuries with rehabilitation.",
+        "المجموعة التخصصية للعلاج الطبيعي للعظام.",
+        "Specialized group for orthopedic physical therapy.",
       ),
       color: "from-orange-500 to-amber-600",
     },
     {
       id: "sports",
       icon: Dumbbell,
-      title: t("الطب الرياضي", "Sports Medicine"),
-      leader: t("أ. راكان الوابل", "Mr. Rakan Al-Wabel"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي - الطب الرياضي",
+        "Sports Physical Therapy Special Interest Group",
+      ),
+      leader: t("أ. راكان عبدالله الوابل", "Mr. Rakan Abdullah Al-Wabel"),
       desc: t(
-        "تأهيل الرياضيين وتحسين الأداء البدني.",
-        "Rehabilitates athletes and enhances performance.",
+        "المجموعة التخصصية للعلاج الطبيعي - الطب الرياضي.",
+        "Specialized group for sports physical therapy.",
       ),
       color: "from-emerald-500 to-green-600",
     },
     {
       id: "oncology",
       icon: Activity,
-      title: t("الأورام", "Oncology"),
-      leader: t("د. نوف محمد الضويان", "Dr. Nouf Mohammed Al-Dhuwayan"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي لمرضى الأورام",
+        "Oncology Physical Therapy Special Interest Group",
+      ),
+      leader: t("أ. نوف محمد الضويان", "Ms. Nouf Mohammed Al-Dhuwayan"),
       desc: t(
-        "دعم وتأهيل مرضى الأورام لتحسين جودة الحياة.",
-        "Supports cancer patients to improve quality of life.",
+        "المجموعة التخصصية للعلاج الطبيعي لمرضى الأورام.",
+        "Specialized group for oncology physical therapy.",
       ),
       color: "from-cyan-500 to-teal-600",
     },
@@ -95,41 +113,50 @@ export default function SpecializationItems() {
       title: t("المجموعة السعودية للوذمة اللمفاوية", "Saudi Lymphedema Group"),
       leader: t("د. أسماء عبداللطيف الدرع", "Dr. Asmaa Abdul Latif Al-Darra"),
       desc: t(
-        "تشخيص وعلاج الوذمة اللمفاوية بطرق متقدمة.",
-        "Advanced diagnosis and treatment of lymphedema.",
+        "المجموعة السعودية للوذمة اللمفاوية.",
+        "Saudi specialized group for lymphedema.",
       ),
       color: "from-violet-500 to-purple-600",
     },
     {
       id: "pediatric",
       icon: Baby,
-      title: t("الأطفال", "Pediatrics"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي للأطفال",
+        "Pediatric Physical Therapy Special Interest Group",
+      ),
       leader: t("د. مشاري صالح الغدير", "Dr. Mishari Saleh Al-Ghadeer"),
       desc: t(
-        "رعاية وتأهيل الأطفال لتحسين النمو والحركة.",
-        "Care and rehabilitation for children's development.",
+        "المجموعة التخصصية للعلاج الطبيعي للأطفال.",
+        "Specialized group for pediatric physical therapy.",
       ),
       color: "from-sky-500 to-blue-600",
     },
     {
       id: "pain",
       icon: Zap,
-      title: t("علم الألم", "Pain Science"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي - علم الألم",
+        "Pain Science Physical Therapy Special Interest Group",
+      ),
       leader: t("د. فارس عبدالله العضيبي", "Dr. Faris Abdullah Al-Adhaibi"),
       desc: t(
-        "إدارة الألم المزمن وتحسين جودة الحياة.",
-        "Manages chronic pain and enhances quality of life.",
+        "المجموعة التخصصية للعلاج الطبيعي - علم الألم.",
+        "Specialized group for pain science physical therapy.",
       ),
       color: "from-amber-500 to-yellow-600",
     },
     {
       id: "electro",
       icon: Eye,
-      title: t("الالكترو", "Electrotherapy"),
+      title: t(
+        "المجموعة التخصصية للعلاج الطبيعي - العلاج الكهربائي",
+        "Electrotherapy Physical Therapy Special Interest Group",
+      ),
       leader: t("أ.د. سامي العبدالوهاب", "Prof. Sami Al-Abdulwahab"),
       desc: t(
-        "استخدام التقنيات الكهربائية في العلاج الطبيعي.",
-        "Uses electrical techniques in physiotherapy.",
+        "المجموعة التخصصية للعلاج الطبيعي - العلاج الكهربائي.",
+        "Specialized group for electrotherapy.",
       ),
       color: "from-indigo-500 to-blue-700",
     },
@@ -152,7 +179,7 @@ export default function SpecializationItems() {
         </div>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
           {specializations.map((spec, index) => (
             <motion.div
               key={spec.id}
@@ -190,7 +217,7 @@ export default function SpecializationItems() {
               </div>
 
               {/* Button */}
-              <Link to="/contact">
+              <Link to="/membership">
                 <Button className="w-full mt-auto group-hover:scale-[1.02] transition-all">
                   {t("انضم الآن", "Join Now")}
                   <ChevronRight

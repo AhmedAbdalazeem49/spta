@@ -137,52 +137,52 @@ const WorkAreasSection = () => {
         ),
       },
     },
-    // {
-    //   id: 2,
-    //   icon: Stethoscope,
-    //   keyword: t("الرعاية", "Care"),
-    //   title: t("الرعاية الصحية", "Healthcare"),
-    //   color: "#f59e0b",
-    //   glow: "rgba(245,158,11,0.15)",
-    //   activities: [
-    //     {
-    //       icon: Heart,
-    //       text: t(
-    //         "تعزيز معايير الرعاية الصحية",
-    //         "Enhancing healthcare standards",
-    //       ),
-    //     },
-    //     {
-    //       icon: Stethoscope,
-    //       text: t(
-    //         "دعم الممارسة السريرية للعلاج الطبيعي",
-    //         "Supporting clinical physical therapy practice",
-    //       ),
-    //     },
-    //     {
-    //       icon: Users,
-    //       text: t(
-    //         "التواصل مع المرضى والمجتمع",
-    //         "Engaging patients and the community",
-    //       ),
-    //     },
-    //     {
-    //       icon: Building2,
-    //       text: t(
-    //         "الشراكة مع المؤسسات الصحية",
-    //         "Partnership with healthcare institutions",
-    //       ),
-    //     },
-    //     {
-    //       icon: Activity,
-    //       text: t(
-    //         "مراقبة جودة الخدمات الصحية",
-    //         "Monitoring healthcare service quality",
-    //       ),
-    //     },
-    //   ],
-    //   stat: { value: "+3000", label: t("معالج مسجل", "Registered Therapists") },
-    // },
+    {
+      id: 2,
+      icon: Stethoscope,
+      keyword: t("الرعاية", "Care"),
+      title: t("الرعاية الصحية", "Healthcare"),
+      color: "#f59e0b",
+      glow: "rgba(245,158,11,0.15)",
+      activities: [
+        {
+          icon: Heart,
+          text: t(
+            "تعزيز معايير الرعاية الصحية",
+            "Enhancing healthcare standards",
+          ),
+        },
+        {
+          icon: Stethoscope,
+          text: t(
+            "دعم الممارسة السريرية للعلاج الطبيعي",
+            "Supporting clinical physical therapy practice",
+          ),
+        },
+        {
+          icon: Users,
+          text: t(
+            "التواصل مع المرضى والمجتمع",
+            "Engaging patients and the community",
+          ),
+        },
+        {
+          icon: Building2,
+          text: t(
+            "الشراكة مع المؤسسات الصحية",
+            "Partnership with healthcare institutions",
+          ),
+        },
+        {
+          icon: Activity,
+          text: t(
+            "مراقبة جودة الخدمات الصحية",
+            "Monitoring healthcare service quality",
+          ),
+        },
+      ],
+      stat: { value: "+3000", label: t("معالج مسجل", "Registered Therapists") },
+    },
   ];
 
   const active = pillars[activeTab];
@@ -271,20 +271,22 @@ const WorkAreasSection = () => {
           {/* Left: stat + title block */}
           <div className="lg:col-span-2 space-y-6">
             {/* Big stat card */}
-            <div
-              className="rounded-2xl p-8 border border-border/40"
-              style={{ background: `${active.glow}` }}
-            >
-              <p
-                className="text-6xl font-black tabular-nums leading-none"
-                style={{ color: active.color }}
+            {active.id !== 2 && (
+              <div
+                className="rounded-2xl p-8 border border-border/40"
+                style={{ background: `${active.glow}` }}
               >
-                {active.stat.value}
-              </p>
-              <p className="text-muted-foreground text-sm mt-2 font-medium">
-                {active.stat.label}
-              </p>
-            </div>
+                <p
+                  className="text-6xl font-black tabular-nums leading-none"
+                  style={{ color: active.color }}
+                >
+                  {active.stat.value}
+                </p>
+                <p className="text-muted-foreground text-sm mt-2 font-medium">
+                  {active.stat.label}
+                </p>
+              </div>
+            )}
 
             {/* Title block */}
             <div className="space-y-3">
