@@ -134,7 +134,7 @@ const ProfilePage = () => {
         description: t("تم تحديث الملف الشخصي", "Profile updated"),
       });
       setIsEditing(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -370,7 +370,7 @@ const ProfilePage = () => {
                                 {t("اسم العضو", "Member Name")}
                               </p>
 
-                              <h3 className="text-xl font-bold text-white">
+                              <h3 className="text-md md:text-xl font-bold text-white break-all">
                                 {user?.name || "—"}
                               </h3>
                             </div>
@@ -380,7 +380,7 @@ const ProfilePage = () => {
                                 {t("البريد الإلكتروني", "Email")}
                               </p>
 
-                              <p className="text-white/85 break-words">
+                              <p className="text-md md:text-xl text-white/85 break-all">
                                 {user?.email || "—"}
                               </p>
                             </div>
@@ -438,7 +438,8 @@ const ProfilePage = () => {
                               </p>
 
                               <p className="text-white tracking-[0.3em] font-semibold">
-                                #{activeMembership?.membership_number || "0000"}
+                                #
+                                {activeMembership?.membership_number || "00000"}
                               </p>
                             </div>
                           </div>
