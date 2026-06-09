@@ -159,7 +159,7 @@ const DigitalMembershipCard = ({
           {/* Center — name + qr */}
           <div className="flex-1 flex items-center justify-between gap-3 md:gap-6 min-h-0">
             {/* Left: name & details */}
-            <div className="flex flex-col  min-w-0 flex-1">
+            <div className="flex flex-col min-w-0 flex-1">
               <div>
                 <h1 className="text-sm sm:text-xl md:text-3xl font-black leading-tight line-clamp-2">
                   {t(member.fullName, member.fullNameEn)}
@@ -175,7 +175,7 @@ const DigitalMembershipCard = ({
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
                 <Badge className="text-white text-[9px] md:text-xs bg-transparent">
-                  <Icon className="w-3 h-3" />
+                  <Icon className="w-3 h-3 me-1" />
                   {t(membershipLabel.ar, membershipLabel.en)}
                 </Badge>
                 <Badge className="text-white text-[9px] md:text-xs bg-transparent">
