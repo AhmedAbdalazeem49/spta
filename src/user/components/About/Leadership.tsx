@@ -11,7 +11,7 @@ const Leadership = () => {
   const boardMembers = [
     {
       name: t("د. عبدالفتاح بن  سعيد القحطاني", "Dr. Abdulfattah Saeed Al-Qahtani"),
-      role: t("رئيس مجلس الإدارة", "Chairman of the Board"),
+      role: t("رئيس مجلس الإدارة", "President of Saudia Physical Therapy Association"),
       icon: Crown,
     },
     {

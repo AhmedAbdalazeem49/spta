@@ -87,11 +87,11 @@ export default function Message() {
                     <p className="font-bold text-lg">
                       {t(
                         "د. عبدالفتاح بن سعيد القحطاني",
-                        "Abdulfattah  Saeed Al-Qahtani",
+                        "Dr. Abdulfattah Saeed Al-Qahtani",
                       )}
                     </p>
                     <p className="text-sm opacity-90">
-                      {t("رئيس مجلس الإدارة", "Board Chairman")}
+                      {t("رئيس مجلس الإدارة", "President of Saudi Physical Therapy Association")}
                     </p>
                   </motion.div>
                 </div>
@@ -150,13 +150,13 @@ export default function Message() {
                   <p className="text-xl font-bold text-primary">
                     {t(
                       "د. عبدالفتاح بن سعيد القحطاني",
-                      "Abdulfattah Saeed Al-Qahtani",
+                      "Dr. Abdulfattah Saeed Al-Qahtani",
                     )}
                   </p>
                   <p className="text-muted-foreground">
                     {t(
                       "رئيس مجلس إدارة الجمعية السعودية للعلاج الطبيعـي",
-                      "Chairman of the SPTA Board of Directors",
+                      "President of Saudi Physical Therapy Association",
                     )}
                   </p>
                 </motion.div>
