@@ -23,7 +23,7 @@ const VisionMission = () => {
             </h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
               {t(
-                "ن تكون الجمعية مرجعًا ومنظمًا لمهنة العلاج الطبيعي في المملكة، ومنبرًا يمثل المختصين أمام الجهات والمنظمات المحلية والدولية.",
+                "أن تكون الجمعية مرجعًا ومنظمًا لمهنة العلاج الطبيعي في المملكة، ومنبرًا يمثل المختصين أمام الجهات والمنظمات المحلية والدولية.",
                 "To be the authoritative reference and regulatory body for the physical therapy profession in the Kingdom, serving as a platform that represents specialists before local and international organizations.",
               )}
             </p>
@@ -43,8 +43,8 @@ const VisionMission = () => {
             </h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
               {t(
-                "العلاج الطبيعي، والسعي دائمًا إلى نشر التوعية وخدمة المجتمع.",
-                "To lead in scientific and professional excellence for physical therapy practitioners, while continuously striving to spread awareness and serve the community.",
+                "الريادة العلمية والمهنية للعاملين في مجال العلاج الطبيعي، والسعي دائمًا إلى نشر التوعية وخدمة المجتمع.",
+                "To achieve scientific and professional leadership for physical therapy professionals while continuously promoting public awareness and serving the community.",
               )}
             </p>
           </motion.div>

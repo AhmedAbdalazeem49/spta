@@ -15,6 +15,7 @@ import {
   User,
   Users,
   X,
+  FileText
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -97,11 +98,11 @@ const Navbar = () => {
     //   path: "/specializations",
     //   icon: Building2,
     // },
-    // {
-    //   label: t("المجلة العلمية", "Scientific Journal"),
-    //   path: "/journal",
-    //   icon: FileText,
-    // },
+    {
+      label: t("المجلة العلمية", "Scientific Journal"),
+      path: "/journal",
+      icon: FileText,
+    },
     {
       label: t("اتصل بنا", "Contact Us"),
       path: "/contact",

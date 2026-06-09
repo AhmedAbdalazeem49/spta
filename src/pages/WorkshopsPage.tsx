@@ -32,7 +32,6 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-
 import { LoginRequiredModal } from "@/components/workshops/LoginRequiredModal";
 import { RegistrationModal } from "@/components/workshops/RegistrationModal";
 import { Workshop } from "@/types/workshop";
@@ -50,12 +49,11 @@ const WorkshopsPage = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [registeredIds, setRegisteredIds] = useState<number[]>([]);
 
-
   // Modals
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegModal, setShowRegModal] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(
-    null
+    null,
   );
 
   const isMember = user?.membership_status === "active";
@@ -94,7 +92,7 @@ const WorkshopsPage = () => {
     AOS.init({ duration: 800, once: true });
     fetchWorkshops();
     fetchMyWorkshops();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ── Filters ───────────────────────────────────────────────────────────────────
@@ -108,8 +106,6 @@ const WorkshopsPage = () => {
 
     return matchesSearch && matchesStatus;
   });
-
-
 
   // ── Status badge ──────────────────────────────────────────────────────────────
 
@@ -210,8 +206,8 @@ const WorkshopsPage = () => {
             </h1>
             <p className="text-xl text-white max-w-2xl mx-auto">
               {t(
-                "تعلم من خبراء المجال وطور مهاراتك المهنية",
-                "Learn from industry experts and develop your professional skills"
+                "أقامت الجمعية ورش عمل مختلفة في جميع مناطق المملكة، تجاوز عدد المستفيدين منها 5000 مستفيدًا من ممارسي المهنة.",
+                "The Association has conducted a wide range of workshops across the Kingdom of Saudi Arabia, serving more than 5,000 physical therapy professionals and practitioners.",
               )}
             </p>
           </motion.div>
@@ -293,7 +289,7 @@ const WorkshopsPage = () => {
                   <AnimatePresence>
                     {filteredWorkshops.map((workshop, index) => {
                       const isRegistered = registeredIds.includes(workshop.id);
-                      
+
                       const imgSrc = getWorkshopImage(workshop);
                       return (
                         <motion.div
@@ -319,7 +315,7 @@ const WorkshopsPage = () => {
                                     ).style.display = "none";
                                     (e.target as HTMLImageElement)
                                       .parentElement!.querySelector(
-                                        ".fallback"
+                                        ".fallback",
                                       )!
                                       .classList.remove("hidden");
                                   }}
@@ -358,13 +354,15 @@ const WorkshopsPage = () => {
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <Calendar className="w-4 h-4 text-primary shrink-0" />
                                   {new Date(workshop.date).toLocaleDateString(
-                                    isRTL ? "ar-SA" : "en-US"
+                                    isRTL ? "ar-SA" : "en-US",
                                   )}
                                 </div>
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <Calendar className="w-4 h-4 text-primary shrink-0" />
-                                  {new Date(workshop.end_date).toLocaleDateString(
-                                    isRTL ? "ar-SA" : "en-US"
+                                  {new Date(
+                                    workshop.end_date,
+                                  ).toLocaleDateString(
+                                    isRTL ? "ar-SA" : "en-US",
                                   )}
                                 </div>
                                 <div className="flex items-center gap-2 text-muted-foreground col-span-2">
@@ -418,8 +416,6 @@ const WorkshopsPage = () => {
                                   </p>
                                 </div>
                               </div>
-
-
 
                               <Button
                                 className="w-full gap-2"

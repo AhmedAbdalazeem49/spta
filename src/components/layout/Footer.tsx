@@ -39,6 +39,7 @@ const Footer = () => {
       },
       { label: t("الفروع", "Branches"), path: "/contact" },
       { label: t("الأخبار", "News"), path: "/news" },
+      { label: t("التخصصات", "Specializations"), path: "/specializations" },
     ],
   };
 

@@ -43,18 +43,20 @@ export default function Hero({
             {subtitle ||
               t(
                 "منصة النشر العلمي للجمعية السعودية للعلاج الطبيعي",
-                "The scientific publishing platform of the Saudi Physical Therapy Association"
+                "The scientific publishing platform of the Saudi Physical Therapy Association",
               )}
           </p>
 
-          <Button
-            size="lg"
-            className="btn-hero gap-2"
+          <a
+            href="https://www.inkwellinfinite.com/index.php/ijprp"
+            target="_blank"
             rel="noopener noreferrer"
           >
-            {buttonText || t("الذهاب إلى صفحة المجلة", "Go to Journal Page")}
-            <ExternalLink className="w-5 h-5" />
-          </Button>
+            <Button size="lg" className="btn-hero gap-2">
+              {buttonText || t("الذهاب إلى صفحة المجلة", "Go to Journal Page")}
+              <ExternalLink className="w-5 h-5" />
+            </Button>
+          </a>
         </motion.div>
       </div>
     </section>

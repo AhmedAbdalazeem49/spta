@@ -1,4 +1,3 @@
-import EditorialBoard from "@/user/components/Journal/EditorialBoard";
 import Features from "@/user/components/Journal/Features";
 import Hero from "@/user/components/Journal/Hero";
 import Info from "@/user/components/Journal/Info";
@@ -11,8 +10,7 @@ const ScientificJournalPage = () => {
       <Hero />
       <Info />
       <Features />
-      <EditorialBoard />
-      <Submissions />
+      {/* <Submissions /> */}
     </Layout>
   );
 };

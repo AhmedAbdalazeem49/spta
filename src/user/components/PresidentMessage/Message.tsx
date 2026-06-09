@@ -59,7 +59,7 @@ export default function Message() {
   ];
 
   return (
-    <section className="section-padding bg-background">
+    <section className="section-padding bg-background overflow-hidden">
       <div className="container-custom">
         <div className="max-w-5xl mx-auto">
           <div className="grid lg:grid-cols-5 gap-12 items-start">
@@ -86,8 +86,8 @@ export default function Message() {
                   >
                     <p className="font-bold text-lg">
                       {t(
-                        "عبدالفتاح بن سعيد القحطاني",
-                        "Abdulfattah  Saeed Al-Qahtani"
+                        "الدكتور عبدالفتاح بن سعيد القحطاني",
+                        "Abdulfattah  Saeed Al-Qahtani",
                       )}
                     </p>
                     <p className="text-sm opacity-90">
@@ -144,19 +144,19 @@ export default function Message() {
                   <p className="text-lg text-foreground mb-2">
                     {t(
                       "مع تحياتي وتقديري،",
-                      "With my regards and appreciation,"
+                      "With my regards and appreciation,",
                     )}
                   </p>
                   <p className="text-xl font-bold text-primary">
                     {t(
-                      "عبدالفتاح بن سعيد القحطاني",
-                      "Abdulfattah Saeed Al-Qahtani"
+                      "الدكتور عبدالفتاح بن سعيد القحطاني",
+                      "Abdulfattah Saeed Al-Qahtani",
                     )}
                   </p>
                   <p className="text-muted-foreground">
                     {t(
                       "رئيس مجلس إدارة الجمعية السعودية للعلاج الطبيعـي",
-                      "Chairman of the SPTA Board of Directors"
+                      "Chairman of the SPTA Board of Directors",
                     )}
                   </p>
                 </motion.div>

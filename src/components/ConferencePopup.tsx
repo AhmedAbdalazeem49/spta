@@ -16,10 +16,13 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import sptaConference1 from '@/assets/spta-conference-1.jpg';
-import sptaConference2 from '@/assets/spta-conference-2.jpg';
-import sptaEvent1 from '@/assets/spta-event-1.jpg';
-import sptaCeremony1 from '@/assets/spta-ceremony-1.jpg';
+import Conference1 from '@/assets/con-1.jpg';
+import Conference2 from '@/assets/con-2.jpg';
+import Conference3 from '@/assets/con-3.jpg';
+import Conference4 from '@/assets/con-4.jpeg';
+import Conference5 from '@/assets/con-5.jpg';
+import Con1luzoma from '@/assets/con-1-luzoma.jpg';
+import Con1linter from '@/assets/con-1-inter.jpg';
 
 interface Conference {
   id: string;
@@ -27,63 +30,82 @@ interface Conference {
   titleEn: string;
   descriptionAr: string;
   descriptionEn: string;
-  date: string;
-  location: string;
-  locationAr: string;
   image: string;
   status: 'upcoming' | 'ongoing' | 'past';
 }
 
 const conferences: Conference[] = [
   {
-    id: 'conf-5',
-    titleAr: 'المؤتمر السعودي الدولي الخامس للعلاج الطبيعي',
-    titleEn: '5th Saudi International Physical Therapy Conference',
-    descriptionAr: 'المؤتمر الأكبر في مجال العلاج الطبيعي على مستوى المملكة',
-    descriptionEn: 'The largest physical therapy conference in the Kingdom',
-    date: '2026-09-15',
-    location: 'Riyadh, Saudi Arabia',
-    locationAr: 'الرياض، المملكة العربية السعودية',
-    image: sptaConference1,
-    status: 'upcoming',
+    id: "conf-1",
+    titleAr: "المؤتمر الأول للعلاج الطبيعي",
+    titleEn: "1st Physical Therapy Conference",
+    descriptionAr: "المؤتمر الأول الذي أقامته الجمعية السعودية للعلاج الطبيعي",
+    descriptionEn:
+      "The first conference organized by the Saudi Physical Therapy Association",
+    image: Conference1,
+    status: "past",
   },
   {
-    id: 'conf-lymph-2',
-    titleAr: 'المؤتمر الثاني للوذمة اللمفاوية',
-    titleEn: '2nd Lymphedema Conference',
-    descriptionAr: 'مؤتمر متخصص في أحدث أبحاث وعلاجات الوذمة اللمفاوية',
-    descriptionEn: 'Specialized conference on latest lymphedema research and treatments',
-    date: '2026-11-20',
-    location: 'Jeddah, Saudi Arabia',
-    locationAr: 'جدة، المملكة العربية السعودية',
-    image: sptaConference2,
-    status: 'upcoming',
+    id: "conf-2",
+    titleAr: "المؤتمر الثاني للعلاج الطبيعي",
+    titleEn: "2nd Physical Therapy Conference",
+    descriptionAr: "المؤتمر الثاني للجمعية السعودية للعلاج الطبيعي",
+    descriptionEn:
+      "The second conference organized by the Saudi Physical Therapy Association",
+    image: Conference2,
+    status: "past",
   },
   {
-    id: 'conf-stroke-1',
-    titleAr: 'المؤتمر السعودي الدولي الأول للجلطة',
-    titleEn: '1st Saudi International Stroke Conference',
-    descriptionAr: 'مؤتمر شامل حول إعادة تأهيل مرضى الجلطات الدماغية',
-    descriptionEn: 'Comprehensive conference on stroke rehabilitation',
-    date: '2025-12-10',
-    location: 'Riyadh, Saudi Arabia',
-    locationAr: 'الرياض، المملكة العربية السعودية',
-    image: sptaEvent1,
-    status: 'past',
+    id: "conf-3",
+    titleAr: "المؤتمر الثالث للعلاج الطبيعي",
+    titleEn: "3rd Physical Therapy Conference",
+    descriptionAr: "المؤتمر الثالث للجمعية السعودية للعلاج الطبيعي",
+    descriptionEn:
+      "The third conference organized by the Saudi Physical Therapy Association",
+    image: Conference3,
+    status: "past",
   },
   {
-    id: 'conf-4',
-    titleAr: 'المؤتمر السعودي الدولي الرابع للعلاج الطبيعي',
-    titleEn: '4th Saudi International Physical Therapy Conference',
-    descriptionAr: 'المؤتمر الرابع بمشاركة دولية واسعة',
-    descriptionEn: 'The 4th conference with wide international participation',
-    date: '2025-03-20',
-    location: 'Riyadh, Saudi Arabia',
-    locationAr: 'الرياض، المملكة العربية السعودية',
-    image: sptaCeremony1,
-    status: 'past',
+    id: "lymphedema-1",
+    titleAr: "المؤتمر الأول للوذمة اللمفاوية",
+    titleEn: "1st Lymphedema Conference",
+    descriptionAr: "مؤتمر متخصص في الوذمة اللمفاوية وإعادة التأهيل",
+    descriptionEn:
+      "Specialized conference focused on lymphedema and rehabilitation",
+    image: Con1luzoma,
+    status: "past",
+  },
+  {
+    id: "conf-4",
+    titleAr: "المؤتمر السعودي الدولي الرابع للعلاج الطبيعي",
+    titleEn: "4th Saudi International Physical Therapy Conference",
+    descriptionAr: "المؤتمر السعودي الدولي الرابع للعلاج الطبيعي",
+    descriptionEn: "The 4th Saudi International Physical Therapy Conference",
+    image: Conference4,
+    status: "past",
+  },
+  {
+    id: "stroke-1",
+    titleAr: "المؤتمر السعودي الدولي الأول للجلطة الدماغية",
+    titleEn: "1st Saudi International Stroke Conference",
+    descriptionAr: "مؤتمر متخصص في الجلطات الدماغية وإعادة التأهيل العصبي",
+    descriptionEn:
+      "Specialized conference on stroke management and neurological rehabilitation",
+    image: Con1linter,
+    status: "past",
+  },
+  {
+    id: "conf-5",
+    titleAr: "المؤتمر السعودي الدولي الخامس للعلاج الطبيعي",
+    titleEn: "5th Saudi International Physical Therapy Conference",
+    descriptionAr: "أحدث مؤتمرات الجمعية السعودية للعلاج الطبيعي",
+    descriptionEn:
+      "The latest Saudi International Physical Therapy Conference organized by the Association",
+    image: Conference5,
+    status: "past",
   },
 ];
+
 
 const ConferencePopup = () => {
   const { t, isRTL } = useLanguage();
@@ -216,19 +238,7 @@ const ConferencePopup = () => {
                             <p className="text-[11px] text-muted-foreground line-clamp-1">
                               {t(conf.descriptionAr, conf.descriptionEn)}
                             </p>
-                            <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <CalendarDays className="w-3 h-3" />
-                                {new Date(conf.date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-                                  year: 'numeric', month: 'short', day: 'numeric'
-                                })}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                {t(conf.locationAr, conf.location)}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-end">
+                            <div className="flex items-center justify-end hidden">
                               <span className="text-[10px] text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
                                 {t('التفاصيل', 'Details')}
                                 <Arrow className="w-3 h-3" />

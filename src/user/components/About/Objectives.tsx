@@ -18,8 +18,8 @@ const Objectives = () => {
       "Achieve scientific communication among association members and provide opportunities for practitioners to contribute to knowledge advancement.",
     ),
     t(
-      "تقديم المشورة العلمية وإجراء الدراسات اللازمة لرفع مستوى الأداء.",
-      "Provide scientific consultation and conduct necessary studies to improve performance levels.",
+      "العمل كبيت خبرة لتقديم الاستشارات المبنية على الأدلة العلمية وإجراء الدراسات اللازمة فيما يتعلق بالتأهيل الطبي والعلاج الطبيعي.",
+      "To function as a recognized center of expertise, providing evidence-based consultations and conducting scientific studies in the fields of medical rehabilitation and physical therapy.",
     ),
     t(
       "تطوير الأداء العلمي والمهني لممارسي المهنة.",

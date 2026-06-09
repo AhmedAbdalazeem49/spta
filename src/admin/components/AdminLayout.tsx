@@ -86,15 +86,15 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col max-h-screen">
       {/* Logo */}
-      <div className="p-4 border-b border-sidebar-border flex items-center justify-center">
+      <div className="p-4 border-b border-sidebar-border flex justify-center">
         <Link to="/admin">
           <img
             src={sptaLogo}
             alt="SPTA"
             className={`object-contain transition-all ${
-              collapsed ? "w-10" : "w-32"
+              collapsed ? "w-10" : "w-40"
             }`}
           />
         </Link>

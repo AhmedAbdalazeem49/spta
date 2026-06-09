@@ -10,7 +10,7 @@ const Leadership = () => {
 
   const boardMembers = [
     {
-      name: t("د. عبدالفتاح بن سعيد القحطاني", "Dr. Abdulfattah Saeed Al-Qahtani"),
+      name: t("د. عبدالفتاح بن  سعيد القحطاني", "Dr. Abdulfattah Saeed Al-Qahtani"),
       role: t("رئيس مجلس الإدارة", "Chairman of the Board"),
       icon: Crown,
     },
