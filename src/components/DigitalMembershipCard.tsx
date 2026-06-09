@@ -130,7 +130,7 @@ const DigitalMembershipCard = ({
         /* ── FRONT ── */
         <div className="relative z-10 h-full flex flex-col p-4 sm:p-6 md:p-8 gap-3 md:gap-4">
           {/* Header row */}
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between">
             <div className="flex items-center gap-2 md:gap-3 min-w-0">
               <div className="shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-center">
                 <Shield className="w-4 h-4 md:w-6 md:h-6" />
@@ -150,10 +150,10 @@ const DigitalMembershipCard = ({
                 </p>
               </div>
             </div>
-            <Badge className="shrink-0 bg-emerald-500/20 border border-emerald-300/20 text-white px-2 py-1 rounded-full text-[9px] md:text-xs whitespace-nowrap">
+            {/* <Badge className="shrink-0 bg-emerald-500/20 border border-emerald-300/20 text-white px-2 py-1 rounded-full text-[9px] md:text-xs whitespace-nowrap">
               <CheckCircle className="w-3 h-3 me-1" />
               {t("موثقة", "Verified")}
-            </Badge>
+            </Badge> */}
           </div>
 
           {/* Center — name + qr */}
@@ -161,7 +161,7 @@ const DigitalMembershipCard = ({
             {/* Left: name & details */}
             <div className="flex flex-col  min-w-0 flex-1">
               <div>
-                <h1 className="text-md sm:text-xl md:text-3xl font-black leading-tight line-clamp-2">
+                <h1 className="text-sm sm:text-xl md:text-3xl font-black leading-tight line-clamp-2">
                   {t(member.fullName, member.fullNameEn)}
                 </h1>
               </div>
@@ -169,16 +169,16 @@ const DigitalMembershipCard = ({
                 <p className="text-[9px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
                   {t("جهة العمل", "Workplace")}
                 </p>
-                <p className="text-sm md:text-base text-white/85 line-clamp-2 leading-snug mb-2">
+                <p className="text-xs md:text-base text-white/85 line-clamp-2  mb-1">
                   {t(member.workplace, member.workplaceEn)}
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
-                <Badge className="bg-white/10 border border-white/10 text-white px-2 py-1 rounded-full text-[9px] md:text-xs">
+                <Badge className="text-white text-[9px] md:text-xs">
                   <Icon className="w-3 h-3 me-1" />
                   {t(membershipLabel.ar, membershipLabel.en)}
                 </Badge>
-                <Badge className="bg-primary/20 border border-primary/20 text-white px-2 py-1 rounded-full text-[9px] md:text-xs">
+                <Badge className=" text-white  text-[9px] md:text-xs">
                   #{member.membershipNumber}
                 </Badge>
               </div>
@@ -206,9 +206,9 @@ const DigitalMembershipCard = ({
 
           {/* Footer */}
           <div>
-            <p className="text-[9px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
+            {/* <p className="text-[9px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
               {t("تاريخ الانتهاء", "Expiry Date")}
-            </p>
+            </p> */}
             <p className="text-sm md:text-xl font-bold">
               {new Date(member.expiryDate).toLocaleDateString(
                 isRTL ? "ar-SA" : "en-US",
