@@ -53,13 +53,11 @@ import AdminWorkshopsPage from "./pages/admin/workshops/AdminWorkshopsPage";
 import WorkshopsPage from "./pages/WorkshopsPage";
 
 // Conference & Certificate pages
-import ConferencePopup from "./components/ConferencePopup";
 import ScrollToTop from "./components/ScrollToTop";
 import AdminMembershipsPage from "./pages/admin/Memberships/AdminMembershipsPage";
 import PaymentPage from "./pages/PaymentPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
 import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
-import ConferenceDetailPage from "./user/pages/ConferenceDetailPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
 import Membership from "./user/pages/Membership";
 import VerifyMembershipPage from "./pages/VerifyMembershipPage";
@@ -115,10 +113,6 @@ const App = () => (
               <Route path="/workshops" element={<WorkshopsPage />} />
               {/* Conferences */}
               <Route path="/conferences" element={<ConferencesPage />} />
-              <Route
-                path="/conferences/:id"
-                element={<ConferenceDetailPage />}
-              />
               {/* attendance Page */}
               <Route
                 path="/workshop/:id/attendance"
@@ -218,7 +212,6 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             {/* <Chatbot /> */}
-            <ConferencePopup />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

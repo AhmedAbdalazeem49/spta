@@ -16,7 +16,6 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -42,6 +41,10 @@ const Footer = () => {
       {
         label: t("المجموعات التخصصية", "Specializations"),
         path: "/specializations",
+      },
+      {
+        label: t("المؤتمرات", "Conferences"),
+        path: "/conferences",
       },
       {
         label: t(

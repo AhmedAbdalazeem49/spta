@@ -29,7 +29,6 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
@@ -160,7 +159,7 @@ const Navbar = () => {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center">
             {isAuthenticated ? (
               <>
                 {(user?.role === "system_admin" ||
@@ -172,7 +171,7 @@ const Navbar = () => {
                       className="gap-1.5 text-primary"
                     >
                       <Shield className="w-4 h-4" />
-                      {t("لوحة التحكم", "Admin")}
+                      {/* {t("لوحة التحكم", "Admin")} */}
                     </Button>
                   </Link>
                 )}
@@ -180,12 +179,11 @@ const Navbar = () => {
                 <Link to="/profile">
                   <Button
                     variant={isScrolled ? "default" : "outline"}
-                    className={`gap-2 ${
+                    className={`${
                       !isScrolled ? "text-primary-foreground bg-primary" : ""
                     }`}
                   >
                     <User className="w-4 h-4" />
-                    {/* {user?.name?.split(" ")[0] || t("حسابي", "My Account")} */}
                   </Button>
                 </Link>
                 <Button
@@ -241,7 +239,7 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
+              className="lg:hidden" 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? (
