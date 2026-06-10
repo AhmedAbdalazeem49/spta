@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 // Mock member data
 const mockMember = {
-  fullName: "(الإسم ثلاثي)",
+  fullName: "(الإسم الثلاثي)",
   fullNameEn: "(Triple Name)",
   membershipNumber: "XXXXX",
   membershipType: "active" as const,
