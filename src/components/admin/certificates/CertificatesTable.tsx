@@ -41,9 +41,6 @@ export const CertificatesTable = ({
             <thead className="bg-muted/50">
               <tr>
                 <th className="text-start p-4 font-semibold text-sm">
-                  {t("الرقم", "ID")}
-                </th>
-                <th className="text-start p-4 font-semibold text-sm">
                   {t("المستلم", "Recipient")}
                 </th>
                 <th className="text-start p-4 font-semibold text-sm">
@@ -72,9 +69,6 @@ export const CertificatesTable = ({
                   transition={{ delay: i * 0.02 }}
                   className="border-t border-border hover:bg-muted/30 transition-colors"
                 >
-                  <td className="p-4 text-sm font-mono text-muted-foreground">
-                    {c.id}
-                  </td>
                   <td className="p-4 text-sm font-medium">
                     {getCertificateName(c, t)}
                   </td>

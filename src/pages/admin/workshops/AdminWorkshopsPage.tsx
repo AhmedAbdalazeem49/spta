@@ -36,6 +36,7 @@ const AdminWorkshopsPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [originalForm, setOriginalForm] = useState(emptyWorkshopForm);
+  const [syncingId, setSyncingId] = useState<number | null>(null);
 
   const [form, setForm] = useState({ ...emptyWorkshopForm });
 
@@ -138,10 +139,18 @@ const AdminWorkshopsPage = () => {
     try {
       if (editMode && selected) {
         formData.append("_method", "PUT");
-        await api.post(`/admin/workshops/${selected.id}`, formData, {
+        const res = await api.post(`/admin/workshops/${selected.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        toast({ title: t("تم التحديث", "Updated successfully") });
+
+        const synced: number = res.data?.certificates_synced ?? 0;
+
+        toast({
+          title: t("تم التحديث", "Updated successfully"),
+          description: synced > 0
+            ? t(`تمت مزامنة ${synced} شهادة تلقائياً`, `${synced} certificate${synced !== 1 ? 's' : ''} auto-synced`)
+            : t("لا توجد شهادات مرتبطة للمزامنة", "No linked certificates to sync"),
+        });
       } else {
         await api.post("/admin/workshops", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -161,6 +170,31 @@ const AdminWorkshopsPage = () => {
       });
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  /** Manually trigger certificate sync for a specific workshop. */
+  const handleManualSync = async (workshop: Workshop) => {
+    setSyncingId(workshop.id);
+    try {
+      const res = await api.post(`/admin/workshops/${workshop.id}/sync-certificates`);
+      const { synced, skipped } = res.data;
+      toast({
+        title: t("تمت المزامنة", "Sync Complete"),
+        description: t(
+          `تم تحديث ${synced} شهادة${skipped ? ` (${skipped} تم تخطيها)` : ''}`,
+          `${synced} certificate${synced !== 1 ? 's' : ''} synced${skipped ? ` (${skipped} skipped)` : ''}`
+        ),
+      });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast({
+        title: t("خطأ في المزامنة", "Sync Failed"),
+        description: err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+        variant: "destructive",
+      });
+    } finally {
+      setSyncingId(null);
     }
   };
 
@@ -267,6 +301,8 @@ const AdminWorkshopsPage = () => {
                 setIsDeleteOpen(true);
               }}
               onOpenSubscriptions={openSubscriptions}
+              onSyncCertificates={handleManualSync}
+              syncingId={syncingId}
             />
           )}
         </CardContent>

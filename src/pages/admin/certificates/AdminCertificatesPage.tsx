@@ -1,5 +1,6 @@
 import { CertificateEditModal } from "@/components/admin/certificates/CertificateEditModal";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,7 +13,7 @@ import {
   getCertificateWorkshop,
 } from "@/utils/certificateUtils";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, Award, Plus, Settings, Shield } from "lucide-react";
+import { AlertCircle, Award, CheckCircle2, Loader2, Plus, RefreshCw, Search, Settings, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Components
@@ -110,6 +111,51 @@ const AdminCertificatesPage = () => {
 
   const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<Certificate>>({});
+
+  // ─── Workshop Sync State ─────────────────────────────────────────────────────
+  const [syncWorkshops, setSyncWorkshops] = useState<Workshop[]>([]);
+  const [syncWorkshopsLoading, setSyncWorkshopsLoading] = useState(false);
+  const [syncSearch, setSyncSearch] = useState("");
+  const [syncingWorkshopId, setSyncingWorkshopId] = useState<number | null>(null);
+  const [syncResults, setSyncResults] = useState<Record<number, { synced: number; skipped: number; ts: number }>>({});
+
+  const fetchSyncWorkshops = async () => {
+    setSyncWorkshopsLoading(true);
+    try {
+      const res = await api.get("/admin/workshops");
+      const data = res.data?.data || res.data || [];
+      setSyncWorkshops(Array.isArray(data) ? data : []);
+    } catch {
+      setSyncWorkshops([]);
+    } finally {
+      setSyncWorkshopsLoading(false);
+    }
+  };
+
+  const handleWorkshopSync = async (workshop: Workshop) => {
+    setSyncingWorkshopId(workshop.id);
+    try {
+      const res = await api.post(`/admin/workshops/${workshop.id}/sync-certificates`);
+      const { synced, skipped } = res.data;
+      setSyncResults(prev => ({ ...prev, [workshop.id]: { synced, skipped, ts: Date.now() } }));
+      toast({
+        title: t("تمت المزامنة", "Sync Complete"),
+        description: t(
+          `تم تحديث ${synced} شهادة لورشة: ${workshop.title}`,
+          `${synced} certificate${synced !== 1 ? 's' : ''} synced for: ${workshop.title}`
+        ),
+      });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast({
+        title: t("خطأ في المزامنة", "Sync Failed"),
+        description: err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+        variant: "destructive",
+      });
+    } finally {
+      setSyncingWorkshopId(null);
+    }
+  };
 
   const handleUpdate = async () => {
     if (!editForm?.id) return;
@@ -406,6 +452,10 @@ const AdminCertificatesPage = () => {
             <Shield className="w-4 h-4" />
             {t("التحقق السريع", "Quick Verify")}
           </TabsTrigger>
+          <TabsTrigger value="sync" className="gap-2" onClick={fetchSyncWorkshops}>
+            <RefreshCw className="w-4 h-4" />
+            {t("مزامنة الشهادات", "Certificate Sync")}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="certificates" className="space-y-6">
@@ -467,6 +517,122 @@ const AdminCertificatesPage = () => {
             verifyCode={verifyCode}
             setVerifyCode={setVerifyCode}
           />
+        </TabsContent>
+
+        {/* ─── Workshop Certificate Sync Panel ─── */}
+        <TabsContent value="sync" className="space-y-6">
+          <div className="rounded-2xl border bg-card p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-bold flex items-center gap-2">
+                  <RefreshCw className="w-5 h-5 text-primary" />
+                  {t("مركز مزامنة الشهادات", "Certificate Sync Control")}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t(
+                    "تحديث بيانات الشهادات من بيانات الورشة — العنوان والتاريخ والمتحدث والموقع",
+                    "Push workshop data into all linked certificates — title, dates, speaker, venue"
+                  )}
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchSyncWorkshops}
+                disabled={syncWorkshopsLoading}
+                className="gap-2 shrink-0"
+              >
+                {syncWorkshopsLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-4 h-4" />
+                )}
+                {t("تحديث القائمة", "Refresh List")}
+              </Button>
+            </div>
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder={t("بحث عن ورشة...", "Search workshops...")}
+                value={syncSearch}
+                onChange={(e) => setSyncSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            {/* Workshop List */}
+            {syncWorkshopsLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-16 w-full rounded-xl" />
+                ))}
+              </div>
+            ) : syncWorkshops.length === 0 ? (
+              <div className="text-center py-10 text-muted-foreground">
+                <RefreshCw className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>{t("اضغط 'تحديث القائمة' لتحميل الورش", "Click 'Refresh List' to load workshops")}</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {syncWorkshops
+                  .filter((w) =>
+                    !syncSearch ||
+                    w.title?.toLowerCase().includes(syncSearch.toLowerCase()) ||
+                    w.doctor_name?.toLowerCase().includes(syncSearch.toLowerCase())
+                  )
+                  .map((w) => {
+                    const result = syncResults[w.id];
+                    const isSyncing = syncingWorkshopId === w.id;
+                    return (
+                      <motion.div
+                        key={w.id}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-4 py-3 hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{w.title}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {w.doctor_name && <span className="mr-2">🏥 {w.doctor_name}</span>}
+                            {w.date && <span>📅 {w.date}</span>}
+                          </p>
+                        </div>
+
+                        {/* Sync result badge */}
+                        {result && !isSyncing && (
+                          <div className="flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 shrink-0">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>{result.synced} {t("شهادة", "cert")}</span>
+                          </div>
+                        )}
+
+                        <Button
+                          size="sm"
+                          variant={result ? "outline" : "default"}
+                          onClick={() => handleWorkshopSync(w)}
+                          disabled={isSyncing || !!syncingWorkshopId}
+                          className="gap-2 shrink-0"
+                        >
+                          {isSyncing ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              {t("جاري...", "Syncing...")}
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="w-3.5 h-3.5" />
+                              {result ? t("إعادة مزامنة", "Re-sync") : t("مزامنة", "Sync")}
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    );
+                  })}
+              </div>
+            )}
+          </div>
         </TabsContent>
       </Tabs>
       <CertificateDetailsModal
@@ -594,7 +760,6 @@ const AdminCertificatesPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      ;
     </div>
   );
 };

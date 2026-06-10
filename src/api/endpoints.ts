@@ -46,6 +46,7 @@ export const WORKSHOP_ENDPOINTS = {
   adminCreate: "/admin/workshops",
   adminUpdate: (id: string | number) => `/admin/workshops/${id}`,
   adminDelete: (id: string | number) => `/admin/workshops/${id}`,
+  adminSyncCertificates: (id: string | number) => `/admin/workshops/${id}/sync-certificates`,
 } as const;
 
 export const USER_ENDPOINTS = {

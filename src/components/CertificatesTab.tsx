@@ -23,14 +23,32 @@ import { useNavigate } from "react-router-dom";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+interface CertificatePayload {
+  type?: string;
+  participant?: { name?: string; name_ar?: string };
+  event?: { title?: string; start_date?: string; end_date?: string; hours?: number };
+  venue?: { location?: string };
+  speaker?: { name?: string };
+  organization?: { name?: string; role?: string };
+  extra?: { role?: string; completion_status?: string; contribution_description?: string };
+}
+
 interface Certificate {
   id: string | number;
   recipient_name?: string;
   workshop_title?: string;
+  doctor_name?: string;
+  workshop_date?: string;
+  workshop_end_date?: string;
+  workshop_hours?: number;
   issue_date?: string;
+  issued_at?: string;
   status?: string;
   serial_number?: string;
   template?: CertTemplate;
+  type?: string;
+  partner_logo?: string | null;
+  payload?: CertificatePayload;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -296,15 +314,30 @@ const CertificatesTab = () => {
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <h3 className="font-bold text-base leading-tight truncate">
-                              {cert.workshop_title || "Workshop Certificate"}
+                              {cert.payload?.event?.title || cert.workshop_title || "Workshop Certificate"}
                             </h3>
 
                             <p className="text-sm text-muted-foreground mt-1">
                               Issued to{" "}
                               <span className="font-medium text-foreground">
-                                {cert.recipient_name || "Participant"}
+                                {cert.payload?.participant?.name || cert.recipient_name || "Participant"}
                               </span>
                             </p>
+
+                            {(cert.payload?.speaker?.name || cert.doctor_name) && (
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                Presented by{" "}
+                                <span className="font-medium">
+                                  {cert.payload?.speaker?.name || cert.doctor_name}
+                                </span>
+                              </p>
+                            )}
+
+                            {cert.payload?.venue?.location && (
+                              <p className="text-xs text-muted-foreground">
+                                📍 {cert.payload.venue.location}
+                              </p>
+                            )}
                           </div>
 
                           <div className="shrink-0 rounded-xl bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary border border-primary/10">

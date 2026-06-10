@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Workshop } from "@/types/workshop";
 import { motion } from "framer-motion";
-import { Edit, QrCode, Trash2, Users } from "lucide-react";
+import { Edit, Loader2, QrCode, RefreshCw, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { WorkshopAttendanceQR } from "./WorkshopAttendanceQR";
 import { WorkshopStatusBadge } from "./WorkshopStatusBadge";
@@ -14,6 +14,8 @@ interface WorkshopsTableProps {
   onOpenEdit: (w: Workshop) => void;
   onOpenDelete: (w: Workshop) => void;
   onOpenSubscriptions: (w: Workshop) => void;
+  onSyncCertificates?: (w: Workshop) => void;
+  syncingId?: number | null;
 }
 
 export const WorkshopsTable = ({
@@ -22,6 +24,8 @@ export const WorkshopsTable = ({
   onOpenEdit,
   onOpenDelete,
   onOpenSubscriptions,
+  onSyncCertificates,
+  syncingId,
 }: WorkshopsTableProps) => {
   const { t } = useLanguage();
   const { user } = useAuth();
@@ -132,6 +136,24 @@ export const WorkshopsTable = ({
                     >
                       <Users className="w-4 h-4" />
                     </Button>
+
+                    {/* Sync Certificates Button */}
+                    {onSyncCertificates && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-emerald-600 hover:bg-emerald-500/10"
+                        onClick={() => onSyncCertificates(w)}
+                        disabled={syncingId === w.id}
+                        title={t("مزامنة الشهادات", "Sync Certificates")}
+                      >
+                        {syncingId === w.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <RefreshCw className="w-4 h-4" />
+                        )}
+                      </Button>
+                    )}
 
                     <Button
                       size="sm"
