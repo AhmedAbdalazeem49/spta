@@ -24,7 +24,7 @@ export default function Info({ journalInfo }: InfoProps) {
     ),
     issn: "1234-5678",
     frequency: t("شهرياَ", "Monthly"),
-    language: t("عربي / إنجليزي", "Arabic / English"),
+    language: t("إنجليزي", "English"),
   };
 
   return (

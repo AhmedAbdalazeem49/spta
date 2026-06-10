@@ -34,7 +34,7 @@ export default function ContactInfo() {
     {
       icon: Mail,
       title: t("البريد الإلكتروني", "Email"),
-      details: "spta@spta.sa",
+      details: "spta@ksu.edu.sa",
       sub: t("سنرد خلال 24 ساعة", "We reply within 24 hours"),
     },
     {

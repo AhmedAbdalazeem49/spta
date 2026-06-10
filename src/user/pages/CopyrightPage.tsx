@@ -161,10 +161,10 @@ const CopyrightPage = () => {
                 )}
               </p>
               <a
-                href="mailto:spta@spta.sa"
+                href="mailto:spta@ksu.edu.sa"
                 className="text-primary font-bold text-lg hover:underline"
               >
-                spta@spta.sa
+                spta@ksu.edu.sa
               </a>
             </motion.div>
 

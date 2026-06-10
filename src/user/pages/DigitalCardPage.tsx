@@ -8,13 +8,13 @@ import { useEffect } from "react";
 
 // Mock member data
 const mockMember = {
-  fullName: "د. أحمد محمد عبدالعظيم",
-  fullNameEn: "Dr. Ahmed Mohammed Abdalazeem",
-  membershipNumber: "19199",
+  fullName: "(الإسم ثلاثي)",
+  fullNameEn: "(Triple Name)",
+  membershipNumber: "XXXXX",
   membershipType: "active" as const,
   expiryDate: "2027-09-01",
-  workplace: "مستشفى الملك فيصل التخصصي",
-  workplaceEn: "King Faisal Specialist Hospital",
+  workplace: "(جهة العمل)",
+  workplaceEn: "(Work Place)",
 };
 
 const features = [
@@ -75,7 +75,7 @@ const DigitalCardPage = () => {
             <p className="text-xl text-white max-w-2xl mx-auto">
               {t(
                 "بطاقة عضوية رقمية احترافية يمكنك حملها في جوالك",
-                "A professional digital membership card you can carry on your phone"
+                "A professional digital membership card you can carry on your phone",
               )}
             </p>
           </div>
@@ -99,9 +99,7 @@ const DigitalCardPage = () => {
       {/* Features Section */}
       <section className="py-16">
         <div className="container-custom">
-          <h2
-            className="text-3xl font-bold text-center mb-12"
-          >
+          <h2 className="text-3xl font-bold text-center mb-12">
             {t("مميزات البطاقة الرقمية", "Digital Card Features")}
           </h2>
 
