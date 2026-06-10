@@ -41,7 +41,7 @@ interface Cert {
   status?: string;
   type?: string;
   template?: string;
-  partner_logo?: string | null;          // ← from workshop, not settings
+  partner_logo?: string | null; // ← from workshop, not settings
   payload?: {
     type?: string;
     participant?: {
@@ -91,7 +91,7 @@ const storageUrl = (path: string | null | undefined): string => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
   const clean = path.replace(/^\/storage\//, "");
-  return `https://spta.techflow1.com/api/files/${clean}`;
+  return `https://spta.techflow1.com/storage/${clean}`;
 };
 
 const formatDate = (raw?: string): string => {
@@ -149,8 +149,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   // 1. Recipient Info
   const recipientName =
     payload?.participant?.name || cert.recipient_name || "—";
-  const recipientNameAr =
-    payload?.participant?.name_ar || cert.recipient_name_ar || "";
 
   // 2. Event Info
   const eventTitle = payload?.event?.title || cert.workshop_title || "—";
@@ -200,7 +198,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const durationDays = getDurationDays();
   const calculatedHours = trainingHours || durationDays * 4;
 
-  const isVerified = cert.status === "verified";
+console.log("stamp_image", settings.stamp_image);
+console.log("stamp_url", storageUrl(settings.stamp_image));
 
   // Dynamic values based on certificate type
   let badgeLabel = t("Attendance", "Attendance");
@@ -274,7 +273,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             <img
               src={storageUrl(partnerLogo)}
               alt="partner logo"
-              crossOrigin="anonymous"
               className="h-14 object-contain filter brightness-110 drop-shadow-md"
             />
           </>
@@ -441,7 +439,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               <img
                 src={storageUrl(settings.stamp_image)}
                 alt="stamp"
-                crossOrigin="anonymous"
                 className="h-16 w-16 object-contain opacity-90 filter drop-shadow-md"
               />
             ) : (
@@ -472,7 +469,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               <img
                 src={storageUrl(settings.signature_image)}
                 alt="signature"
-                crossOrigin="anonymous"
                 className="h-10 object-contain filter invert brightness-200 drop-shadow-md"
               />
             ) : (

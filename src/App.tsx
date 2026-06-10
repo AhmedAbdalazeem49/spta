@@ -61,6 +61,7 @@ import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
 import Membership from "./user/pages/Membership";
 import VerifyMembershipPage from "./pages/VerifyMembershipPage";
+import WhatsAppFloat from "./components/WhatsAppFloat";
 
 const queryClient = new QueryClient();
 
@@ -212,6 +213,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             {/* <Chatbot /> */}
+            <WhatsAppFloat />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
