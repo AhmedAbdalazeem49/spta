@@ -150,7 +150,7 @@ export const CertificateAddModal = ({
       case "appreciation_org":
         return t("Certificate of Appreciation", "Certificate of Appreciation");
       case "attended":
-        return t("Certificate of Attendance (Seminar)", "Certificate of Attendance");
+        return t("Certificate of Attendance", "Certificate of Attendance");
       default:
         return t("Certificate of Attendance", "Certificate of Attendance");
     }
@@ -766,12 +766,12 @@ export const CertificateAddModal = ({
                     </h3>
                     <p className="text-[10px] text-blue-pale/60">
                       {form.type === "completion" 
-                        ? t("has successfully completed the program:", "has successfully completed the program:")
+                        ? t("has successfully completed", "has successfully completed")
                         : form.type === "appreciation_person" 
                           ? t("in recognition of their contribution in the event:", "in recognition of their contribution in the event:")
                           : form.type === "appreciation_org"
                             ? t("in appreciation of their support in the event:", "in appreciation of their support in the event:")
-                            : t("has successfully attended:", "has successfully attended:")}
+                            : t("has successfully attended", "has successfully attended")}
                     </p>
                     <h4
                       className={`text-md font-semibold text-white ${
