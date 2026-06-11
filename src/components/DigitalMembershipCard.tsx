@@ -206,9 +206,9 @@ const DigitalMembershipCard = ({
 
           {/* Footer */}
           <div>
-            {/* <p className="text-[9px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
+            <p className="text-[7px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
               {t("تاريخ الانتهاء", "Expiry Date")}
-            </p> */}
+            </p> 
             <p className="text-sm md:text-xl font-bold">
               {new Date(member.expiryDate).toLocaleDateString(
                 isRTL ? "ar-SA" : "en-US",
