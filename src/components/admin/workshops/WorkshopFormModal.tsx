@@ -477,7 +477,7 @@ export const WorkshopFormModal = ({
           >
             <div className="grid sm:grid-cols-2 gap-4">
               <Field
-                label={t("عنوان الورشة", "Workshop Title")}
+                label={t("العنوان", "Title")}
                 error={err("title")}
                 required
                 icon={<BookOpen className="w-3 h-3" />}

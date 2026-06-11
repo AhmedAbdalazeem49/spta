@@ -231,24 +231,25 @@ const AdminWorkshopsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 text-primary" />
-            {t("إدارة ورش العمل", "Workshops Management")}
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            {t(
-              "إنشاء وتعديل وحذف ورش العمل",
-              "Create, edit and delete workshops",
-            )}
-          </p>
-        </div>
-        <Button onClick={openCreate} className="gap-2 shrink-0">
-          <Plus className="w-4 h-4" />
-          {t("إضافة ورشة", "Add Workshop")}
-        </Button>
-      </div>
+      <h2 className="text-2xl font-bold flex items-center gap-2">
+        <GraduationCap className="w-6 h-6 text-primary" />
+        {t(
+          "إدارة ورش العمل والمؤتمرات والندوات",
+          "Workshops, Conferences & Seminars",
+        )}
+      </h2>
+
+      <p className="text-muted-foreground text-sm">
+        {t(
+          "إنشاء وتعديل وحذف ورش العمل والمؤتمرات والندوات",
+          "Create, edit and delete workshops, conferences, and seminars",
+        )}
+      </p>
+
+      <Button onClick={openCreate} className="gap-2 shrink-0">
+        <Plus className="w-4 h-4" />
+        {t("إضافة ورشة / مؤتمر / ندوة", "Add Workshop / Conference / Seminar")}
+      </Button>
 
       <Card>
         <CardHeader className="pb-3">
