@@ -771,7 +771,7 @@ export const CertificateAddModal = ({
                           ? t("in recognition of their contribution in the event:", "in recognition of their contribution in the event:")
                           : form.type === "appreciation_org"
                             ? t("in appreciation of their support in the event:", "in appreciation of their support in the event:")
-                            : t("has successfully completed the workshop:", "has successfully completed the workshop:")}
+                            : t("has successfully attended:", "has successfully attended:")}
                     </p>
                     <h4
                       className={`text-md font-semibold text-white ${

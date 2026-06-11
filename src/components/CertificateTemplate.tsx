@@ -206,8 +206,8 @@ console.log("stamp_url", storageUrl(settings.stamp_image));
   let certTitle = t("Certificate of Attendance", "Certificate of Attendance");
   let subText = t("This is to certify that", "This is to certify that");
   let bodyText = t(
-    "has successfully attended and completed the workshop",
-    "has successfully attended and completed the workshop",
+    "has successfully attended and completed",
+    "has successfully attended and completed",
   );
 
   if (type === "completion") {
@@ -215,8 +215,8 @@ console.log("stamp_url", storageUrl(settings.stamp_image));
     certTitle = t("Certificate of Completion", "Certificate of Completion");
     subText = t("This is to certify that", "This is to certify that");
     bodyText = t(
-      "has successfully completed the program",
-      "has successfully completed the program",
+      "has successfully completed",
+      "has successfully completed",
     );
   } else if (type === "appreciation_person") {
     badgeLabel = t("Appreciation", "Appreciation");
@@ -252,7 +252,7 @@ console.log("stamp_url", storageUrl(settings.stamp_image));
     badgeLabel = t("Seminar Attendance", "Seminar Attendance");
     certTitle = t("Certificate of Attendance", "Certificate of Attendance");
     subText = t("This is to certify that", "This is to certify that");
-    bodyText = t("has attended the seminar:", "has attended the seminar:");
+    bodyText = t("has attended:", "has attended:");
   }
 
   // Workshop partner_logo — from cert prop (set per-workshop, not global settings)
@@ -469,7 +469,7 @@ console.log("stamp_url", storageUrl(settings.stamp_image));
               <img
                 src={storageUrl(settings.signature_image)}
                 alt="signature"
-                className="h-10 object-contain filter invert brightness-200 drop-shadow-md"
+                className="h-10 object-contain"
               />
             ) : (
               <div className="h-10 w-28 border-b border-[#c5a880]/30" />
