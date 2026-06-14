@@ -94,8 +94,11 @@ const DigitalMembershipCard = ({
   const [selectedStyle, setSelectedStyle] = useState(cardStyles[0]);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const Icon = membershipIcons[member.membershipType];
-  const membershipLabel = membershipLabels[member.membershipType];
+    const Icon = membershipIcons[member.membershipType] ?? Shield;
+    const membershipLabel = membershipLabels[member.membershipType] ?? {
+      ar: "عضو",
+      en: "Member",
+    };
 
   const CardFace = ({ back = false }: { back?: boolean }) => (
     <div
