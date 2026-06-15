@@ -1,10 +1,4 @@
-export type PaymentMethod =
-  | "creditcard"
-  | "mada"
-  | "applepay"
-  | "googlepay"
-  | "tabby"
-  | "tamara";
+export type PaymentMethod = "creditcard" | "applepay" | "samsungpay";
 
 export interface CreatePaymentPayload {
   amount: number;

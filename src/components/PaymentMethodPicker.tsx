@@ -1,14 +1,9 @@
-import { motion } from "framer-motion";
-import { CreditCard, Smartphone, Loader2, CheckCircle2 } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { CheckCircle2, CreditCard, Loader2, Smartphone } from "lucide-react";
 
-export type PaymentMethodKey =
-  | "mada"
-  | "visa"
-  | "applepay"
-  | "googlepay"
-
+export type PaymentMethodKey = "visa" | "applepay" | "samsungpay";
 
 interface Props {
   amount: number;
@@ -27,10 +22,14 @@ const methods: {
   Icon: typeof CreditCard;
   hint?: { ar: string; en: string };
 }[] = [
-  { key: "mada", ar: "مدى", en: "Mada", Icon: CreditCard },
-  { key: "visa", ar: "فيزا / ماستركارد", en: "Visa / Mastercard", Icon: CreditCard },
+  {
+    key: "visa",
+    ar: "فيزا / ماستركارد",
+    en: "Visa / Mastercard",
+    Icon: CreditCard,
+  },
   { key: "applepay", ar: "Apple Pay", en: "Apple Pay", Icon: Smartphone },
-  { key: "googlepay", ar: "Google Pay", en: "Google Pay", Icon: Smartphone },
+  { key: "samsungpay", ar: "Google Pay", en: "Google Pay", Icon: Smartphone },
 ];
 
 const PaymentMethodPicker: React.FC<Props> = ({
@@ -72,7 +71,9 @@ const PaymentMethodPicker: React.FC<Props> = ({
               }`}
             >
               <div className="flex items-center gap-2">
-                <Icon className={`w-4 h-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
+                <Icon
+                  className={`w-4 h-4 ${active ? "text-primary" : "text-muted-foreground"}`}
+                />
                 <span className="text-sm font-medium">{t(ar, en)}</span>
               </div>
               {hint && (
@@ -100,14 +101,14 @@ const PaymentMethodPicker: React.FC<Props> = ({
         )}
         {t(
           confirmLabel?.ar || "تأكيد الدفع",
-          confirmLabel?.en || "Confirm Payment"
+          confirmLabel?.en || "Confirm Payment",
         )}
       </Button>
 
       <p className="text-[10px] text-center text-muted-foreground">
         {t(
           "مدفوعات آمنة عبر بوابة موثقة. لن يكتمل التسجيل إلا بعد نجاح الدفع.",
-          "Secure payments via certified gateway. Registration is confirmed only after successful payment."
+          "Secure payments via certified gateway. Registration is confirmed only after successful payment.",
         )}
       </p>
     </div>
