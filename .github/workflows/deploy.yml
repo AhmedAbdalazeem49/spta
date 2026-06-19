@@ -1,4 +1,4 @@
-name: Deploy Vite React
+name: Deploy Vite React to cPanel
 
 on:
   push:
@@ -10,21 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install
-      - run: npm run build
+      - name: Install deps
+        run: npm install
 
-      - name: Deploy via SFTP
-        uses: appleboy/scp-action@v0.1.7
+      - name: Build
+        run: npm run build
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
+          server: box117-sa.exaservers.com
+          username: sptasa
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
-          source: "dist/*"
-          target: "/home/sptasa/public_html/"
+          port: 21
+          protocol: ftp
+          local-dir: dist/
+          server-dir: /public_html/
+          timeout: 120000
