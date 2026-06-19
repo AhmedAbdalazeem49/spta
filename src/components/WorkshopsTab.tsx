@@ -167,7 +167,7 @@ export default function WorkshopsTab() {
                 {reg.workshop.image && (
                   <div className="relative h-64 w-full overflow-hidden">
                     <img
-                      src={`https://spta.techflow1.com/storage/${reg.workshop.image}`}
+                      src={`${import.meta.env.VITE_Storage_URL}/storage/${reg.workshop.image}`}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 
@@ -279,7 +279,6 @@ export default function WorkshopsTab() {
                       {reg.attendance || "pending"}
                     </Badge>
                   </div>
-
 
                   {/* ACTIONS */}
                   <div className="flex gap-2 pt-2">

@@ -87,11 +87,17 @@ interface Props {
 }
 
 // ── helpers ──────────────────────────────────────────────────
-const storageUrl = (path: string | null | undefined): string => {
+const STORAGE_BASE_URL = import.meta.env.VITE_Storage_URL;
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const storageUrl = (path: string | null | undefined): string => {
   if (!path) return "";
+
   if (path.startsWith("http")) return path;
+
   const clean = path.replace(/^\/storage\//, "");
-  return `https://spta.techflow1.com/storage/${clean}`;
+
+  return `${STORAGE_BASE_URL}/storage/${clean}`;
 };
 
 const formatDate = (raw?: string): string => {
@@ -139,8 +145,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const settings = useSettings();
 
   const qrValue = cert.serial_number
-    ? `https://spta-one.vercel.app/certificate/verify/${cert.serial_number}`
-    : `https://spta-one.vercel.app/certificate/verify/${cert.id}`;
+    ? `/certificate/verify/${cert.serial_number}`
+    : `/certificate/verify/${cert.id}`;
 
   const payload = cert.payload;
   // Resolve certificate type
@@ -198,8 +204,8 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const durationDays = getDurationDays();
   const calculatedHours = trainingHours || durationDays * 4;
 
-console.log("stamp_image", settings.stamp_image);
-console.log("stamp_url", storageUrl(settings.stamp_image));
+  console.log("stamp_image", settings.stamp_image);
+  console.log("stamp_url", storageUrl(settings.stamp_image));
 
   // Dynamic values based on certificate type
   let badgeLabel = t("Attendance", "Attendance");
@@ -214,10 +220,7 @@ console.log("stamp_url", storageUrl(settings.stamp_image));
     badgeLabel = t("Completion", "Completion");
     certTitle = t("Certificate of Completion", "Certificate of Completion");
     subText = t("This is to certify that", "This is to certify that");
-    bodyText = t(
-      "has successfully completed",
-      "has successfully completed",
-    );
+    bodyText = t("has successfully completed", "has successfully completed");
   } else if (type === "appreciation_person") {
     badgeLabel = t("Appreciation", "Appreciation");
     certTitle = t("Certificate of Appreciation", "Certificate of Appreciation");

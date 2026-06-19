@@ -56,11 +56,16 @@ export const CertificateSettingsModal = ({
     };
 
   // IMAGE PREVIEW — handles File, server path, or null
+  const STORAGE_BASE = import.meta.env.VITE_Storage_URL;
+
   const getImagePreview = (value: File | string | null): string | undefined => {
     if (!value) return undefined;
+
     if (value instanceof File) return URL.createObjectURL(value);
+
     if (value.startsWith("http")) return value;
-    return `https://spta.techflow1.com${value}`;
+
+    return `${STORAGE_BASE}${value}`;
   };
 
   // SAVE

@@ -546,7 +546,7 @@ const ProfilePage = () => {
                                 {certificateSettings?.signature_image ? (
                                   <div className="w-full rounded-2xl bg-white p-3 inline-flex shadow-lg">
                                     <img
-                                      src={`https://spta.techflow1.com${certificateSettings.signature_image}`}
+                                      src={`${import.meta.env.VITE_Storage_URL}/storage/${certificateSettings.signature_image.replace(/^\/storage\//, "")}`}
                                       alt="signature"
                                       className="w-full h-16 object-cover"
                                     />
