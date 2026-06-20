@@ -69,9 +69,9 @@ const Membership = () => {
         </div>
       </section>
 
-      <HeroCount />
-      <Stats />
-      <GeographicalDistribution />
+      {/* <HeroCount /> */}
+      {/* <Stats /> */}
+      {/* <GeographicalDistribution /> */}
     </Layout>
   );
 };

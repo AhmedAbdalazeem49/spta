@@ -1,6 +1,6 @@
 import DigitalMembershipCard from "@/components/DigitalMembershipCard";
 import Layout from "@/components/layout/Layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AOS from "aos";
 import { CreditCard, QrCode, Shield, Smartphone } from "lucide-react";

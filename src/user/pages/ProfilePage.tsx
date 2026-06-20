@@ -1,6 +1,7 @@
 import CertificatesTab from "@/components/CertificatesTab";
 import DigitalMembershipCard from "@/components/DigitalMembershipCard";
 import Layout from "@/components/layout/Layout";
+import ProfileImageModal from "@/components/ProfileImageModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +19,7 @@ import QRCode from "react-qr-code";
 import {
   Award,
   Building2,
+  Camera,
   CheckCircle,
   FileText,
   GraduationCap,
@@ -59,7 +61,12 @@ const ProfilePage = () => {
   const [membershipLoading, setMembershipLoading] = useState(true);
   const [membershipError, setMembershipError] = useState(false);
   const [showCardModal, setShowCardModal] = useState(false);
-
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState(
+    user?.profile_image
+      ? `${import.meta.env.VITE_Storage_URL}/${user.profile_image}`
+      : null,
+  );
   // Profile edit state
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -202,6 +209,7 @@ const ProfilePage = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary/90 to-primary-dark py-24 overflow-hidden">
+        {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
             className="absolute inset-0"
@@ -211,36 +219,77 @@ const ProfilePage = () => {
           />
         </div>
 
+        {/* Soft radial glow behind avatar for depth */}
+        <div className="absolute top-1/2 start-1/4 -translate-y-1/2 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+
         <div className="container-custom relative z-10">
           <div
-            className="flex flex-col md:flex-row items-center gap-8"
+            className="flex flex-col md:flex-row items-center gap-8 md:gap-10"
             data-aos="fade-up"
           >
-            {/* Avatar */}
-            <div className="relative">
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary to-teal flex items-center justify-center text-primary-foreground text-4xl font-bold shadow-lg">
-                {user?.name?.charAt(0) || "U"}
-              </div>
-              {activeMembership?.status === "active" && (
-                <div className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-green-accent flex items-center justify-center shadow-md">
-                  <CheckCircle className="w-5 h-5 text-white" />
+            {/* Avatar + Edit Section */}
+            <div className="relative shrink-0">
+              {/* Avatar ring */}
+              <div className="relative w-32 h-32 rounded-full p-1 bg-gradient-to-br from-white/40 to-white/10 shadow-xl">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-primary to-teal flex items-center justify-center ring-4 ring-primary-dark/20">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      className="w-full h-full object-cover"
+                      alt={t("الصورة الشخصية", "Profile photo")}
+                    />
+                  ) : (
+                    <span className="text-4xl font-bold text-white">
+                      {user?.name?.charAt(0) || "U"}
+                    </span>
+                  )}
                 </div>
-              )}
+
+                {/* Active badge */}
+                {activeMembership?.status === "active" && (
+                  <div className="absolute -bottom-1 -end-1 w-9 h-9 rounded-full bg-green-accent flex items-center justify-center shadow-md ring-2 ring-primary">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                )}
+              </div>
+
+              {/* Edit / Camera button */}
+              <button
+                onClick={() => setImageModalOpen(true)}
+                className="absolute -bottom-1 -start-1 w-10 h-10 rounded-full bg-white text-primary flex items-center justify-center shadow-lg ring-4 ring-primary-dark/10 hover:bg-white/90 hover:scale-105 active:scale-95 transition-all"
+                aria-label={t("تغيير الصورة الشخصية", "Change profile photo")}
+              >
+                <Camera className="w-4.5 h-4.5" />
+              </button>
             </div>
-            <div className="text-center md:text-start">
+
+            {/* User Info */}
+            <div className="text-center md:text-start flex-1">
               <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
                 {user?.name || t("المستخدم", "User")}
               </h1>
-              <p className="text-white/70 text-lg mb-3">
+
+              <p className="text-white/70 text-lg mb-4">
                 {user?.specialization || user?.email}
               </p>
+
+              {/* Role / Badge */}
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
                 <Badge
                   variant="outline"
-                  className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 gap-1.5"
+                  className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 gap-1.5 px-3 py-1.5"
                 >
                   <Shield className="w-3.5 h-3.5" />
+                  {t("عضو", "Member")}
                 </Badge>
+
+                <button
+                  onClick={() => setImageModalOpen(true)}
+                  className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white bg-white/10 hover:bg-white/15 border border-white/20 rounded-full px-3 py-1.5 transition"
+                >
+                  <Edit className="w-3.5 h-3.5" />
+                  {t("تغيير الصورة الشخصية", "Change profile photo")}
+                </button>
               </div>
             </div>
           </div>
@@ -799,6 +848,7 @@ const ProfilePage = () => {
                 expiryDate: activeMembership?.ends_at || "",
                 workplace: user?.employer || "",
                 workplaceEn: user?.employer || "",
+                profileImage: profileImage || undefined,
               }}
               certificateSettings={certificateSettings}
               showControls={true}
@@ -808,6 +858,13 @@ const ProfilePage = () => {
           </motion.div>
         </div>
       )}
+      <ProfileImageModal
+        open={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        onSuccess={(url) => {
+          setProfileImage(url);
+        }}
+      />
     </Layout>
   );
 };

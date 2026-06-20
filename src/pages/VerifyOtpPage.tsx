@@ -55,7 +55,7 @@ const VerifyOtpPage = () => {
       });
 
       // go to home or membership
-      navigate("/membership");
+      window.location.href="/membership";
     } catch (err: any) {
       toast({
         title: t("رمز غير صالح", "Invalid OTP"),

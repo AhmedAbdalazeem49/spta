@@ -31,20 +31,20 @@ export default function Benefits() {
       ],
       color: "from-emerald-500 to-teal-600",
     },
-    {
-      icon: BookOpen,
-      title: t("المكتبة الإلكترونية", "Digital Library Access"),
-      description: t(
-        "وصول مجاني لقواعد البيانات العلمية والمراجع المتخصصة",
-        "Free access to scientific databases and specialized references"
-      ),
-      highlights: [
-        t("قواعد بيانات PubMed و Cochrane", "PubMed & Cochrane databases"),
-        t("أكثر من 10,000 مرجع علمي", "Over 10,000 scientific references"),
-        t("تحديثات دورية للمحتوى", "Regular content updates"),
-      ],
-      color: "from-blue-500 to-indigo-600",
-    },
+    // {
+    //   icon: BookOpen,
+    //   title: t("المكتبة الإلكترونية", "Digital Library Access"),
+    //   description: t(
+    //     "وصول مجاني لقواعد البيانات العلمية والمراجع المتخصصة",
+    //     "Free access to scientific databases and specialized references"
+    //   ),
+    //   highlights: [
+    //     t("قواعد بيانات PubMed و Cochrane", "PubMed & Cochrane databases"),
+    //     t("أكثر من 10,000 مرجع علمي", "Over 10,000 scientific references"),
+    //     t("تحديثات دورية للمحتوى", "Regular content updates"),
+    //   ],
+    //   color: "from-blue-500 to-indigo-600",
+    // },
     {
       icon: Award,
       title: t("الشهادات المهنية", "Professional Certificates"),

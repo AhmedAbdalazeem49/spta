@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import QRCode from "react-qr-code";
 
 import {
+  AlertTriangle,
   CheckCircle,
   Crown,
   GraduationCap,
@@ -12,6 +13,7 @@ import {
   Shield,
   Sparkles,
   Star,
+  User,
   Users,
 } from "lucide-react";
 
@@ -77,6 +79,10 @@ const membershipLabels = {
   intern: { ar: "طالب امتياز", en: "Intern Student" },
 };
 
+// Placeholder avatar used only to preview how the card looks with a photo.
+// Replace MemberData.profileImage with the real uploaded image URL in production.
+const PLACEHOLDER_PROFILE_IMAGE = "https://i.pravatar.cc/150?img=12";
+
 interface DigitalMembershipCardProps {
   member: MemberData;
   certificateSettings?: CertificateSettings;
@@ -94,11 +100,29 @@ const DigitalMembershipCard = ({
   const [selectedStyle, setSelectedStyle] = useState(cardStyles[0]);
   const [isFlipped, setIsFlipped] = useState(false);
 
-    const Icon = membershipIcons[member.membershipType] ?? Shield;
-    const membershipLabel = membershipLabels[member.membershipType] ?? {
-      ar: "عضو",
-      en: "Member",
-    };
+  const Icon = membershipIcons[member.membershipType] ?? Shield;
+  const membershipLabel = membershipLabels[member.membershipType] ?? {
+    ar: "عضو",
+    en: "Member",
+  };
+
+  // Use the real profile image if present, otherwise fall back to a
+  // placeholder so the card preview always shows how a photo will look.
+  const avatarSrc = member.profileImage || PLACEHOLDER_PROFILE_IMAGE;
+
+  const Disclaimer = () => (
+    <div className="flex items-start gap-1 border-t border-white/10 pt-1">
+      <p className="text-[6px] sm:text-[7px] md:text-[8.5px] leading-[1.4] text-white/55">
+        <span className="font-semibold text-white/75">
+          {t("تنويه:", "Note:")}
+        </span>{" "}
+        {t(
+          "هذه البطاقة مخصصة لإثبات العضوية ولا تُستخدم لإثبات التصنيف المهني",
+          "This card is intended solely as proof of membership and is not valid as proof of professional classification",
+        )}
+      </p>
+    </div>
+  );
 
   const CardFace = ({ back = false }: { back?: boolean }) => (
     <div
@@ -131,12 +155,24 @@ const DigitalMembershipCard = ({
 
       {!back ? (
         /* ── FRONT ── */
-        <div className="relative z-10 h-full flex flex-col p-4 sm:p-6 md:p-8 gap-3 md:gap-4">
+        <div className="relative z-10 h-full flex flex-col p-2 sm:p-6 md:p-8 gap-2 md:gap-3">
           {/* Header row */}
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2 md:gap-3 min-w-0">
-              <div className="shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-center">
-                <Shield className="w-4 h-4 md:w-6 md:h-6" />
+              <div className="shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-xl overflow-hidden bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-center">
+                {member.profileImage ? (
+                  <img
+                    src={member.profileImage}
+                    alt={t(member.fullName, member.fullNameEn)}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // If the image fails to load, hide it so the fallback icon shows instead
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <User className="w-4 h-4 md:w-6 text-white/70" />
+                )}
               </div>
               <div className="min-w-0">
                 <h2 className="text-xs sm:text-sm md:text-base font-bold leading-tight truncate">
@@ -153,10 +189,6 @@ const DigitalMembershipCard = ({
                 </p>
               </div>
             </div>
-            {/* <Badge className="shrink-0 bg-emerald-500/20 border border-emerald-300/20 text-white px-2 py-1 rounded-full text-[9px] md:text-xs whitespace-nowrap">
-              <CheckCircle className="w-3 h-3 me-1" />
-              {t("موثقة", "Verified")}
-            </Badge> */}
           </div>
 
           {/* Center — name + qr */}
@@ -164,7 +196,7 @@ const DigitalMembershipCard = ({
             {/* Left: name & details */}
             <div className="flex flex-col min-w-0 flex-1">
               <div>
-                <h1 className="text-sm sm:text-xl md:text-3xl font-black leading-tight line-clamp-2">
+                <h1 className="text-xs sm:text-xl md:text-3xl line-clamp-2 pt-1">
                   {t(member.fullName, member.fullNameEn)}
                 </h1>
               </div>
@@ -177,7 +209,7 @@ const DigitalMembershipCard = ({
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
-                <Badge className="text-white text-[9px] md:text-xs bg-transparent">
+                <Badge className="text-white text-[9px] md:text-xs bg-transparent px-0">
                   <Icon className="w-3 h-3 me-1" />
                   {t(membershipLabel.ar, membershipLabel.en)}
                 </Badge>
@@ -189,7 +221,7 @@ const DigitalMembershipCard = ({
 
             {/* Right: QR */}
             <div className="shrink-0 flex flex-col items-center gap-1.5">
-              <div className="bg-white p-2 md:p-3 rounded-xl md:rounded-2xl shadow-xl">
+              <div className="bg-white p-1 md:p-3 rounded-xl md:rounded-2xl shadow-xl">
                 <QRCode
                   value={`${window.location.origin}/verify-membership/${member.membershipNumber}`}
                   size={72}
@@ -197,7 +229,7 @@ const DigitalMembershipCard = ({
                   fgColor="#000000"
                   level="H"
                   style={{ display: "block" }}
-                  className="w-[72px] h-[72px] sm:w-[90px] sm:h-[90px] md:w-[130px] md:h-[130px]"
+                  className="w-[60px] h-[60px] sm:w-[90px] sm:h-[90px] md:w-[130px] md:h-[130px]"
                 />
               </div>
               {/* <div className="flex items-center gap-1 text-white/60 text-[9px] md:text-xs">
@@ -211,7 +243,7 @@ const DigitalMembershipCard = ({
           <div>
             <p className="text-[7px] md:text-xs uppercase tracking-widest text-white/50 mb-0.5">
               {t("تاريخ الانتهاء", "Expiry Date")}
-            </p> 
+            </p>
             <p className="text-sm md:text-xl font-bold">
               {new Date(member.expiryDate).toLocaleDateString(
                 isRTL ? "ar-SA" : "en-US",
@@ -219,6 +251,9 @@ const DigitalMembershipCard = ({
               )}
             </p>
           </div>
+
+          {/* Disclaimer — printed on the card itself */}
+          <Disclaimer />
         </div>
       ) : (
         /* ── BACK ── */
@@ -227,12 +262,6 @@ const DigitalMembershipCard = ({
             <h2 className="text-md md:text-4xl font-black mb-2">
               {t("التحقق الرقمي", "Digital Verification")}
             </h2>
-            <p className="text-white/70 text-xs md:text-base max-w-sm leading-relaxed">
-              {t(
-                "هذه البطاقة رقمية وموثقة ويمكن التحقق من صحتها عبر رمز QR.",
-                "This card is digitally verified and can be validated through QR verification.",
-              )}
-            </p>
           </div>
 
           <div className="space-y-2 md:space-y-5">
@@ -254,14 +283,19 @@ const DigitalMembershipCard = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-white/10 pt-4">
-            <div className="text-white/50 text-xs">
-              © {new Date().getFullYear()} SPTA
+          <div>
+            <div className="flex items-center justify-between  pt-4">
+              <div className="text-white/50 text-xs">
+                {new Date().getFullYear()} SPTA ©
+              </div>
+              <div className="flex items-center gap-1.5 text-white/50 text-xs">
+                <Sparkles className="w-3 h-3" />
+                Secure Digital Card
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-white/50 text-xs">
-              <Sparkles className="w-3 h-3" />
-              Secure Digital Card
-            </div>
+
+            {/* Disclaimer — printed on the card itself */}
+            <Disclaimer />
           </div>
         </div>
       )}

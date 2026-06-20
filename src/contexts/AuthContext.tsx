@@ -14,6 +14,7 @@ interface User {
   name: string;
   name_ar?: string;
   email: string;
+  profile_image:string;
   phone?: string;
   national_id?: string;
   classification_number?: string;
