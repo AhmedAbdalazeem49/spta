@@ -144,122 +144,123 @@ export default function WorkshopsTab() {
 
       {/* ================= WORKSHOPS GRID ================= */}
       {!loading && activeWorkshops.length > 0 && (
-        <div className="grid gap-4 md:grid-cols-2">
-          {activeWorkshops.map((reg) => (
-            <Card
-              key={reg.id}
-              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-card/80 backdrop-blur-xl shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-            >
-              <CardContent className="p-0">
-                {/* IMAGE SECTION */}
-                {reg.workshop.image && (
-                  <div className="relative h-64 w-full overflow-hidden">
-                    <img
-                      src={`${import.meta.env.VITE_Storage_URL}/storage/${reg.workshop.image}`}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                    <div className="absolute top-4 right-4">
-                      <Badge
-                        className={
-                          reg.status === "confirmed"
-                            ? "bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 backdrop-blur-md"
-                            : "bg-yellow-500/20 text-yellow-200 border border-yellow-400/30 backdrop-blur-md"
-                        }
-                      >
-                        {reg.status}
-                      </Badge>
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-6 space-y-5">
-                  {/* TITLE BLOCK */}
-                  <div className="rounded-2xl bg-muted/40 border border-border/40 p-4 transition-all duration-300 hover:bg-muted/60 hover:shadow-md">
-                    <h3 className="text-lg font-bold leading-snug line-clamp-2">
-                      {reg.workshop.title}
-                    </h3>
-                    {reg.workshop.doctor_name && (
-                      <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                        <User className="w-3.5 h-3.5" />
-                        {reg.workshop.doctor_name}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* DESCRIPTION PANEL */}
-                  {reg.workshop.description && (
-                    <div className="rounded-2xl bg-muted/30 border border-border/40 p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-sm">
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {reg.workshop.description}
-                      </p>
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            {activeWorkshops.map((reg) => (
+              <Card
+                key={reg.id}
+                className="group relative overflow-hidden rounded-3xl border border-border/60 bg-card/80 backdrop-blur-xl shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+              >
+                <CardContent className="p-0">
+                  {/* IMAGE SECTION */}
+                  {reg.workshop.image && (
+                    <div className="relative h-64 w-full overflow-hidden">
+                      <img
+                        src={`${import.meta.env.VITE_Storage_URL}/storage/${reg.workshop.image}`}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                      <div className="absolute top-4 right-4">
+                        <Badge
+                          className={
+                            reg.status === "confirmed"
+                              ? "bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 backdrop-blur-md"
+                              : "bg-yellow-500/20 text-yellow-200 border border-yellow-400/30 backdrop-blur-md"
+                          }
+                        >
+                          {reg.status}
+                        </Badge>
+                      </div>
                     </div>
                   )}
 
-                  {/* META GRID */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {reg.workshop.date && (
-                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        {new Date(reg.workshop.date).toLocaleDateString(
-                          "en-US",
-                        )}
-                      </div>
-                    )}
-                    {reg.workshop.end_date && (
-                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        {new Date(reg.workshop.end_date).toLocaleDateString(
-                          "en-US",
-                        )}
-                      </div>
-                    )}
-                    {reg.workshop.time && (
-                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
-                        <Clock className="w-4 h-4 text-primary" />
-                        {reg.workshop.time}
-                      </div>
-                    )}
-                    {reg.workshop.total_capacity && (
-                      <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
-                        <Users className="w-4 h-4 text-primary" />
-                        {reg.workshop.total_capacity} seats
-                      </div>
-                    )}
-                    {reg.workshop.location && (
-                      <div className="col-span-2 rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
-                        <MapPin className="w-4 h-4 text-primary" />
-                        {reg.workshop.location}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* PRICE + ATTENDANCE */}
-                  <div className="flex items-center justify-between rounded-2xl bg-muted/30 border border-border/40 p-4 hover:bg-muted/50 transition">
-                    <div className="flex items-center gap-2 text-sm">
-                      <CreditCard className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">
-                        {t("السعر", "Price")}:
-                      </span>
-                      <span className="font-bold text-primary">
-                        {reg.price === 0 ? "Free" : `${reg.price} SAR`}
-                      </span>
+                  <div className="p-6 space-y-5">
+                    {/* TITLE BLOCK */}
+                    <div className="rounded-2xl bg-muted/40 border border-border/40 p-4 transition-all duration-300 hover:bg-muted/60 hover:shadow-md">
+                      <h3 className="text-lg font-bold leading-snug line-clamp-2">
+                        {reg.workshop.title}
+                      </h3>
+                      {reg.workshop.doctor_name && (
+                        <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                          <User className="w-3.5 h-3.5" />
+                          {reg.workshop.doctor_name}
+                        </p>
+                      )}
                     </div>
-                    <Badge
-                      className={
-                        reg.attendance === "attended"
-                          ? "bg-blue-500/15 text-blue-600"
-                          : reg.attendance === "absent"
-                            ? "bg-red-500/15 text-red-600"
-                            : "bg-gray-500/15 text-gray-600"
-                      }
-                    >
-                      {reg.attendance || "pending"}
-                    </Badge>
-                  </div>
 
-                  {/* ACTIONS */}
-                  {/* <div className="flex gap-2 pt-2">
+                    {/* DESCRIPTION PANEL */}
+                    {reg.workshop.description && (
+                      <div className="rounded-2xl bg-muted/30 border border-border/40 p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-sm">
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {reg.workshop.description}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* META GRID */}
+                    <div className="grid grid-cols-2 gap-3">
+                      {reg.workshop.date && (
+                        <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                          <Calendar className="w-4 h-4 text-primary" />
+                          {new Date(reg.workshop.date).toLocaleDateString(
+                            "en-US",
+                          )}
+                        </div>
+                      )}
+                      {reg.workshop.end_date && (
+                        <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                          <Calendar className="w-4 h-4 text-primary" />
+                          {new Date(reg.workshop.end_date).toLocaleDateString(
+                            "en-US",
+                          )}
+                        </div>
+                      )}
+                      {reg.workshop.time && (
+                        <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                          <Clock className="w-4 h-4 text-primary" />
+                          {reg.workshop.time}
+                        </div>
+                      )}
+                      {reg.workshop.total_capacity && (
+                        <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                          <Users className="w-4 h-4 text-primary" />
+                          {reg.workshop.total_capacity} seats
+                        </div>
+                      )}
+                      {reg.workshop.location && (
+                        <div className="col-span-2 rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
+                          <MapPin className="w-4 h-4 text-primary" />
+                          {reg.workshop.location}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* PRICE + ATTENDANCE */}
+                    <div className="flex items-center justify-between rounded-2xl bg-muted/30 border border-border/40 p-4 hover:bg-muted/50 transition">
+                      <div className="flex items-center gap-2 text-sm">
+                        <CreditCard className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">
+                          {t("السعر", "Price")}:
+                        </span>
+                        <span className="font-bold text-primary">
+                          {reg.price === 0 ? "Free" : `${reg.price} SAR`}
+                        </span>
+                      </div>
+                      <Badge
+                        className={
+                          reg.attendance === "attended"
+                            ? "bg-blue-500/15 text-blue-600"
+                            : reg.attendance === "absent"
+                              ? "bg-red-500/15 text-red-600"
+                              : "bg-gray-500/15 text-gray-600"
+                        }
+                      >
+                        {reg.attendance || "pending"}
+                      </Badge>
+                    </div>
+
+                    {/* ACTIONS */}
+                    {/* <div className="flex gap-2 pt-2">
                     <Button
                       variant="destructive"
                       size="sm"
@@ -279,11 +280,37 @@ export default function WorkshopsTab() {
                       WhatsApp
                     </Button>
                   </div> */}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="flex flex-col items-center justify-center text-center mt-4 py-16 px-4 border border-dashed rounded-2xl bg-muted/20">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+              <Calendar className="w-6 h-6 text-primary" />
+            </div>
+
+            <h2 className="text-lg font-bold mb-2">
+              {t("كمل تصفح الورش المتاحة", "Explore more workshops")}
+            </h2>
+
+            <p className="text-sm text-muted-foreground max-w-md mb-6">
+              {t(
+                "قدامك مجموعة ورش مميزة تقدر تكمل اكتشافها، ويمكن تلقى ورشة تضيف لك تجربة أقوى 👌",
+                "There are more great workshops you can explore, and you might find one that adds even more value to your experience 👌",
+              )}
+            </p>
+
+            <Button
+              onClick={() => (window.location.href = "/workshops")}
+              className="gap-2"
+            >
+              <Calendar className="w-4 h-4" />
+              {t("استعرض باقي الورش", "Browse more workshops")}
+            </Button>
+          </div>
+        </>
       )}
 
       {/* ================= CANCEL CONFIRMATION MODAL ================= */}
