@@ -259,7 +259,7 @@ export default function WorkshopsTab() {
                   </div>
 
                   {/* ACTIONS */}
-                  <div className="flex gap-2 pt-2">
+                  {/* <div className="flex gap-2 pt-2">
                     <Button
                       variant="destructive"
                       size="sm"
@@ -278,7 +278,7 @@ export default function WorkshopsTab() {
                       <MessageCircle className="w-4 h-4 text-green-600" />
                       WhatsApp
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
               </CardContent>
             </Card>
