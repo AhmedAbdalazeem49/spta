@@ -13,6 +13,7 @@ import { Workshop } from "@/types/workshop";
 import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
 import {
+  Ban,
   CheckCircle2,
   Clock,
   FileSpreadsheet,
@@ -41,7 +42,7 @@ interface Subscriber {
   classification_number?: string;
   payment_status: "paid" | "free" | "pending";
   registration_status: string; // confirmed / cancelled / pending
-  attendance: "attended" | "absent" | "pending"; // ✅ from reg.attendance field
+  attendance: "attended" | "absent" | "pending";
   certificate_issued: boolean;
   registration_date: string;
 }
@@ -58,6 +59,7 @@ export const WorkshopSubscriptionsModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [issuingId, setIssuingId] = useState<string | null>(null);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   // ─── FETCH ───────────────────────────────────────────────
   const fetchSubscribers = async () => {
@@ -65,6 +67,7 @@ export const WorkshopSubscriptionsModal = ({
     setIsLoading(true);
     try {
       const res = await api.get(`/admin/workshops/${workshop.id}/subscribers`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mapped: Subscriber[] = res.data.data.map((reg: any) => ({
         id: String(reg.id),
         user_id: String(reg.user_id),
@@ -76,7 +79,6 @@ export const WorkshopSubscriptionsModal = ({
         classification_number: reg.user?.classification_number,
         payment_status: parseFloat(reg.price) > 0 ? "paid" : "free",
         registration_status: reg.status,
-        // ✅ use reg.attendance directly — NOT reg.status
         attendance:
           reg.attendance === "attended"
             ? "attended"
@@ -101,6 +103,7 @@ export const WorkshopSubscriptionsModal = ({
 
   useEffect(() => {
     if (isOpen && workshop) fetchSubscribers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, workshop]);
 
   // ─── ATTENDANCE TOGGLE ───────────────────────────────────
@@ -118,6 +121,7 @@ export const WorkshopSubscriptionsModal = ({
       });
       setSubscribers((prev) =>
         prev.map((s) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           s.id === sub.id ? { ...s, attendance: next as any } : s,
         ),
       );
@@ -131,6 +135,39 @@ export const WorkshopSubscriptionsModal = ({
         description: "Failed to update attendance",
         variant: "destructive",
       });
+    }
+  };
+
+  // ─── CANCEL SUBSCRIPTION ─────────────────────────────────
+  const handleCancelSubscription = async (sub: Subscriber) => {
+    if (sub.registration_status === "cancelled") return;
+
+    setCancellingId(sub.id);
+    try {
+      // Uses registration ID as the route param: POST /workshops/{id}/cancel
+      await api.post(`/workshops/${sub.id}/cancel`);
+
+      setSubscribers((prev) =>
+        prev.map((s) =>
+          s.id === sub.id ? { ...s, registration_status: "cancelled" } : s,
+        ),
+      );
+      toast({
+        title: t("تم الإلغاء", "Cancelled"),
+        description: t(
+          "تم إلغاء اشتراك المستخدم",
+          "User subscription has been cancelled",
+        ),
+      });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: t("فشل إلغاء الاشتراك", "Failed to cancel subscription"),
+        variant: "destructive",
+      });
+    } finally {
+      setCancellingId(null);
     }
   };
 
@@ -151,8 +188,8 @@ export const WorkshopSubscriptionsModal = ({
         ),
       );
       toast({ title: t("تم إصدار الشهادة", "Certificate Issued") });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      // 409 = already has one — still mark as issued in UI
       if (err?.response?.status === 409) {
         setSubscribers((prev) =>
           prev.map((s) =>
@@ -208,6 +245,7 @@ export const WorkshopSubscriptionsModal = ({
           status: "verified",
         });
         successCount++;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (err?.response?.status === 409) {
           skipCount++;
@@ -215,7 +253,6 @@ export const WorkshopSubscriptionsModal = ({
       }
     }
 
-    // Refresh to get accurate certificate_issued flags
     await fetchSubscribers();
     setIsGenerating(false);
 
@@ -405,9 +442,6 @@ export const WorkshopSubscriptionsModal = ({
                       {t("الدفع", "Payment")}
                     </th>
                     <th className="p-3 text-start font-medium">
-                      {t("التسجيل", "Registration")}
-                    </th>
-                    <th className="p-3 text-start font-medium">
                       {t("رقم التصنيف", "Classification_number")}
                     </th>
                     <th className="p-3 text-start font-medium">
@@ -416,18 +450,26 @@ export const WorkshopSubscriptionsModal = ({
                     <th className="p-3 text-start font-medium">
                       {t("الشهادة", "Certificate")}
                     </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("الإجراءات", "Actions")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {subscribers.map((sub) => {
                     const att = attendanceConfig[sub.attendance];
                     const pay = paymentConfig[sub.payment_status];
+                    const isCancelled = sub.registration_status === "cancelled";
                     return (
                       <motion.tr
                         key={sub.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="border-t hover:bg-muted/20 transition-colors"
+                        className={`border-t transition-colors ${
+                          isCancelled
+                            ? "bg-red-50/40 dark:bg-red-950/10 opacity-60"
+                            : "hover:bg-muted/20"
+                        }`}
                       >
                         {/* User */}
                         <td className="p-3">
@@ -470,7 +512,7 @@ export const WorkshopSubscriptionsModal = ({
                         </td>
 
                         {/* Registration status */}
-                        <td className="p-3">
+                        {/* <td className="p-3">
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
                               sub.registration_status === "confirmed"
@@ -482,8 +524,9 @@ export const WorkshopSubscriptionsModal = ({
                           >
                             {sub.registration_status}
                           </span>
-                        </td>
+                        </td> */}
 
+                        {/* Classification number */}
                         <td className="p-3">
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${pay.className}`}
@@ -495,9 +538,20 @@ export const WorkshopSubscriptionsModal = ({
                         {/* Attendance — clickable to cycle */}
                         <td className="p-3">
                           <button
-                            onClick={() => toggleAttendance(sub)}
-                            title={t("انقر للتغيير", "Click to change")}
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-opacity hover:opacity-75 ${att.className}`}
+                            onClick={() =>
+                              !isCancelled && toggleAttendance(sub)
+                            }
+                            disabled={isCancelled}
+                            title={
+                              isCancelled
+                                ? t("الاشتراك ملغي", "Subscription cancelled")
+                                : t("انقر للتغيير", "Click to change")
+                            }
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-opacity ${att.className} ${
+                              isCancelled
+                                ? "opacity-40 cursor-not-allowed"
+                                : "hover:opacity-75"
+                            }`}
                           >
                             {sub.attendance === "attended" && (
                               <CheckCircle2 className="w-3 h-3" />
@@ -523,7 +577,7 @@ export const WorkshopSubscriptionsModal = ({
                             <Button
                               size="sm"
                               variant="outline"
-                              disabled={issuingId === sub.id}
+                              disabled={issuingId === sub.id || isCancelled}
                               onClick={() => handleIssueCertificate(sub)}
                               className="h-7 text-xs gap-1"
                             >
@@ -533,6 +587,31 @@ export const WorkshopSubscriptionsModal = ({
                                 <Medal className="w-3 h-3" />
                               )}
                               {t("إصدار", "Issue")}
+                            </Button>
+                          )}
+                        </td>
+
+                        {/* Actions — Cancel */}
+                        <td className="p-3">
+                          {isCancelled ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-200">
+                              <Ban className="w-3 h-3" />
+                              {t("ملغي", "Cancelled")}
+                            </span>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={cancellingId === sub.id}
+                              onClick={() => handleCancelSubscription(sub)}
+                              className="h-7 text-xs gap-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                            >
+                              {cancellingId === sub.id ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Ban className="w-3 h-3" />
+                              )}
+                              {t("إلغاء الاشتراك", "Cancel")}
                             </Button>
                           )}
                         </td>
