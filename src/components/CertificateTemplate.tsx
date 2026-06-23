@@ -144,9 +144,11 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const { t, isRTL } = useLanguage();
   const settings = useSettings();
 
+  const baseUrl = window.location.origin;
+
   const qrValue = cert.serial_number
-    ? `/certificate/verify/${cert.serial_number}`
-    : `/certificate/verify/${cert.id}`;
+    ? `${baseUrl}/certificate/verify/${cert.serial_number}`
+    : `${baseUrl}/certificate/verify/${cert.serial_number}`;
 
   const payload = cert.payload;
   // Resolve certificate type
