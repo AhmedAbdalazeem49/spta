@@ -14,12 +14,12 @@ import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
 import {
   CheckCircle2,
+  Clock,
   FileSpreadsheet,
   Loader2,
   Medal,
   Users,
   XCircle,
-  Clock,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
@@ -81,8 +81,8 @@ export const WorkshopSubscriptionsModal = ({
           reg.attendance === "attended"
             ? "attended"
             : reg.attendance === "absent"
-            ? "absent"
-            : "pending",
+              ? "absent"
+              : "pending",
         certificate_issued: reg.certificate_issued ?? false,
         registration_date: reg.created_at,
       }));
@@ -109,8 +109,8 @@ export const WorkshopSubscriptionsModal = ({
       sub.attendance === "attended"
         ? "absent"
         : sub.attendance === "absent"
-        ? "pending"
-        : "attended";
+          ? "pending"
+          : "attended";
     try {
       await api.post(`/admin/workshops/${workshop?.id}/attendance`, {
         user_id: sub.user_id,
@@ -118,8 +118,8 @@ export const WorkshopSubscriptionsModal = ({
       });
       setSubscribers((prev) =>
         prev.map((s) =>
-          s.id === sub.id ? { ...s, attendance: next as any } : s
-        )
+          s.id === sub.id ? { ...s, attendance: next as any } : s,
+        ),
       );
       toast({
         title: t("تم التحديث", "Updated"),
@@ -147,8 +147,8 @@ export const WorkshopSubscriptionsModal = ({
 
       setSubscribers((prev) =>
         prev.map((s) =>
-          s.id === sub.id ? { ...s, certificate_issued: true } : s
-        )
+          s.id === sub.id ? { ...s, certificate_issued: true } : s,
+        ),
       );
       toast({ title: t("تم إصدار الشهادة", "Certificate Issued") });
     } catch (err: any) {
@@ -156,14 +156,14 @@ export const WorkshopSubscriptionsModal = ({
       if (err?.response?.status === 409) {
         setSubscribers((prev) =>
           prev.map((s) =>
-            s.id === sub.id ? { ...s, certificate_issued: true } : s
-          )
+            s.id === sub.id ? { ...s, certificate_issued: true } : s,
+          ),
         );
         toast({
           title: t("شهادة موجودة", "Already Issued"),
           description: t(
             "يمتلك هذا المستخدم شهادة لهذه الورشة مسبقاً",
-            "This user already has a certificate for this workshop"
+            "This user already has a certificate for this workshop",
           ),
         });
         return;
@@ -181,7 +181,7 @@ export const WorkshopSubscriptionsModal = ({
   // ─── BULK CERTIFICATE ────────────────────────────────────
   const handleBulkIssueCertificates = async () => {
     const attended = subscribers.filter(
-      (s) => s.attendance === "attended" && !s.certificate_issued
+      (s) => s.attendance === "attended" && !s.certificate_issued,
     );
 
     if (attended.length === 0) {
@@ -189,7 +189,7 @@ export const WorkshopSubscriptionsModal = ({
         title: t("لا يوجد", "Nothing to issue"),
         description: t(
           "لا يوجد حاضرون بدون شهادة",
-          "All attended subscribers already have certificates"
+          "All attended subscribers already have certificates",
         ),
       });
       return;
@@ -227,7 +227,7 @@ export const WorkshopSubscriptionsModal = ({
         }`,
         `Issued ${successCount} certificate(s)${
           skipCount > 0 ? `, ${skipCount} already existed` : ""
-        }`
+        }`,
       ),
     });
   };
@@ -243,6 +243,7 @@ export const WorkshopSubscriptionsModal = ({
         "Membership",
         "Payment",
         "Registration",
+        "Classification_number",
         "Attendance",
         "Certificate",
         "Date",
@@ -255,6 +256,7 @@ export const WorkshopSubscriptionsModal = ({
         s.membership_type || "",
         s.payment_status,
         s.registration_status,
+        s.classification_number,
         s.attendance,
         s.certificate_issued ? "Issued" : "Not Issued",
         new Date(s.registration_date).toLocaleString(),
@@ -270,6 +272,7 @@ export const WorkshopSubscriptionsModal = ({
       { wch: 16 },
       { wch: 12 },
       { wch: 14 },
+      { wch: 30 },
       { wch: 14 },
       { wch: 14 },
       { wch: 22 },
@@ -281,7 +284,7 @@ export const WorkshopSubscriptionsModal = ({
       new Blob([buf], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       }),
-      `workshop-${workshop?.id}-subscribers.xlsx`
+      `workshop-${workshop?.id}-subscribers.xlsx`,
     );
   };
 
@@ -319,9 +322,8 @@ export const WorkshopSubscriptionsModal = ({
   if (!workshop) return null;
 
   const attendedCount = subscribers.filter(
-    (s) => s.attendance === "attended"
+    (s) => s.attendance === "attended",
   ).length;
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -406,6 +408,9 @@ export const WorkshopSubscriptionsModal = ({
                       {t("التسجيل", "Registration")}
                     </th>
                     <th className="p-3 text-start font-medium">
+                      {t("رقم التصنيف", "Classification_number")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
                       {t("الحضور", "Attendance")}
                     </th>
                     <th className="p-3 text-start font-medium">
@@ -442,7 +447,7 @@ export const WorkshopSubscriptionsModal = ({
                           )}
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {new Date(
-                              sub.registration_date
+                              sub.registration_date,
                             ).toLocaleDateString()}
                           </p>
                         </td>
@@ -471,11 +476,19 @@ export const WorkshopSubscriptionsModal = ({
                               sub.registration_status === "confirmed"
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                 : sub.registration_status === "cancelled"
-                                ? "bg-red-50 text-red-700 border-red-200"
-                                : "bg-gray-50 text-gray-600 border-gray-200"
+                                  ? "bg-red-50 text-red-700 border-red-200"
+                                  : "bg-gray-50 text-gray-600 border-gray-200"
                             }`}
                           >
                             {sub.registration_status}
+                          </span>
+                        </td>
+
+                        <td className="p-3">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${pay.className}`}
+                          >
+                            {sub.classification_number}
                           </span>
                         </td>
 

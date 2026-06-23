@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { UserItem } from "@/types/user";
 import { AnimatePresence, motion } from "framer-motion";
-import { BadgeCheck, CheckCircle2, Clock, Eye, Loader2, Pencil, Trash2, XCircle } from "lucide-react";
+import {  Eye, Pencil, Trash2,  } from "lucide-react";
 
 interface UsersTableProps {
   users: UserItem[];
@@ -40,7 +40,6 @@ export const UsersTable = ({
       <table className="w-full">
         <thead className="bg-muted/50">
           <tr>
-            <th className="text-start p-4 font-semibold text-sm">#</th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("الاسم", "Name")}
             </th>
@@ -63,13 +62,10 @@ export const UsersTable = ({
               {t("جهة العمل", "Employer")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
-              {t("تاريخ التسجيل", "Registered")}
+              {t("رقم التصنيف", "Classification No.")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("الدور", "Role")}
-            </th>
-            <th className="text-start p-4 font-semibold text-sm">
-              {t("الحالة", "Status")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("الإجراءات", "Actions")}
@@ -86,16 +82,10 @@ export const UsersTable = ({
                 transition={{ delay: i * 0.03 }}
                 className="border-t border-border hover:bg-muted/30 transition-colors"
               >
-                <td className="p-4 text-sm text-muted-foreground">{u.id}</td>
                 <td className="p-4">
                   <p className="font-medium text-sm">
                     {isRTL ? u.name_ar || u.name : u.name}
                   </p>
-                  {u.name_ar && (
-                    <p className="text-xs text-muted-foreground">
-                      {isRTL ? u.name : u.name_ar}
-                    </p>
-                  )}
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">{u.email}</td>
                 <td className="p-4 text-sm text-muted-foreground" dir="ltr">
@@ -114,47 +104,26 @@ export const UsersTable = ({
                   {u.employer || "—"}
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">
-                  {formatDate(u.created_at)}
+                  {u.classification_number || "—"}
                 </td>
+
                 <td className="p-4">
                   <Badge
-                    variant={u.role === "system_admin" ? "default" : u.role === "branch_admin" ? "outline" : "secondary"}
+                    variant={
+                      u.role === "system_admin"
+                        ? "default"
+                        : u.role === "branch_admin"
+                          ? "outline"
+                          : "secondary"
+                    }
                     className={`text-xs ${u.role === "branch_admin" ? "border-blue-500 text-blue-500" : ""}`}
                   >
-                    {u.role === "system_admin" 
-                      ? t("مدير النظام", "System Admin") 
-                      : u.role === "branch_admin" 
-                      ? t("مدير فرع", "Branch Manager") 
-                      : t("عضو", "Member")}
+                    {u.role === "system_admin"
+                      ? t("مدير النظام", "System Admin")
+                      : u.role === "branch_admin"
+                        ? t("مدير فرع", "Branch Manager")
+                        : t("عضو", "Member")}
                   </Badge>
-                </td>
-                <td className="p-4">
-                  {(() => {
-                    const status = u.status || (u.email_verified_at ? "approved" : "pending");
-                    const config: Record<
-                      string,
-                      { label: string; cls: string; Icon: any }
-                    > = {
-                      pending: {
-                        label: t(" للتفعيل", "Need Verify"),
-                        cls: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
-                        Icon: Clock,
-                      },
-                      approved: {
-                        label: t("نشط", "Active"),
-                        cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
-                        Icon: BadgeCheck,
-                      },
-                    };
-                    const c = config[status] || config.pending;
-                    const SI = c.Icon;
-                    return (
-                      <Badge variant="outline" className={`${c.cls} gap-1`}>
-                        <SI className="w-3 h-3" />
-                        {c.label}
-                      </Badge>
-                    );
-                  })()}
                 </td>
                 <td className="p-4">
                   <div className="flex items-center gap-1 flex-wrap">
