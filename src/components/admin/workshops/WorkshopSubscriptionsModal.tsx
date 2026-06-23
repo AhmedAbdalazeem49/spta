@@ -428,7 +428,7 @@ export const WorkshopSubscriptionsModal = ({
               {t("لا يوجد مشتركون", "No subscribers yet")}
             </div>
           ) : (
-            <div className="rounded-xl border bg-background overflow-hidden">
+            <div className="rounded-xl border bg-background">
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
