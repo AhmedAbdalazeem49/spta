@@ -13,7 +13,6 @@ import { Workshop } from "@/types/workshop";
 import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
 import {
-  Ban,
   CheckCircle2,
   Clock,
   FileSpreadsheet,
@@ -21,6 +20,7 @@ import {
   Medal,
   Users,
   XCircle,
+  Ban,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
@@ -145,7 +145,7 @@ export const WorkshopSubscriptionsModal = ({
     setCancellingId(sub.id);
     try {
       // Uses registration ID as the route param: POST /workshops/{id}/cancel
-      await api.post(`/workshops/${sub.id}/cancel`);
+      await api.post(`/admin/workshops/registrations/${sub.id}/cancel`);
 
       setSubscribers((prev) =>
         prev.map((s) =>
@@ -245,7 +245,7 @@ export const WorkshopSubscriptionsModal = ({
           status: "verified",
         });
         successCount++;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (err?.response?.status === 409) {
           skipCount++;
@@ -428,7 +428,7 @@ export const WorkshopSubscriptionsModal = ({
               {t("لا يوجد مشتركون", "No subscribers yet")}
             </div>
           ) : (
-            <div className="rounded-xl border bg-background">
+            <div className="rounded-xl border bg-background overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
@@ -440,6 +440,9 @@ export const WorkshopSubscriptionsModal = ({
                     </th>
                     <th className="p-3 text-start font-medium">
                       {t("الدفع", "Payment")}
+                    </th>
+                    <th className="p-3 text-start font-medium">
+                      {t("التسجيل", "Registration")}
                     </th>
                     <th className="p-3 text-start font-medium">
                       {t("رقم التصنيف", "Classification_number")}
@@ -512,7 +515,7 @@ export const WorkshopSubscriptionsModal = ({
                         </td>
 
                         {/* Registration status */}
-                        {/* <td className="p-3">
+                        <td className="p-3">
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
                               sub.registration_status === "confirmed"
@@ -524,7 +527,7 @@ export const WorkshopSubscriptionsModal = ({
                           >
                             {sub.registration_status}
                           </span>
-                        </td> */}
+                        </td>
 
                         {/* Classification number */}
                         <td className="p-3">
