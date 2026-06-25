@@ -42,14 +42,16 @@ export const CertificatePreviewModal = ({
     try {
       setDownloadingPdf(true);
 
-      // Clone to avoid mutating the visible certificate
       const clone = certificateRef.current.cloneNode(true) as HTMLElement;
       clone.style.position = "fixed";
       clone.style.top = "-9999px";
-      clone.style.width = certificateRef.current.offsetWidth + "px";
+      clone.style.left = "-9999px";
+      clone.style.width = "1122px"; // A4 landscape width at 96dpi
+      clone.style.height = "794px"; // A4 landscape height at 96dpi
+      clone.style.borderRadius = "0";
+      clone.style.overflow = "hidden";
       document.body.appendChild(clone);
 
-      // Convert all images to base64 so html2canvas can render them
       await convertImagesToBase64(clone);
 
       const name = `${certificate.recipient_name || "user"}-${certificate.workshop_title || "certificate"}`;

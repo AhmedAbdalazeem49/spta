@@ -22,12 +22,16 @@ export async function downloadElementAsPdf(
     backgroundColor: "#ffffff",
     logging: false,
     allowTaint: false,
+    width: 1122,
+    height: 754,
+    windowWidth: 1122,
+    windowHeight: 754,
   });
 
   const pdf = new jsPDF({
     orientation: "landscape",
-    unit: "mm",
-    format: "a4",
+    unit: "px",
+    format: [1122, 754],
   });
 
   const pageW = pdf.internal.pageSize.getWidth();
@@ -44,16 +48,7 @@ export async function downloadElementAsPdf(
   const x = (pageW - w) / 2;
   const y = (pageH - h) / 2;
 
-  pdf.addImage(
-    canvas.toDataURL("image/png", 1.0),
-    "PNG",
-    x,
-    y,
-    w,
-    h,
-    undefined,
-    "FAST",
-  );
+  pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 1122, 794);
   pdf.save(`${sanitizeFilename(filename)}.pdf`);
 }
 
