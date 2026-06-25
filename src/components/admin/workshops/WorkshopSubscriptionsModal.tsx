@@ -13,14 +13,15 @@ import { Workshop } from "@/types/workshop";
 import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
 import {
+  Ban,
   CheckCircle2,
   Clock,
   FileSpreadsheet,
   Loader2,
   Medal,
+  Trash2,
   Users,
   XCircle,
-  Ban,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
@@ -103,7 +104,7 @@ export const WorkshopSubscriptionsModal = ({
 
   useEffect(() => {
     if (isOpen && workshop) fetchSubscribers();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, workshop]);
 
   // ─── ATTENDANCE TOGGLE ───────────────────────────────────
@@ -129,6 +130,7 @@ export const WorkshopSubscriptionsModal = ({
         title: t("تم التحديث", "Updated"),
         description: t("تم تغيير حالة الحضور", "Attendance updated"),
       });
+      fetchSubscribers();
     } catch {
       toast({
         title: "Error",
@@ -152,6 +154,7 @@ export const WorkshopSubscriptionsModal = ({
           s.id === sub.id ? { ...s, registration_status: "cancelled" } : s,
         ),
       );
+      await fetchSubscribers();
       toast({
         title: t("تم الإلغاء", "Cancelled"),
         description: t(
@@ -159,7 +162,7 @@ export const WorkshopSubscriptionsModal = ({
           "User subscription has been cancelled",
         ),
       });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: "Error",
@@ -188,7 +191,7 @@ export const WorkshopSubscriptionsModal = ({
         ),
       );
       toast({ title: t("تم إصدار الشهادة", "Certificate Issued") });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.status === 409) {
         setSubscribers((prev) =>
@@ -245,7 +248,7 @@ export const WorkshopSubscriptionsModal = ({
           status: "verified",
         });
         successCount++;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (err?.response?.status === 409) {
           skipCount++;
@@ -612,9 +615,9 @@ export const WorkshopSubscriptionsModal = ({
                               {cancellingId === sub.id ? (
                                 <Loader2 className="w-3 h-3 animate-spin" />
                               ) : (
-                                <Ban className="w-3 h-3" />
+                                <Trash2 className="w-3 h-3" />
                               )}
-                              {t("إلغاء الاشتراك", "Cancel")}
+                              {t("إلغاء وحذف", "Cancel & Delete")}
                             </Button>
                           )}
                         </td>

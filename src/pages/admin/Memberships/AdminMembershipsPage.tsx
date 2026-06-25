@@ -1143,21 +1143,20 @@ const AdminMembershipsPage = () => {
     pageNumber = 1,
     search = "",
     status = "all",
-    type = "all"
+    type = "all",
   ) => {
     setIsLoading(true);
     try {
-      const params = new URLSearchParams({ page: String(pageNumber) });
-      if (search.trim()) params.append("search", search.trim());
-      if (status && status !== "all") params.append("status", status);
-      if (type && type !== "all") params.append("membership_type", type);
+      const params: Record<string, string> = { page: String(pageNumber) };
+      if (search.trim()) params.search = search.trim();
+      if (status && status !== "all") params.status = status;
+      if (type && type !== "all") params.membership_type = type;
 
-      const res = await api.get(`/admin/memberships`);
+      const res = await api.get(`/admin/memberships`, { params }); // ← pass params here
       const data = res.data?.data || [];
       setMemberships(Array.isArray(data) ? data : []);
-      setLastPage(res.data?.last_page || 1);
+      setLastPage(res.data?.meta?.last_page || res.data?.last_page || 1);
 
-      // Compute stats from meta or locally
       const meta = res.data?.meta;
       if (meta) {
         setStats({
@@ -1363,7 +1362,7 @@ const AdminMembershipsPage = () => {
           <p className="text-muted-foreground">
             {t(
               "عرض وإدارة جميع اشتراكات العضوية",
-              "View and manage all membership subscriptions"
+              "View and manage all membership subscriptions",
             )}
           </p>
         </div>
@@ -1372,8 +1371,6 @@ const AdminMembershipsPage = () => {
           {t("إضافة عضوية", "Add Membership")}
         </Button>
       </div>
-
-
 
       {/* Table card */}
       <Card>
@@ -1394,8 +1391,8 @@ const AdminMembershipsPage = () => {
               />
               <Input
                 placeholder={t(
-                  "بحث بالاسم أو رقم العضوية...",
-                  "Search by name or membership number..."
+                  "بحث بالاسم أو البريد أو رقم العضوية...",
+                  "Search by name, email or membership number...",
                 )}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -1403,8 +1400,22 @@ const AdminMembershipsPage = () => {
               />
             </div>
 
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[160px]">
+                <SelectValue placeholder={t("الحالة", "Status")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  {t("كل الحالات", "All Statuses")}
+                </SelectItem>
+                {STATUS_OPTIONS.map((s) => (
+                  <SelectItem key={s.value} value={s.value}>
+                    {isRTL ? s.labelAr : s.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-{/* 
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-full sm:w-[160px]">
                 <SelectValue placeholder={t("النوع", "Type")} />
@@ -1419,7 +1430,7 @@ const AdminMembershipsPage = () => {
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select> */}
+            </Select>
           </div>
         </CardHeader>
 

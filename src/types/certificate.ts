@@ -20,6 +20,8 @@ export interface Certificate {
   type?: string;
   workshop_end_date?: string;
   workshopEndDate?: string;
+  partner_logo?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any;
 }
 

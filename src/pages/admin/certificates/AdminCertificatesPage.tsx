@@ -1,3 +1,4 @@
+import { CertificateDeleteModal } from "@/components/admin/certificates/CertificateDeleteModal";
 import { CertificateEditModal } from "@/components/admin/certificates/CertificateEditModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,17 @@ import {
   getCertificateWorkshop,
 } from "@/utils/certificateUtils";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, Award, CheckCircle2, Loader2, Plus, RefreshCw, Search, Settings, Shield } from "lucide-react";
+import {
+  AlertCircle,
+  Award,
+  CheckCircle2,
+  Loader2,
+  Plus,
+  RefreshCw,
+  Search,
+  Settings,
+  Shield,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Components
@@ -38,6 +49,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AlertTriangle, Eye, X } from "lucide-react";
+import { certificateService } from "@/services";
 
 const AdminCertificatesPage = () => {
   const { t } = useLanguage();
@@ -68,6 +80,30 @@ const AdminCertificatesPage = () => {
     custom_text: "",
     partner_logo: null as File | string | null,
   });
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedForDelete, setSelectedForDelete] =
+    useState<Certificate | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+const handleDelete = async () => {
+  if (!selectedForDelete) return;
+  setIsDeleting(true);
+  try {
+    await certificateService.remove(selectedForDelete.id);
+    toast({
+      title: t("تم بنجاح", "Success"),
+      description: t("تم حذف الشهادة", "Certificate deleted"),
+    });
+    setIsDeleteOpen(false);
+    setSelectedForDelete(null);
+    await fetchCertificates();
+  } catch {
+    toast({ title: t("خطأ", "Error"), variant: "destructive" });
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
   const fetchCertificateSettings = async () => {
     try {
@@ -116,8 +152,12 @@ const AdminCertificatesPage = () => {
   const [syncWorkshops, setSyncWorkshops] = useState<Workshop[]>([]);
   const [syncWorkshopsLoading, setSyncWorkshopsLoading] = useState(false);
   const [syncSearch, setSyncSearch] = useState("");
-  const [syncingWorkshopId, setSyncingWorkshopId] = useState<number | null>(null);
-  const [syncResults, setSyncResults] = useState<Record<number, { synced: number; skipped: number; ts: number }>>({});
+  const [syncingWorkshopId, setSyncingWorkshopId] = useState<number | null>(
+    null,
+  );
+  const [syncResults, setSyncResults] = useState<
+    Record<number, { synced: number; skipped: number; ts: number }>
+  >({});
 
   const fetchSyncWorkshops = async () => {
     setSyncWorkshopsLoading(true);
@@ -135,21 +175,27 @@ const AdminCertificatesPage = () => {
   const handleWorkshopSync = async (workshop: Workshop) => {
     setSyncingWorkshopId(workshop.id);
     try {
-      const res = await api.post(`/admin/workshops/${workshop.id}/sync-certificates`);
+      const res = await api.post(
+        `/admin/workshops/${workshop.id}/sync-certificates`,
+      );
       const { synced, skipped } = res.data;
-      setSyncResults(prev => ({ ...prev, [workshop.id]: { synced, skipped, ts: Date.now() } }));
+      setSyncResults((prev) => ({
+        ...prev,
+        [workshop.id]: { synced, skipped, ts: Date.now() },
+      }));
       toast({
         title: t("تمت المزامنة", "Sync Complete"),
         description: t(
           `تم تحديث ${synced} شهادة لورشة: ${workshop.title}`,
-          `${synced} certificate${synced !== 1 ? 's' : ''} synced for: ${workshop.title}`
+          `${synced} certificate${synced !== 1 ? "s" : ""} synced for: ${workshop.title}`,
         ),
       });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ في المزامنة", "Sync Failed"),
-        description: err.response?.data?.message || t("حدث خطأ", "An error occurred"),
+        description:
+          err.response?.data?.message || t("حدث خطأ", "An error occurred"),
         variant: "destructive",
       });
     } finally {
@@ -161,38 +207,38 @@ const AdminCertificatesPage = () => {
     if (!editForm?.id) return;
 
     try {
-      const { data } = await api.put(
-        `/certificates/${editForm.id}/update`,
-        {
-          type: editForm.type,
-          template: editForm.template,
-          recipient_name: editForm.recipient_name,
-          recipient_name_ar: editForm.recipient_name_ar,
-          workshop_title: editForm.workshop_title,
-          status: editForm.status,
-          issue_date: editForm.issue_date || editForm.issueDate,
-          start_date: editForm.start_date,
-          end_date: editForm.end_date,
-          hours: editForm.hours ? Number(editForm.hours) : undefined,
-          speaker: editForm.speaker,
-          venue: editForm.venue,
-          role: editForm.role,
-          organization_name: editForm.organization_name,
-          contribution_description: editForm.contribution_description,
-          completion_status: editForm.completion_status,
-          duration: editForm.duration,
-        }
-      );
+      const { data } = await api.put(`/certificates/${editForm.id}/update`, {
+        type: editForm.type,
+        template: editForm.template,
+        recipient_name: editForm.recipient_name,
+        recipient_name_ar: editForm.recipient_name_ar,
+        workshop_title: editForm.workshop_title,
+        status: editForm.status,
+        issue_date: editForm.issue_date || editForm.issueDate,
+        start_date: editForm.start_date,
+        end_date: editForm.end_date,
+        hours: editForm.hours ? Number(editForm.hours) : undefined,
+        speaker: editForm.speaker,
+        venue: editForm.venue,
+        role: editForm.role,
+        organization_name: editForm.organization_name,
+        contribution_description: editForm.contribution_description,
+        completion_status: editForm.completion_status,
+        duration: editForm.duration,
+      });
 
       console.log("Updated:", data);
       toast({
         title: t("تم التحديث", "Updated"),
-        description: t("تم تحديث بيانات الشهادة بنجاح", "Certificate updated successfully"),
+        description: t(
+          "تم تحديث بيانات الشهادة بنجاح",
+          "Certificate updated successfully",
+        ),
       });
 
       setEditOpen(false);
       fetchCertificates();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Update failed:", error?.response?.data || error.message);
       toast({
@@ -258,10 +304,10 @@ const AdminCertificatesPage = () => {
   };
 
   const selectedWorkshop = workshops.find(
-    (w) => String(w.id) === form.workshopId
+    (w) => String(w.id) === form.workshopId,
   );
   const selectedRecipient = recipients.find(
-    (r) => String(r.id) === form.recipientId
+    (r) => String(r.id) === form.recipientId,
   );
 
   const getWorkshopName = (w: Workshop) =>
@@ -270,7 +316,7 @@ const AdminCertificatesPage = () => {
     r.name || t(r.nameAr || "", r.nameEn || "");
 
   const filteredWorkshops = workshops.filter((w) =>
-    getWorkshopName(w).toLowerCase().includes(workshopSearch.toLowerCase())
+    getWorkshopName(w).toLowerCase().includes(workshopSearch.toLowerCase()),
   );
 
   const filteredRecipients = recipients.filter(
@@ -278,7 +324,7 @@ const AdminCertificatesPage = () => {
       getRecipientName(r)
         .toLowerCase()
         .includes(recipientSearch.toLowerCase()) ||
-      (r.email || "").toLowerCase().includes(recipientSearch.toLowerCase())
+      (r.email || "").toLowerCase().includes(recipientSearch.toLowerCase()),
   );
 
   const previewName =
@@ -302,24 +348,28 @@ const AdminCertificatesPage = () => {
   };
 
   const handleSubmitCertificate = async () => {
-    if (form.type !== 'appreciation_org' && !form.recipientId && !form.manualRecipientName) {
+    if (
+      form.type !== "appreciation_org" &&
+      !form.recipientId &&
+      !form.manualRecipientName
+    ) {
       toast({
         title: t("بيانات ناقصة", "Missing data"),
         description: t(
           "يرجى اختيار المستلم أو إدخال الاسم يدوياً",
-          "Please select recipient or enter a name manually"
+          "Please select recipient or enter a name manually",
         ),
         variant: "destructive",
       });
       return;
     }
 
-    if (form.type === 'appreciation_org' && !form.organization_name) {
+    if (form.type === "appreciation_org" && !form.organization_name) {
       toast({
         title: t("بيانات ناقصة", "Missing data"),
         description: t(
           "يرجى إدخال اسم الجهة / المنظمة",
-          "Please enter organization name"
+          "Please enter organization name",
         ),
         variant: "destructive",
       });
@@ -355,12 +405,12 @@ const AdminCertificatesPage = () => {
         title: t("تم إنشاء الشهادة", "Certificate Created"),
         description: t(
           "تمت إضافة الشهادة بنجاح",
-          "Certificate added successfully"
+          "Certificate added successfully",
         ),
       });
       setIsAddOpen(false);
       fetchCertificates();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // ✅ 409 = duplicate certificate
       if (error?.response?.status === 409) {
@@ -452,7 +502,11 @@ const AdminCertificatesPage = () => {
             <Shield className="w-4 h-4" />
             {t("التحقق السريع", "Quick Verify")}
           </TabsTrigger>
-          <TabsTrigger value="sync" className="gap-2" onClick={fetchSyncWorkshops}>
+          <TabsTrigger
+            value="sync"
+            className="gap-2"
+            onClick={fetchSyncWorkshops}
+          >
             <RefreshCw className="w-4 h-4" />
             {t("مزامنة الشهادات", "Certificate Sync")}
           </TabsTrigger>
@@ -508,6 +562,10 @@ const AdminCertificatesPage = () => {
               onOpenDetails={openDetails}
               onOpenPreview={openPreview}
               onOpenEdit={handleOpenEdit}
+              onOpenDelete={(c) => {
+                setSelectedForDelete(c);
+                setIsDeleteOpen(true);
+              }}
             />
           )}
         </TabsContent>
@@ -531,7 +589,7 @@ const AdminCertificatesPage = () => {
                 <p className="text-sm text-muted-foreground mt-1">
                   {t(
                     "تحديث بيانات الشهادات من بيانات الورشة — العنوان والتاريخ والمتحدث والموقع",
-                    "Push workshop data into all linked certificates — title, dates, speaker, venue"
+                    "Push workshop data into all linked certificates — title, dates, speaker, venue",
                   )}
                 </p>
               </div>
@@ -572,15 +630,25 @@ const AdminCertificatesPage = () => {
             ) : syncWorkshops.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground">
                 <RefreshCw className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                <p>{t("اضغط 'تحديث القائمة' لتحميل الورش", "Click 'Refresh List' to load workshops")}</p>
+                <p>
+                  {t(
+                    "اضغط 'تحديث القائمة' لتحميل الورش",
+                    "Click 'Refresh List' to load workshops",
+                  )}
+                </p>
               </div>
             ) : (
               <div className="space-y-2">
                 {syncWorkshops
-                  .filter((w) =>
-                    !syncSearch ||
-                    w.title?.toLowerCase().includes(syncSearch.toLowerCase()) ||
-                    w.doctor_name?.toLowerCase().includes(syncSearch.toLowerCase())
+                  .filter(
+                    (w) =>
+                      !syncSearch ||
+                      w.title
+                        ?.toLowerCase()
+                        .includes(syncSearch.toLowerCase()) ||
+                      w.doctor_name
+                        ?.toLowerCase()
+                        .includes(syncSearch.toLowerCase()),
                   )
                   .map((w) => {
                     const result = syncResults[w.id];
@@ -593,9 +661,13 @@ const AdminCertificatesPage = () => {
                         className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-4 py-3 hover:bg-muted/50 transition-colors"
                       >
                         <div className="min-w-0 flex-1">
-                          <p className="font-medium text-sm truncate">{w.title}</p>
+                          <p className="font-medium text-sm truncate">
+                            {w.title}
+                          </p>
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {w.doctor_name && <span className="mr-2">🏥 {w.doctor_name}</span>}
+                            {w.doctor_name && (
+                              <span className="mr-2">🏥 {w.doctor_name}</span>
+                            )}
                             {w.date && <span>📅 {w.date}</span>}
                           </p>
                         </div>
@@ -604,7 +676,9 @@ const AdminCertificatesPage = () => {
                         {result && !isSyncing && (
                           <div className="flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 shrink-0">
                             <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>{result.synced} {t("شهادة", "cert")}</span>
+                            <span>
+                              {result.synced} {t("شهادة", "cert")}
+                            </span>
                           </div>
                         )}
 
@@ -623,7 +697,9 @@ const AdminCertificatesPage = () => {
                           ) : (
                             <>
                               <RefreshCw className="w-3.5 h-3.5" />
-                              {result ? t("إعادة مزامنة", "Re-sync") : t("مزامنة", "Sync")}
+                              {result
+                                ? t("إعادة مزامنة", "Re-sync")
+                                : t("مزامنة", "Sync")}
                             </>
                           )}
                         </Button>
@@ -696,7 +772,7 @@ const AdminCertificatesPage = () => {
             <DialogDescription>
               {t(
                 "يمتلك هذا المستخدم شهادة لهذه الورشة بالفعل. لا يمكن إنشاء شهادة مكررة.",
-                "This user already has a certificate for this workshop. Duplicate certificates are not allowed."
+                "This user already has a certificate for this workshop. Duplicate certificates are not allowed.",
               )}
             </DialogDescription>
           </DialogHeader>
@@ -760,6 +836,14 @@ const AdminCertificatesPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <CertificateDeleteModal
+        isOpen={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        selected={selectedForDelete}
+        onDelete={handleDelete}
+        isSaving={isDeleting}
+      />
     </div>
   );
 };

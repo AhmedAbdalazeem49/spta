@@ -31,6 +31,7 @@ export const CERTIFICATE_ENDPOINTS = {
   mine: "/certificates/mine",
   verify: (code: string) => `/certificates/verify/${code}`,
   adminList: "/admin/certificates",
+  delete: (id: string | number) => `/admin/certificates/${id}`,
 } as const;
 
 export const CONFERENCE_ENDPOINTS = {

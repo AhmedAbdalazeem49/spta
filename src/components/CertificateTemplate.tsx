@@ -1,19 +1,11 @@
-import { Badge } from "@/components/ui/badge";
+import CertBg from "@/assets/logo-color-cert.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 import api from "@/services/api";
 import { motion } from "framer-motion";
-import {
-  Award,
-  Calendar,
-  CheckCircle2,
-  FileText,
-  MapPin,
-  Stamp,
-  User,
-} from "lucide-react";
+import { CheckCircle2, Stamp } from "lucide-react";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
-import Logo from "/logo.png";
+import Logo from "/spta-logo-colors-trans.png";
 
 export type CertTemplate =
   | "attendance"
@@ -41,7 +33,7 @@ interface Cert {
   status?: string;
   type?: string;
   template?: string;
-  partner_logo?: string | null; // ← from workshop, not settings
+  partner_logo?: string | null;
   payload?: {
     type?: string;
     participant?: {
@@ -55,16 +47,9 @@ interface Cert {
       end_date?: string;
       hours?: number;
     };
-    venue?: {
-      location?: string;
-    };
-    speaker?: {
-      name?: string;
-    };
-    organization?: {
-      name?: string;
-      role?: string;
-    };
+    venue?: { location?: string };
+    speaker?: { name?: string };
+    organization?: { name?: string; role?: string };
     extra?: {
       role?: string;
       completion_status?: string;
@@ -86,17 +71,13 @@ interface Props {
   template?: CertTemplate;
 }
 
-// ── helpers ──────────────────────────────────────────────────
 const STORAGE_BASE_URL = import.meta.env.VITE_Storage_URL;
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const storageUrl = (path: string | null | undefined): string => {
   if (!path) return "";
-
   if (path.startsWith("http")) return path;
-
   const clean = path.replace(/^\/storage\//, "");
-
   return `${STORAGE_BASE_URL}/storage/${clean}`;
 };
 
@@ -113,7 +94,6 @@ const formatDate = (raw?: string): string => {
   }
 };
 
-// ── shared hook: fetch settings once ─────────────────────────
 const useSettings = () => {
   const [settings, setSettings] = useState<CertificateSettings>({
     signature_image: null,
@@ -140,35 +120,67 @@ const useSettings = () => {
   return settings;
 };
 
+// ── SPTA brand colors ─────────────────────────────────────────
+const BLUE_DARK = "#0e3d6e"; // navy text / footer bar
+const BLUE_MID = "#1a6aa8"; // swooshes / accents
+const BLUE_LIGHT = "#3a9bd5"; // dot arcs highlight
+const TEAL_DOT = "#3fcbb0"; // first dots in arc
+const GREEN_BAR = "#4bb87a"; // bottom green accent
+const TEXT_BODY = "#1a3a5c"; // dark navy for body text
+const TEXT_MUTED = "#5b84a8"; // muted blue-gray
+
+// ── Background SVG watermark ──────────────────────────────────
+const CertBackground = () => (
+  <>
+    {/* Background image watermark — centered, multiply blend */}
+    <img
+      src={CertBg}
+      alt=""
+      aria-hidden="true"
+      className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+      style={{ opacity: 0.12, mixBlendMode: "multiply" }}
+    />
+
+    {/* SVG layer — swooshes on top of the image */}
+    <svg
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 900 620"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      {/* Top-right blue swoosh arcs */}
+      <path d="M580,0 Q780,-30 900,80 L900,0 Z" fill={BLUE_MID} opacity="1" />
+      <path
+        d="M540,0 Q760,10 900,130 Q860,60 780,20 Q680,-10 540,0 Z"
+        fill="white"
+        opacity="1"
+      />
+      <path
+        d="M460,0 Q700,20 900,170 Q870,110 800,60 Q700,0 460,0 Z"
+        fill={BLUE_DARK}
+        opacity="1"
+      />
+    </svg>
+  </>
+);
+
 const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const { t, isRTL } = useLanguage();
   const settings = useSettings();
 
   const baseUrl = window.location.origin;
-
-  const qrValue = cert.serial_number
-    ? `${baseUrl}/certificate/verify/${cert.serial_number}`
-    : `${baseUrl}/certificate/verify/${cert.serial_number}`;
+  const qrValue = `${baseUrl}/certificate/verify/${cert.serial_number}`;
 
   const payload = cert.payload;
-  // Resolve certificate type
   const type = payload?.type || cert.type || template || "attendance";
 
-  // 1. Recipient Info
   const recipientName =
     payload?.participant?.name || cert.recipient_name || "—";
-
-  // 2. Event Info
   const eventTitle = payload?.event?.title || cert.workshop_title || "—";
   const eventTitleAr = cert.workshop_title_ar || "";
-
-  // 3. Speaker / Presenter
   const speakerName = payload?.speaker?.name || cert.doctor_name || "";
-
-  // 4. Location / Venue
   const venueLocation = payload?.venue?.location || "";
 
-  // 5. Dates
   const startDateStr =
     payload?.event?.start_date ||
     cert.workshop_date ||
@@ -183,22 +195,20 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const displayStartDate = formatDate(startDateStr);
   const displayEndDate = formatDate(endDateStr);
 
-  // 6. Hours and Durations
   const trainingHours = payload?.event?.hours || cert.workshop_hours || null;
   const completionStatus = payload?.extra?.completion_status || "Completed";
   const role = payload?.organization?.role || payload?.extra?.role || "";
   const contributionDesc = payload?.extra?.contribution_description || "";
   const organizationName = payload?.organization?.name || "";
 
-  // Calculate duration in days dynamically
   const getDurationDays = () => {
     if (!startDateStr || !endDateStr) return 1;
     try {
       const start = new Date(startDateStr.split("T")[0]);
       const end = new Date(endDateStr.split("T")[0]);
-      const diffTime = Math.abs(end.getTime() - start.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      return diffDays > 0 ? diffDays : 1;
+      const diff =
+        Math.ceil(Math.abs(end.getTime() - start.getTime()) / 86400000) + 1;
+      return diff > 0 ? diff : 1;
     } catch {
       return 1;
     }
@@ -206,10 +216,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const durationDays = getDurationDays();
   const calculatedHours = trainingHours || durationDays * 4;
 
-  console.log("stamp_image", settings.stamp_image);
-  console.log("stamp_url", storageUrl(settings.stamp_image));
-
-  // Dynamic values based on certificate type
   let badgeLabel = t("Attendance", "Attendance");
   let certTitle = t("Certificate of Attendance", "Certificate of Attendance");
   let subText = t("This is to certify that", "This is to certify that");
@@ -221,7 +227,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   if (type === "completion") {
     badgeLabel = t("Completion", "Completion");
     certTitle = t("Certificate of Completion", "Certificate of Completion");
-    subText = t("This is to certify that", "This is to certify that");
     bodyText = t("has successfully completed", "has successfully completed");
   } else if (type === "appreciation_person") {
     badgeLabel = t("Appreciation", "Appreciation");
@@ -256,166 +261,178 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   } else if (type === "attended") {
     badgeLabel = t("Seminar Attendance", "Seminar Attendance");
     certTitle = t("Certificate of Attendance", "Certificate of Attendance");
-    subText = t("This is to certify that", "This is to certify that");
     bodyText = t("has attended:", "has attended:");
   }
 
-  // Workshop partner_logo — from cert prop (set per-workshop, not global settings)
   const partnerLogo = cert.partner_logo || null;
-
-  // Unified Premium Logo Row
-  const LogoRow = () => (
-    <div className="flex items-center justify-between w-full border-b border-[#c5a880]/20 pb-4 mb-4">
-      <div className="flex items-center gap-3">
-        <img
-          src={Logo}
-          alt="SPTA Logo"
-          className="h-14 object-contain filter brightness-110 drop-shadow-md"
-        />
-        {partnerLogo && (
-          <>
-            <div className="w-px h-8 bg-[#c5a880]/30" />
-            <img
-              src={storageUrl(partnerLogo)}
-              alt="partner logo"
-              className="h-14 object-contain filter brightness-110 drop-shadow-md"
-            />
-          </>
-        )}
-      </div>
-      <div className="text-left">
-        <p className="text-[10px] uppercase tracking-widest text-[#c5a880] font-semibold">
-          {t(
-            "Saudi Physical Therapy Association",
-            "Saudi Physical Therapy Association",
-          )}
-        </p>
-        <p className="text-[12px] opacity-80 tracking-wider  mt-0.5 text-[#c5a880]">
-          {cert.serial_number || `CERT-REF-${cert.id}`}
-        </p>
-      </div>
-    </div>
-  );
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative bg-gradient-to-br from-[#0e3756] via-[#175e93] to-[#1e7ec8] p-8 text-white overflow-hidden rounded-3xl border-2 border-[#c5a880]/30 shadow-[0_20px_50px_rgba(0,0,0,0.4)] select-none"
+      className="relative bg-white overflow-hidden rounded-2xl select-none"
+      style={{
+        border: "1px solid #d0dff0",
+        boxShadow: "0 8px 32px rgba(14,61,110,0.12)",
+        minHeight: 560,
+      }}
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* Premium background decorative rings */}
+      {/* SVG background layer */}
+      <CertBackground />
+
+      {/* Content */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(circle, white 1px, transparent 0)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full border border-[#c5a880]/10 pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full border border-[#c5a880]/10 pointer-events-none" />
-
-      {/* Borders */}
-      <div className="absolute inset-3 rounded-[20px] border border-[#c5a880]/20 pointer-events-none" />
-      <div className="absolute inset-4 rounded-[18px] border border-white/5 pointer-events-none" />
-
-      <div className="relative z-10 flex flex-col justify-between h-full min-h-[480px]">
-        {/* Logo and Header */}
-        <LogoRow />
-
-        {/* Certificate Title / Badge */}
-        <div className="text-center space-y-4 my-2">
-          <div className="text-[#c5a880] text-xs font-semibold uppercase tracking-wider">
-            {badgeLabel}
+        className="relative z-10 flex flex-col h-full"
+        style={{ minHeight: 560 }}
+      >
+        {/* ── Header row ── */}
+        <div className="flex items-start justify-between px-8 pt-7 pb-4">
+          <div></div>
+          {/* Logo top-left */}
+          <div className="flex items-center gap-3">
+            {partnerLogo && (
+              <>
+                <img
+                  src={storageUrl(partnerLogo)}
+                  alt="partner logo"
+                  className="h-14 object-contain"
+                />
+                <div className="w-px h-8" style={{ background: "#c5d8ed" }} />
+              </>
+            )}
+            <img src={Logo} alt="SPTA Logo" className="h-20 object-contain" />
           </div>
+        </div>
 
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white  uppercase">
+        {/* ── Thin blue separator ── */}
+        <div className="mx-8" style={{ height: 1, background: "#d0dff0" }} />
+
+        {/* ── Main body ── */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-10 py-6 gap-3">
+          {/* Badge / type label */}
+          <p
+            className="text-[10px] uppercase tracking-[0.25em] font-bold"
+            style={{ color: BLUE_LIGHT }}
+          >
+            {badgeLabel}
+          </p>
+
+          {/* Certificate title */}
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight"
+            style={{ color: BLUE_DARK, letterSpacing: "0.06em" }}
+          >
             {certTitle}
           </h2>
 
-          <p className="text-xs opacity-60 italic tracking-wide">{subText}</p>
-
-          {/* Recipient Name */}
-          <div className="py-2">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-wide font-serif drop-shadow-md">
-              {type === "appreciation_org"
-                ? organizationName || recipientName
-                : recipientName}
-            </h1>
+          {/* Decorative thin line under title */}
+          <div className="flex items-center gap-2 w-40">
+            <div className="flex-1 h-px" style={{ background: GREEN_BAR }} />
+            <div
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: GREEN_BAR }}
+            />
+            <div className="flex-1 h-px" style={{ background: GREEN_BAR }} />
           </div>
 
-          <p className="text-xs opacity-60 tracking-wide">{bodyText}</p>
+          {/* Sub-text */}
+          <p className="text-xs italic" style={{ color: TEXT_MUTED }}>
+            {subText}
+          </p>
 
-          {/* Event Title Block */}
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-lg sm:text-xl font-bold text-[#fde047] leading-relaxed">
+          {/* Recipient name */}
+          <h1
+            className="text-3xl sm:text-4xl font-extrabold tracking-wide font-serif"
+            style={{ color: BLUE_DARK }}
+          >
+            {type === "appreciation_org"
+              ? organizationName || recipientName
+              : recipientName}
+          </h1>
+
+          {/* Body text */}
+          <p className="text-xs" style={{ color: TEXT_MUTED }}>
+            {bodyText}
+          </p>
+
+          {/* Event title */}
+          <div className="max-w-xl">
+            <h3
+              className="text-lg sm:text-xl font-bold leading-snug"
+              style={{ color: BLUE_MID }}
+            >
               {eventTitle}
             </h3>
             {eventTitleAr && (
-              <h3 className="text-md font-semibold text-white/90 mt-1">
+              <h3
+                className="text-base font-semibold mt-0.5"
+                style={{ color: TEXT_BODY }}
+              >
                 {eventTitleAr}
               </h3>
             )}
           </div>
 
-          {/* Contribution Description for Appreciation */}
+          {/* Contribution description */}
           {contributionDesc && (
-            <p className="text-xs text-[#c5a880] max-w-lg mx-auto leading-relaxed italic">
+            <p
+              className="text-xs max-w-lg leading-relaxed italic"
+              style={{ color: TEXT_MUTED }}
+            >
               "{contributionDesc}"
             </p>
           )}
 
-          {/* Meta details depending on type */}
-          <div className="flex flex-wrap justify-center items-center gap-4 text-xs font-medium text-blue-200 mt-2">
-            {/* Speaker block */}
+          {/* Meta: speaker / venue / duration */}
+          <div
+            className="flex flex-wrap justify-center items-center gap-4 text-xs font-medium"
+            style={{ color: TEXT_MUTED }}
+          >
             {speakerName && (
-              <div className="flex items-center gap-1.5">
-                <span>
-                  {t("Presented by", "Presented by")}:{" "}
-                  <span className="text-white font-semibold">
-                    {speakerName}
-                  </span>
+              <span>
+                {t("Presented by", "Presented by")}:{" "}
+                <span className="font-semibold" style={{ color: TEXT_BODY }}>
+                  {speakerName}
                 </span>
-              </div>
+              </span>
             )}
-
-            {/* Venue Block */}
             {venueLocation && (
-              <div className="flex items-center gap-1.5">
-                <span>
-                  {t("Held at", "Held at")}:{" "}
-                  <span className="text-white font-semibold">
-                    {venueLocation}
-                  </span>
+              <span>
+                {t("Held at", "Held at")}:{" "}
+                <span className="font-semibold" style={{ color: TEXT_BODY }}>
+                  {venueLocation}
                 </span>
-              </div>
+              </span>
             )}
-
-            {/* Duration Block */}
             {type !== "attended" && type !== "appreciation_org" && (
-              <div className="flex items-center gap-1.5  text-yellow-300">
-                <span>
-                  {t("Duration", "Duration")}: {durationDays}{" "}
-                  {durationDays === 1 ? t("Day", "Day") : t("Days", "Days")}
-                </span>
-                <span className="w-1 h-1 rounded-full bg-[#c5a880]/50" />
-                <span>
-                  {calculatedHours} {t("Training Hours", "Training Hours")}
-                </span>
-              </div>
+              <span className="font-semibold" style={{ color: BLUE_MID }}>
+                {durationDays}{" "}
+                {durationDays === 1 ? t("Day", "Day") : t("Days", "Days")}
+                {" · "}
+                {calculatedHours} {t("Training Hours", "Training Hours")}
+              </span>
             )}
-
-            {/* Completion Status */}
             {type === "completion" && completionStatus && (
-              <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-emerald-300">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{completionStatus}</span>
+              <div
+                className="flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px]"
+                style={{
+                  background: "#e6f4ed",
+                  color: "#2d7a50",
+                  border: "1px solid #b8dfc9",
+                }}
+              >
+                <CheckCircle2 className="w-3 h-3" />
+                {completionStatus}
               </div>
             )}
           </div>
 
-          {/* Dates block */}
-          <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] text-white/50 font-mono tracking-wide pt-1">
+          {/* Dates */}
+          <div
+            className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-mono tracking-wide"
+            style={{ color: TEXT_MUTED, opacity: 0.7 }}
+          >
             <span>
               {t("Issued", "Issued")}: {displayIssueDate}
             </span>
@@ -423,72 +440,144 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               type !== "appreciation_org" &&
               startDateStr && (
                 <>
-                  <span className="opacity-30">|</span>
+                  <span style={{ opacity: 0.4 }}>|</span>
                   <span>
                     {t("Start", "Start")}: {displayStartDate}
                   </span>
-                  <span className="opacity-30">|</span>
+                  <span style={{ opacity: 0.4 }}>|</span>
                   <span>
                     {t("End", "End")}: {displayEndDate}
                   </span>
                 </>
               )}
+            <div>
+              <p className="text-[12px] uppercase tracking-widest font-bold text-primary">
+                {cert.serial_number || `CERT-REF-${cert.id}`}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Footer Area with Stamp, QR and Signature */}
-        <div className="flex items-end justify-between border-t border-[#c5a880]/20 pt-4 mt-4">
-          {/* Official Stamp */}
-          <div className="flex flex-col items-center gap-1 w-32 sm:w-40 text-center">
-            {settings.stamp_image ? (
-              <img
-                src={storageUrl(settings.stamp_image)}
-                alt="stamp"
-                className="h-16 w-16 object-contain opacity-90 filter drop-shadow-md"
-              />
-            ) : (
-              <div className="h-16 w-16 rounded-full border-2 border-dashed border-[#c5a880]/20 flex items-center justify-center">
-                <Stamp className="w-6 h-6 text-[#c5a880]/40" />
-              </div>
-            )}
-            <p className="text-[9px] uppercase tracking-widest text-white/40">
-              {t("Official Stamp", "Official Stamp")}
-            </p>
-          </div>
+        {/* ── Footer area ── */}
+        <div>
+          {/* thin separator */}
+          <div
+            className="mx-8 mb-4"
+            style={{ height: 1, background: "#d0dff0" }}
+          />
 
-          {/* Verification QR */}
-          <div className="flex flex-col items-center gap-1">
-            <div className="bg-white rounded-xl p-1.5 shadow-lg border border-[#c5a880]/30 hover:scale-105 transition-transform">
-              <QRCode
-                value={qrValue}
-                size={64}
-                bgColor="#fff"
-                fgColor="#0e3756"
+          {/* Stamp · QR · Signature row */}
+          <div className="flex items-end justify-between px-8 pb-5">
+            {/* Stamp */}
+            <div className="flex flex-col items-center gap-1 w-28 text-center">
+              {settings.stamp_image ? (
+                <img
+                  src={storageUrl(settings.stamp_image)}
+                  alt="stamp"
+                  className="h-14 w-14 object-contain"
+                />
+              ) : (
+                <div
+                  className="h-14 w-14 rounded-full flex items-center justify-center"
+                  style={{ border: "1.5px dashed #a0bcd8" }}
+                >
+                  <Stamp className="w-5 h-5" style={{ color: "#a0bcd8" }} />
+                </div>
+              )}
+              <p
+                className="text-[9px] uppercase tracking-widest"
+                style={{ color: TEXT_MUTED }}
+              >
+                {t("Official Stamp", "Official Stamp")}
+              </p>
+            </div>
+
+            {/* QR */}
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className="rounded-xl p-1.5"
+                style={{
+                  background: "white",
+                  border: "1px solid #d0dff0",
+                  boxShadow: "0 2px 8px rgba(14,61,110,0.08)",
+                }}
+              >
+                <QRCode
+                  value={qrValue}
+                  size={60}
+                  bgColor="#fff"
+                  fgColor={BLUE_DARK}
+                />
+              </div>
+              <p
+                className="text-[9px] uppercase tracking-widest"
+                style={{ color: TEXT_MUTED }}
+              >
+                {t("Verify", "Verify")}
+              </p>
+            </div>
+
+            {/* Signature */}
+            <div className="flex flex-col items-center gap-1 w-36 text-center">
+              {settings.signature_image ? (
+                <img
+                  src={storageUrl(settings.signature_image)}
+                  alt="signature"
+                  className="h-10 object-contain"
+                />
+              ) : (
+                <div
+                  className="h-10 w-28"
+                  style={{ borderBottom: `1.5px solid #a0bcd8` }}
+                />
+              )}
+              <div
+                className="w-24 mt-1"
+                style={{ height: 1, background: "#d0dff0" }}
               />
+              <p className="text-xs font-bold" style={{ color: BLUE_DARK }}>
+                {settings.chairman_name || t("رئيس الجمعية", "Chairman")}
+              </p>
+              <p
+                className="text-[8px] leading-tight"
+                style={{ color: TEXT_MUTED }}
+              >
+                {t(
+                  "President, Saudi Physical Therapy Association",
+                  "President, Saudi Physical Therapy Association",
+                )}
+              </p>
             </div>
           </div>
 
-          {/* Signature and Chairman */}
-          <div className="flex flex-col items-center gap-1 w-32 sm:w-44 text-center">
-            {settings.signature_image ? (
-              <img
-                src={storageUrl(settings.signature_image)}
-                alt="signature"
-                className="h-10 object-contain"
+          {/* ── Bottom bar ── */}
+          <div className="flex items-stretch" style={{ height: 40 }}>
+            {/* Blue section */}
+            <div
+              className="flex items-center px-8 gap-2"
+              style={{
+                background: BLUE_DARK,
+                flex: "0 0 60%",
+              }}
+            >
+              <span className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
+                Spta.sa
+              </span>
+            </div>
+
+            {/* Green accent with inner highlight */}
+            <div
+              className="relative flex-1 overflow-hidden"
+              style={{ background: GREEN_BAR }}
+            >
+              <div
+                className="absolute inset-y-0 left-0 w-6"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(255,255,255,0.15), transparent)",
+                }}
               />
-            ) : (
-              <div className="h-10 w-28 border-b border-[#c5a880]/30" />
-            )}
-            <div className="h-px w-24 bg-[#c5a880]/20 mt-1" />
-            <p className="text-xs font-bold text-[#c5a880]">
-              {settings.chairman_name || t("رئيس الجمعية", "Chairman")}
-            </p>
-            <p className="text-[8px] text-white/50 leading-tight">
-              {t(
-                "President, Saudi Physical Therapy Association",
-                "President, Saudi Physical Therapy Association",
-              )}
-            </p>
+            </div>
           </div>
         </div>
       </div>

@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import { downloadElementAsPdf } from "@/lib/certificate-export";
+import {
+  convertImagesToBase64,
+  downloadElementAsPdf,
+} from "@/lib/certificate-export";
 import api from "@/services/api";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -26,11 +29,20 @@ import { useNavigate } from "react-router-dom";
 interface CertificatePayload {
   type?: string;
   participant?: { name?: string; name_ar?: string };
-  event?: { title?: string; start_date?: string; end_date?: string; hours?: number };
+  event?: {
+    title?: string;
+    start_date?: string;
+    end_date?: string;
+    hours?: number;
+  };
   venue?: { location?: string };
   speaker?: { name?: string };
   organization?: { name?: string; role?: string };
-  extra?: { role?: string; completion_status?: string; contribution_description?: string };
+  extra?: {
+    role?: string;
+    completion_status?: string;
+    contribution_description?: string;
+  };
 }
 
 interface Certificate {
@@ -65,6 +77,7 @@ const CertificatesTab = () => {
     {},
   );
   const [busyId, setBusyId] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedCert, setSelectedCert] = useState<any>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -105,17 +118,25 @@ const CertificatesTab = () => {
 
   const handleDownload = async (cert: Certificate) => {
     const el = certRefs.current[String(cert.id)];
-
     if (!el) return;
 
     setBusyId(String(cert.id));
 
     try {
-      const name = `${cert.recipient_name || "user"}-${
-        cert.workshop_title || "certificate"
-      }`;
+      // Clone the element so we don't mutate the visible certificate
+      const clone = el.cloneNode(true) as HTMLElement;
+      clone.style.position = "fixed";
+      clone.style.top = "-9999px";
+      clone.style.width = el.offsetWidth + "px";
+      document.body.appendChild(clone);
 
-      await downloadElementAsPdf(el, `certificate-${name}`);
+      // Convert all images to base64 in the clone
+      await convertImagesToBase64(clone);
+
+      const name = `${cert.recipient_name || "user"}-${cert.workshop_title || "certificate"}`;
+      await downloadElementAsPdf(clone, `certificate-${name}`);
+
+      document.body.removeChild(clone);
 
       toast({
         title: "Certificate Downloaded",
@@ -264,7 +285,7 @@ const CertificatesTab = () => {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 xl:grid-cols-2 gap-8">
+          <div className="grid sm:grid-cols-1 xl:grid-cols-1 gap-8">
             <AnimatePresence>
               {certificates.map((cert, i) => {
                 const tpl = getTemplate(cert.id);
@@ -308,58 +329,7 @@ const CertificatesTab = () => {
                     </div>
 
                     {/* ───────────────── Content Section ───────────────── */}
-                    <div className="p-5 space-y-5 border-t bg-card">
-                      {/* Workshop Info */}
-                      <div className="space-y-2">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <h3 className="font-bold text-base leading-tight truncate">
-                              {cert.payload?.event?.title || cert.workshop_title || "Workshop Certificate"}
-                            </h3>
-
-                            <p className="text-sm text-muted-foreground mt-1">
-                              Issued to{" "}
-                              <span className="font-medium text-foreground">
-                                {cert.payload?.participant?.name || cert.recipient_name || "Participant"}
-                              </span>
-                            </p>
-
-                            {(cert.payload?.speaker?.name || cert.doctor_name) && (
-                              <p className="text-xs text-muted-foreground mt-0.5">
-                                Presented by{" "}
-                                <span className="font-medium">
-                                  {cert.payload?.speaker?.name || cert.doctor_name}
-                                </span>
-                              </p>
-                            )}
-
-                            {cert.payload?.venue?.location && (
-                              <p className="text-xs text-muted-foreground">
-                                📍 {cert.payload.venue.location}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="shrink-0 rounded-xl bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary border border-primary/10">
-                            Certified
-                          </div>
-                        </div>
-
-                        {cert.issue_date && (
-                          <p className="text-xs text-muted-foreground">
-                            Issue Date:{" "}
-                            {new Date(cert.issue_date).toLocaleDateString(
-                              "en-US",
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              },
-                            )}
-                          </p>
-                        )}
-                      </div>
-
+                    <div className="p-5 space-y-5 border-t bg-card mt-2">
                       {/* ───────────────── Action Buttons ───────────────── */}
                       <div className="flex items-center gap-2">
                         <Button
@@ -388,7 +358,7 @@ const CertificatesTab = () => {
 
                       {/* ───────────────── Verification ───────────────── */}
                       {cert.serial_number && (
-                        <div className="rounded-2xl border border-emerald-500/15 bg-emerald-500/5 px-4 py-3">
+                        <div className="rounded-2xl border border-emerald-500/15 bg-emerald-500/5 px-4 py-3 hidden">
                           <div className="flex items-center justify-center gap-2 text-center">
                             <Shield className="w-4 h-4 text-emerald-600 shrink-0" />
 

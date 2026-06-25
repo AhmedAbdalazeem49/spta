@@ -15,4 +15,7 @@ export const certificateService = {
     const { data } = await api.get(CERTIFICATE_ENDPOINTS.adminList);
     return data?.data ?? data ?? [];
   },
+  async remove(id: string | number): Promise<void> {
+    await api.delete(CERTIFICATE_ENDPOINTS.delete(id));
+  },
 };

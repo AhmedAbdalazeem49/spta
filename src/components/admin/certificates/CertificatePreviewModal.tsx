@@ -1,3 +1,4 @@
+import CertificateTemplate from "@/components/CertificateTemplate";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,6 +8,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  convertImagesToBase64,
+  downloadElementAsPdf,
+} from "@/lib/certificate-export";
 import { Certificate } from "@/types/certificate";
 import {
   getCertificateDate,
@@ -15,8 +20,6 @@ import {
 } from "@/utils/certificateUtils";
 import { Download, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
-import CertificateTemplate from "@/components/CertificateTemplate";
-import { downloadElementAsPdf } from "@/lib/certificate-export";
 
 interface CertificatePreviewModalProps {
   isOpen: boolean;
@@ -38,10 +41,21 @@ export const CertificatePreviewModal = ({
 
     try {
       setDownloadingPdf(true);
-      const name = `${certificate.recipient_name || "user"}-${
-        certificate.workshop_title || "certificate"
-      }`;
-      await downloadElementAsPdf(certificateRef.current, `certificate-${name}`);
+
+      // Clone to avoid mutating the visible certificate
+      const clone = certificateRef.current.cloneNode(true) as HTMLElement;
+      clone.style.position = "fixed";
+      clone.style.top = "-9999px";
+      clone.style.width = certificateRef.current.offsetWidth + "px";
+      document.body.appendChild(clone);
+
+      // Convert all images to base64 so html2canvas can render them
+      await convertImagesToBase64(clone);
+
+      const name = `${certificate.recipient_name || "user"}-${certificate.workshop_title || "certificate"}`;
+      await downloadElementAsPdf(clone, `certificate-${name}`);
+
+      document.body.removeChild(clone);
     } catch (error) {
       console.error("PDF generation failed:", error);
     } finally {
@@ -92,7 +106,6 @@ export const CertificatePreviewModal = ({
             >
               {t("إغلاق", "Close")}
             </Button>
-
 
             <Button
               onClick={handleDownloadPdf}

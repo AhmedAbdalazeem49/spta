@@ -8,7 +8,7 @@ import {
   getCertificateWorkshop,
 } from "@/utils/certificateUtils";
 import { motion } from "framer-motion";
-import { Eye, Pencil, Printer } from "lucide-react";
+import { Eye, Pencil, Printer, Trash2 } from "lucide-react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
 
 interface CertificatesTableProps {
@@ -16,6 +16,7 @@ interface CertificatesTableProps {
   onOpenDetails: (cert: Certificate) => void;
   onOpenPreview: (cert: Certificate) => void;
   onOpenEdit: (cert: Certificate) => void;
+  onOpenDelete: (cert: Certificate) => void;
 }
 
 export const CertificatesTable = ({
@@ -23,6 +24,7 @@ export const CertificatesTable = ({
   onOpenDetails,
   onOpenPreview,
   onOpenEdit,
+  onOpenDelete,
 }: CertificatesTableProps) => {
   const { t } = useLanguage();
 
@@ -78,35 +80,49 @@ export const CertificatesTable = ({
                   <td className="p-4 text-sm text-muted-foreground">
                     {getCertificateDate(c)}
                   </td>
-                  <td className="p-4">{c.serial_number}</td>
+                  <td className="p-4 text-sm font-mono">{c.serial_number}</td>
                   <td className="p-4">
                     <CertificateStatusBadge status={c.status} />
                   </td>
-                  <td className="p-4 flex gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onOpenDetails(c)}
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onOpenPreview(c)}
-                      title={t("طباعة", "Print")}
-                    >
-                      <Printer className="w-4 h-4" />
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onOpenEdit(c)}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
+                  <td className="p-4">
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="w-8 h-8 text-muted-foreground hover:text-primary"
+                        onClick={() => onOpenDetails(c)}
+                        title={t("عرض", "View")}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="w-8 h-8 text-muted-foreground hover:text-primary"
+                        onClick={() => onOpenPreview(c)}
+                        title={t("طباعة", "Print")}
+                      >
+                        <Printer className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="w-8 h-8 text-muted-foreground hover:text-blue-600"
+                        onClick={() => onOpenEdit(c)}
+                        title={t("تعديل", "Edit")}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="w-8 h-8 text-destructive hover:text-destructive"
+                        onClick={() => onOpenDelete(c)}
+                        title={t("حذف", "Delete")}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </td>
                 </motion.tr>
               ))}

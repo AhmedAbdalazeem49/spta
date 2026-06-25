@@ -1,8 +1,12 @@
+import api from "@/services/api";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const sanitizeFilename = (s: string) =>
-  s.replace(/[^\p{L}\p{N}\-_ ]/gu, "").trim().replace(/\s+/g, "-") || "certificate";
+  s
+    .replace(/[^\p{L}\p{N}\-_ ]/gu, "")
+    .trim()
+    .replace(/\s+/g, "-") || "certificate";
 
 /**
  * Render a DOM element to a high-quality PDF and trigger download.
@@ -10,13 +14,14 @@ const sanitizeFilename = (s: string) =>
  */
 export async function downloadElementAsPdf(
   el: HTMLElement,
-  filename: string
+  filename: string,
 ): Promise<void> {
   const canvas = await html2canvas(el, {
     scale: 2.5,
     useCORS: true,
     backgroundColor: "#ffffff",
     logging: false,
+    allowTaint: false,
   });
 
   const pdf = new jsPDF({
@@ -39,7 +44,16 @@ export async function downloadElementAsPdf(
   const x = (pageW - w) / 2;
   const y = (pageH - h) / 2;
 
-  pdf.addImage(canvas.toDataURL("image/png", 1.0), "PNG", x, y, w, h, undefined, "FAST");
+  pdf.addImage(
+    canvas.toDataURL("image/png", 1.0),
+    "PNG",
+    x,
+    y,
+    w,
+    h,
+    undefined,
+    "FAST",
+  );
   pdf.save(`${sanitizeFilename(filename)}.pdf`);
 }
 
@@ -57,3 +71,77 @@ export function printElement(el: HTMLElement): void {
   // small delay to allow class to apply
   setTimeout(() => window.print(), 50);
 }
+
+export const preloadImages = (el: HTMLElement): Promise<void> => {
+  const imgs = Array.from(el.querySelectorAll("img"));
+  const promises = imgs.map(
+    (img) =>
+      new Promise<void>((resolve) => {
+        if (img.complete && img.naturalWidth > 0) {
+          resolve();
+          return;
+        }
+        img.onload = () => resolve();
+        img.onerror = () => resolve(); // don't block on broken images
+        // Force reload with crossOrigin to bypass CORS cache
+        const src = img.src;
+        img.crossOrigin = "anonymous";
+        img.src = "";
+        img.src = src;
+      }),
+  );
+  return Promise.all(promises).then(() => {});
+};
+
+export const toBase64 = (url: string): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      canvas.getContext("2d")!.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => resolve(""); // skip broken images silently
+    img.src = url + "?nocache=" + Date.now(); // bust any cached non-CORS response
+  });
+};
+
+export const convertImagesToBase64 = async (el: HTMLElement): Promise<void> => {
+  const imgs = Array.from(el.querySelectorAll("img"));
+
+  await Promise.all(
+    imgs.map(async (img) => {
+      if (
+        !img.src ||
+        img.src.startsWith("data:") ||
+        img.src.startsWith("blob:")
+      )
+        return;
+      // Skip local Vite-served assets (logo, certBg, etc.)
+      if (
+        img.src.includes(window.location.origin) &&
+        img.src.includes("/assets/")
+      )
+        return;
+      if (!img.src.includes("/storage/")) return; // only convert storage images
+
+      try {
+        const res = await api.get("/image-to-base64", {
+          params: { url: img.src },
+        });
+
+        if (res.data?.base64) {
+          img.src = res.data.base64;
+          console.log("✅ Converted:", img.alt || img.src.slice(0, 60));
+        } else {
+          console.warn("⚠️ No base64 returned for:", img.src);
+        }
+      } catch (err) {
+        console.error("❌ Failed:", img.src, err);
+      }
+    }),
+  );
+};
