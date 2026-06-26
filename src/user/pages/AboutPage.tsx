@@ -5,6 +5,7 @@ import Partners from "@/user/components/About/Partners";
 import Quote from "@/user/components/About/Quote";
 import VisionMission from "@/user/components/About/VisionMission";
 import Layout from "@/components/layout/Layout";
+import IdentityCommitteeSection from "../components/About/Identitycommitteesection";
 
 
 const AboutPage = () => {
@@ -14,6 +15,7 @@ const AboutPage = () => {
       <VisionMission />
       <Objectives />
       <Leadership />
+      <IdentityCommitteeSection />
       <Quote />
       <Partners />
     </Layout>

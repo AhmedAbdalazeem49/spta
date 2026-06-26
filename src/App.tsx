@@ -51,6 +51,8 @@ import AdminUsersPage from "./pages/admin/users/AdminUsersPage";
 import AdminWorkshopsPage from "./pages/admin/workshops/AdminWorkshopsPage";
 import AdminEmailsPage from "./pages/admin/emails/AdminEmailsPage";
 import AdminResearchPage from "./pages/admin/Research/AdminResearchPage";
+import AdminPartnersPage from "./pages/admin/partners/AdminPartnersPage";
+import AdminAdvertisementsPage from "./pages/admin/advertisements/AdminAdvertisementsPage";
 
 // Public workshops page (user-facing)
 import WorkshopsPage from "./pages/WorkshopsPage";
@@ -230,6 +232,26 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminResearchPage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/partners"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminPartnersPage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/advertisements"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminAdvertisementsPage />
                     </AdminLayout>
                   </AdminRoute>
                 }

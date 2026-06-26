@@ -22,6 +22,8 @@ import {
   Users,
   X,
   FileText,
+  Handshake,
+  Megaphone,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -84,6 +86,20 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       icon: FileText,
       labelAr: "الأبحاث والاستبيانات",
       labelEn: "Research & Questionnaires",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/partners",
+      icon: Handshake,
+      labelAr: "الشركاء والجهات الداعمة",
+      labelEn: "Partners & Sponsors",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/advertisements",
+      icon: Megaphone,
+      labelAr: "الإعلانات",
+      labelEn: "Advertisements",
       systemAdminOnly: true,
     },
     // {
