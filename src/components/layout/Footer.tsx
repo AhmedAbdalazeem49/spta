@@ -40,6 +40,10 @@ const Footer = () => {
         path: "/specializations",
       },
       {
+        label: t("المشاركة في الأبحاث والاستبيانات", "Empirical Research & Questionnaires"),
+        path: "/research/empirical",
+      },
+      {
         label: t("المؤتمرات", "Conferences"),
         path: "/conferences",
       },

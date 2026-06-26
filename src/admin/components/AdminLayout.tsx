@@ -21,6 +21,7 @@ import {
   User,
   Users,
   X,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -76,6 +77,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       icon: Crown,
       labelAr: "الأعضاء",
       labelEn: "Memberships",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/research",
+      icon: FileText,
+      labelAr: "الأبحاث والاستبيانات",
+      labelEn: "Research & Questionnaires",
       systemAdminOnly: true,
     },
     // {

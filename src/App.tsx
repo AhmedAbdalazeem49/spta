@@ -25,6 +25,7 @@ import PoliciesPage from "./user/pages/PoliciesPage";
 import PreviousBoardsPage from "./user/pages/PreviousBoardsPage";
 import ResearchCenterPage from "./user/pages/ResearchCenterPage";
 import ResearchPage from "./user/pages/ResearchPage";
+import EmpiricalResearchPage from "./user/pages/EmpiricalResearchPage";
 import ScientificJournalPage from "./user/pages/ScientificJournalPage";
 import SpecializationsPage from "./user/pages/SpecializationsPage";
 import VideosPage from "./user/pages/VideosPage";
@@ -49,6 +50,7 @@ import AdminDashboardPage from "./pages/admin/dashboard/AdminDashboardPage";
 import AdminUsersPage from "./pages/admin/users/AdminUsersPage";
 import AdminWorkshopsPage from "./pages/admin/workshops/AdminWorkshopsPage";
 import AdminEmailsPage from "./pages/admin/emails/AdminEmailsPage";
+import AdminResearchPage from "./pages/admin/Research/AdminResearchPage";
 
 // Public workshops page (user-facing)
 import WorkshopsPage from "./pages/WorkshopsPage";
@@ -95,6 +97,7 @@ const App = () => (
               <Route path="/research" element={<ResearchPage />} />
               <Route path="/research/center" element={<ResearchCenterPage />} />
               <Route path="/research/databases" element={<DatabasesPage />} />
+              <Route path="/research/empirical" element={<EmpiricalResearchPage />} />
               <Route path="/research/*" element={<ResearchPage />} />
               {/* Library */}
               <Route path="/library" element={<LibraryPage />} />
@@ -217,6 +220,16 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminEmailsPage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/research"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminResearchPage />
                     </AdminLayout>
                   </AdminRoute>
                 }
