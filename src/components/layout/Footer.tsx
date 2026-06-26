@@ -10,11 +10,10 @@ import {
   Linkedin,
   Mail,
   MapPin,
-  Phone,
   Send,
-  Twitter,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   const { t, isRTL } = useLanguage();
@@ -56,7 +55,7 @@ const Footer = () => {
 
   const socialLinks = [
     {
-      icon: Twitter,
+      icon: FaXTwitter,
       href: "https://x.com/Spta_Media?lang=ar",
       label: "Twitter",
     },
@@ -164,12 +163,15 @@ const Footer = () => {
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 flex-shrink-0" />
+                <FaWhatsapp className="w-5 h-5 flex-shrink-0" />
                 <a
-                  href="tel:0541812433"
-                  className="text-primary-foreground/80 hover:text-primary-foreground"
+                  href="https://wa.me/966541812433"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  dir="ltr"
+                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                 >
-                  0541812433
+                  +966541812433
                 </a>
               </li>
               <li className="flex items-center gap-3">
