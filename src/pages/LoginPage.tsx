@@ -76,6 +76,21 @@ const LoginPage = () => {
       navigate(from, { replace: true });
     } catch (error: any) {
       const data = error?.response?.data;
+      const errorMessage = data?.message || error?.message || "";
+
+      if (errorMessage.includes("البريد الإلكتروني غير مؤكد")) {
+        toast({
+          title: t("تنبيه", "Attention"),
+          description: t(
+            "البريد الإلكتروني غير مؤكد. جاري تحويلك لصفحة التأكيد...",
+            "Email is not verified. Redirecting to verification page..."
+          ),
+        });
+        setTimeout(() => {
+          navigate("/verify-otp", { state: { email: formData.email.trim() } });
+        }, 2000);
+        return;
+      }
 
       toast({
         title: t("خطأ في تسجيل الدخول", "Login failed"),

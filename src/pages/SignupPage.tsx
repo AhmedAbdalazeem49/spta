@@ -380,6 +380,21 @@ const SignupPage = () => {
           {}
         );
         setTouched(allTouched);
+
+        // Check for unverified_account error
+        if (serverErrors.email && serverErrors.email.includes("unverified_account")) {
+          toast({
+            title: t("تنبيه", "Attention"),
+            description: t(
+              "البريد الإلكتروني مسجل مسبقاً ولكنه غير مؤكد. جاري تحويلك لصفحة التأكيد...",
+              "Email is already registered but not verified. Redirecting to verification page..."
+            ),
+          });
+          setTimeout(() => {
+            navigate("/verify-otp", { state: { email: formData.email } });
+          }, 2000);
+          return;
+        }
       }
       toast({
         title: t("خطأ", "Error"),
