@@ -15,5 +15,7 @@ export interface Workshop {
   image?: string | null;
   image_url?: string | null;
   partner_logo?: string | null;
+  attendance_type?: "in_person" | "online";
+  meeting_link?: string | null;
   is_registered?: boolean;
 }

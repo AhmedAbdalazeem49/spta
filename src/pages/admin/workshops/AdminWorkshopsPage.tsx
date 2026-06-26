@@ -83,7 +83,10 @@ const AdminWorkshopsPage = () => {
       member_price: String(w.member_price || ""),
       total_capacity: String(w.total_capacity || ""),
       status: w.status || "open",
+      attendance_type: w.attendance_type || "in_person",
+      meeting_link: w.meeting_link || "",
       image: null,
+      partner_logo: null,
     } satisfies WorkshopForm;
 
     setForm(populated);

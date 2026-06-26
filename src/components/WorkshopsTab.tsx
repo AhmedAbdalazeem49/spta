@@ -13,6 +13,8 @@ import {
   User,
   Users,
   XCircle,
+  Video,
+  ExternalLink,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -35,6 +37,8 @@ interface WorkshopRegistration {
     total_capacity?: number;
     status?: string;
     image?: string;
+    attendance_type?: "in_person" | "online";
+    meeting_link?: string | null;
   };
 }
 
@@ -164,12 +168,26 @@ export default function WorkshopsTab() {
                         <Badge
                           className={
                             reg.status === "confirmed"
-                              ? "bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 backdrop-blur-md"
+                              ? "bg-emerald-500 text-white border border-emerald-400/30 backdrop-blur-md"
                               : "bg-yellow-500/20 text-yellow-200 border border-yellow-400/30 backdrop-blur-md"
                           }
                         >
                           {reg.status}
                         </Badge>
+                      </div>
+                      <div className="absolute top-4 left-4">
+                        {reg.workshop.attendance_type === "online" && (
+                          <Badge className="bg-blue-500 text-white border border-blue-400/30 backdrop-blur-md gap-1">
+                            <Video className="w-3 h-3" />
+                            {t("أونلاين", "Online")}
+                          </Badge>
+                        )}
+                        {reg.workshop.attendance_type === "in_person" && (
+                          <Badge className="bg-emerald-500 text-white border border-emerald-400/30 backdrop-blur-md gap-1">
+                            <Users className="w-3 h-3" />
+                            {t("حضوري", "In Person")}
+                          </Badge>
+                        )}
                       </div>
                     </div>
                   )}
@@ -258,6 +276,19 @@ export default function WorkshopsTab() {
                         {reg.attendance || "pending"}
                       </Badge>
                     </div>
+
+                    {/* ONLINE MEETING LINK ACTION */}
+                    {reg.workshop.attendance_type == "online" && reg.workshop.meeting_link && (
+                      <div className="pt-2">
+                        <Button
+                          className="w-full gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all"
+                          onClick={() => window.open(reg.workshop.meeting_link!, "_blank")}
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          {t("رابط الاجتماع", "Join Meeting")}
+                        </Button>
+                      </div>
+                    )}
 
                     {/* ACTIONS */}
                     {/* <div className="flex gap-2 pt-2">

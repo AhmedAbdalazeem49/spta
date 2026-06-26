@@ -45,6 +45,8 @@ export const emptyWorkshopForm = {
   status: "open" as "open" | "closed" | "completed" | "postponed",
   image: null as File | null,
   partner_logo: null as File | null,
+  attendance_type: "in_person" as "in_person" | "online",
+  meeting_link: "",
 };
 
 export type WorkshopForm = typeof emptyWorkshopForm;
@@ -164,6 +166,14 @@ function validate(
 
   if (!editMode && !form.image)
     errors.image = t("الصورة التعريفية للورشة مطلوبة", "Image is required");
+
+  if (!form.attendance_type)
+    errors.attendance_type = t("نوع الحضور مطلوب", "Attendance type is required");
+
+  if (form.attendance_type === "online" && !form.meeting_link?.trim())
+    errors.meeting_link = t("رابط الاجتماع مطلوب", "Meeting link is required");
+  else if (form.meeting_link && form.meeting_link.length > 500)
+    errors.meeting_link = t("الحد الأقصى 500 حرف", "Max 500 characters");
 
   return errors;
 }
@@ -368,6 +378,10 @@ export const WorkshopFormModal = ({
     fd.append("member_price", form.member_price);
     fd.append("total_capacity", form.total_capacity);
     fd.append("status", form.status);
+    fd.append("attendance_type", form.attendance_type);
+    if (form.meeting_link) {
+      fd.append("meeting_link", form.meeting_link);
+    }
 
     if (form.image instanceof File) {
       fd.append("image", form.image);
@@ -526,6 +540,64 @@ export const WorkshopFormModal = ({
                 )}
               />
             </Field>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field
+                label={t("نوع الحضور", "Attendance Type")}
+                error={err("attendance_type")}
+                required
+              >
+                <div className="flex gap-2 h-10">
+                  <button
+                    type="button"
+                    onClick={() => update("attendance_type", "in_person")}
+                    className={`flex-1 rounded-xl border text-sm font-semibold transition-all ${
+                      form.attendance_type === "in_person"
+                        ? "bg-primary/10 border-primary text-primary"
+                        : "bg-background border-border text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {t("حضوري", "In Person")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => update("attendance_type", "online")}
+                    className={`flex-1 rounded-xl border text-sm font-semibold transition-all ${
+                      form.attendance_type === "online"
+                        ? "bg-primary/10 border-primary text-primary"
+                        : "bg-background border-border text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {t("أونلاين", "Online")}
+                  </button>
+                </div>
+              </Field>
+
+              <AnimatePresence>
+                {form.attendance_type === "online" && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                  >
+                    <Field
+                      label={t("رابط الاجتماع", "Meeting Link")}
+                      error={err("meeting_link")}
+                      required
+                    >
+                      <input
+                        className={cls("meeting_link")}
+                        value={form.meeting_link}
+                        onChange={(e) => update("meeting_link", e.target.value)}
+                        onBlur={() => touch("meeting_link")}
+                        placeholder="https://zoom.us/j/..."
+                        dir="ltr"
+                      />
+                    </Field>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </Section>
 
           {/* 2 · Location & Time */}
