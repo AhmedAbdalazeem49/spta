@@ -14,6 +14,9 @@ export interface UserItem {
 
   classification_number?: string;
   membership_type?: string;
+  region?: string;
+  city?: string;
+  classification_number?: string;
 
   email_verified_at?: string | null;
   created_at?: string;
@@ -46,6 +49,9 @@ export interface EditForm {
   role: "system_admin" | "branch_admin" | "user";
   password: string;
   password_confirmation: string;
+  region: string;
+  city: string;
+  classification_number: string;
 }
 
 export interface AddForm {
@@ -60,6 +66,9 @@ export interface AddForm {
   role: "system_admin" | "branch_admin" | "user";
   password: string;
   password_confirmation: string;
+  region: string;
+  city: string;
+  classification_number: string;
 }
 
 export const defaultAddForm: AddForm = {
@@ -74,4 +83,7 @@ export const defaultAddForm: AddForm = {
   role: "user",
   password: "",
   password_confirmation: "",
+  region: "",
+  city: "",
+  classification_number: "",
 };

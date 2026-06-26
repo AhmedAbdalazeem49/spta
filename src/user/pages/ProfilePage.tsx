@@ -77,6 +77,9 @@ const ProfilePage = () => {
     employer: "",
     specialization: "",
     sub_specialization: "",
+    classification_number: "",
+    region: "",
+    city: "",
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,6 +113,9 @@ const ProfilePage = () => {
         employer: user.employer || "",
         specialization: user.specialization || "",
         sub_specialization: user.sub_specialization || "",
+        classification_number: user.classification_number || "",
+        region: user.region || "",
+        city: user.city || "",
       });
     }
   }, [user]);
@@ -647,6 +653,21 @@ const ProfilePage = () => {
                       label: t("رقم الهوية / الإقامة", "National ID / Iqama"),
                       value: user?.national_id,
                     },
+                    {
+                      icon: Shield,
+                      label: t("رقم التصنيف", "Classification Number"),
+                      value: user?.classification_number,
+                    },
+                    {
+                      icon: Building2,
+                      label: t("المنطقة", "Region"),
+                      value: user?.region,
+                    },
+                    {
+                      icon: Building2,
+                      label: t("المدينة", "City"),
+                      value: user?.city,
+                    },
                   ].map((item, i) => {
                     const Icon = item.icon;
 
@@ -780,6 +801,69 @@ const ProfilePage = () => {
                             setEditForm({
                               ...editForm,
                               sub_specialization: e.target.value,
+                            })
+                          }
+                          className="focus-visible:ring-primary"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">
+                          {t("رقم التصنيف", "Classification Number")}
+                        </Label>
+                        <Input
+                          value={editForm.classification_number}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              classification_number: e.target.value,
+                            })
+                          }
+                          className="focus-visible:ring-primary"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">
+                          {t("المنطقة", "Region")}
+                        </Label>
+                        <select
+                          value={editForm.region}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, region: e.target.value })
+                          }
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="">{t("اختر المنطقة", "Select Region")}</option>
+                          {[
+                            "الرياض",
+                            "مكة المكرمة",
+                            "المدينة المنورة",
+                            "القصيم",
+                            "الشرقية",
+                            "عسير",
+                            "تبوك",
+                            "حائل",
+                            "الحدود الشمالية",
+                            "جازان",
+                            "نجران",
+                            "الباحة",
+                            "الجوف",
+                          ].map((r) => (
+                            <option key={r} value={r}>
+                              {r}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">
+                          {t("المدينة", "City")}
+                        </Label>
+                        <Input
+                          value={editForm.city}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              city: e.target.value,
                             })
                           }
                           className="focus-visible:ring-primary"

@@ -135,6 +135,63 @@ export const UserEditModal = ({
           </div>
 
           <div className="space-y-1">
+            <Label>{t("رقم التصنيف", "Classification Number")}</Label>
+            <Input
+              value={editForm.classification_number}
+              onChange={(e) =>
+                setEditForm({ ...editForm, classification_number: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label className="flex items-center gap-1">
+              {t("المنطقة", "Region")}
+            </Label>
+            <Select
+              value={editForm.region}
+              onValueChange={(val) =>
+                setEditForm({ ...editForm, region: val })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t("اختر المنطقة", "Select Region")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[
+                  "الرياض",
+                  "مكة المكرمة",
+                  "المدينة المنورة",
+                  "القصيم",
+                  "الشرقية",
+                  "عسير",
+                  "تبوك",
+                  "حائل",
+                  "الحدود الشمالية",
+                  "جازان",
+                  "نجران",
+                  "الباحة",
+                  "الجوف",
+                ].map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {r}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1">
+            <Label>{t("المدينة", "City")}</Label>
+            <Input
+              value={editForm.city}
+              onChange={(e) =>
+                setEditForm({ ...editForm, city: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="space-y-1">
             <Label>
               {t("كلمة المرور الجديدة", "New Password")}{" "}
               <span className="text-xs text-muted-foreground">

@@ -15,6 +15,8 @@ interface UsersTableProps {
   onOpenView: (user: UserItem) => void;
   onOpenEdit: (user: UserItem) => void;
   onOpenDelete: (user: UserItem) => void;
+  selectedIds?: number[];
+  onSelectionChange?: (ids: number[]) => void;
 }
 
 export const UsersTable = ({
@@ -27,8 +29,26 @@ export const UsersTable = ({
   onOpenView,
   onOpenEdit,
   onOpenDelete,
+  selectedIds = [],
+  onSelectionChange,
 }: UsersTableProps) => {
   const { t, isRTL } = useLanguage();
+
+  const toggleAll = () => {
+    if (selectedIds.length === users.length) {
+      onSelectionChange?.([]);
+    } else {
+      onSelectionChange?.(users.map((u) => u.id));
+    }
+  };
+
+  const toggleOne = (id: number) => {
+    if (selectedIds.includes(id)) {
+      onSelectionChange?.(selectedIds.filter((s) => s !== id));
+    } else {
+      onSelectionChange?.([...selectedIds, id]);
+    }
+  };
 
   const formatDate = (date?: string | null) => {
     if (!date) return "—";
@@ -40,6 +60,17 @@ export const UsersTable = ({
       <table className="w-full">
         <thead className="bg-muted/50">
           <tr>
+            {onSelectionChange && (
+              <th className="p-4 w-10">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 cursor-pointer accent-primary"
+                  checked={users.length > 0 && selectedIds.length === users.length}
+                  onChange={toggleAll}
+                  title={t("تحديد الكل", "Select All")}
+                />
+              </th>
+            )}
             <th className="text-start p-4 font-semibold text-sm">
               {t("الاسم", "Name")}
             </th>
@@ -57,6 +88,12 @@ export const UsersTable = ({
             </th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("التخصص الفرعي", "Sub-Spec")}
+            </th>
+            <th className="text-start p-4 font-semibold text-sm">
+              {t("المنطقة", "Region")}
+            </th>
+            <th className="text-start p-4 font-semibold text-sm">
+              {t("المدينة", "City")}
             </th>
             <th className="text-start p-4 font-semibold text-sm">
               {t("جهة العمل", "Employer")}
@@ -80,8 +117,20 @@ export const UsersTable = ({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
-                className="border-t border-border hover:bg-muted/30 transition-colors"
+                className={`border-t border-border transition-colors ${
+                  selectedIds.includes(u.id) ? "bg-primary/5" : "hover:bg-muted/30"
+                }`}
               >
+                {onSelectionChange && (
+                  <td className="p-4 w-10">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 cursor-pointer accent-primary"
+                      checked={selectedIds.includes(u.id)}
+                      onChange={() => toggleOne(u.id)}
+                    />
+                  </td>
+                )}
                 <td className="p-4">
                   <p className="font-medium text-sm">
                     {isRTL ? u.name_ar || u.name : u.name}
@@ -99,6 +148,12 @@ export const UsersTable = ({
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">
                   {u.sub_specialization || "—"}
+                </td>
+                <td className="p-4 text-sm text-muted-foreground">
+                  {u.region || "—"}
+                </td>
+                <td className="p-4 text-sm text-muted-foreground">
+                  {u.city || "—"}
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">
                   {u.employer || "—"}

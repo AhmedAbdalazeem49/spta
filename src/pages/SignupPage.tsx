@@ -41,6 +41,8 @@ type FormData = {
   specialization: string;
   subSpecialization: string;
   workplace: string;
+  region: string;
+  city: string;
   password: string;
   confirmPassword: string;
 };
@@ -95,6 +97,14 @@ const RULES = {
     return null;
   },
   subSpecialization: (v: string) => {
+    if (v.length > 255) return "النص طويل جداً";
+    return null;
+  },
+  region: (v: string) => {
+    if (!v.trim()) return "المنطقة مطلوبة";
+    return null;
+  },
+  city: (v: string) => {
     if (v.length > 255) return "النص طويل جداً";
     return null;
   },
@@ -276,6 +286,8 @@ const SignupPage = () => {
     specialization: "",
     subSpecialization: "",
     workplace: "",
+    region: "",
+    city: "",
     password: "",
     confirmPassword: "",
   });
@@ -346,6 +358,8 @@ const SignupPage = () => {
         specialization: formData.specialization,
         sub_specialization: formData.subSpecialization || null,
         employer: formData.workplace,
+        region: formData.region,
+        city: formData.city || null,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
@@ -420,7 +434,8 @@ const SignupPage = () => {
       formData.fullNameEn &&
       formData.nationalId &&
       formData.email &&
-      formData.phone,
+      formData.phone &&
+      formData.region,
     professional:
       !errors.specialization &&
       !errors.workplace &&
@@ -652,6 +667,62 @@ const SignupPage = () => {
                         dir="ltr"
                       />
                     </div>
+                  </Field>
+                </div>
+
+                {/* Region & City */}
+                <div className="grid md:grid-cols-2 gap-5 mt-5">
+                  <Field
+                    label="المنطقة"
+                    labelEn="Region"
+                    required
+                    error={errors.region}
+                  >
+                    <select
+                      value={formData.region}
+                      onChange={(e) => set("region", e.target.value)}
+                      onBlur={() => setTouched((p) => ({ ...p, region: true }))}
+                      className={`${inputBase} ${
+                        errors.region
+                          ? "border-red-400 bg-red-50/30 focus:ring-red-200 focus:border-red-400"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <option value="">اختر المنطقة / Select Region</option>
+                      {[
+                        "الرياض",
+                        "مكة المكرمة",
+                        "المدينة المنورة",
+                        "القصيم",
+                        "الشرقية",
+                        "عسير",
+                        "تبوك",
+                        "حائل",
+                        "الحدود الشمالية",
+                        "جازان",
+                        "نجران",
+                        "الباحة",
+                        "الجوف",
+                      ].map((region) => (
+                        <option key={region} value={region}>
+                          {region}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+
+                  <Field
+                    label="المدينة"
+                    labelEn="City"
+                    error={errors.city}
+                    hint="اختياري — أدخل مدينتك"
+                  >
+                    <input
+                      value={formData.city}
+                      onChange={(e) => set("city", e.target.value)}
+                      className={`${inputBase} border-border hover:border-primary/50`}
+                      placeholder="مثال: جدة، الدمام..."
+                    />
                   </Field>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 import { AddForm, defaultAddForm, EditForm, UserItem } from "@/types/user";
-import { Search, UserPlus, Users } from "lucide-react";
+import { Mail, Search, UserPlus, Users, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Components
@@ -14,6 +14,7 @@ import { UserDeleteModal } from "@/components/admin/users/UserDeleteModal";
 import { UserEditModal } from "@/components/admin/users/UserEditModal";
 import { UsersTable } from "@/components/admin/users/UsersTable";
 import { UserViewModal } from "@/components/admin/users/UserViewModal";
+import { BulkEmailModal } from "@/components/shared/BulkEmailModal";
 
 const AdminUsersPage = () => {
   const { t, isRTL } = useLanguage();
@@ -23,6 +24,7 @@ const AdminUsersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [regionFilter, setRegionFilter] = useState<string>("all");
 
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
@@ -54,32 +56,37 @@ const AdminUsersPage = () => {
   const [addForm, setAddForm] = useState<AddForm>(defaultAddForm);
   const [addStep, setAddStep] = useState<1 | 2>(1);
 
+  // Selection & Email State
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isEmailOpen, setIsEmailOpen] = useState(false);
+
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
-  // Debounced server-side search
   useEffect(() => {
     const timeout = setTimeout(() => {
       setPage(1);
-      fetchUsers(1, searchQuery, statusFilter);
+      fetchUsers(1, searchQuery, statusFilter, regionFilter);
     }, 400);
     return () => clearTimeout(timeout);
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, regionFilter]);
 
   useEffect(() => {
-    fetchUsers(page, searchQuery, statusFilter);
+    fetchUsers(page, searchQuery, statusFilter, regionFilter);
   }, [page]);
 
   const fetchUsers = async (
     pageNumber: number = 1,
     search: string = "",
-    status: string = "all"
+    status: string = "all",
+    region: string = "all"
   ) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams({ page: String(pageNumber) });
       if (search.trim()) params.append("search", search.trim());
       if (status && status !== "all") params.append("status", status);
+      if (region && region !== "all") params.append("region", region);
 
       const res = await api.get(`/admin/users?${params.toString()}`);
       const data = res.data?.data || res.data || [];
@@ -139,6 +146,9 @@ const AdminUsersPage = () => {
       role: u.role || "user",
       password: "",
       password_confirmation: "",
+      region: u.region || "",
+      city: u.city || "",
+      classification_number: u.classification_number || "",
     });
     setIsEditOpen(true);
   };
@@ -157,6 +167,9 @@ const AdminUsersPage = () => {
       sub_specialization: editForm.sub_specialization,
       employer: editForm.employer,
       role: editForm.role,
+      region: editForm.region,
+      city: editForm.city,
+      classification_number: editForm.classification_number,
     };
 
     if (editForm.password.trim()) {
@@ -255,6 +268,9 @@ const AdminUsersPage = () => {
         sub_specialization: addForm.sub_specialization,
         employer: addForm.employer,
         role: addForm.role,
+        region: addForm.region,
+        city: addForm.city,
+        classification_number: addForm.classification_number,
         password: addForm.password,
         password_confirmation: addForm.password_confirmation,
       });
@@ -281,6 +297,33 @@ const AdminUsersPage = () => {
     }
   };
 
+  const handleExport = async () => {
+    try {
+      const params = new URLSearchParams();
+      if (searchQuery.trim()) params.append("search", searchQuery.trim());
+      if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
+      if (regionFilter && regionFilter !== "all") params.append("region", regionFilter);
+
+      const response = await api.get(`/admin/users/export?${params.toString()}`, {
+        responseType: 'blob',
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `users_export_${new Date().toISOString().split("T")[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    } catch (err) {
+      toast({
+        title: t("خطأ", "Error"),
+        description: t("حدث خطأ أثناء التصدير", "Error exporting data"),
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -294,14 +337,36 @@ const AdminUsersPage = () => {
           </p>
         </div>
 
-        <Button
-          onClick={openAdd}
-          className="gap-2 shrink-0 shadow-sm"
-          size="default"
-        >
-          <UserPlus className="w-4 h-4" />
-          {t("إضافة مستخدم", "Add User")}
-        </Button>
+        <div className="flex items-center gap-2">
+          {selectedIds.length > 0 && (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setIsEmailOpen(true)}
+                className="gap-2 border-primary text-primary hover:bg-primary/5"
+              >
+                <Mail className="w-4 h-4" />
+                {t(`إرسال بريد (${selectedIds.length})`, `Email (${selectedIds.length})`)}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSelectedIds([])}
+                title={t("إلغاء التحديد", "Clear selection")}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </>
+          )}
+          <Button
+            onClick={openAdd}
+            className="gap-2 shrink-0 shadow-sm"
+            size="default"
+          >
+            <UserPlus className="w-4 h-4" />
+            {t("إضافة مستخدم", "Add User")}
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -328,6 +393,35 @@ const AdminUsersPage = () => {
                 className={isRTL ? "pr-10" : "pl-10"}
               />
             </div>
+            <select
+              value={regionFilter}
+              onChange={(e) => setRegionFilter(e.target.value)}
+              className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="all">{t("جميع المناطق", "All Regions")}</option>
+              {[
+                "الرياض",
+                "مكة المكرمة",
+                "المدينة المنورة",
+                "القصيم",
+                "الشرقية",
+                "عسير",
+                "تبوك",
+                "حائل",
+                "الحدود الشمالية",
+                "جازان",
+                "نجران",
+                "الباحة",
+                "الجوف",
+              ].map((region) => (
+                <option key={region} value={region}>
+                  {region}
+                </option>
+              ))}
+            </select>
+            <Button variant="outline" onClick={handleExport}>
+              {t("تصدير إكسل", "Export Excel")}
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -364,6 +458,8 @@ const AdminUsersPage = () => {
                 setSelectedUser(u);
                 setIsDeleteOpen(true);
               }}
+              selectedIds={selectedIds}
+              onSelectionChange={setSelectedIds}
             />
           )}
         </CardContent>
@@ -402,6 +498,18 @@ const AdminUsersPage = () => {
         onDelete={handleDelete}
         isDeleting={isDeleting}
         selected={selectedUser}
+      />
+
+      <BulkEmailModal
+        isOpen={isEmailOpen}
+        onOpenChange={(open) => {
+          setIsEmailOpen(open);
+          if (!open) setSelectedIds([]);
+        }}
+        endpoint="/admin/emails/send"
+        extraPayload={{ user_ids: selectedIds }}
+        recipientLabel={t(`المستخدمون المحددون`, `Selected Users`)}
+        recipientCount={selectedIds.length}
       />
     </div>
   );

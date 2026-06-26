@@ -34,6 +34,9 @@ import {
   Trash2,
   Users,
   XCircle,
+  Mail,
+  X,
+  FileSpreadsheet,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +59,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
+import { BulkEmailModal } from "@/components/shared/BulkEmailModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -863,6 +867,8 @@ const MembershipsTable = ({
   onOpenView,
   onOpenEdit,
   onOpenDelete,
+  selectedIds,
+  onSelectionChange,
 }: {
   memberships: MembershipItem[];
   page: number;
@@ -871,13 +877,31 @@ const MembershipsTable = ({
   onPageChange: (p: number) => void;
   onUpdateStatus: (
     id: number,
-    status: "active" | "expired" | "cancelled"
+    status: "active" | "expired" | "cancelled",
   ) => void;
   onOpenView: (m: MembershipItem) => void;
   onOpenEdit: (m: MembershipItem) => void;
   onOpenDelete: (m: MembershipItem) => void;
+  selectedIds?: number[];
+  onSelectionChange?: (ids: number[]) => void;
 }) => {
   const { t, isRTL } = useLanguage();
+
+  const toggleAll = () => {
+    if (selectedIds?.length === memberships.length) {
+      onSelectionChange?.([]);
+    } else {
+      onSelectionChange?.(memberships.map((m) => m.id));
+    }
+  };
+
+  const toggleOne = (id: number) => {
+    if (selectedIds?.includes(id)) {
+      onSelectionChange?.(selectedIds.filter((s) => s !== id));
+    } else {
+      onSelectionChange?.([...(selectedIds || []), id]);
+    }
+  };
 
   return (
     <div>
@@ -885,6 +909,20 @@ const MembershipsTable = ({
         <table className="w-full text-sm">
           <thead className="bg-muted/50 border-b border-border">
             <tr>
+              {onSelectionChange && (
+                <th className="p-4 w-10">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 cursor-pointer accent-primary"
+                    checked={
+                      memberships.length > 0 &&
+                      selectedIds?.length === memberships.length
+                    }
+                    onChange={toggleAll}
+                    title={t("تحديد الكل", "Select All")}
+                  />
+                </th>
+              )}
               <th className="text-start p-4 font-semibold text-muted-foreground">
                 #
               </th>
@@ -912,7 +950,24 @@ const MembershipsTable = ({
             {memberships.map((m, index) => {
               const TypeIcon = getMembershipTypeIcon(m.membership_type);
               return (
-                <tr key={m.id} className="hover:bg-muted/30 transition-colors">
+                <tr
+                  key={m.id}
+                  className={`transition-colors ${
+                    selectedIds?.includes(m.id)
+                      ? "bg-primary/5"
+                      : "hover:bg-muted/30"
+                  }`}
+                >
+                  {onSelectionChange && (
+                    <td className="p-4 w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 cursor-pointer accent-primary"
+                        checked={selectedIds?.includes(m.id)}
+                        onChange={() => toggleOne(m.id)}
+                      />
+                    </td>
+                  )}
                   <td className="p-4 text-muted-foreground text-xs">
                     {(page - 1) * 15 + index + 1}
                   </td>
@@ -1099,6 +1154,10 @@ const AdminMembershipsPage = () => {
 
   // View
   const [isViewOpen, setIsViewOpen] = useState(false);
+
+  // Selection & Email State
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isEmailOpen, setIsEmailOpen] = useState(false);
 
   // Edit
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -1347,6 +1406,31 @@ const AdminMembershipsPage = () => {
       setIsAdding(false);
     }
   };
+  const handleExport = async () => {
+    try {
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
+      if (typeFilter && typeFilter !== "all") params.append("membership_type", typeFilter);
+
+      const response = await api.get(`/admin/memberships/export?${params.toString()}`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `memberships_export_${new Date().toISOString().split("T")[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      toast({
+        title: t("خطأ", "Error"),
+        description: t("حدث خطأ أثناء التصدير", "Error occurred during export"),
+        variant: "destructive",
+      });
+    }
+  };
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
@@ -1366,10 +1450,32 @@ const AdminMembershipsPage = () => {
             )}
           </p>
         </div>
-        <Button onClick={openAdd} className="gap-2 shrink-0 shadow-sm">
-          <Plus className="w-4 h-4" />
-          {t("إضافة عضوية", "Add Membership")}
-        </Button>
+        <div className="flex items-center gap-2">
+          {selectedIds.length > 0 && (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setIsEmailOpen(true)}
+                className="gap-2 border-primary text-primary hover:bg-primary/5"
+              >
+                <Mail className="w-4 h-4" />
+                {t(`إرسال بريد (${selectedIds.length})`, `Email (${selectedIds.length})`)}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSelectedIds([])}
+                title={t("إلغاء التحديد", "Clear selection")}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </>
+          )}
+          <Button onClick={openAdd} className="gap-2 shrink-0 shadow-sm">
+            <Plus className="w-4 h-4" />
+            {t("إضافة عضوية", "Add Membership")}
+          </Button>
+        </div>
       </div>
 
       {/* Table card */}
@@ -1431,6 +1537,11 @@ const AdminMembershipsPage = () => {
                 ))}
               </SelectContent>
             </Select>
+
+            <Button variant="outline" onClick={handleExport} className="gap-2 shrink-0">
+              <FileSpreadsheet className="w-4 h-4" />
+              {t("تصدير إكسل", "Export Excel")}
+            </Button>
           </div>
         </CardHeader>
 
@@ -1468,6 +1579,8 @@ const AdminMembershipsPage = () => {
                 setSelectedMembership(m);
                 setIsDeleteOpen(true);
               }}
+              selectedIds={selectedIds}
+              onSelectionChange={setSelectedIds}
             />
           )}
         </CardContent>
@@ -1509,6 +1622,18 @@ const AdminMembershipsPage = () => {
         onDelete={handleDelete}
         isDeleting={isDeleting}
         membership={selectedMembership}
+      />
+
+      <BulkEmailModal
+        isOpen={isEmailOpen}
+        onOpenChange={(open) => {
+          setIsEmailOpen(open);
+          if (!open) setSelectedIds([]);
+        }}
+        endpoint="/admin/emails/send"
+        extraPayload={{ user_ids: memberships.filter(m => selectedIds.includes(m.id)).map(m => m.user_id) }}
+        recipientLabel={t(`الأعضاء المحددون`, `Selected Members`)}
+        recipientCount={selectedIds.length}
       />
     </div>
   );

@@ -22,9 +22,12 @@ import {
   Trash2,
   Users,
   XCircle,
+  Mail,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
+import { BulkEmailModal } from "@/components/shared/BulkEmailModal";
 
 interface WorkshopSubscriptionsModalProps {
   isOpen: boolean;
@@ -61,6 +64,10 @@ export const WorkshopSubscriptionsModal = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [issuingId, setIssuingId] = useState<string | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
+
+  // Selection & Email State
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isEmailOpen, setIsEmailOpen] = useState(false);
 
   // ─── FETCH ───────────────────────────────────────────────
   const fetchSubscribers = async () => {
@@ -106,6 +113,22 @@ export const WorkshopSubscriptionsModal = ({
     if (isOpen && workshop) fetchSubscribers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, workshop]);
+
+  const toggleAll = () => {
+    if (selectedIds.length === subscribers.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(subscribers.map((s) => s.id));
+    }
+  };
+
+  const toggleOne = (id: string) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((s) => s !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
 
   // ─── ATTENDANCE TOGGLE ───────────────────────────────────
   const toggleAttendance = async (sub: Subscriber) => {
@@ -394,11 +417,32 @@ export const WorkshopSubscriptionsModal = ({
               </div>
             </div>
 
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap items-center">
+              {selectedIds.length > 0 && (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEmailOpen(true)}
+                    className="gap-2 border-primary text-primary hover:bg-primary/5 h-9"
+                  >
+                    <Mail className="w-4 h-4" />
+                    {t(`إرسال بريد (${selectedIds.length})`, `Email (${selectedIds.length})`)}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSelectedIds([])}
+                    title={t("إلغاء التحديد", "Clear selection")}
+                    className="h-9 w-9"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </>
+              )}
               <Button
                 variant="outline"
                 onClick={handleExportExcel}
-                className="gap-2"
+                className="gap-2 h-9"
               >
                 <FileSpreadsheet className="w-4 h-4" />
                 Excel
@@ -435,6 +479,15 @@ export const WorkshopSubscriptionsModal = ({
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
+                    <th className="p-3 w-10 text-start">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 cursor-pointer accent-primary"
+                        checked={subscribers.length > 0 && selectedIds.length === subscribers.length}
+                        onChange={toggleAll}
+                        title={t("تحديد الكل", "Select All")}
+                      />
+                    </th>
                     <th className="p-3 text-start font-medium">
                       {t("المستخدم", "User")}
                     </th>
@@ -477,6 +530,16 @@ export const WorkshopSubscriptionsModal = ({
                             : "hover:bg-muted/20"
                         }`}
                       >
+                        {/* Checkbox */}
+                        <td className="p-3 w-10">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 cursor-pointer accent-primary"
+                            checked={selectedIds.includes(sub.id)}
+                            onChange={() => toggleOne(sub.id)}
+                          />
+                        </td>
+
                         {/* User */}
                         <td className="p-3">
                           <p className="font-medium">{sub.name}</p>
@@ -630,6 +693,22 @@ export const WorkshopSubscriptionsModal = ({
           )}
         </div>
       </DialogContent>
+      
+      <BulkEmailModal
+        isOpen={isEmailOpen}
+        onOpenChange={(open) => {
+          setIsEmailOpen(open);
+          if (!open) setSelectedIds([]);
+        }}
+        endpoint="/admin/emails/send"
+        extraPayload={{ 
+          user_ids: subscribers
+            .filter(s => selectedIds.includes(s.id))
+            .map(s => Number(s.user_id)) 
+        }}
+        recipientLabel={t(`المشتركون المحددون`, `Selected Subscribers`)}
+        recipientCount={selectedIds.length}
+      />
     </Dialog>
   );
 };

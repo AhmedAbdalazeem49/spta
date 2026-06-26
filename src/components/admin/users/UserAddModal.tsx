@@ -27,6 +27,8 @@ import {
   Loader2,
   Lock,
   Mail,
+  MapPin,
+  ShieldCheck,
   Phone,
   Shield,
   User,
@@ -217,6 +219,25 @@ export const UserAddModal = ({
               </div>
 
               <div className="space-y-1.5">
+                <Label>{t("رقم التصنيف", "Classification Number")}</Label>
+                <div className="relative">
+                  <ShieldCheck
+                    className={`absolute top-1/2 -translate-y-1/2 ${
+                      isRTL ? "right-3" : "left-3"
+                    } w-4 h-4 text-muted-foreground`}
+                  />
+                  <Input
+                    placeholder={t("رقم التصنيف", "Classification Number")}
+                    value={addForm.classification_number}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, classification_number: e.target.value })
+                    }
+                    className={isRTL ? "pr-10" : "pl-10"}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
                 <Label>{t("جهة العمل", "Employer")}</Label>
                 <div className="relative">
                   <Building2
@@ -273,6 +294,70 @@ export const UserAddModal = ({
                         ...addForm,
                         sub_specialization: e.target.value,
                       })
+                    }
+                    className={isRTL ? "pr-10" : "pl-10"}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="flex items-center gap-1">
+                  {t("المنطقة", "Region")}
+                  <span className="text-destructive text-xs">*</span>
+                </Label>
+                <div className="relative">
+                  <MapPin
+                    className={`absolute top-1/2 -translate-y-1/2 ${
+                      isRTL ? "right-3" : "left-3"
+                    } w-4 h-4 text-muted-foreground`}
+                  />
+                  <Select
+                    value={addForm.region}
+                    onValueChange={(val) =>
+                      setAddForm({ ...addForm, region: val })
+                    }
+                  >
+                    <SelectTrigger className={isRTL ? "pr-10" : "pl-10"}>
+                      <SelectValue placeholder={t("اختر المنطقة", "Select Region")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[
+                        "الرياض",
+                        "مكة المكرمة",
+                        "المدينة المنورة",
+                        "القصيم",
+                        "الشرقية",
+                        "عسير",
+                        "تبوك",
+                        "حائل",
+                        "الحدود الشمالية",
+                        "جازان",
+                        "نجران",
+                        "الباحة",
+                        "الجوف",
+                      ].map((r) => (
+                        <SelectItem key={r} value={r}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>{t("المدينة", "City")}</Label>
+                <div className="relative">
+                  <MapPin
+                    className={`absolute top-1/2 -translate-y-1/2 ${
+                      isRTL ? "right-3" : "left-3"
+                    } w-4 h-4 text-muted-foreground`}
+                  />
+                  <Input
+                    placeholder={t("المدينة", "City")}
+                    value={addForm.city}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, city: e.target.value })
                     }
                     className={isRTL ? "pr-10" : "pl-10"}
                   />
