@@ -92,12 +92,12 @@ const Chatbot = () => {
       const responses = isRTL
         ? [
             "شكراً لتواصلك معنا! سأقوم بمساعدتك في استفسارك.",
-            "للمزيد من المعلومات، يمكنك التواصل معنا عبر البريد الإلكتروني: spta@ksu.edu.sa",
+            "للمزيد من المعلومات، يمكنك التواصل معنا عبر البريد الإلكتروني: spta@spta.sa",
             "يسعدني مساعدتك! هل هناك شيء آخر تود معرفته؟",
           ]
         : [
             "Thank you for reaching out! I'll help you with your inquiry.",
-            "For more information, you can contact us at: spta@ksu.edu.sa",
+            "For more information, you can contact us at: spta@spta.sa",
             "Happy to help! Is there anything else you'd like to know?",
           ];
 
@@ -276,7 +276,7 @@ const Chatbot = () => {
                                   {
                                     hour: "2-digit",
                                     minute: "2-digit",
-                                  }
+                                  },
                                 )}
                               </p>
                             </div>
@@ -339,7 +339,7 @@ const Chatbot = () => {
                           onKeyPress={handleKeyPress}
                           placeholder={t(
                             "اكتب رسالتك...",
-                            "Type your message..."
+                            "Type your message...",
                           )}
                           className="flex-1 rounded-full bg-muted border-0 focus-visible:ring-1"
                         />

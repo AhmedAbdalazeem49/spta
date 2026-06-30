@@ -36,7 +36,7 @@ export default function ContactInfo() {
       icon: Mail,
       type: "email",
       title: t("البريد الإلكتروني", "Email"),
-      details: "spta@ksu.edu.sa",
+      details: "spta@spta.sa",
       sub: t("سنرد خلال 24 ساعة", "We reply within 24 hours"),
     },
   ];
@@ -105,7 +105,10 @@ export default function ContactInfo() {
                     {info.title}
                   </h3>
 
-                  <p className="text-foreground font-medium hover:underline transition" dir="ltr">
+                  <p
+                    className="text-foreground font-medium hover:underline transition"
+                    dir="ltr"
+                  >
                     {info.details}
                   </p>
 

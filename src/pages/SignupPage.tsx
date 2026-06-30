@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { PhoneInput } from "@/components/shared/PhoneInput";
 // ─── Types ───────────────────────────────────────────────
 type FormData = {
   fullNameAr: string;
@@ -637,37 +637,6 @@ const SignupPage = () => {
                       />
                     </div>
                   </Field>
-
-                  <Field
-                    label="رقم الجوال"
-                    labelEn="Phone Number"
-                    required
-                    error={errors.phone}
-                    hint={
-                      !touched.phone
-                        ? "يشمل رمز الدولة، مثال: +966501234567"
-                        : undefined
-                    }
-                  >
-                    <div className="relative">
-                      <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => set("phone", e.target.value)}
-                        onBlur={() =>
-                          setTouched((p) => ({ ...p, phone: true }))
-                        }
-                        className={`${inputBase} pr-10 ${
-                          errors.phone
-                            ? "border-red-400 bg-red-50/30 focus:ring-red-200 focus:border-red-400"
-                            : "border-border hover:border-primary/50"
-                        }`}
-                        placeholder="+XXX XX XXX XXXX"
-                        dir="ltr"
-                      />
-                    </div>
-                  </Field>
                 </div>
 
                 {/* Region & City */}
@@ -725,6 +694,26 @@ const SignupPage = () => {
                     />
                   </Field>
                 </div>
+
+                <Field
+                  label="رقم الجوال"
+                  labelEn="Phone Number"
+                  required
+                  error={errors.phone}
+                  hint={
+                    !touched.phone
+                      ? "أكمل رقم الجوال بدون الرمز إذا قمت باختياره"
+                      : undefined
+                  }
+                >
+                  <PhoneInput
+                    value={formData.phone}
+                    onChange={(value) => set("phone", value)}
+                    onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
+                    error={errors.phone}
+                    inputBaseClass={inputBase}
+                  />
+                </Field>
               </div>
 
               {/* ─── Section 2: Professional ─── */}

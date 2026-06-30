@@ -10,6 +10,7 @@ import Quote from "@/user/components/About/Quote";
 import Layout from "@/components/layout/Layout";
 import Message from "../components/PresidentMessage/Message";
 import AdvertisementsSection from "@/user/components/Home/AdvertisementsSection";
+import Partners from "@/user/components/About/Partners";
 
 const HomePage = () => {
   return (
@@ -24,6 +25,7 @@ const HomePage = () => {
       {/* <DownloadApp /> */}
       {/* <BranchesSection /> */}
       <AdvertisementsSection />
+      <Partners />
     </Layout>
   );
 };

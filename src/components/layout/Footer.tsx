@@ -12,8 +12,8 @@ import {
   MapPin,
   Send,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { FaWhatsapp, FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const { t, isRTL } = useLanguage();
@@ -40,7 +40,10 @@ const Footer = () => {
         path: "/specializations",
       },
       {
-        label: t("المشاركة في الأبحاث والاستبيانات", "Empirical Research & Questionnaires"),
+        label: t(
+          "المشاركة في الأبحاث والاستبيانات",
+          "Empirical Research & Questionnaires",
+        ),
         path: "/research/empirical",
       },
       {
@@ -181,10 +184,10 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 flex-shrink-0" />
                 <a
-                  href="mailto:spta@ksu.edu.sa"
+                  href="mailto:spta@spta.sa"
                   className="text-primary-foreground/80 hover:text-primary-foreground"
                 >
-                  spta@ksu.edu.sa
+                  spta@spta.sa
                 </a>
               </li>
               <li className="flex items-center gap-3">

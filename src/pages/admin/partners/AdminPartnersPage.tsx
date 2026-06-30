@@ -40,6 +40,7 @@ export interface Partner {
   description: string | null;
   link: string | null;
   image: string | null;
+  sort_order: number;
   created_at: string;
 }
 
@@ -61,6 +62,7 @@ const AdminPartnersPage = () => {
     name: "",
     description: "",
     link: "",
+    sort_order: "0",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -119,6 +121,7 @@ const AdminPartnersPage = () => {
       formData.append("name", form.name);
       if (form.description) formData.append("description", form.description);
       if (form.link) formData.append("link", form.link);
+      formData.append("sort_order", form.sort_order);
       if (imageFile) formData.append("image", imageFile);
 
       if (isEditOpen && selectedPartner) {
@@ -178,7 +181,7 @@ const AdminPartnersPage = () => {
   };
 
   const openAdd = () => {
-    setForm({ name: "", description: "", link: "" });
+    setForm({ name: "", description: "", link: "", sort_order: "0" });
     setImageFile(null);
     setImagePreview(null);
     setIsAddOpen(true);
@@ -190,6 +193,7 @@ const AdminPartnersPage = () => {
       name: partner.name,
       description: partner.description || "",
       link: partner.link || "",
+      sort_order: partner.sort_order.toString(),
     });
     setImageFile(null);
     if (partner.image) {
@@ -261,6 +265,7 @@ const AdminPartnersPage = () => {
                     <th className="text-start p-4 font-semibold text-muted-foreground">{t("الشعار", "Logo")}</th>
                     <th className="text-start p-4 font-semibold text-muted-foreground">{t("اسم الشريك", "Name")}</th>
                     <th className="text-start p-4 font-semibold text-muted-foreground">{t("الرابط", "Link")}</th>
+                    <th className="text-start p-4 font-semibold text-muted-foreground">{t("الترتيب", "Order")}</th>
                     <th className="text-start p-4 font-semibold text-muted-foreground">{t("الإجراءات", "Actions")}</th>
                   </tr>
                 </thead>
@@ -301,6 +306,11 @@ const AdminPartnersPage = () => {
                           ) : (
                             <span className="text-muted-foreground text-xs">-</span>
                           )}
+                        </td>
+                        <td className="p-4">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-muted font-mono text-xs border">
+                            {partner.sort_order}
+                          </span>
                         </td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
@@ -404,6 +414,18 @@ const AdminPartnersPage = () => {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder={t("نبذة بسيطة...", "Brief description...")}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t("ترتيب العرض", "Sort Order")} <span className="text-destructive">*</span></Label>
+              <Input
+                type="number"
+                required
+                value={form.sort_order}
+                onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
+                placeholder="0"
+                dir="ltr"
               />
             </div>
 

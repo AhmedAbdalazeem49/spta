@@ -18,7 +18,7 @@ const CopyrightPage = () => {
       title: t("حقوق الملكية", "Ownership Rights"),
       content: t(
         "جميع المحتويات المنشورة على هذا الموقع، بما في ذلك النصوص والصور والرسومات والشعارات والفيديوهات، هي ملك للجمعية السعودية للعلاج الطبيعي ومحمية بموجب قوانين حقوق النشر.",
-        "All content published on this website, including text, images, graphics, logos, and videos, is owned by the Saudi Physical Therapy Association and protected under copyright laws."
+        "All content published on this website, including text, images, graphics, logos, and videos, is owned by the Saudi Physical Therapy Association and protected under copyright laws.",
       ),
     },
     {
@@ -26,7 +26,7 @@ const CopyrightPage = () => {
       title: t("الاستخدام المسموح", "Permitted Use"),
       content: t(
         "يُسمح باستخدام محتوى الموقع للأغراض الشخصية والتعليمية غير التجارية فقط، مع وجوب ذكر المصدر وعدم تعديل المحتوى. أي استخدام تجاري يتطلب إذناً كتابياً مسبقاً من الجمعية.",
-        "Website content may be used for personal and non-commercial educational purposes only, with proper attribution and without modification. Any commercial use requires prior written permission from the association."
+        "Website content may be used for personal and non-commercial educational purposes only, with proper attribution and without modification. Any commercial use requires prior written permission from the association.",
       ),
     },
     {
@@ -34,7 +34,7 @@ const CopyrightPage = () => {
       title: t("الاستخدام المحظور", "Prohibited Use"),
       content: t(
         "يُحظر نسخ أو توزيع أو نشر أو بيع أو تعديل أي جزء من محتوى هذا الموقع دون الحصول على إذن كتابي مسبق من الجمعية السعودية للعلاج الطبيعي. كما يُحظر استخدام الشعار أو العلامات التجارية بأي شكل.",
-        "It is prohibited to copy, distribute, publish, sell, or modify any part of this website's content without prior written permission from SPTA. Use of logos or trademarks in any form is also prohibited."
+        "It is prohibited to copy, distribute, publish, sell, or modify any part of this website's content without prior written permission from SPTA. Use of logos or trademarks in any form is also prohibited.",
       ),
     },
   ];
@@ -69,7 +69,7 @@ const CopyrightPage = () => {
             <p className="text-xl text-white/80">
               {t(
                 "سياسة حماية حقوق الملكية الفكرية وقواعد استخدام المحتوى",
-                "Intellectual property protection policy and content usage rules"
+                "Intellectual property protection policy and content usage rules",
               )}
             </p>
           </motion.div>
@@ -84,7 +84,7 @@ const CopyrightPage = () => {
             <p className="font-medium text-center">
               {t(
                 "تحذير: أي انتهاك لحقوق النشر قد يعرضك للمساءلة القانونية",
-                "Warning: Any copyright violation may result in legal action"
+                "Warning: Any copyright violation may result in legal action",
               )}
             </p>
           </div>
@@ -157,14 +157,14 @@ const CopyrightPage = () => {
               <p className="text-muted-foreground mb-4">
                 {t(
                   "للحصول على إذن لاستخدام أي محتوى من هذا الموقع، يرجى التواصل معنا عبر البريد الإلكتروني",
-                  "To obtain permission to use any content from this website, please contact us via email"
+                  "To obtain permission to use any content from this website, please contact us via email",
                 )}
               </p>
               <a
-                href="mailto:spta@ksu.edu.sa"
+                href="mailto:spta@spta.sa"
                 className="text-primary font-bold text-lg hover:underline"
               >
-                spta@ksu.edu.sa
+                spta@spta.sa
               </a>
             </motion.div>
 
@@ -175,14 +175,14 @@ const CopyrightPage = () => {
             >
               <p>
                 {t(
-                  "© 2024 الجمعية السعودية للعلاج الطبيعي. جميع الحقوق محفوظة.",
-                  "© 2024 Saudi Physical Therapy Association. All rights reserved."
+                  "© 2026 الجمعية السعودية للعلاج الطبيعي. جميع الحقوق محفوظة.",
+                  "© 2026 Saudi Physical Therapy Association. All rights reserved.",
                 )}
               </p>
               <p className="mt-2">
                 {t(
                   "تخضع هذه السياسة للقوانين المعمول بها في المملكة العربية السعودية",
-                  "This policy is subject to the laws applicable in Saudi Arabia"
+                  "This policy is subject to the laws applicable in Saudi Arabia",
                 )}
               </p>
             </div>
