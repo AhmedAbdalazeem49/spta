@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { UserItem } from "@/types/user";
 import { AnimatePresence, motion } from "framer-motion";
-import {  Eye, Pencil, Trash2,  } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 interface UsersTableProps {
   users: UserItem[];
@@ -21,11 +21,6 @@ interface UsersTableProps {
 
 export const UsersTable = ({
   users,
-  page,
-  lastPage,
-  updatingId,
-  onPageChange,
-  onUpdateStatus,
   onOpenView,
   onOpenEdit,
   onOpenDelete,
@@ -50,119 +45,144 @@ export const UsersTable = ({
     }
   };
 
-  const formatDate = (date?: string | null) => {
-    if (!date) return "—";
-    return new Date(date).toLocaleDateString();
-  };
-
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
+    <div className="overflow-x-auto border">
+      <table className="w-full text-xs">
         <thead className="bg-muted/50">
-          <tr>
+          <tr className="border-b">
             {onSelectionChange && (
-              <th className="p-4 w-10">
+              <th className="px-2 py-2 w-8">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 cursor-pointer accent-primary"
-                  checked={users.length > 0 && selectedIds.length === users.length}
+                  className="h-3.5 w-3.5 cursor-pointer accent-primary"
+                  checked={
+                    users.length > 0 && selectedIds.length === users.length
+                  }
                   onChange={toggleAll}
                   title={t("تحديد الكل", "Select All")}
                 />
               </th>
             )}
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("الاسم", "Name")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("البريد", "Email")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("الهاتف", "Phone")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("رقم الهوية / الإقامة", "National ID / Iqama")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("التخصص", "Specialization")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("التخصص الفرعي", "Sub-Spec")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("المنطقة", "Region")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("المدينة", "City")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("جهة العمل", "Employer")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("رقم التصنيف", "Classification No.")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("الدور", "Role")}
             </th>
-            <th className="text-start p-4 font-semibold text-sm">
+
+            <th className="px-2 py-2 text-start font-semibold whitespace-nowrap">
               {t("الإجراءات", "Actions")}
             </th>
           </tr>
         </thead>
+
         <tbody>
           <AnimatePresence>
             {users.map((u, i) => (
               <motion.tr
                 key={u.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.03 }}
-                className={`border-t border-border transition-colors ${
-                  selectedIds.includes(u.id) ? "bg-primary/5" : "hover:bg-muted/30"
+                transition={{ delay: i * 0.02 }}
+                className={`border-b transition-colors ${
+                  selectedIds.includes(u.id)
+                    ? "bg-primary/5"
+                    : "hover:bg-muted/30"
                 }`}
               >
                 {onSelectionChange && (
-                  <td className="p-4 w-10">
+                  <td className="px-2 py-2">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 cursor-pointer accent-primary"
+                      className="h-3.5 w-3.5 cursor-pointer accent-primary"
                       checked={selectedIds.includes(u.id)}
                       onChange={() => toggleOne(u.id)}
                     />
                   </td>
                 )}
-                <td className="p-4">
-                  <p className="font-medium text-sm">
-                    {isRTL ? u.name_ar || u.name : u.name}
-                  </p>
+
+                <td className="px-2 py-2 font-medium whitespace-nowrap">
+                  {isRTL ? u.name_ar || u.name : u.name}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">{u.email}</td>
-                <td className="p-4 text-sm text-muted-foreground" dir="ltr">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
+                  {u.email}
+                </td>
+
+                <td
+                  className="px-2 py-2 text-muted-foreground whitespace-nowrap"
+                  dir="ltr"
+                >
                   {u.phone || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.national_id || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.specialization || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.sub_specialization || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.region || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.city || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.employer || "—"}
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+
+                <td className="px-2 py-2 text-muted-foreground whitespace-nowrap">
                   {u.classification_number || "—"}
                 </td>
 
-                <td className="p-4">
+                <td className="px-2 py-2 whitespace-nowrap">
                   <Badge
                     variant={
                       u.role === "system_admin"
@@ -171,7 +191,11 @@ export const UsersTable = ({
                           ? "outline"
                           : "secondary"
                     }
-                    className={`text-xs ${u.role === "branch_admin" ? "border-blue-500 text-blue-500" : ""}`}
+                    className={`text-[10px] px-2 py-0.5 ${
+                      u.role === "branch_admin"
+                        ? "border-blue-500 text-blue-500"
+                        : ""
+                    }`}
                   >
                     {u.role === "system_admin"
                       ? t("مدير النظام", "System Admin")
@@ -180,30 +204,34 @@ export const UsersTable = ({
                         : t("عضو", "Member")}
                   </Badge>
                 </td>
-                <td className="p-4">
-                  <div className="flex items-center gap-1 flex-wrap">
+
+                <td className="px-2 py-2">
+                  <div className="flex items-center gap-0.5">
                     <Button
-                      size="sm"
+                      size="icon"
                       variant="ghost"
+                      className="h-7 w-7"
                       onClick={() => onOpenView(u)}
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye className="h-3.5 w-3.5" />
                     </Button>
+
                     <Button
-                      size="sm"
+                      size="icon"
                       variant="ghost"
-                      className="text-primary hover:text-primary/80"
+                      className="h-7 w-7 text-primary hover:text-primary/80"
                       onClick={() => onOpenEdit(u)}
                     >
-                      <Pencil className="w-4 h-4" />
+                      <Pencil className="h-3.5 w-3.5" />
                     </Button>
+
                     <Button
-                      size="sm"
+                      size="icon"
                       variant="ghost"
-                      className="text-destructive"
+                      className="h-7 w-7 text-destructive"
                       onClick={() => onOpenDelete(u)}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 </td>
@@ -212,26 +240,6 @@ export const UsersTable = ({
           </AnimatePresence>
         </tbody>
       </table>
-
-      {lastPage > 1 && (
-        <div className="flex justify-end mt-3 gap-2 px-4 pb-4">
-          <Button
-            onClick={() => onPageChange(Math.max(1, page - 1))}
-            disabled={page === 1}
-          >
-            {t("السابق", "Prev")}
-          </Button>
-          <span className="px-2 py-1">
-            {page} / {lastPage}
-          </span>
-          <Button
-            onClick={() => onPageChange(Math.min(lastPage, page + 1))}
-            disabled={page === lastPage}
-          >
-            {t("التالي", "Next")}
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

@@ -117,7 +117,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col max-h-screen">
+    <div className="flex flex-col h-screen fixed top-0 right-0">
       {/* Logo */}
       <div className="p-4 border-b border-sidebar-border flex justify-center">
         <Link to="/admin">
