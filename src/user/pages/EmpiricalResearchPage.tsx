@@ -1,28 +1,28 @@
 import Layout from "@/components/layout/Layout";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  FileText,
-  Search,
-  BookOpen,
-  ClipboardList,
-  AlertCircle,
-  ExternalLink,
-  Loader2,
-  CalendarDays,
-  ArrowUpRight,
-  Sparkles,
-  Users,
-  TrendingUp,
-  Shield,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { arSA } from "date-fns/locale";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowUpRight,
+  BookOpen,
+  CalendarDays,
+  ClipboardList,
+  ExternalLink,
+  FileText,
+  Loader2,
+  Search,
+  Shield,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import ResearchPublishCTA from "../components/Research/ResearchPublishCTA";
+import ResearchPublishModal from "../components/Research/ResearchPublishModal";
 
 interface ResearchItem {
   id: number;
@@ -94,9 +94,11 @@ const EmpiricalResearchPage = () => {
 
   return (
     <Layout>
+      {/* ─── Publish Research Popup ────────────────────────────────── */}
+      <ResearchPublishModal />
+
       {/* ─── Hero ────────────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-28 overflow-hidden">
-        {/* layered background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-blue-500/5" />
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -105,7 +107,6 @@ const EmpiricalResearchPage = () => {
             backgroundSize: "40px 40px",
           }}
         />
-        {/* decorative blobs */}
         <div className="absolute top-20 -left-32 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 -right-32 w-96 h-96 rounded-full bg-blue-500/8 blur-3xl pointer-events-none" />
 
@@ -115,7 +116,6 @@ const EmpiricalResearchPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* eyebrow pill */}
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary border border-primary/20 mb-8 shadow-sm">
               <Sparkles className="w-4 h-4" />
               <span className="font-semibold text-sm tracking-wide">
@@ -146,7 +146,6 @@ const EmpiricalResearchPage = () => {
               )}
             </p>
 
-            {/* ethics notice */}
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -245,7 +244,6 @@ const EmpiricalResearchPage = () => {
             transition={{ delay: 0.4 }}
             className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center mb-10"
           >
-            {/* tab switcher */}
             <div className="flex bg-muted/60 p-1.5 rounded-2xl w-full md:w-auto gap-1 border">
               {[
                 { id: "all", labelAr: "الكل", labelEn: "All" },
@@ -258,8 +256,9 @@ const EmpiricalResearchPage = () => {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() =>
+                    setActiveTab(tab.id as "all" | "research" | "questionnaire")
+                  }
                   className={`relative flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
                     activeTab === tab.id
                       ? "bg-background text-primary shadow-sm border border-border"
@@ -278,7 +277,6 @@ const EmpiricalResearchPage = () => {
               ))}
             </div>
 
-            {/* search */}
             <div className="relative w-full md:w-80 group">
               <Search
                 className={`absolute top-1/2 -translate-y-1/2 ${
@@ -357,7 +355,6 @@ const EmpiricalResearchPage = () => {
                       onHoverEnd={() => setHoveredId(null)}
                       className="group relative block bg-card border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:border-primary/30"
                     >
-                      {/* left accent bar */}
                       <div
                         className={`absolute ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-1 transition-all duration-300 ${
                           isHovered
@@ -368,7 +365,6 @@ const EmpiricalResearchPage = () => {
                         }`}
                       />
 
-                      {/* subtle hover glow */}
                       <div
                         className={`absolute inset-0 transition-opacity duration-300 pointer-events-none ${
                           isHovered ? "opacity-100" : "opacity-0"
@@ -377,9 +373,7 @@ const EmpiricalResearchPage = () => {
 
                       <div className="relative p-6 md:p-7">
                         <div className="flex flex-col sm:flex-row gap-5 justify-between items-start sm:items-center">
-                          {/* left: content */}
                           <div className="flex-1 min-w-0 space-y-3">
-                            {/* badge + date row */}
                             <div className="flex flex-wrap items-center gap-3">
                               <Badge
                                 variant={isResearch ? "default" : "secondary"}
@@ -411,12 +405,10 @@ const EmpiricalResearchPage = () => {
                               </span>
                             </div>
 
-                            {/* title */}
                             <h3 className="text-lg md:text-xl font-bold leading-snug group-hover:text-primary transition-colors duration-300 line-clamp-2 pr-4">
                               {item.title}
                             </h3>
 
-                            {/* type description */}
                             <p className="text-sm text-muted-foreground line-clamp-1">
                               {isResearch
                                 ? t(
@@ -430,7 +422,6 @@ const EmpiricalResearchPage = () => {
                             </p>
                           </div>
 
-                          {/* right: CTA */}
                           <div className="shrink-0">
                             <motion.div
                               animate={
@@ -456,38 +447,8 @@ const EmpiricalResearchPage = () => {
             </div>
           )}
 
-          {/* ── Bottom CTA ── */}
-          {!isLoading && items.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mt-14 p-8 rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-blue-500/5 border border-primary/15 text-center"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">
-                {t(
-                  "هل لديك بحث تريد نشره؟",
-                  "Want to publish your own research?",
-                )}
-              </h3>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
-                {t(
-                  "يمكنك تقديم طلب نشر بحثك أو استبيانك عبر منصة الجمعية بعد الحصول على موافقة لجنة الأخلاقيات البحثية.",
-                  "You can submit a request to publish your study or questionnaire through the Association's platform after obtaining Research Ethics Committee approval.",
-                )}
-              </p>
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
-              >
-                <ExternalLink className="w-4 h-4" />
-                {t("تواصل معنا", "Contact Us")}
-              </a>
-            </motion.div>
-          )}
+          {/* ── Bottom CTA (now its own component) ── */}
+          {!isLoading && items.length > 0 && <ResearchPublishCTA />}
         </div>
       </section>
     </Layout>

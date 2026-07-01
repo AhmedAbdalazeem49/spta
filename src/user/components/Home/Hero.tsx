@@ -28,7 +28,21 @@ export default function Hero() {
         "The leading reference and regulator of the physical therapy profession in Saudi Arabia",
       ),
       cta: t("انضم إلينا", "Join Us"),
-      ctaLink: "/contact",
+      ctaLink: "/membership",
+    },
+
+    {
+      image: sptaCeremony1,
+      title: t(
+        "الريادة العلمية والمهنية",
+        "Scientific & Professional Leadership",
+      ),
+      subtitle: t(
+        "السعي دائمًا إلى نشر التوعية وخدمة المجتمع",
+        "Continuously striving to spread awareness and serve the community",
+      ),
+      cta: t("اكتشف المزيد", "Discover More"),
+      ctaLink: "/about",
     },
     {
       image: sptaAward1,
@@ -42,29 +56,6 @@ export default function Hero() {
       ),
       cta: t("عرض الفعاليات", "View Events"),
       ctaLink: "/news",
-    },
-    {
-      image: sptaCeremony1,
-      title: t(
-        "الريادة العلمية والمهنية",
-        "Scientific & Professional Leadership",
-      ),
-      subtitle: t(
-        "السعي دائمًا إلى نشر التوعية وخدمة المجتمع",
-        "Continuously striving to spread awareness and serve the community",
-      ),
-      cta: t("اكتشف المزيد", "Discover More"),
-      ctaLink: "/about/vision-mission",
-    },
-    {
-      image: sptaConference1,
-      title: t("التعاون والشراكات", "Collaboration & Partnerships"),
-      subtitle: t(
-        "شراكات استراتيجية مع جهات حكومية وخاصة محلية ودولية",
-        "Strategic partnerships with government and private entities locally and internationally",
-      ),
-      cta: t("تعرف علينا", "Learn About Us"),
-      ctaLink: "/about",
     },
   ];
 
