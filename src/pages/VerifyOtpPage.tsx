@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   AlertCircle,
   CheckCircle2,
@@ -17,6 +17,8 @@ import {
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const RESEND_DURATION = 60; // 1 minute
+
 const VerifyOtpPage = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
@@ -27,16 +29,17 @@ const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
-  
-  const [timeLeft, setTimeLeft] = useState(120);
+
+  // Timer is idle (0) by default so the resend button is clickable
+  // the moment the user lands on the page.
+  const [timeLeft, setTimeLeft] = useState(0);
+  const isCountingDown = timeLeft > 0;
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timerId);
-    }
+    if (timeLeft <= 0) return;
+    const timerId = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+    return () => clearTimeout(timerId);
   }, [timeLeft]);
-
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -48,24 +51,33 @@ const VerifyOtpPage = () => {
     if (!email) {
       toast({
         title: t("خطأ", "Error"),
-        description: t("الرجاء إدخال البريد الإلكتروني", "Please enter your email"),
+        description: t(
+          "الرجاء إدخال البريد الإلكتروني",
+          "Please enter your email",
+        ),
         variant: "destructive",
       });
       return;
     }
-    
+
     try {
       setResendLoading(true);
       await api.post("/resend-otp", { email });
-      setTimeLeft(120);
+      setTimeLeft(RESEND_DURATION);
       toast({
         title: t("تم الإرسال", "Sent"),
-        description: t("تم إرسال رمز تحقق جديد", "A new verification code has been sent"),
+        description: t(
+          "تم إرسال رمز تحقق جديد",
+          "A new verification code has been sent",
+        ),
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
-        description: err.response?.data?.message || t("حدث خطأ أثناء إرسال الرمز", "Error sending code"),
+        description:
+          err.response?.data?.message ||
+          t("حدث خطأ أثناء إرسال الرمز", "Error sending code"),
         variant: "destructive",
       });
     } finally {
@@ -88,25 +100,29 @@ const VerifyOtpPage = () => {
 
       toast({
         title: t("تم التحقق بنجاح", "Verification Successful"),
-        description: t("تم تفعيل حسابك بنجاح.", "Your account has been activated successfully."),
+        description: t(
+          "تم تفعيل حسابك بنجاح.",
+          "Your account has been activated successfully.",
+        ),
       });
 
       window.location.href = "/membership";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("رمز غير صالح", "Invalid OTP"),
-        description: err.response?.data?.message || t("الرمز الذي أدخلته غير صحيح.", "The code you entered is incorrect."),
+        description:
+          err.response?.data?.message ||
+          t(
+            "الرمز الذي أدخلته غير صحيح.",
+            "The code you entered is incorrect.",
+          ),
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    handleResend();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Layout>
@@ -133,10 +149,15 @@ const VerifyOtpPage = () => {
               {t("أدخل رمز التحقق", "Enter Verification Code")}
             </h2>
             <p className="text-muted-foreground text-sm mb-6">
-              {email 
-                ? t(`لقد أرسلنا رمزاً مكوناً من 6 أرقام إلى ${email}`, `We've sent a 6-digit code to ${email}`) 
-                : t("يرجى إدخال بريدك الإلكتروني لتلقي الرمز", "Please enter your email to receive the code")
-              }
+              {email
+                ? t(
+                    `لقد أرسلنا رمزاً مكوناً من 6 أرقام إلى ${email}`,
+                    `We've sent a 6-digit code to ${email}`,
+                  )
+                : t(
+                    "يرجى إدخال بريدك الإلكتروني لتلقي الرمز",
+                    "Please enter your email to receive the code",
+                  )}
             </p>
 
             <motion.div
@@ -149,7 +170,7 @@ const VerifyOtpPage = () => {
               <p className="text-sm text-blue-700 dark:text-blue-300">
                 {t(
                   "تنويه: قد تصل رسالة التحقق إلى مجلد الرسائل غير المرغوب فيها (Spam / Junk). يرجى التحقق منه.",
-                  "Note: The verification email may arrive in your Spam or Junk folder. Please check it."
+                  "Note: The verification email may arrive in your Spam or Junk folder. Please check it.",
                 )}
               </p>
             </motion.div>
@@ -200,29 +221,47 @@ const VerifyOtpPage = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 {t("لم تستلم الرمز؟", "Didn't receive the code?")}
               </p>
-              
-              <Button
-                variant="outline"
-                onClick={handleResend}
-                disabled={timeLeft > 0 || resendLoading || !email}
-                className="w-full md:w-auto min-w-[200px]"
-              >
-                {resendLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                ) : timeLeft > 0 ? (
-                  <span className="flex items-center gap-2">
-                    <RefreshCw className="w-4 h-4" />
-                    {t(`إعادة الإرسال بعد ${formatTime(timeLeft)}`, `Resend in ${formatTime(timeLeft)}`)}
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <Send className="w-4 h-4" />
-                    {t("إعادة إرسال الرمز", "Resend Code")}
-                  </span>
-                )}
-              </Button>
-            </div>
 
+              <div className="flex flex-col items-center gap-3">
+                <Button
+                  variant={isCountingDown ? "outline" : "default"}
+                  onClick={handleResend}
+                  disabled={isCountingDown || resendLoading || !email}
+                  className="w-full md:w-auto min-w-[220px] h-11 relative overflow-hidden"
+                >
+                  {resendLoading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("جاري الإرسال...", "Sending...")}
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <Send className="w-4 h-4" />
+                      {t("إعادة إرسال الرمز", "Resend Code")}
+                    </span>
+                  )}
+                </Button>
+
+                <AnimatePresence mode="wait">
+                  {isCountingDown && (
+                    <motion.div
+                      key="countdown"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-4 py-1.5 rounded-full"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin [animation-duration:3s]" />
+                      {t(
+                        `يمكنك إعادة الإرسال بعد ${formatTime(timeLeft)}`,
+                        `You can resend in ${formatTime(timeLeft)}`,
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
