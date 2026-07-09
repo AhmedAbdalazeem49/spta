@@ -346,7 +346,10 @@ const AdminUsersPage = () => {
                 className="gap-2 border-primary text-primary hover:bg-primary/5"
               >
                 <Mail className="w-4 h-4" />
-                {t(`إرسال بريد (${selectedIds.length})`, `Email (${selectedIds.length})`)}
+                {t(
+                  `إرسال بريد (${selectedIds.length})`,
+                  `Email (${selectedIds.length})`,
+                )}
               </Button>
               <Button
                 variant="ghost"
@@ -386,7 +389,7 @@ const AdminUsersPage = () => {
               <Input
                 placeholder={t(
                   "بحث بالاسم أو البريد...",
-                  "Search by name or email..."
+                  "Search by name or email...",
                 )}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

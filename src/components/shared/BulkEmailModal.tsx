@@ -12,7 +12,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
 import { Loader2, Mail, Send, Users } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -27,33 +27,11 @@ interface BulkEmailModalProps {
   recipientLabel?: string;
   /** How many recipients (optional) */
   recipientCount?: number;
+  /** Endpoint used to upload inline images. Defaults to /admin/emails/upload-image */
+  imageUploadEndpoint?: string;
 }
 
-const quillModules = {
-  toolbar: [
-    [{ header: [1, 2, 3, 4, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ color: [] }, { background: [] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link"],
-    ["clean"],
-  ],
-};
-
-const quillFormats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "color",
-  "background",
-  "align",
-  "list",
-  "bullet",
-  "link",
-];
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
 export const BulkEmailModal = ({
   isOpen,
@@ -62,12 +40,16 @@ export const BulkEmailModal = ({
   extraPayload = {},
   recipientLabel,
   recipientCount,
+  imageUploadEndpoint = "/admin/emails/upload-image",
 }: BulkEmailModalProps) => {
   const { t, isRTL } = useLanguage();
   const { toast } = useToast();
   const [isSending, setIsSending] = useState(false);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const quillRef = useRef<ReactQuill>(null);
 
   const handleClose = () => {
     if (!isSending) {
@@ -76,6 +58,113 @@ export const BulkEmailModal = ({
       onOpenChange(false);
     }
   };
+
+  // Custom image handler: uploads the file to the backend and inserts
+  // the returned public URL into the editor, instead of embedding base64.
+  const imageHandler = useCallback(() => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        toast({
+          title: t("خطأ", "Error"),
+          description: t(
+            "الملف المحدد ليس صورة",
+            "Selected file is not an image",
+          ),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        toast({
+          title: t("خطأ", "Error"),
+          description: t(
+            "حجم الصورة كبير جدًا (الحد الأقصى 5 ميجابايت)",
+            "Image is too large (max 5MB)",
+          ),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const editor = quillRef.current?.getEditor();
+      const range = editor?.getSelection(true);
+
+      setIsUploadingImage(true);
+      try {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await api.post(imageUploadEndpoint, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        const imageUrl: string | undefined = res.data?.url;
+        if (!imageUrl) {
+          throw new Error("No URL returned from upload endpoint");
+        }
+
+        if (editor && range) {
+          editor.insertEmbed(range.index, "image", imageUrl, "user");
+          editor.setSelection(range.index + 1, 0);
+        }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        toast({
+          title: t("خطأ في رفع الصورة", "Upload Error"),
+          description:
+            err.response?.data?.message ||
+            t("تعذر رفع الصورة", "Failed to upload image"),
+          variant: "destructive",
+        });
+      } finally {
+        setIsUploadingImage(false);
+      }
+    };
+  }, [imageUploadEndpoint, t, toast]);
+
+  const quillModules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, 4, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ color: [] }, { background: [] }],
+          [{ align: [] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          ["clean"],
+        ],
+        handlers: {
+          image: imageHandler,
+        },
+      },
+    }),
+    [imageHandler],
+  );
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "color",
+    "background",
+    "align",
+    "list",
+    "bullet",
+    "link",
+    "image",
+  ];
 
   const handleSend = async () => {
     if (!subject.trim()) {
@@ -89,7 +178,21 @@ export const BulkEmailModal = ({
     if (!body.trim() || body === "<p><br></p>") {
       toast({
         title: t("خطأ", "Error"),
-        description: t("يرجى كتابة محتوى الرسالة", "Please write message content"),
+        description: t(
+          "يرجى كتابة محتوى الرسالة",
+          "Please write message content",
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
+    if (isUploadingImage) {
+      toast({
+        title: t("يرجى الانتظار", "Please wait"),
+        description: t(
+          "جارٍ رفع صورة، يرجى الانتظار حتى تكتمل العملية",
+          "An image is still uploading, please wait for it to finish",
+        ),
         variant: "destructive",
       });
       return;
@@ -106,10 +209,14 @@ export const BulkEmailModal = ({
       toast({
         title: t("تم الإرسال بنجاح", "Sent Successfully"),
         description: count
-          ? t(`تم إرسال ${count} رسالة بريد إلكتروني`, `${count} emails queued successfully`)
+          ? t(
+              `تم إرسال ${count} رسالة بريد إلكتروني`,
+              `${count} emails queued successfully`,
+            )
           : t("تم إرسال الرسائل", "Emails queued successfully"),
       });
       handleClose();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ في الإرسال", "Send Error"),
@@ -131,7 +238,8 @@ export const BulkEmailModal = ({
       >
         {/* Gradient Header */}
         <div className="relative bg-gradient-to-br from-primary via-primary/90 to-teal-600 text-white px-6 py-5 overflow-hidden shrink-0">
-          <div className="absolute inset-0 opacity-10"
+          <div
+            className="absolute inset-0 opacity-10"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41z'/%3E%3C/g%3E%3C/svg%3E")`,
             }}
@@ -175,16 +283,25 @@ export const BulkEmailModal = ({
 
           {/* Body */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">
-              {t("محتوى الرسالة", "Message Content")}
-              <span className="text-destructive ms-1">*</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold">
+                {t("محتوى الرسالة", "Message Content")}
+                <span className="text-destructive ms-1">*</span>
+              </Label>
+              {isUploadingImage && (
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  {t("جارٍ رفع الصورة...", "Uploading image...")}
+                </span>
+              )}
+            </div>
             <div
               className="border border-input rounded-xl overflow-hidden bg-background"
               dir="ltr"
               style={{ minHeight: 280 }}
             >
               <ReactQuill
+                ref={quillRef}
                 theme="snow"
                 value={body}
                 onChange={setBody}
@@ -206,7 +323,7 @@ export const BulkEmailModal = ({
             <p className="text-sm text-muted-foreground leading-relaxed">
               {t(
                 "سيتم إرسال الرسائل بشكل غير متزامن في خلفية النظام. قد يستغرق الأمر بضع دقائق حتى تصل الرسائل إلى صناديق الوارد.",
-                "Emails will be sent asynchronously in the background. It may take a few minutes for messages to reach inboxes."
+                "Emails will be sent asynchronously in the background. It may take a few minutes for messages to reach inboxes.",
               )}
             </p>
           </div>
@@ -219,7 +336,7 @@ export const BulkEmailModal = ({
           </Button>
           <Button
             onClick={handleSend}
-            disabled={isSending || !subject.trim()}
+            disabled={isSending || !subject.trim() || isUploadingImage}
             className="gap-2 min-w-[140px]"
             size="lg"
           >

@@ -283,7 +283,7 @@ const IdentityCommitteeSection = () => {
 
         {/* ── journal banner ── */}
         <motion.a
-          href="https://spta.ksu.edu.sa/ar/node/2887"
+          href="https://www.inkwellinfinite.com/index.php/ijprp/about"
           target="_blank"
           rel="noopener noreferrer"
           initial={{ opacity: 0, y: 16 }}

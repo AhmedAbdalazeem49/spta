@@ -910,7 +910,7 @@ const MembershipsTable = ({
           <thead className="bg-muted/50 border-b border-border">
             <tr>
               {onSelectionChange && (
-                <th className="p-4 w-10">
+                <th className="p-4 w-10 whitespace-nowrap">
                   <input
                     type="checkbox"
                     className="w-4 h-4 cursor-pointer accent-primary"
@@ -923,25 +923,22 @@ const MembershipsTable = ({
                   />
                 </th>
               )}
-              <th className="text-start p-4 font-semibold text-muted-foreground">
-                #
-              </th>
-              <th className="text-start p-4 font-semibold text-muted-foreground">
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("المستخدم", "User")}
               </th>
-              <th className="text-start p-4 font-semibold text-muted-foreground">
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("رقم العضوية", "Membership No.")}
               </th>
-              <th className="text-start p-4 font-semibold text-muted-foreground">
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("النوع", "Type")}
               </th>
-              <th className="text-start p-4 font-semibold text-muted-foreground">
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("الفترة", "Period")}
               </th>
-              <th className="text-start p-4 font-semibold text-muted-foreground">
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("الحالة", "Status")}
               </th>
-              <th className="text-start p-4 font-semibold text-muted-foreground">
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("الإجراءات", "Actions")}
               </th>
             </tr>
@@ -968,17 +965,11 @@ const MembershipsTable = ({
                       />
                     </td>
                   )}
-                  <td className="p-4 text-muted-foreground text-xs">
-                    {(page - 1) * 15 + index + 1}
-                  </td>
 
                   {/* User */}
-                  <td className="p-4">
+                  <td className="p-4 whitespace-nowrap">
                     {m.user ? (
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm shrink-0">
-                          {m.user.name?.charAt(0) || "U"}
-                        </div>
                         <div>
                           <p className="font-medium text-sm">{m.user.name}</p>
                           <p className="text-xs text-muted-foreground">
@@ -992,14 +983,14 @@ const MembershipsTable = ({
                   </td>
 
                   {/* Membership number */}
-                  <td className="p-4">
-                    <span className="font-mono text-xs bg-muted px-2 py-1 rounded-md">
+                  <td className="p-4 whitespace-nowrap">
+                    <span className="font-mono text-md bg-muted px-2 py-1 rounded-md">
                       {m.membership_number}
                     </span>
                   </td>
 
                   {/* Type */}
-                  <td className="p-4">
+                  <td className="p-4 whitespace-nowrap">
                     <div className="flex items-center gap-1.5 text-sm">
                       <TypeIcon className="w-3.5 h-3.5 text-primary" />
                       {getMembershipTypeLabel(m.membership_type, isRTL)}
@@ -1007,7 +998,7 @@ const MembershipsTable = ({
                   </td>
 
                   {/* Period */}
-                  <td className="p-4">
+                  <td className="p-4 whitespace-nowrap">
                     <div className="text-xs space-y-0.5">
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Calendar className="w-3 h-3" />
@@ -1021,12 +1012,12 @@ const MembershipsTable = ({
                   </td>
 
                   {/* Status */}
-                  <td className="p-4">
+                  <td className="p-4 whitespace-nowrap">
                     <StatusBadge status={m.status} t={t} />
                   </td>
 
                   {/* Actions */}
-                  <td className="p-4">
+                  <td className="p-4 whitespace-nowrap">
                     <div className="flex items-center gap-1">
                       <Button
                         size="icon"
@@ -1095,33 +1086,6 @@ const MembershipsTable = ({
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
-      {lastPage > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-border">
-          <p className="text-sm text-muted-foreground">
-            {t("الصفحة", "Page")} {page} {t("من", "of")} {lastPage}
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPageChange(page - 1)}
-              disabled={page === 1}
-            >
-              {t("السابق", "Previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPageChange(page + 1)}
-              disabled={page === lastPage}
-            >
-              {t("التالي", "Next")}
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

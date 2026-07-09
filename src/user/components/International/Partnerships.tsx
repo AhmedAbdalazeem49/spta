@@ -67,8 +67,8 @@ export default function Partnerships() {
       color: "#10b981",
       glow: "rgba(16,185,129,0.12)",
       title: t(
-        "مجموعة العلاج الطبيعي الرياضي (Sports)",
-        "Sports Physiotherapy Group",
+        "المنظمة الدولية للعلاج الطبيعي الرياضي وعلاج التمارين",
+        "International Sports and Exercise Physiotherapy Association (ISEPA)",
       ),
       desc: t(
         "تطوير مجالات الوقاية من الإصابات الرياضية وعلاجها وإعادة التأهيل وتحسين الأداء البدني للرياضيين.",
