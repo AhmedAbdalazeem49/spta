@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Building2,
+  ChevronDown,
   Globe,
   GraduationCap,
   LogOut,
@@ -15,7 +16,9 @@ import {
   User,
   Users,
   X,
-  FileText
+  FileText,
+  Library,
+  ExternalLink,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -24,11 +27,13 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(
+    null,
+  );
   const { language, setLanguage, t, isRTL } = useLanguage();
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
@@ -50,32 +55,23 @@ const Navbar = () => {
       path: "/about",
       icon: Users,
     },
-    // {
-    //   label: t("البحث والتعليم", "Research"),
-    //   path: "/research",
-    //   icon: BookOpen,
-    //   children: [
-    //     {
-    //       label: t("مركز الأبحاث", "Research Center"),
-    //       path: "/research/center",
-    //     },
-    //     {
-    //       label: t("قواعد البيانات", "Databases"),
-    //       path: "/research/databases",
-    //     },
-    //   ],
-    // },
-    // {
-    //   label: t("المكتبة والإعلام", "Library & Media"),
-    //   path: "/library",
-    //   icon: Library,
-    //   children: [
-    //     { label: t("المكتبة", "Library"), path: "/library" },
-    //     { label: t("الكتيبات", "Booklets"), path: "/booklets" },
-    //     { label: t("المطويات", "Brochures"), path: "/brochures" },
-    //     { label: t("الفيديوهات", "Videos"), path: "/videos" },
-    //   ],
-    // },
+    {
+      label: t("المؤتمر", "Conference"),
+      path: "#",
+      icon: Library,
+      children: [
+        {
+          label: t("تقديم ورش العمل", "Workshop Submission"),
+          path: "https://sptaworkshop-mckvddhf.manus.space/",
+          external: true,
+        },
+        {
+          label: t("تقديم الملخصات", "Abstract Submission"),
+          path: "https://sptaconf-rtge7wgu.manus.space/",
+          external: true,
+        },
+      ],
+    },
     {
       label: t("العضوية", "Membership"),
       path: "/membership",
@@ -91,7 +87,6 @@ const Navbar = () => {
       path: "/card",
       icon: Users,
     },
-
     {
       label: t("المجلة العلمية", "Scientific Journal"),
       path: "/journal",
@@ -102,7 +97,6 @@ const Navbar = () => {
       path: "/contact",
       icon: Phone,
     },
-    // { label: t("تطبيق SPTA", "SPTA App"), path: "/#app", icon: Smartphone },
   ];
 
   return (
@@ -134,16 +128,20 @@ const Navbar = () => {
               const isActive =
                 location.pathname === item.path ||
                 location.pathname.startsWith(item.path + "/");
+              const hasChildren = !!item.children?.length;
 
               return (
                 <div
                   key={item.path}
                   className="relative"
+                  onMouseEnter={() =>
+                    hasChildren && setActiveDropdown(item.path)
+                  }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <Link
                     to={item.path}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-lg transition-all duration-300 ${
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : isScrolled
@@ -152,7 +150,54 @@ const Navbar = () => {
                     }`}
                   >
                     {item.label}
+                    {hasChildren && (
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          activeDropdown === item.path ? "rotate-180" : ""
+                        }`}
+                      />
+                    )}
                   </Link>
+
+                  {/* Desktop Dropdown */}
+                  <AnimatePresence>
+                    {hasChildren && activeDropdown === item.path && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.18 }}
+                        className={`absolute top-full mt-1 min-w-[220px] rounded-xl border border-border bg-background shadow-xl overflow-hidden py-1.5 ${
+                          isRTL ? "right-0" : "left-0"
+                        }`}
+                      >
+                        {item.children!.map((child) =>
+                          child.external ? (
+                            <a
+                              key={child.path}
+                              href={child.path}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setActiveDropdown(null)}
+                              className="flex items-center justify-between gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors"
+                            >
+                              <span>{child.label}</span>
+                              <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                            </a>
+                          ) : (
+                            <Link
+                              key={child.path}
+                              to={child.path}
+                              onClick={() => setActiveDropdown(null)}
+                              className="flex items-center px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors"
+                            >
+                              {child.label}
+                            </Link>
+                          ),
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}
@@ -171,7 +216,6 @@ const Navbar = () => {
                       className="gap-1.5 text-primary"
                     >
                       <Shield className="w-4 h-4" />
-                      {/* {t("لوحة التحكم", "Admin")} */}
                     </Button>
                   </Link>
                 )}
@@ -239,7 +283,7 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden" 
+              className="lg:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? (
@@ -302,22 +346,86 @@ const Navbar = () => {
                     const isActive =
                       location.pathname === item.path ||
                       location.pathname.startsWith(item.path + "/");
+                    const hasChildren = !!item.children?.length;
+                    const isSubmenuOpen = openMobileSubmenu === item.path;
 
                     return (
                       <div key={item.path} className="space-y-1">
-                        <button
-                          onClick={() => {
-                            navigate(item.path);
-                            setIsMobileMenuOpen(false);
-                          }}
-                          className={`w-full flex items-center px-4 py-3 rounded-lg font-medium transition ${
+                        <div
+                          className={`w-full flex items-center rounded-lg font-medium transition ${
                             isActive
                               ? "bg-primary text-primary-foreground"
                               : "hover:bg-secondary"
                           }`}
                         >
-                          <span>{item.label}</span>
-                        </button>
+                          <button
+                            onClick={() => {
+                              navigate(item.path);
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="flex-1 flex items-center px-4 py-3 text-start"
+                          >
+                            <span>{item.label}</span>
+                          </button>
+
+                          {hasChildren && (
+                            <button
+                              onClick={() =>
+                                setOpenMobileSubmenu(
+                                  isSubmenuOpen ? null : item.path,
+                                )
+                              }
+                              className="px-3 py-3"
+                              aria-label="Toggle submenu"
+                            >
+                              <ChevronDown
+                                className={`w-4 h-4 transition-transform duration-200 ${
+                                  isSubmenuOpen ? "rotate-180" : ""
+                                }`}
+                              />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Mobile Submenu */}
+                        <AnimatePresence>
+                          {hasChildren && isSubmenuOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className={`overflow-hidden ${
+                                isRTL ? "pr-4" : "pl-4"
+                              }`}
+                            >
+                              {item.children!.map((child) =>
+                                child.external ? (
+                                  <a
+                                    key={child.path}
+                                    href={child.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="flex items-center justify-between gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:bg-secondary rounded-lg transition-colors"
+                                  >
+                                    <span>{child.label}</span>
+                                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                                  </a>
+                                ) : (
+                                  <Link
+                                    key={child.path}
+                                    to={child.path}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="flex items-center px-4 py-2.5 text-sm text-muted-foreground hover:bg-secondary rounded-lg transition-colors"
+                                  >
+                                    {child.label}
+                                  </Link>
+                                ),
+                              )}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     );
                   })}
