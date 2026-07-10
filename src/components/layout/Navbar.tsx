@@ -56,21 +56,9 @@ const Navbar = () => {
       icon: Users,
     },
     {
-      label: t("المؤتمر", "Conference"),
-      path: "#",
+      label: t("المؤتمرات", "Conferences"),
+      path: "/conferences",
       icon: Library,
-      children: [
-        {
-          label: t("تقديم ورش العمل", "Workshop Submission"),
-          path: "https://sptaworkshop-mckvddhf.manus.space/",
-          external: true,
-        },
-        {
-          label: t("تقديم الملخصات", "Abstract Submission"),
-          path: "https://sptaconf-rtge7wgu.manus.space/",
-          external: true,
-        },
-      ],
     },
     {
       label: t("العضوية", "Membership"),

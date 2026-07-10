@@ -12,6 +12,7 @@ import Conference2 from "@/assets/con-2.jpg";
 import Conference3 from "@/assets/con-3.jpg";
 import Conference4 from "@/assets/con-4.jpeg";
 import Conference5 from "@/assets/con-5.jpg";
+import ConferenceSubmissionBanner from "../components/conference/ConferenceSubmissionBanner";
 
 const allConferences = [
   {
@@ -152,6 +153,8 @@ const ConferencesPage = () => {
           </motion.div>
         </div>
       </section>
+
+      <ConferenceSubmissionBanner />
 
       <div className="container mx-auto px-4 py-14 space-y-6">
         {/* ── HERO CARD — full-bleed tall ── */}
