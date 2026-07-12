@@ -19,6 +19,7 @@ import {
   Shield,
   Sparkles,
   Users,
+  Share2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResearchPublishCTA from "../components/Research/ResearchPublishCTA";
@@ -29,6 +30,7 @@ interface ResearchItem {
   title: string;
   type: "research" | "questionnaire";
   link: string;
+  image?: string | null;
   created_at: string;
 }
 
@@ -58,6 +60,10 @@ const EmpiricalResearchPage = () => {
       try {
         setIsLoading(true);
         const params = new URLSearchParams();
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        if (id) params.append("id", id);
+
         if (searchQuery) params.append("search", searchQuery);
         if (activeTab !== "all") params.append("type", activeTab);
 
@@ -405,24 +411,50 @@ const EmpiricalResearchPage = () => {
                               </span>
                             </div>
 
-                            <h3 className="text-lg md:text-xl font-bold leading-snug group-hover:text-primary transition-colors duration-300 line-clamp-2 pr-4">
-                              {item.title}
-                            </h3>
+                            <div className="flex gap-4">
+                              {item.image && (
+                                <img
+                                  src={`${import.meta.env.VITE_API_URL}/storage/${item.image}`}
+                                  alt={item.title}
+                                  className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl border flex-shrink-0"
+                                />
+                              )}
+                              <div>
+                                <h3 className="text-lg md:text-xl font-bold leading-snug group-hover:text-primary transition-colors duration-300 line-clamp-2 pr-4 mb-2">
+                                  {item.title}
+                                </h3>
 
-                            <p className="text-sm text-muted-foreground line-clamp-1">
-                              {isResearch
-                                ? t(
-                                    "انقر للمشاركة في هذا البحث التجريبي المعتمد من لجنة الأخلاقيات",
-                                    "Click to participate in this ethics-approved empirical study",
-                                  )
-                                : t(
-                                    "أجب على أسئلة الاستبيان وساعد الباحثين في جمع البيانات",
-                                    "Complete the questionnaire and help researchers gather valuable data",
-                                  )}
-                            </p>
+                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                  {isResearch
+                                    ? t(
+                                        "انقر للمشاركة في هذا البحث التجريبي المعتمد من لجنة الأخلاقيات",
+                                        "Click to participate in this ethics-approved empirical study",
+                                      )
+                                    : t(
+                                        "أجب على أسئلة الاستبيان وساعد الباحثين في جمع البيانات",
+                                        "Complete the questionnaire and help researchers gather valuable data",
+                                      )}
+                                </p>
+                              </div>
+                            </div>
                           </div>
 
-                          <div className="shrink-0">
+                          <div className="shrink-0 flex items-center gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(`${window.location.origin}/research/empirical?id=${item.id}`);
+                                toast({
+                                  title: t("تم النسخ", "Copied"),
+                                  description: t("تم نسخ الرابط بنجاح", "Link copied successfully"),
+                                });
+                              }}
+                              className="flex items-center justify-center p-2.5 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors border"
+                              title={t("نسخ الرابط", "Copy Link")}
+                            >
+                              <Share2 className="w-5 h-5" />
+                            </button>
                             <motion.div
                               animate={
                                 isHovered ? { scale: 1.04 } : { scale: 1 }

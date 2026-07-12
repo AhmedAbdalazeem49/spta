@@ -46,6 +46,7 @@ export interface ResearchItem {
   title: string;
   type: "research" | "questionnaire";
   link: string;
+  image?: string | null;
   created_at: string;
 }
 
@@ -70,10 +71,11 @@ const AdminResearchPage = () => {
   
   const [selectedItem, setSelectedItem] = useState<ResearchItem | null>(null);
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{ title: string; type: string; link: string; image: File | null }>({
     title: "",
     type: "research",
     link: "",
+    image: null,
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -122,7 +124,16 @@ const AdminResearchPage = () => {
 
     try {
       setIsSaving(true);
-      await api.post("/admin/research-items", form);
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("type", form.type);
+      formData.append("link", form.link);
+      if (form.image) {
+        formData.append("image", form.image);
+      }
+      await api.post("/admin/research-items", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast({
         title: t("تم بنجاح", "Success"),
         description: t("تمت الإضافة بنجاح", "Added successfully"),
@@ -146,7 +157,17 @@ const AdminResearchPage = () => {
 
     try {
       setIsSaving(true);
-      await api.put(`/admin/research-items/${selectedItem.id}`, form);
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("type", form.type);
+      formData.append("link", form.link);
+      formData.append("_method", "PUT");
+      if (form.image) {
+        formData.append("image", form.image);
+      }
+      await api.post(`/admin/research-items/${selectedItem.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast({
         title: t("تم بنجاح", "Success"),
         description: t("تم التحديث بنجاح", "Updated successfully"),
@@ -187,13 +208,13 @@ const AdminResearchPage = () => {
   };
 
   const openAdd = () => {
-    setForm({ title: "", type: "research", link: "" });
+    setForm({ title: "", type: "research", link: "", image: null });
     setIsAddOpen(true);
   };
 
   const openEdit = (item: ResearchItem) => {
     setSelectedItem(item);
-    setForm({ title: item.title, type: item.type, link: item.link });
+    setForm({ title: item.title, type: item.type, link: item.link, image: null });
     setIsEditOpen(true);
   };
 
@@ -404,6 +425,20 @@ const AdminResearchPage = () => {
                 placeholder="https://..."
                 dir="ltr"
               />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("الصورة (اختياري)", "Image (Optional)")}</Label>
+              <div className="flex items-center gap-4">
+                {selectedItem?.image && !form.image && (
+                  <img src={`${import.meta.env.VITE_API_URL}/storage/${selectedItem.image}`} alt="Current" className="w-12 h-12 rounded object-cover border" />
+                )}
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => setForm({...form, image: e.target.files ? e.target.files[0] : null})}
+                  className="cursor-pointer"
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-2 pt-4">
               <Button type="button" variant="outline" onClick={() => { setIsAddOpen(false); setIsEditOpen(false); }}>
