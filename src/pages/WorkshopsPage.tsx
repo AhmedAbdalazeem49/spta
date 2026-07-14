@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -10,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -27,14 +27,14 @@ import {
   GraduationCap,
   ImageOff,
   MapPin,
+  Maximize2,
   Percent,
   Search,
+  Share2,
   UserCircle,
   Users,
   Video,
   XCircle,
-  Maximize2,
-  Share2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -71,7 +71,7 @@ const WorkshopsPage = () => {
     setIsLoadingWorkshops(true);
     try {
       const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
+      const id = urlParams.get("id");
       const query = id ? `?id=${id}` : "";
       const res = await api.get(`/workshops${query}`);
       setWorkshops(res.data.data ?? res.data ?? []);
@@ -102,13 +102,13 @@ const WorkshopsPage = () => {
     AOS.init({ duration: 800, once: true });
     fetchWorkshops();
     fetchMyWorkshops();
-    
+
     // Check for shared workshop id
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    const id = params.get("id");
     if (id) {
       setTimeout(() => {
-        const found = workshops.find(w => w.id.toString() === id);
+        const found = workshops.find((w) => w.id.toString() === id);
         if (found) setDetailsWorkshop(found);
       }, 1000);
     }
@@ -348,7 +348,7 @@ const WorkshopsPage = () => {
                         >
                           <div className="relative h-full flex flex-col rounded-2xl border bg-card overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/30">
                             {/* ── Cover image ─────────────────────────────────────── */}
-                            <div 
+                            <div
                               className="relative h-52 w-full overflow-hidden bg-muted shrink-0 group/img cursor-pointer"
                               onClick={() => setDetailsWorkshop(workshop)}
                             >
@@ -386,7 +386,9 @@ const WorkshopsPage = () => {
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                 <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 text-white">
                                   <Maximize2 className="w-4 h-4" />
-                                  <span className="text-sm font-medium">{t("عرض التفاصيل", "View Details")}</span>
+                                  <span className="text-sm font-medium">
+                                    {t("عرض التفاصيل", "View Details")}
+                                  </span>
                                 </div>
                               </div>
 
@@ -395,10 +397,15 @@ const WorkshopsPage = () => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    navigator.clipboard.writeText(`${window.location.origin}/workshops?id=${workshop.id}`);
+                                    navigator.clipboard.writeText(
+                                      `${window.location.origin}/workshops?id=${workshop.id}`,
+                                    );
                                     toast({
                                       title: t("تم النسخ", "Copied"),
-                                      description: t("تم نسخ الرابط بنجاح", "Link copied successfully"),
+                                      description: t(
+                                        "تم نسخ الرابط بنجاح",
+                                        "Link copied successfully",
+                                      ),
                                     });
                                   }}
                                   className="bg-black/20 hover:bg-black/40 backdrop-blur-md p-2 rounded-full text-white transition-colors"
@@ -492,6 +499,15 @@ const WorkshopsPage = () => {
                                       <Clock className="w-3.5 h-3.5 text-primary" />
                                     </div>
                                     <span>{workshop.time.slice(0, 5)}</span>
+                                  </div>
+                                )}
+
+                                {workshop.workshop_hours && (
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                                      <Clock className="w-3.5 h-3.5 text-primary" />
+                                    </div>
+                                    <span>{workshop.workshop_hours} {isRTL ? 'ساعات' : 'Hours'}</span>
                                   </div>
                                 )}
 
@@ -688,78 +704,25 @@ const WorkshopsPage = () => {
       />
 
       {/* ── Details Modal ── */}
-      <Dialog open={!!detailsWorkshop} onOpenChange={(open) => !open && setDetailsWorkshop(null)}>
-        <DialogContent className="max-w-3xl p-0 overflow-hidden">
+      <Dialog
+        open={!!detailsWorkshop}
+        onOpenChange={(open) => !open && setDetailsWorkshop(null)}
+      >
+        <DialogContent className="p-0 overflow-hidden">
           {detailsWorkshop && (
-            <div className="flex flex-col">
-              <div className="relative h-64 sm:h-80 w-full bg-muted">
+              <div className="relative h-auto w-auto">
                 {getWorkshopImage(detailsWorkshop) ? (
                   <img
                     src={getWorkshopImage(detailsWorkshop) || ""}
                     alt={detailsWorkshop.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <ImageOff className="w-12 h-12 text-primary/20" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                <div className="absolute bottom-4 start-4 end-4">
-                  <h2 className="text-2xl font-bold text-white mb-3">{detailsWorkshop.title}</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {getStatusBadge(detailsWorkshop.status)}
-                    <Badge variant="outline" className="text-white border-white/30 bg-white/10">
-                      {detailsWorkshop.attendance_type === "online" ? t("أونلاين", "Online") : t("حضوري", "In Person")}
-                    </Badge>
-                  </div>
-                </div>
               </div>
-              <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
-                {detailsWorkshop.description && (
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2">{t("الوصف", "Description")}</h3>
-                    <p className="text-muted-foreground whitespace-pre-wrap">{detailsWorkshop.description}</p>
-                  </div>
-                )}
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-muted/30 p-4 rounded-xl border">
-                  <div className="space-y-1">
-                    <span className="text-sm text-muted-foreground">{t("التاريخ", "Date")}</span>
-                    <p className="font-medium">{new Date(detailsWorkshop.date).toLocaleDateString()}</p>
-                  </div>
-                  {detailsWorkshop.time && (
-                    <div className="space-y-1">
-                      <span className="text-sm text-muted-foreground">{t("الوقت", "Time")}</span>
-                      <p className="font-medium">{detailsWorkshop.time.slice(0, 5)}</p>
-                    </div>
-                  )}
-                  <div className="space-y-1">
-                    <span className="text-sm text-muted-foreground">{t("المكان", "Location")}</span>
-                    <p className="font-medium line-clamp-1" title={detailsWorkshop.location}>{detailsWorkshop.location}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-sm text-muted-foreground">{t("المقاعد", "Capacity")}</span>
-                    <p className="font-medium">{detailsWorkshop.total_capacity}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <Button variant="outline" onClick={() => setDetailsWorkshop(null)}>
-                    {t("إغلاق", "Close")}
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      setDetailsWorkshop(null);
-                      openRegistration(detailsWorkshop);
-                    }}
-                    disabled={detailsWorkshop.status !== "open"}
-                  >
-                    {t("سجّل الآن", "Register Now")}
-                  </Button>
-                </div>
-              </div>
-            </div>
           )}
         </DialogContent>
       </Dialog>

@@ -32,6 +32,7 @@ interface WorkshopRegistration {
     date?: string;
     end_date?: string;
     time?: string;
+    workshop_hours?: string;
     regular_price?: string;
     member_price?: string;
     total_capacity?: number;
@@ -239,10 +240,10 @@ export default function WorkshopsTab() {
                           {reg.workshop.time}
                         </div>
                       )}
-                      {reg.workshop.total_capacity && (
+                      {reg.workshop.workshop_hours && (
                         <div className="rounded-xl bg-background border border-border/40 p-3 hover:shadow-md hover:bg-muted/30 transition-all flex items-center gap-2 text-xs">
-                          <Users className="w-4 h-4 text-primary" />
-                          {reg.workshop.total_capacity} seats
+                          <Clock className="w-4 h-4 text-primary" />
+                          {reg.workshop.workshop_hours} hours
                         </div>
                       )}
                       {reg.workshop.location && (

@@ -10,6 +10,8 @@ export interface Workshop {
   regular_price: string | number;
   member_price: string | number;
   total_capacity: number;
+  workshop_hours?: number;
+  subscribers_count?: number;
   registered_count?: number;
   status: "open" | "closed" | "completed" | "postponed";
   image?: string | null;

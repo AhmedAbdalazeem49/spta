@@ -231,7 +231,10 @@ const AdminResearchPage = () => {
             {t("الأبحاث والاستبيانات", "Research & Questionnaires")}
           </h2>
           <p className="text-muted-foreground mt-1">
-            {t("إدارة الأبحاث التجريبية والاستبيانات البحثية", "Manage empirical research and questionnaires")}
+            {t(
+              "إدارة الأبحاث التجريبية والاستبيانات البحثية",
+              "Manage empirical research and questionnaires",
+            )}
           </p>
         </div>
         <Button onClick={openAdd} className="gap-2">
@@ -263,7 +266,9 @@ const AdminResearchPage = () => {
               <SelectContent>
                 <SelectItem value="all">{t("الكل", "All")}</SelectItem>
                 <SelectItem value="research">{t("بحث", "Research")}</SelectItem>
-                <SelectItem value="questionnaire">{t("استبيان", "Questionnaire")}</SelectItem>
+                <SelectItem value="questionnaire">
+                  {t("استبيان", "Questionnaire")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -284,17 +289,27 @@ const AdminResearchPage = () => {
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 border-b">
                   <tr>
-                    <th className="text-start p-4 font-semibold text-muted-foreground">#</th>
-                    <th className="text-start p-4 font-semibold text-muted-foreground">{t("العنوان", "Title")}</th>
-                    <th className="text-start p-4 font-semibold text-muted-foreground">{t("النوع", "Type")}</th>
-                    <th className="text-start p-4 font-semibold text-muted-foreground">{t("الرابط", "Link")}</th>
-                    <th className="text-start p-4 font-semibold text-muted-foreground">{t("الإجراءات", "Actions")}</th>
+                    <th className="text-start p-4 font-semibold text-muted-foreground">
+                      #
+                    </th>
+                    <th className="text-start p-4 font-semibold text-muted-foreground">
+                      {t("العنوان", "Title")}
+                    </th>
+                    <th className="text-start p-4 font-semibold text-muted-foreground">
+                      {t("النوع", "Type")}
+                    </th>
+                    <th className="text-start p-4 font-semibold text-muted-foreground">
+                      {t("الرابط", "Link")}
+                    </th>
+                    <th className="text-start p-4 font-semibold text-muted-foreground">
+                      {t("الإجراءات", "Actions")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
                   <AnimatePresence>
                     {items.map((item, index) => (
-                      <motion.tr 
+                      <motion.tr
                         key={item.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -303,18 +318,25 @@ const AdminResearchPage = () => {
                         <td className="p-4 text-muted-foreground text-xs">
                           {(page - 1) * 15 + index + 1}
                         </td>
-                        <td className="p-4 font-medium max-w-[300px] truncate" title={item.title}>
+                        <td
+                          className="p-4 font-medium max-w-[300px] truncate"
+                          title={item.title}
+                        >
                           {item.title}
                         </td>
                         <td className="p-4">
-                          <Badge variant={item.type === 'research' ? 'default' : 'secondary'}>
+                          <Badge
+                            variant={
+                              item.type === "research" ? "default" : "secondary"
+                            }
+                          >
                             {getTypeLabel(item.type)}
                           </Badge>
                         </td>
                         <td className="p-4">
-                          <a 
-                            href={item.link} 
-                            target="_blank" 
+                          <a
+                            href={item.link}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline flex items-center gap-1 text-xs"
                           >
@@ -352,7 +374,7 @@ const AdminResearchPage = () => {
               </table>
             </div>
           )}
-          
+
           {/* Pagination */}
           {!isLoading && lastPage > 1 && (
             <div className="flex items-center justify-center gap-2 p-4 border-t">
@@ -360,7 +382,7 @@ const AdminResearchPage = () => {
                 variant="outline"
                 size="sm"
                 disabled={page === 1}
-                onClick={() => setPage(p => p - 1)}
+                onClick={() => setPage((p) => p - 1)}
               >
                 {t("السابق", "Previous")}
               </Button>
@@ -371,7 +393,7 @@ const AdminResearchPage = () => {
                 variant="outline"
                 size="sm"
                 disabled={page === lastPage}
-                onClick={() => setPage(p => p + 1)}
+                onClick={() => setPage((p) => p + 1)}
               >
                 {t("التالي", "Next")}
               </Button>
@@ -381,37 +403,50 @@ const AdminResearchPage = () => {
       </Card>
 
       {/* Add / Edit Modal */}
-      <Dialog open={isAddOpen || isEditOpen} onOpenChange={(val) => {
-        if (!val) {
-          setIsAddOpen(false);
-          setIsEditOpen(false);
-        }
-      }}>
+      <Dialog
+        open={isAddOpen || isEditOpen}
+        onOpenChange={(val) => {
+          if (!val) {
+            setIsAddOpen(false);
+            setIsEditOpen(false);
+          }
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
               {isEditOpen ? t("تعديل", "Edit") : t("إضافة جديد", "Add New")}
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={isEditOpen ? handleEdit : handleAdd} className="space-y-4 pt-4">
+          <form
+            onSubmit={isEditOpen ? handleEdit : handleAdd}
+            className="space-y-4 pt-4"
+          >
             <div className="space-y-2">
               <Label>{t("العنوان", "Title")}</Label>
               <Input
                 required
                 value={form.title}
-                onChange={e => setForm({...form, title: e.target.value})}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
                 placeholder={t("أدخل العنوان...", "Enter title...")}
               />
             </div>
             <div className="space-y-2">
               <Label>{t("النوع", "Type")}</Label>
-              <Select value={form.type} onValueChange={v => setForm({...form, type: v})}>
+              <Select
+                value={form.type}
+                onValueChange={(v) => setForm({ ...form, type: v })}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="research">{t("بحث", "Research")}</SelectItem>
-                  <SelectItem value="questionnaire">{t("استبيان", "Questionnaire")}</SelectItem>
+                  <SelectItem value="research">
+                    {t("بحث", "Research")}
+                  </SelectItem>
+                  <SelectItem value="questionnaire">
+                    {t("استبيان", "Questionnaire")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -421,7 +456,7 @@ const AdminResearchPage = () => {
                 required
                 type="url"
                 value={form.link}
-                onChange={e => setForm({...form, link: e.target.value})}
+                onChange={(e) => setForm({ ...form, link: e.target.value })}
                 placeholder="https://..."
                 dir="ltr"
               />
@@ -430,18 +465,34 @@ const AdminResearchPage = () => {
               <Label>{t("الصورة (اختياري)", "Image (Optional)")}</Label>
               <div className="flex items-center gap-4">
                 {selectedItem?.image && !form.image && (
-                  <img src={`${import.meta.env.VITE_API_URL}/storage/${selectedItem.image}`} alt="Current" className="w-12 h-12 rounded object-cover border" />
+                  <img
+                    src={`${import.meta.env.VITE_Storage_URL}/storage/${selectedItem.image}`}
+                    alt="Current"
+                    className="w-12 h-12 rounded object-cover border"
+                  />
                 )}
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={e => setForm({...form, image: e.target.files ? e.target.files[0] : null})}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      image: e.target.files ? e.target.files[0] : null,
+                    })
+                  }
                   className="cursor-pointer"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => { setIsAddOpen(false); setIsEditOpen(false); }}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsAddOpen(false);
+                  setIsEditOpen(false);
+                }}
+              >
                 {t("إلغاء", "Cancel")}
               </Button>
               <Button type="submit" disabled={isSaving}>
@@ -457,13 +508,20 @@ const AdminResearchPage = () => {
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("هل أنت متأكد؟", "Are you sure?")}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("هل أنت متأكد؟", "Are you sure?")}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {t("لا يمكن التراجع عن هذا الإجراء.", "This action cannot be undone.")}
+              {t(
+                "لا يمكن التراجع عن هذا الإجراء.",
+                "This action cannot be undone.",
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>{t("إلغاء", "Cancel")}</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>
+              {t("إلغاء", "Cancel")}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault();
@@ -472,7 +530,11 @@ const AdminResearchPage = () => {
               disabled={isDeleting}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : t("حذف نهائي", "Delete Permanently")}
+              {isDeleting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                t("حذف نهائي", "Delete Permanently")
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

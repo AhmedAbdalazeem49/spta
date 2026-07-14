@@ -42,6 +42,7 @@ export const emptyWorkshopForm = {
   regular_price: "",
   member_price: "",
   total_capacity: "",
+  workshop_hours: "",
   status: "open" as "open" | "closed" | "completed" | "postponed",
   image: null as File | null,
   partner_logo: null as File | null,
@@ -148,9 +149,17 @@ function validate(
     );
 
   if (!form.total_capacity)
-    errors.total_capacity = t("عدد الساعات مطلوب", "Hours is required");
+    errors.total_capacity = t("عدد الحضور مطلوب", "Capacity is required");
   else if (Number(form.total_capacity) < 1)
     errors.total_capacity = t(
+      "يجب أن يكون عدد الحضور 1 على الأقل",
+      "Capacity must be ≥ 1",
+    );
+
+  if (!form.workshop_hours)
+    errors.workshop_hours = t("عدد الساعات مطلوب", "Hours is required");
+  else if (Number(form.workshop_hours) < 1)
+    errors.workshop_hours = t(
       "يجب أن يكون عدد الساعات 1 على الأقل",
       "Hours must be ≥ 1",
     );
@@ -377,6 +386,7 @@ export const WorkshopFormModal = ({
     fd.append("regular_price", form.regular_price);
     fd.append("member_price", form.member_price);
     fd.append("total_capacity", form.total_capacity);
+    fd.append("workshop_hours", form.workshop_hours);
     fd.append("status", form.status);
     fd.append("attendance_type", form.attendance_type);
     if (form.meeting_link) {
@@ -418,8 +428,9 @@ export const WorkshopFormModal = ({
     form.regular_price,
     form.member_price,
     form.total_capacity,
+    form.workshop_hours,
   ].filter(Boolean).length;
-  const progress = Math.round((completedFields / 9) * 100);
+  const progress = Math.round((completedFields / 10) * 100);
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
@@ -723,7 +734,7 @@ export const WorkshopFormModal = ({
               </Field>
 
               <Field
-                label={t("عدد الساعات", "Hours")}
+                label={t("عدد الحضور", "Capacity")}
                 error={err("total_capacity")}
                 required
                 icon={<Users className="w-3 h-3" />}
@@ -736,6 +747,23 @@ export const WorkshopFormModal = ({
                   onChange={(e) => update("total_capacity", e.target.value)}
                   onBlur={() => touch("total_capacity")}
                   placeholder="30"
+                />
+              </Field>
+
+              <Field
+                label={t("عدد الساعات", "Hours")}
+                error={err("workshop_hours")}
+                required
+                icon={<Clock className="w-3 h-3" />}
+              >
+                <input
+                  type="number"
+                  min={1}
+                  className={cls("workshop_hours")}
+                  value={form.workshop_hours}
+                  onChange={(e) => update("workshop_hours", e.target.value)}
+                  onBlur={() => touch("workshop_hours")}
+                  placeholder="4"
                 />
               </Field>
             </div>

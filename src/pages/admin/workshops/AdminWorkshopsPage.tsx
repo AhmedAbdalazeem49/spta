@@ -82,6 +82,7 @@ const AdminWorkshopsPage = () => {
       regular_price: String(w.regular_price || ""),
       member_price: String(w.member_price || ""),
       total_capacity: String(w.total_capacity || ""),
+      workshop_hours: String(w.workshop_hours || ""),
       status: w.status || "open",
       attendance_type: w.attendance_type || "in_person",
       meeting_link: w.meeting_link || "",

@@ -414,7 +414,7 @@ const EmpiricalResearchPage = () => {
                             <div className="flex gap-4">
                               {item.image && (
                                 <img
-                                  src={`${import.meta.env.VITE_API_URL}/storage/${item.image}`}
+                                  src={`${import.meta.env.VITE_Storage_URL}/storage/${item.image}`}
                                   alt={item.title}
                                   className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl border flex-shrink-0"
                                 />
@@ -444,10 +444,15 @@ const EmpiricalResearchPage = () => {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                navigator.clipboard.writeText(`${window.location.origin}/research/empirical?id=${item.id}`);
+                                navigator.clipboard.writeText(
+                                  `${window.location.origin}/research/empirical?id=${item.id}`,
+                                );
                                 toast({
                                   title: t("تم النسخ", "Copied"),
-                                  description: t("تم نسخ الرابط بنجاح", "Link copied successfully"),
+                                  description: t(
+                                    "تم نسخ الرابط بنجاح",
+                                    "Link copied successfully",
+                                  ),
                                 });
                               }}
                               className="flex items-center justify-center p-2.5 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors border"
