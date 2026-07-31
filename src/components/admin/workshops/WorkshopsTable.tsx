@@ -104,10 +104,20 @@ export const WorkshopsTable = ({
                         SAR
                       </span>
                     </span>
+
                     {w.member_price !== undefined &&
                       w.member_price !== w.regular_price && (
                         <span className="text-xs text-muted-foreground">
                           {t("أعضاء", "Members")}: {w.member_price} SAR
+                        </span>
+                      )}
+
+                    {w.student_price !== undefined &&
+                      w.student_price !== null &&
+                      w.student_price !== w.regular_price && (
+                        <span className="text-xs text-muted-foreground">
+                          {t("الطلاب الأعضاء", "Student Members")}:{" "}
+                          {w.student_price} SAR
                         </span>
                       )}
                   </div>

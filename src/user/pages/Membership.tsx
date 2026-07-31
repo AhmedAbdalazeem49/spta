@@ -5,15 +5,12 @@ import { useNavigate } from "react-router-dom";
 import type { Plan } from "../components/Membership/Plans";
 
 import Benefits from "@/user/components/Membership/Benefits";
-import GeographicalDistribution from "@/user/components/Membership/GeographicalDistribution";
 import Hero from "@/user/components/Membership/Hero";
-import Stats from "@/user/components/Membership/Stats";
-import HeroCount from "../components/Membership/HeroCount";
 import Plans from "../components/Membership/Plans";
 
 const Membership = () => {
   const { t, isRTL } = useLanguage();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
   const handleSelectPlan = (plan: Plan) => {
@@ -56,13 +53,14 @@ const Membership = () => {
             <p className="text-muted-foreground mt-2">
               {t(
                 "اختر الخطة المناسبة لك حسب مستواك",
-                "Choose the plan that fits your level"
+                "Choose the plan that fits your level",
               )}
             </p>
           </div>
 
           <Plans
             t={t}
+            user={user}
             isRTL={isRTL}
             onSelect={(plan: Plan) => handleSelectPlan(plan)}
           />

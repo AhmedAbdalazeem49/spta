@@ -40,6 +40,7 @@ export const emptyWorkshopForm = {
   end_date: "",
   time: "",
   regular_price: "",
+  student_price: "",
   member_price: "",
   total_capacity: "",
   workshop_hours: "",
@@ -90,10 +91,6 @@ function validate(
   if (!form.description.trim())
     errors.description = t("الوصف مطلوب", "Description is required");
 
-  if (!form.doctor_name.trim())
-    errors.doctor_name = t("اسم الطبيب مطلوب", "Doctor name is required");
-  else if (form.doctor_name.length > 255)
-    errors.doctor_name = t("الحد الأقصى 255 حرف", "Max 255 characters");
 
   if (!form.location.trim())
     errors.location = t("الموقع مطلوب", "Location is required");
@@ -384,6 +381,7 @@ export const WorkshopFormModal = ({
     fd.append("end_date", form.end_date);
     fd.append("time", form.time);
     fd.append("regular_price", form.regular_price);
+    fd.append("student_price", form.student_price);
     fd.append("member_price", form.member_price);
     fd.append("total_capacity", form.total_capacity);
     fd.append("workshop_hours", form.workshop_hours);
@@ -426,6 +424,7 @@ export const WorkshopFormModal = ({
     form.end_date,
     form.time,
     form.regular_price,
+    form.student_price,
     form.member_price,
     form.total_capacity,
     form.workshop_hours,
@@ -520,7 +519,6 @@ export const WorkshopFormModal = ({
               <Field
                 label={t("الطبيب المسؤول", "Doctor Name")}
                 error={err("doctor_name")}
-                required
                 icon={<Stethoscope className="w-3 h-3" />}
               >
                 <input
@@ -729,6 +727,27 @@ export const WorkshopFormModal = ({
                   value={form.member_price}
                   onChange={(e) => update("member_price", e.target.value)}
                   onBlur={() => touch("member_price")}
+                  placeholder="0.00"
+                />
+              </Field>
+
+              <Field
+                label={t(
+                  "سعر الطلاب الأعضاء (ر.س)",
+                  "Student Member Price (SAR)",
+                )}
+                error={err("student_price")}
+                required={false}
+                icon={<DollarSign className="w-3 h-3" />}
+              >
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  className={cls("student_price")}
+                  value={form.student_price}
+                  onChange={(e) => update("student_price", e.target.value)}
+                  onBlur={() => touch("student_price")}
                   placeholder="0.00"
                 />
               </Field>

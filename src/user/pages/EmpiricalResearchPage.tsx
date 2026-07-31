@@ -11,6 +11,7 @@ import {
   ArrowUpRight,
   BookOpen,
   CalendarDays,
+  Clipboard,
   ClipboardList,
   ExternalLink,
   FileText,
@@ -19,9 +20,9 @@ import {
   Shield,
   Sparkles,
   Users,
-  Share2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ResearchPublishCTA from "../components/Research/ResearchPublishCTA";
 import ResearchPublishModal from "../components/Research/ResearchPublishModal";
 
@@ -42,6 +43,7 @@ interface Stats {
 const EmpiricalResearchPage = () => {
   const { t, isRTL } = useLanguage();
   const { toast } = useToast();
+  const location = useLocation();
 
   const [items, setItems] = useState<ResearchItem[]>([]);
   const [stats, setStats] = useState<Stats>({
@@ -61,7 +63,7 @@ const EmpiricalResearchPage = () => {
         setIsLoading(true);
         const params = new URLSearchParams();
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = urlParams.get("id");
         if (id) params.append("id", id);
 
         if (searchQuery) params.append("search", searchQuery);
@@ -87,6 +89,16 @@ const EmpiricalResearchPage = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery, activeTab, toast, t]);
+
+  useEffect(() => {
+    if (location.hash !== "#shared") return;
+
+    const timer = setTimeout(() => {
+      document.getElementById("shared")?.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [location.hash, items]);
 
   const formatDate = (dateString: string) => {
     try {
@@ -249,6 +261,7 @@ const EmpiricalResearchPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center mb-10"
+            id="shared"
           >
             <div className="flex bg-muted/60 p-1.5 rounded-2xl w-full md:w-auto gap-1 border">
               {[
@@ -445,7 +458,7 @@ const EmpiricalResearchPage = () => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 navigator.clipboard.writeText(
-                                  `${window.location.origin}/research/empirical?id=${item.id}`,
+                                  `${window.location.origin}/research/empirical?id=${item.id}#shared`,
                                 );
                                 toast({
                                   title: t("تم النسخ", "Copied"),
@@ -458,7 +471,7 @@ const EmpiricalResearchPage = () => {
                               className="flex items-center justify-center p-2.5 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors border"
                               title={t("نسخ الرابط", "Copy Link")}
                             >
-                              <Share2 className="w-5 h-5" />
+                              <Clipboard className="w-5 h-5" />
                             </button>
                             <motion.div
                               animate={

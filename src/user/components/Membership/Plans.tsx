@@ -1,3 +1,4 @@
+import type { User } from "@/types";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 
@@ -122,16 +123,21 @@ export default function Plans({
   t,
   isRTL,
   onSelect,
+  user,
 }: {
   t: (ar: string, en: string) => string;
   isRTL: boolean;
+  user: User | null;
   onSelect: (plan: Plan) => void;
 }) {
+  const hasClassificationNumber = !!user?.classification_number;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
       {plans.map((plan, index) => {
         const style = planStyles[plan.key];
+        const isStudentPlan = plan.key === "student" || plan.key === "intern";
 
+        const isDisabled = hasClassificationNumber && isStudentPlan;
         return (
           <motion.div
             key={plan.key}
@@ -223,24 +229,49 @@ export default function Plans({
                     <ArrowRight className="w-4 h-4" />
                   </a>
                 ) : (
-                  <button
-                    onClick={() => onSelect(plan)}
-                    className={`
-      relative overflow-hidden w-full rounded-2xl px-6 py-4
-      font-semibold text-white transition-all duration-300
-      bg-gradient-to-r ${style.accent}
-      hover:scale-[1.02] active:scale-[0.98]
-      shadow-lg
-    `}
-                  >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      {t("اشترك الآن", "Register Now")}
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
+                  <>
+                    <button
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          onSelect(plan);
+                        }
+                      }}
+                      className={`
+        relative overflow-hidden w-full rounded-2xl px-6 py-4
+        font-semibold text-white transition-all duration-300
+        bg-gradient-to-r ${style.accent}
+        shadow-lg
+        ${
+          isDisabled
+            ? "opacity-50 cursor-not-allowed grayscale"
+            : "hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl"
+        }
+      `}
+                    >
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        {isDisabled
+                          ? t("غير متاح", "Not Available")
+                          : t("اشترك الآن", "Register Now")}
 
-                    {/* BUTTON GLOW */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition bg-white blur-xl" />
-                  </button>
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+
+                      {!isDisabled && (
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition bg-white blur-xl" />
+                      )}
+                    </button>
+
+                    {isDisabled && (
+                      <p className="mt-3 text-center text-xs text-muted-foreground leading-relaxed">
+                        {t(
+                          "هذه العضوية متاحة فقط للطلاب الذين لا يملكون رقم تصنيف مهني.",
+                          "This membership is available only for students who do not have a professional classification number.",
+                        )}
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </div>

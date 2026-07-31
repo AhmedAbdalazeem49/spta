@@ -65,6 +65,9 @@ const WorkshopsPage = () => {
 
   const isMember = user?.membership_status === "active";
 
+  const isStudentMember =
+    user?.active_membership?.membership_type === "student" || user?.active_membership?.membership_type === "intern";
+
   // ── Fetch ─────────────────────────────────────────────────────────────────────
 
   const fetchWorkshops = async () => {
@@ -507,7 +510,10 @@ const WorkshopsPage = () => {
                                     <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                                       <Clock className="w-3.5 h-3.5 text-primary" />
                                     </div>
-                                    <span>{workshop.workshop_hours} {isRTL ? 'ساعات' : 'Hours'}</span>
+                                    <span>
+                                      {workshop.workshop_hours}{" "}
+                                      {isRTL ? "ساعات" : "Hours"}
+                                    </span>
                                   </div>
                                 )}
 
@@ -594,31 +600,60 @@ const WorkshopsPage = () => {
                               )}
 
                               {/* Pricing row */}
-                              <div className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-muted/50 border border-border/60">
-                                <div>
-                                  <p className="text-[10px] text-muted-foreground mb-0.5">
-                                    {t("للأعضاء", "Members")}
-                                  </p>
-                                  <p className="font-bold text-emerald-600 text-sm">
-                                    {workshop.member_price}{" "}
-                                    <span className="text-[11px] font-medium">
-                                      {t("ر.س", "SAR")}
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="w-px h-8 bg-border" />
+                              <div className="rounded-xl bg-muted/50 border border-border/60 overflow-hidden">
                                 <div
-                                  className={isRTL ? "text-start" : "text-end"}
+                                  className={`grid ${
+                                    workshop.student_price != null
+                                      ? "grid-cols-3"
+                                      : "grid-cols-3"
+                                  }`}
                                 >
-                                  <p className="text-[10px] text-muted-foreground mb-0.5">
-                                    {t("لغير الأعضاء", "Non-Members")}
-                                  </p>
-                                  <p className="font-bold text-sm">
-                                    {workshop.regular_price}{" "}
-                                    <span className="text-[11px] font-medium text-muted-foreground">
-                                      {t("ر.س", "SAR")}
-                                    </span>
-                                  </p>
+                                  <div className="px-3.5 py-2.5">
+                                    <p className="text-[10px] text-muted-foreground mb-0.5">
+                                      {t("للأعضاء", "Members")}
+                                    </p>
+                                    <p className="font-bold text-emerald-600 text-sm">
+                                      {workshop.member_price}{" "}
+                                      <span className="text-[11px] font-medium">
+                                        {t("ر.س", "SAR")}
+                                      </span>
+                                    </p>
+                                  </div>
+
+                                  {workshop.student_price != null && (
+                                    <>
+                                      <div className="px-3.5 py-2.5">
+                                        <p className="text-[10px] text-muted-foreground mb-0.5">
+                                          {t(
+                                            "للطلاب الأعضاء",
+                                            "Student Members",
+                                          )}
+                                        </p>
+                                        <p className="font-bold text-blue-600 text-sm">
+                                          {workshop.student_price}{" "}
+                                          <span className="text-[11px] font-medium">
+                                            {t("ر.س", "SAR")}
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </>
+                                  )}
+
+                                  <div
+                                    className={`px-3.5 py-2.5 ${
+                                      isRTL ? "text-start" : "text-end"
+                                    }`}
+                                  >
+                                    <p className="text-[10px] text-muted-foreground mb-0.5">
+                                      {t("لغير الأعضاء", "Non-Members")}
+                                    </p>
+                                    <p className="font-bold text-sm">
+                                      {workshop.regular_price}{" "}
+                                      <span className="text-[11px] font-medium text-muted-foreground">
+                                        {t("ر.س", "SAR")}
+                                      </span>
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
 
@@ -698,6 +733,7 @@ const WorkshopsPage = () => {
         onClose={() => setShowRegModal(false)}
         workshop={selectedWorkshop}
         isMember={isMember}
+        isStudentMember={isStudentMember}
         t={t}
         isRTL={isRTL}
         onSuccess={fetchWorkshops}
@@ -710,19 +746,19 @@ const WorkshopsPage = () => {
       >
         <DialogContent className="p-0 overflow-hidden">
           {detailsWorkshop && (
-              <div className="relative h-auto w-auto">
-                {getWorkshopImage(detailsWorkshop) ? (
-                  <img
-                    src={getWorkshopImage(detailsWorkshop) || ""}
-                    alt={detailsWorkshop.title}
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <ImageOff className="w-12 h-12 text-primary/20" />
-                  </div>
-                )}
-              </div>
+            <div className="relative h-auto w-auto">
+              {getWorkshopImage(detailsWorkshop) ? (
+                <img
+                  src={getWorkshopImage(detailsWorkshop) || ""}
+                  alt={detailsWorkshop.title}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <ImageOff className="w-12 h-12 text-primary/20" />
+                </div>
+              )}
+            </div>
           )}
         </DialogContent>
       </Dialog>

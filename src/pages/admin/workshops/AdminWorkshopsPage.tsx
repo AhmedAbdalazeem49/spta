@@ -80,6 +80,7 @@ const AdminWorkshopsPage = () => {
       end_date: w.end_date || "",
       time: w.time || "",
       regular_price: String(w.regular_price || ""),
+      student_price: String(w.student_price || ""),
       member_price: String(w.member_price || ""),
       total_capacity: String(w.total_capacity || ""),
       workshop_hours: String(w.workshop_hours || ""),

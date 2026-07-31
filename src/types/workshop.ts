@@ -8,6 +8,7 @@ export interface Workshop {
   end_date: string;
   time: string;
   regular_price: string | number;
+  student_price: string | number;
   member_price: string | number;
   total_capacity: number;
   workshop_hours?: number;

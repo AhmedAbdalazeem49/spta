@@ -34,6 +34,7 @@ interface WorkshopRegistration {
     time?: string;
     workshop_hours?: string;
     regular_price?: string;
+    student_price?: string;
     member_price?: string;
     total_capacity?: number;
     status?: string;

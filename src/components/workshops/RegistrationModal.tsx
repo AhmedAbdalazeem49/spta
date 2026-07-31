@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import api from "@/services/api";
 import { Workshop } from "@/types/workshop";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -20,6 +18,7 @@ interface RegistrationModalProps {
   onClose: () => void;
   workshop: Workshop | null;
   isMember: boolean;
+  isStudentMember: boolean;
   t: (ar: string, en: string) => string;
   isRTL: boolean;
   onSuccess: () => void;
@@ -30,16 +29,25 @@ export const RegistrationModal = ({
   onClose,
   workshop,
   isMember,
+  isStudentMember,
   t,
   isRTL,
-  onSuccess,
 }: RegistrationModalProps) => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log("isMember", isMember);
+
   const basePrice = workshop
-    ? parseFloat(String(isMember ? workshop.member_price : workshop.regular_price)) || 0
+    ? parseFloat(
+        String(
+          !isMember
+            ? workshop.regular_price
+            : isStudentMember
+              ? (workshop.student_price ?? workshop.member_price)
+              : workshop.member_price,
+        ),
+      ) || 0
     : 0;
 
   const handleSubmit = async () => {
@@ -150,7 +158,7 @@ export const RegistrationModal = ({
                       icon: <Calendar className="w-3 h-3" />,
                       value: new Date(workshop.date).toLocaleDateString(
                         isRTL ? "ar-SA" : "en-US",
-                        { month: "short", day: "numeric" }
+                        { month: "short", day: "numeric" },
                       ),
                     },
                     {
@@ -201,9 +209,11 @@ export const RegistrationModal = ({
                         {t("السعر الأساسي", "Base price")}
                       </p>
                       <p className="text-sm font-semibold">
-                        {isMember
-                          ? workshop.member_price
-                          : workshop.regular_price}{" "}
+                        {!isMember
+                          ? workshop.regular_price
+                          : isStudentMember
+                            ? (workshop.student_price ?? workshop.member_price)
+                            : workshop.member_price}{" "}
                         {t("ر.س", "SAR")}
                       </p>
                     </div>
@@ -252,8 +262,8 @@ export const RegistrationModal = ({
                   {isSubmitting
                     ? t("جاري التسجيل...", "Registering...")
                     : basePrice <= 0
-                    ? t("تأكيد التسجيل", "Confirm Registration")
-                    : t("التسجيل والدفع", "Register & Pay")}
+                      ? t("تأكيد التسجيل", "Confirm Registration")
+                      : t("التسجيل والدفع", "Register & Pay")}
                 </Button>
               </div>
             </div>
