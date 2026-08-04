@@ -53,7 +53,7 @@ import AdminEmailsPage from "./pages/admin/emails/AdminEmailsPage";
 import AdminResearchPage from "./pages/admin/Research/AdminResearchPage";
 import AdminPartnersPage from "./pages/admin/partners/AdminPartnersPage";
 import AdminAdvertisementsPage from "./pages/admin/advertisements/AdminAdvertisementsPage";
-
+import AdminNewsPage from "./pages/admin/news/AdminNewsPage";
 // Public workshops page (user-facing)
 import WorkshopsPage from "./pages/WorkshopsPage";
 
@@ -252,6 +252,16 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminAdvertisementsPage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/news"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminNewsPage />
                     </AdminLayout>
                   </AdminRoute>
                 }

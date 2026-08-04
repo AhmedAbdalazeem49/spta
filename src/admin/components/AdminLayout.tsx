@@ -102,6 +102,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       labelEn: "Advertisements",
       systemAdminOnly: true,
     },
+    {
+      path: "/admin/news",
+      icon: FileText,
+      labelAr: "الأخبار",
+      labelEn: "News",
+      systemAdminOnly: true,
+    },
     // {
     //   path: "/admin/emails",
     //   icon: Mail,

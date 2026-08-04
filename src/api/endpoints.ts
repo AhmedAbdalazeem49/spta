@@ -62,4 +62,11 @@ export const COUPON_ENDPOINTS = {
   adminDelete: (id: string | number) => `/admin/promo-codes/${id}`,
 } as const;
 
+export const NEWS_ENDPOINTS = {
+  list: "/news",
+  adminList: "/admin/news",
+  adminCreate: "/admin/news",
+  adminUpdate: (id: string | number) => `/admin/news/${id}`,
+  adminDelete: (id: string | number) => `/admin/news/${id}`,
+} as const;
 
