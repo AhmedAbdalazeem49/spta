@@ -2,18 +2,32 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { FlaskConical, Mail, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLocation  , useNavigate} from "react-router-dom";
+
 
 const RESEARCH_CONTACT_EMAIL = "spta@spta.sa";
 
 const ResearchPublishModal = () => {
   const { t, isRTL } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Open shortly after mount for a smoother entrance feel
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(true), 600);
+    if (!location.state?.showResearchModal) return;
+
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+
+      navigate(location.pathname + location.search + location.hash, {
+        replace: true,
+        state: null,
+      });
+    }, 600);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [location, navigate]);
 
   const handleClose = () => setIsOpen(false);
 

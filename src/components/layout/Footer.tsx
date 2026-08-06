@@ -145,6 +145,11 @@ const Footer = () => {
                 <li key={link.path + link.label}>
                   <Link
                     to={link.path}
+                    state={
+                      link.path === "/research/empirical"
+                        ? { showResearchModal: true }
+                        : undefined
+                    }
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                   >
                     {link.label}
