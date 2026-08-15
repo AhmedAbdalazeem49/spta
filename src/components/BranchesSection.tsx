@@ -25,8 +25,8 @@ const branches: Branch[] = [
     id: "jeddah",
     name: "Jeddah Branch",
     nameAr: "فرع جدة",
-    director: "Mr. Ahmed Tarek Al-Hasawi",
-    directorAr: "أ. أحمد طارق الحساوي",
+    director: "Saeed Mohammed Al-Asmary",
+    directorAr: "أ. سعيد محمد الاسمري",
   },
   {
     id: "makkah",
@@ -88,8 +88,8 @@ const branches: Branch[] = [
     id: "najran",
     name: "Najran Branch",
     nameAr: "فرع نجران",
-    director: "Dr. Abdullah Mohammed Al-Khraim",
-    directorAr: "د. عبدالله محمد آل خريم",
+    director: "Hadi Hamad Hadi Al-Aqeel",
+    directorAr: "أ. هادي حمد هادي آل عقيل",
   },
   {
     id: "jouf",

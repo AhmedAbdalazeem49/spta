@@ -475,7 +475,7 @@ export const WorkshopSubscriptionsModal = ({
               {t("لا يوجد مشتركون", "No subscribers yet")}
             </div>
           ) : (
-            <div className="rounded-xl border bg-background overflow-hidden">
+            <div className="rounded-xl border bg-background overflow-auto">
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
@@ -541,7 +541,7 @@ export const WorkshopSubscriptionsModal = ({
                         </td>
 
                         {/* User */}
-                        <td className="p-3">
+                        <td className="p-3 whitespace-nowrap">
                           <p className="font-medium">{sub.name}</p>
                           {sub.name_ar && (
                             <p className="text-xs text-muted-foreground">
