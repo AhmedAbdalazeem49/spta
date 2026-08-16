@@ -22,7 +22,7 @@ interface WorkshopRegistration {
   id: number;
   status: "pending" | "confirmed" | "cancelled";
   price: number;
-  attendance?: "attended" | "absent" | "pending";
+  attendance?: "attended" | "absent";
   workshop: {
     id: number;
     title: string;
@@ -280,11 +280,23 @@ export default function WorkshopsTab() {
                     </div>
 
                     {/* ONLINE MEETING LINK ACTION */}
-                    {reg.workshop.attendance_type == "online" && reg.workshop.meeting_link && (
+                    {reg.workshop.attendance_type === "online" && reg.workshop.meeting_link && (
                       <div className="pt-2">
                         <Button
                           className="w-full gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all"
-                          onClick={() => window.open(reg.workshop.meeting_link!, "_blank")}
+                          onClick={async () => {
+                            if (reg.attendance !== "attended") {
+                              try {
+                                await api.post(`/workshops/${reg.workshop.id}/attendance`, {
+                                  attendance: "attended"
+                                });
+                                fetchWorkshops(); // to refresh status visually
+                              } catch (e) {
+                                console.error("Error marking attendance:", e);
+                              }
+                            }
+                            window.open(reg.workshop.meeting_link!, "_blank");
+                          }}
                         >
                           <ExternalLink className="w-4 h-4" />
                           {t("رابط الاجتماع", "Join Meeting")}

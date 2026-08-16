@@ -407,10 +407,11 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             )}
             {type !== "attended" && type !== "appreciation_org" && (
               <span className="font-semibold" style={{ color: BLUE_MID }}>
+                {durationDays === 1 ? t("Day ", "Day ") : t("Days ", "Days ")}
                 {durationDays}{" "}
-                {durationDays === 1 ? t("Day", "Day") : t("Days", "Days")}
                 {" · "}
-                {calculatedHours} {t("Training Hours", "Training Hours")}
+                {t("Training Hours ", "Training Hours ")}
+                {calculatedHours}
               </span>
             )}
             {type === "completion" && completionStatus && (

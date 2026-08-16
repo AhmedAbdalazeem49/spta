@@ -6,6 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
@@ -46,7 +54,7 @@ interface Subscriber {
   classification_number?: string;
   payment_status: "paid" | "free" | "pending";
   registration_status: string; // confirmed / cancelled / pending
-  attendance: "attended" | "absent" | "pending";
+  attendance: "attended" | "absent";
   certificate_issued: boolean;
   registration_date: string;
 }
@@ -69,6 +77,10 @@ export const WorkshopSubscriptionsModal = ({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isEmailOpen, setIsEmailOpen] = useState(false);
 
+  // Search & Filter State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<"all" | "absent" | "attended" | "free" | "paid">("all");
+
   // ─── FETCH ───────────────────────────────────────────────
   const fetchSubscribers = async () => {
     if (!workshop?.id) return;
@@ -87,12 +99,7 @@ export const WorkshopSubscriptionsModal = ({
         classification_number: reg.user?.classification_number,
         payment_status: parseFloat(reg.price) > 0 ? "paid" : "free",
         registration_status: reg.status,
-        attendance:
-          reg.attendance === "attended"
-            ? "attended"
-            : reg.attendance === "absent"
-              ? "absent"
-              : "pending",
+        attendance: reg.attendance === "attended" ? "attended" : "absent",
         certificate_issued: reg.certificate_issued ?? false,
         registration_date: reg.created_at,
       }));
@@ -132,12 +139,7 @@ export const WorkshopSubscriptionsModal = ({
 
   // ─── ATTENDANCE TOGGLE ───────────────────────────────────
   const toggleAttendance = async (sub: Subscriber) => {
-    const next =
-      sub.attendance === "attended"
-        ? "absent"
-        : sub.attendance === "absent"
-          ? "pending"
-          : "attended";
+    const next = sub.attendance === "attended" ? "absent" : "attended";
     try {
       await api.post(`/admin/workshops/${workshop?.id}/attendance`, {
         user_id: sub.user_id,
@@ -361,10 +363,6 @@ export const WorkshopSubscriptionsModal = ({
       label: t("غائب", "Absent"),
       className: "bg-red-100 text-red-700 border-red-200",
     },
-    pending: {
-      label: t("لم يحدد", "Pending"),
-      className: "bg-gray-100 text-gray-600 border-gray-200",
-    },
   };
 
   const paymentConfig = {
@@ -387,6 +385,29 @@ export const WorkshopSubscriptionsModal = ({
   const attendedCount = subscribers.filter(
     (s) => s.attendance === "attended",
   ).length;
+
+  const filteredSubscribers = subscribers.filter((sub) => {
+    // Filter type logic
+    if (filterType === "absent" && sub.attendance !== "absent") return false;
+    if (filterType === "attended" && sub.attendance !== "attended") return false;
+    if (filterType === "free" && sub.payment_status !== "free") return false;
+    if (filterType === "paid" && sub.payment_status !== "paid") return false;
+
+    // Search query logic
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch =
+        sub.name.toLowerCase().includes(q) ||
+        (sub.name_ar && sub.name_ar.toLowerCase().includes(q)) ||
+        sub.email.toLowerCase().includes(q) ||
+        sub.phone.toLowerCase().includes(q) ||
+        (sub.classification_number && sub.classification_number.toLowerCase().includes(q));
+
+      if (!matchesSearch) return false;
+    }
+
+    return true;
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -463,13 +484,42 @@ export const WorkshopSubscriptionsModal = ({
           </div>
         </DialogHeader>
 
+        {/* ── SEARCH & FILTERS ── */}
+        <div className="px-6 py-4 border-b bg-muted/5 flex flex-col sm:flex-row gap-4 items-center">
+          <div className="w-full sm:w-1/3">
+            <Input
+              placeholder={t("بحث (الاسم، البريد، الجوال)...", "Search (Name, Email, Phone)...")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full"
+            />
+          </div>
+          <div className="w-full sm:w-48">
+            <Select
+              value={filterType}
+              onValueChange={(val: any) => setFilterType(val)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t("تصفية", "Filter")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("الكل", "All")}</SelectItem>
+                <SelectItem value="attended">{t("حاضر", "Attended")}</SelectItem>
+                <SelectItem value="absent">{t("غائب", "Absent")}</SelectItem>
+                <SelectItem value="free">{t("مجاني", "Free")}</SelectItem>
+                <SelectItem value="paid">{t("دفع", "Paid")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {/* ── BODY ── */}
         <div className="flex-1 overflow-auto p-6 bg-muted/10">
           {isLoading ? (
             <div className="flex justify-center py-20">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
-          ) : subscribers.length === 0 ? (
+          ) : filteredSubscribers.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
               <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
               {t("لا يوجد مشتركون", "No subscribers yet")}
@@ -515,7 +565,7 @@ export const WorkshopSubscriptionsModal = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {subscribers.map((sub) => {
+                  {filteredSubscribers.map((sub) => {
                     const att = attendanceConfig[sub.attendance];
                     const pay = paymentConfig[sub.payment_status];
                     const isCancelled = sub.registration_status === "cancelled";
@@ -627,9 +677,6 @@ export const WorkshopSubscriptionsModal = ({
                             )}
                             {sub.attendance === "absent" && (
                               <XCircle className="w-3 h-3" />
-                            )}
-                            {sub.attendance === "pending" && (
-                              <Clock className="w-3 h-3" />
                             )}
                             {att.label}
                           </button>

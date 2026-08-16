@@ -71,16 +71,16 @@ export const CertificatesTable = ({
                   transition={{ delay: i * 0.02 }}
                   className="border-t border-border hover:bg-muted/30 transition-colors"
                 >
-                  <td className="p-4 text-sm font-medium">
+                  <td className="p-4 text-sm font-medium whitespace-nowrap">
                     {getCertificateName(c, t)}
                   </td>
-                  <td className="p-4 text-sm text-muted-foreground">
+                  <td className="p-4 text-sm text-muted-foreground whitespace-nowrap">
                     {getCertificateWorkshop(c, t)}
                   </td>
-                  <td className="p-4 text-sm text-muted-foreground">
+                  <td className="p-4 text-sm text-muted-foreground whitespace-nowrap">
                     {getCertificateDate(c)}
                   </td>
-                  <td className="p-4 text-sm font-mono">{c.serial_number}</td>
+                  <td className="p-4 text-sm font-mono whitespace-nowrap">{c.serial_number}</td>
                   <td className="p-4">
                     <CertificateStatusBadge status={c.status} />
                   </td>
