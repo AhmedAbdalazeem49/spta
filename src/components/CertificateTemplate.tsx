@@ -184,16 +184,14 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const startDateStr =
     payload?.event?.start_date ||
     cert.workshop_date ||
-    cert.issue_date ||
-    cert.issued_at ||
     "";
   const endDateStr =
     payload?.event?.end_date || cert.workshop_end_date || startDateStr;
   const issueDateStr = cert.issue_date || cert.issued_at || startDateStr;
 
   const displayIssueDate = formatDate(issueDateStr);
-  const displayStartDate = formatDate(startDateStr);
-  const displayEndDate = formatDate(endDateStr);
+  const displayStartDate = startDateStr ? formatDate(startDateStr) : "";
+  const displayEndDate = endDateStr ? formatDate(endDateStr) : "";
 
   const trainingHours = payload?.event?.hours || cert.workshop_hours || null;
   const completionStatus = payload?.extra?.completion_status || "Completed";
@@ -201,20 +199,24 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const contributionDesc = payload?.extra?.contribution_description || "";
   const organizationName = payload?.organization?.name || "";
 
+  const hasEventDates = !!startDateStr;
+
   const getDurationDays = () => {
-    if (!startDateStr || !endDateStr) return 1;
+    if (!startDateStr || !endDateStr) return 0;
     try {
       const start = new Date(startDateStr.split("T")[0]);
       const end = new Date(endDateStr.split("T")[0]);
       const diff =
         Math.ceil(Math.abs(end.getTime() - start.getTime()) / 86400000) + 1;
-      return diff > 0 ? diff : 1;
+      return diff > 0 ? diff : 0;
     } catch {
-      return 1;
+      return 0;
     }
   };
   const durationDays = getDurationDays();
-  const calculatedHours = trainingHours || durationDays * 4;
+  const calculatedHours = trainingHours || (durationDays > 0 ? durationDays * 4 : 0);
+  
+  const showDurationAndHours = type !== "attended" && type !== "appreciation_org" && (hasEventDates || trainingHours);
 
   let badgeLabel = t("Attendance", "Attendance");
   let certTitle = t("Certificate of Attendance", "Certificate of Attendance");
@@ -405,11 +407,14 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
                 </span>
               </span>
             )}
-            {type !== "attended" && type !== "appreciation_org" && (
+            {showDurationAndHours && (
               <span className="font-semibold" style={{ color: BLUE_MID }}>
-                {durationDays === 1 ? t("Day ", "Day ") : t("Days ", "Days ")}
-                {durationDays}{" "}
-                {" · "}
+                {durationDays > 0 && (
+                  <>
+                    {durationDays === 1 ? t("Day ", "Day ") : t("Days ", "Days ")}
+                    {durationDays}{" · "}
+                  </>
+                )}
                 {t("Training Hours ", "Training Hours ")}
                 {calculatedHours}
               </span>
@@ -439,7 +444,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             </span>
             {type !== "attended" &&
               type !== "appreciation_org" &&
-              startDateStr && (
+              hasEventDates && (
                 <>
                   <span style={{ opacity: 0.4 }}>|</span>
                   <span>

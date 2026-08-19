@@ -43,6 +43,7 @@ import {
   FileText
 } from "lucide-react";
 import { CertificateStatusBadge } from "./CertificateStatusBadge";
+import CertificateTemplate from "@/components/CertificateTemplate";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const EMPTY_FORM = {
@@ -439,7 +440,7 @@ export const CertificateAddModal = ({
                               <GraduationCap className="w-3.5 h-3.5 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium truncate">
+                              <p className="font-medium">
                                 {getWorkshopName(w)}
                               </p>
                               <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -730,79 +731,49 @@ export const CertificateAddModal = ({
               exit={{ opacity: 0, x: -10 }}
               className="space-y-4 py-2"
             >
-              {/* Live certificate preview rendering skeleton */}
-              <div className="relative aspect-[1.6/1] bg-gradient-to-br from-[#061224] via-[#091b35] to-[#122e54] rounded-2xl p-6 text-primary-foreground overflow-hidden border border-[#c5a880]/30 shadow-2xl">
-                <div
-                  className="absolute inset-0 opacity-[0.03]"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0l50 50-50 50L0 50z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E")`,
-                  }}
-                />
-                <div className="absolute inset-3 rounded-xl border border-[#c5a880]/20 pointer-events-none" />
-                <div className="relative h-full flex flex-col justify-between">
-                  <div className="text-center mb-1">
-                    <Award className="w-6 h-6 mx-auto mb-1 text-[#c5a880]" />
-                    <h2 className="text-lg font-bold text-white uppercase">
-                      {getPreviewTitle()}
-                    </h2>
-                    <p className="text-[10px] text-blue-pale/70 uppercase tracking-wider">
-                      {t("Saudi Physical Therapy Association", "Saudi Physical Therapy Association")}
-                    </p>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center justify-center text-center">
-                    <p className="text-[10px] text-blue-pale/60 italic">
-                      {form.type === "appreciation_person" || form.type === "appreciation_org" 
-                        ? t("This certificate is proudly presented to", "This certificate is proudly presented to")
-                        : t("This is to certify that", "This is to certify that")}
-                    </p>
-                    <h3
-                      className={`text-xl font-bold mb-1 ${
-                        previewName.startsWith("—")
-                          ? "text-white/30 italic text-sm"
-                          : "text-[#c5a880]"
-                      }`}
-                    >
-                      {form.type === "appreciation_org" ? (form.organization_name || t("— اسم الجهة —", "— Organization —")) : previewName}
-                    </h3>
-                    <p className="text-[10px] text-blue-pale/60">
-                      {form.type === "completion" 
-                        ? t("has successfully completed", "has successfully completed")
-                        : form.type === "appreciation_person" 
-                          ? t("in recognition of their contribution in the event:", "in recognition of their contribution in the event:")
-                          : form.type === "appreciation_org"
-                            ? t("in appreciation of their support in the event:", "in appreciation of their support in the event:")
-                            : t("has successfully attended", "has successfully attended")}
-                    </p>
-                    <h4
-                      className={`text-md font-semibold text-white ${
-                        previewWorkshop.startsWith("—")
-                          ? "text-white/30 italic text-xs"
-                          : ""
-                      }`}
-                    >
-                      {previewWorkshop}
-                    </h4>
-                  </div>
-                  <div className="flex items-end justify-between text-[10px]">
-                    <div className="text-center">
-                      <div className="w-12 h-6 border-b border-[#c5a880]/30 mb-0.5" />
-                      <p className="text-[8px] text-blue-pale/50">
-                        {t("Signature", "Signature")}
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-10 h-10 bg-white rounded p-1 mb-0.5 flex items-center justify-center mx-auto">
-                        <QrCode className="w-8 h-8 text-[#061224]" />
-                      </div>
-                      <p className="text-[8px] text-blue-pale/50">{t("Verify", "Verify")}</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-12 h-6 border-b border-[#c5a880]/30 mb-0.5" />
-                      <p className="text-[8px] text-blue-pale/50">
-                        {t("Stamp", "Stamp")}
-                      </p>
-                    </div>
-                  </div>
+              {/* Live certificate preview rendering */}
+              <div className="w-full overflow-x-auto pb-4">
+                <div className="min-w-[800px]">
+                  <CertificateTemplate 
+                    cert={{
+                      id: "preview",
+                      serial_number: "CERT-PREVIEW-123",
+                      recipient_name: previewName,
+                      recipient_name_ar: form.recipient_name_ar,
+                      workshop_title: previewWorkshop,
+                      doctor_name: form.speaker,
+                      issue_date: previewDate,
+                      workshop_date: form.start_date,
+                      workshop_end_date: form.end_date || form.workshop_end_date,
+                      workshop_hours: Number(form.hours) || undefined,
+                      status: form.status,
+                      type: form.type,
+                      template: form.template,
+                      payload: {
+                        type: form.type,
+                        participant: {
+                          name: previewName,
+                          name_ar: form.recipient_name_ar,
+                        },
+                        event: {
+                          title: previewWorkshop,
+                          start_date: form.start_date,
+                          end_date: form.end_date || form.workshop_end_date,
+                          hours: Number(form.hours) || undefined,
+                        },
+                        venue: { location: form.venue },
+                        speaker: { name: form.speaker },
+                        organization: { name: form.organization_name, role: form.role },
+                        extra: {
+                          role: form.role,
+                          completion_status: form.completion_status,
+                          contribution_description: form.contribution_description,
+                          duration: form.duration,
+                        },
+                      },
+                    }} 
+                    template={form.template as any} 
+                  />
                 </div>
               </div>
 
