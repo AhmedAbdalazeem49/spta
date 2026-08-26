@@ -121,11 +121,48 @@ export const WorkshopSubscriptionsModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, workshop]);
 
-  const toggleAll = () => {
-    if (selectedIds.length === subscribers.length) {
-      setSelectedIds([]);
+  const filteredSubscribers = subscribers.filter((sub) => {
+    // Filter type logic
+    if (filterType === "absent" && sub.attendance !== "absent") return false;
+    if (filterType === "attended" && sub.attendance !== "attended") return false;
+    if (filterType === "free" && sub.payment_status !== "free") return false;
+    if (filterType === "paid" && sub.payment_status !== "paid") return false;
+
+    // Search query logic
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch =
+        sub.name.toLowerCase().includes(q) ||
+        (sub.name_ar && sub.name_ar.toLowerCase().includes(q)) ||
+        sub.email.toLowerCase().includes(q) ||
+        sub.phone.toLowerCase().includes(q) ||
+        (sub.classification_number && sub.classification_number.toLowerCase().includes(q));
+
+      if (!matchesSearch) return false;
+    }
+
+    return true;
+  });
+
+  // Auto-update selection when filter or search changes
+  useEffect(() => {
+    if (filterType !== "all" || searchQuery !== "") {
+      setSelectedIds(filteredSubscribers.map((s) => s.id));
     } else {
-      setSelectedIds(subscribers.map((s) => s.id));
+      setSelectedIds([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterType, searchQuery]);
+
+  const toggleAll = () => {
+    const filteredIds = filteredSubscribers.map(s => s.id);
+    const areAllFilteredSelected = filteredIds.length > 0 && filteredIds.every(id => selectedIds.includes(id));
+
+    if (areAllFilteredSelected) {
+      setSelectedIds(selectedIds.filter(id => !filteredIds.includes(id)));
+    } else {
+      const newSelections = new Set([...selectedIds, ...filteredIds]);
+      setSelectedIds(Array.from(newSelections));
     }
   };
 
@@ -386,29 +423,6 @@ export const WorkshopSubscriptionsModal = ({
     (s) => s.attendance === "attended",
   ).length;
 
-  const filteredSubscribers = subscribers.filter((sub) => {
-    // Filter type logic
-    if (filterType === "absent" && sub.attendance !== "absent") return false;
-    if (filterType === "attended" && sub.attendance !== "attended") return false;
-    if (filterType === "free" && sub.payment_status !== "free") return false;
-    if (filterType === "paid" && sub.payment_status !== "paid") return false;
-
-    // Search query logic
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      const matchesSearch =
-        sub.name.toLowerCase().includes(q) ||
-        (sub.name_ar && sub.name_ar.toLowerCase().includes(q)) ||
-        sub.email.toLowerCase().includes(q) ||
-        sub.phone.toLowerCase().includes(q) ||
-        (sub.classification_number && sub.classification_number.toLowerCase().includes(q));
-
-      if (!matchesSearch) return false;
-    }
-
-    return true;
-  });
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="fixed w-screen h-screen max-w-none p-0 flex flex-col overflow-hidden bg-background">
@@ -533,7 +547,10 @@ export const WorkshopSubscriptionsModal = ({
                       <input
                         type="checkbox"
                         className="w-4 h-4 cursor-pointer accent-primary"
-                        checked={subscribers.length > 0 && selectedIds.length === subscribers.length}
+                        checked={
+                          filteredSubscribers.length > 0 &&
+                          filteredSubscribers.every((s) => selectedIds.includes(s.id))
+                        }
                         onChange={toggleAll}
                         title={t("تحديد الكل", "Select All")}
                       />

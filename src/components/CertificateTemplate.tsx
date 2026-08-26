@@ -181,10 +181,7 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
   const speakerName = payload?.speaker?.name || cert.doctor_name || "";
   const venueLocation = payload?.venue?.location || "";
 
-  const startDateStr =
-    payload?.event?.start_date ||
-    cert.workshop_date ||
-    "";
+  const startDateStr = payload?.event?.start_date || cert.workshop_date || "";
   const endDateStr =
     payload?.event?.end_date || cert.workshop_end_date || startDateStr;
   const issueDateStr = cert.issue_date || cert.issued_at || startDateStr;
@@ -214,9 +211,13 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
     }
   };
   const durationDays = getDurationDays();
-  const calculatedHours = trainingHours || (durationDays > 0 ? durationDays * 4 : 0);
-  
-  const showDurationAndHours = type !== "attended" && type !== "appreciation_org" && (hasEventDates || trainingHours);
+  const calculatedHours =
+    trainingHours || (durationDays > 0 ? durationDays * 4 : 0);
+
+  const showDurationAndHours =
+    type !== "attended" &&
+    type !== "appreciation_org" &&
+    (hasEventDates || trainingHours);
 
   let badgeLabel = t("Attendance", "Attendance");
   let certTitle = t("Certificate of Attendance", "Certificate of Attendance");
@@ -230,12 +231,12 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
     badgeLabel = t("Completion", "Completion");
     certTitle = t("Certificate of Completion", "Certificate of Completion");
     bodyText = t("has successfully completed", "has successfully completed");
-  } else if (type === "appreciation_person") {
+  } else if (type === "appreciation_person" || type === "appreciation") {
     badgeLabel = t("Appreciation", "Appreciation");
     certTitle = t("Certificate of Appreciation", "Certificate of Appreciation");
     subText = t(
-      "This certificate is proudly presented to",
-      "This certificate is proudly presented to",
+      "The Saudia Physical Therapy Association express its sincere gratitude to",
+      "The Saudia Physical Therapy Association express its sincere gratitude to",
     );
     bodyText = t(
       role
@@ -245,7 +246,11 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
         ? `تقديراً لجهودهم ومشاركتهم الفعالة بصفة ${role} في فعالية:`
         : "تقديراً لجهودهم ومشاركتهم الفعالة في فعالية:",
     );
-  } else if (type === "appreciation_org") {
+  } else if (
+    type === "appreciation_org" ||
+    type === "appreciation_person" ||
+    type === "appreciation"
+  ) {
     badgeLabel = t("Appreciation", "Appreciation");
     certTitle = t("Certificate of Appreciation", "Certificate of Appreciation");
     subText = t(
@@ -312,14 +317,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
 
         {/* ── Main body ── */}
         <div className="flex-1 flex flex-col items-center justify-center text-center px-10 py-6 gap-3">
-          {/* Badge / type label */}
-          <p
-            className="text-[10px] uppercase tracking-[0.25em] font-bold"
-            style={{ color: BLUE_LIGHT }}
-          >
-            {badgeLabel}
-          </p>
-
           {/* Certificate title */}
           <h2
             className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight"
@@ -411,12 +408,15 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               <span className="font-semibold" style={{ color: BLUE_MID }}>
                 {durationDays > 0 && (
                   <>
-                    {durationDays === 1 ? t("Day ", "Day ") : t("Days ", "Days ")}
-                    {durationDays}{" · "}
+                    {durationDays === 1
+                      ? t("Day ", "Day ")
+                      : t("Days ", "Days ")}
+                    {durationDays}
+                    {/* {" · "} */}
                   </>
                 )}
-                {t("Training Hours ", "Training Hours ")}
-                {calculatedHours}
+                {/* {t("Training Hours ", "Training Hours ")} */}
+                {/* {calculatedHours} */}
               </span>
             )}
             {type === "completion" && completionStatus && (
@@ -448,11 +448,11 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
                 <>
                   <span style={{ opacity: 0.4 }}>|</span>
                   <span>
-                    {t("Start", "Start")}: {displayStartDate}
+                    {t("End", "End")}: {displayEndDate}
                   </span>
                   <span style={{ opacity: 0.4 }}>|</span>
                   <span>
-                    {t("End", "End")}: {displayEndDate}
+                    {t("Start", "Start")}: {displayStartDate}
                   </span>
                 </>
               )}
