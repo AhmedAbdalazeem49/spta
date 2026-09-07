@@ -540,8 +540,8 @@ const WorkshopsPage = () => {
 
                               {/* Seats progress */}
                               {workshop.registered_count !== undefined && (
-                                <div className="space-y-1.5">
-                                  <div className="flex items-center justify-between text-xs">
+                                <div className="space-y-1.5 hidden">
+                                  <div className="flex items-center justify-between text-xs ">
                                     <span className="text-muted-foreground flex items-center gap-1">
                                       <Users className="w-3.5 h-3.5" />
                                       {t("المقاعد", "Seats")}

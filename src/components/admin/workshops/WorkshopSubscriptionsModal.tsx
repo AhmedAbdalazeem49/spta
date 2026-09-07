@@ -350,7 +350,7 @@ export const WorkshopSubscriptionsModal = ({
         "Certificate",
         "Date",
       ],
-      ...subscribers.map((s) => [
+      ...filteredSubscribers.map((s) => [
         s.name,
         s.name_ar || "",
         s.email,
