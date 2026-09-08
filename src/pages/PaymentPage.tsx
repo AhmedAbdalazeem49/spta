@@ -289,6 +289,7 @@ const PaymentPage = () => {
         reference_id: item.key,
         payment_method: selectedMethod,
         promo_code: couponCode || undefined,
+        certificate_eligible: (type === "workshop" && isCurrentlyFree && basePrice > 0) ? false : true,
       };
 
       const res = await paymentService.create(payload);

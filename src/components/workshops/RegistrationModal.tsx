@@ -238,6 +238,32 @@ export const RegistrationModal = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Promotional Text for Non-Members */}
+                {!isMember && (
+                  <div className="rounded-2xl border border-blue-200 bg-blue-50/50 p-4 text-center mt-4">
+                    <h4 className="text-sm font-bold text-blue-800 mb-1.5">
+                      {t("احصل على العضوية الآن!", "Get Membership Now!")}
+                    </h4>
+                    <p className="text-xs text-blue-600/90 mb-3">
+                      {t(
+                        "اشترك في عضوية الجمعية للاستفادة من خصومات حصرية على ورش العمل وإصدار الشهادات المعتمدة.",
+                        "Subscribe to the association's membership to benefit from exclusive discounts on workshops and accredited certificates."
+                      )}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/memberships");
+                      }}
+                    >
+                      {t("الاشتراك في العضوية", "Subscribe to Membership")}
+                    </Button>
+                  </div>
+                )}
               </div>
 
               {/* Footer */}

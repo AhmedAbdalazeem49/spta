@@ -10,12 +10,14 @@ export const paymentService = {
     reference_id: string | number;
     payment_method: string;
     promo_code?: string | null;
+    certificate_eligible?: boolean;
   }) {
     if (payload.type === "workshop") {
       const { data } = await api.post("/workshops/subscribe", {
         workshop_id: payload.reference_id,
         payment_method: payload.payment_method,
         promo_code: payload.promo_code ?? undefined,
+        certificate_eligible: payload.certificate_eligible,
       });
       return data?.data ?? data;
     } else {

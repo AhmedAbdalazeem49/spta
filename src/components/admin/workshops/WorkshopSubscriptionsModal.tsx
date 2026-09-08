@@ -272,7 +272,7 @@ export const WorkshopSubscriptionsModal = ({
       }
       toast({
         title: "Error",
-        description: "Failed to issue certificate",
+        description: err?.response?.data?.message || "Failed to issue certificate",
         variant: "destructive",
       });
     } finally {
@@ -312,7 +312,7 @@ export const WorkshopSubscriptionsModal = ({
         successCount++;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
-        if (err?.response?.status === 409) {
+        if (err?.response?.status === 409 || err?.response?.status === 403) {
           skipCount++;
         }
       }
@@ -325,10 +325,10 @@ export const WorkshopSubscriptionsModal = ({
       title: t("تم الإصدار", "Bulk Issue Complete"),
       description: t(
         `تم إصدار ${successCount} شهادة${
-          skipCount > 0 ? `، ${skipCount} موجودة مسبقاً` : ""
+          skipCount > 0 ? `، تم تخطي ${skipCount} (موجودة مسبقاً أو غير مستحقة)` : ""
         }`,
         `Issued ${successCount} certificate(s)${
-          skipCount > 0 ? `, ${skipCount} already existed` : ""
+          skipCount > 0 ? `, skipped ${skipCount} (already existed or ineligible)` : ""
         }`,
       ),
     });
