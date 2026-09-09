@@ -35,6 +35,7 @@ export const RegistrationModal = ({
 }: RegistrationModalProps) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [withCertificate, setWithCertificate] = useState(true);
 
   console.log("isMember", isMember);
 
@@ -49,6 +50,8 @@ export const RegistrationModal = ({
         ),
       ) || 0
     : 0;
+
+  const finalPrice = withCertificate ? basePrice : 0;
 
   const handleSubmit = async () => {
     if (!workshop) return;
@@ -70,8 +73,9 @@ export const RegistrationModal = ({
             nameAr: workshop.title,
 
             // pricing
-            price: basePrice,
-            priceValue: basePrice,
+            price: finalPrice,
+            priceValue: finalPrice,
+            originalBasePrice: basePrice, // pass this so we know if it was normally paid
 
             // workshop data
             workshop_id: workshop.id,
@@ -85,6 +89,7 @@ export const RegistrationModal = ({
 
             // useful flags
             isWorkshop: true,
+            withCertificate: withCertificate,
           },
         },
       });
@@ -185,6 +190,53 @@ export const RegistrationModal = ({
 
               {/* Body */}
               <div className="overflow-y-auto flex-1 px-6 py-5 space-y-4">
+                
+                {/* Registration Type Selection */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    {t("نوع التسجيل", "Registration Type")}
+                  </p>
+                  <div className="grid grid-cols-1 gap-2">
+                    <button
+                      onClick={() => setWithCertificate(true)}
+                      className={`flex items-center justify-between p-3 rounded-xl border text-start transition-all ${
+                        withCertificate 
+                          ? "border-primary bg-primary/5 ring-1 ring-primary" 
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div>
+                        <p className="text-sm font-semibold">{t("حضور بشهادة معتمدة", "Attend with certificate")}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{t("احصل على شهادة حضور معتمدة بعد الانتهاء", "Get an accredited certificate upon completion")}</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ml-3 ${
+                        withCertificate ? "border-primary bg-primary" : "border-input"
+                      }`}>
+                        {withCertificate && <div className="w-2 h-2 bg-white rounded-full" />}
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => setWithCertificate(false)}
+                      className={`flex items-center justify-between p-3 rounded-xl border text-start transition-all ${
+                        !withCertificate 
+                          ? "border-primary bg-primary/5 ring-1 ring-primary" 
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div>
+                        <p className="text-sm font-semibold">{t("حضور مجاني بدون شهادة", "Attend free without certificate")}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{t("حضور الورشة والاستفادة منها مجاناً", "Attend the workshop for free")}</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ml-3 ${
+                        !withCertificate ? "border-primary bg-primary" : "border-input"
+                      }`}>
+                        {!withCertificate && <div className="w-2 h-2 bg-white rounded-full" />}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Membership + price card */}
                 <div className="rounded-2xl border border-border/60 overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b border-border/40">
@@ -209,12 +261,7 @@ export const RegistrationModal = ({
                         {t("السعر الأساسي", "Base price")}
                       </p>
                       <p className="text-sm font-semibold">
-                        {!isMember
-                          ? workshop.regular_price
-                          : isStudentMember
-                            ? (workshop.student_price ?? workshop.member_price)
-                            : workshop.member_price}{" "}
-                        {t("ر.س", "SAR")}
+                        {basePrice} {t("ر.س", "SAR")}
                       </p>
                     </div>
                     <div className="text-end">
@@ -222,13 +269,13 @@ export const RegistrationModal = ({
                         {t("المبلغ النهائي", "Final amount")}
                       </p>
                       <p className="text-xl font-bold text-primary">
-                        {basePrice <= 0 ? (
+                        {finalPrice <= 0 ? (
                           <span className="text-emerald-600">
                             {t("مجاني", "Free")}
                           </span>
                         ) : (
                           <>
-                            {basePrice.toFixed(2)}{" "}
+                            {finalPrice.toFixed(2)}{" "}
                             <span className="text-sm font-normal">
                               {t("ر.س", "SAR")}
                             </span>
