@@ -1,6 +1,26 @@
+import { BulkEmailModal } from "@/components/shared/BulkEmailModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -8,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/services/api";
@@ -19,47 +40,26 @@ import {
   Calendar,
   CheckCircle,
   Clock,
+  CreditCard,
   Crown,
   Edit,
-  CreditCard,
-  ShieldAlert,
-  UserCheck,
   Eye,
+  FileSpreadsheet,
   GraduationCap,
   Hash,
   Loader2,
+  Mail,
   Plus,
   Search,
   Shield,
+  ShieldAlert,
   Trash2,
+  UserCheck,
   Users,
-  XCircle,
-  Mail,
   X,
-  FileSpreadsheet,
+  XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Separator } from "@/components/ui/separator";
-import { BulkEmailModal } from "@/components/shared/BulkEmailModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -80,6 +80,7 @@ export interface MembershipItem {
     email: string;
     phone?: string;
     employer?: string;
+    classification_number?: string;
     specialization?: string;
   };
 }
@@ -528,7 +529,7 @@ const MembershipAddModal = ({
               <Input
                 placeholder={t(
                   "ابحث بالاسم أو البريد...",
-                  "Search by name or email..."
+                  "Search by name or email...",
                 )}
                 value={userSearch}
                 onChange={(e) => {
@@ -627,7 +628,7 @@ const MembershipAddModal = ({
               <span className="text-muted-foreground text-xs ms-1">
                 {t(
                   "(اختياري - سيُولَّد تلقائياً)",
-                  "(optional – auto-generated)"
+                  "(optional – auto-generated)",
                 )}
               </span>
             </Label>
@@ -681,7 +682,7 @@ const MembershipAddModal = ({
             <p className="text-xs leading-relaxed">
               {t(
                 "إضافة عضوية من هنا تعني أن الدفع قد تمّ بالفعل. سيتم تفعيل العضوية فور الحفظ وفق الحالة المختارة.",
-                "Adding a membership here means payment has already been made. The membership will be activated upon saving based on the selected status."
+                "Adding a membership here means payment has already been made. The membership will be activated upon saving based on the selected status.",
               )}
             </p>
           </div>
@@ -710,8 +711,6 @@ const MembershipAddModal = ({
 };
 
 // ─── Delete Modal ─────────────────────────────────────────────────────────────
-
-
 
 interface MembershipDeleteModalProps {
   isOpen: boolean;
@@ -752,7 +751,7 @@ export const MembershipDeleteModal = ({
             <AlertDialogDescription className="text-red-100 mt-2">
               {t(
                 "سيتم حذف العضوية بشكل نهائي من النظام",
-                "This membership will be permanently removed from the system"
+                "This membership will be permanently removed from the system",
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -824,7 +823,7 @@ export const MembershipDeleteModal = ({
               <p className="text-sm text-red-600 mt-1">
                 {t(
                   "سيتم حذف العضوية وجميع بياناتها بشكل نهائي ولا يمكن استرجاعها",
-                  "This membership and all its data will be permanently deleted and cannot be recovered"
+                  "This membership and all its data will be permanently deleted and cannot be recovered",
                 )}
               </p>
             </div>
@@ -936,6 +935,9 @@ const MembershipsTable = ({
                 {t("الفترة", "Period")}
               </th>
               <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
+                {t("رقم التصنيف", "Classification No.")}
+              </th>
+              <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
                 {t("الحالة", "Status")}
               </th>
               <th className="text-start p-4 font-semibold text-muted-foreground whitespace-nowrap">
@@ -1016,6 +1018,14 @@ const MembershipsTable = ({
                     <StatusBadge status={m.status} t={t} />
                   </td>
 
+                  <td className="p-4 whitespace-nowrap">
+                    <span className="font-mono text-md">
+                      {m.user.classification_number
+                        ? m.user.classification_number
+                        : "-"}
+                    </span>
+                  </td>
+
                   {/* Actions */}
                   <td className="p-4 whitespace-nowrap">
                     <div className="flex items-center gap-1">
@@ -1090,8 +1100,6 @@ const MembershipsTable = ({
   );
 };
 
-
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 const AdminMembershipsPage = () => {
@@ -1154,12 +1162,12 @@ const AdminMembershipsPage = () => {
       fetchMemberships(1, searchQuery, statusFilter, typeFilter);
     }, 400);
     return () => clearTimeout(timeout);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, statusFilter, typeFilter]);
 
   useEffect(() => {
     fetchMemberships(page, searchQuery, statusFilter, typeFilter);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const fetchMemberships = async (
@@ -1207,7 +1215,7 @@ const AdminMembershipsPage = () => {
     }
     try {
       const res = await api.get(
-        `/admin/users?search=${encodeURIComponent(query)}&page=1`
+        `/admin/users?search=${encodeURIComponent(query)}&page=1`,
       );
       const data = res.data?.data || [];
       setUserSuggestions(Array.isArray(data) ? data.slice(0, 6) : []);
@@ -1220,7 +1228,7 @@ const AdminMembershipsPage = () => {
 
   const updateStatus = async (
     id: number,
-    status: "active" | "expired" | "cancelled"
+    status: "active" | "expired" | "cancelled",
   ) => {
     setUpdatingId(id);
     try {
@@ -1230,9 +1238,9 @@ const AdminMembershipsPage = () => {
         description: t("تم تحديث حالة العضوية", "Membership status updated"),
       });
       setMemberships((prev) =>
-        prev.map((m) => (m.id === id ? { ...m, status } : m))
+        prev.map((m) => (m.id === id ? { ...m, status } : m)),
       );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -1268,7 +1276,7 @@ const AdminMembershipsPage = () => {
       });
       setIsEditOpen(false);
       fetchMemberships(page, searchQuery, statusFilter, typeFilter);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -1294,7 +1302,7 @@ const AdminMembershipsPage = () => {
       setSelectedMembership(null);
       fetchMemberships(1, searchQuery, statusFilter, typeFilter);
       setPage(1);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: t("خطأ", "Error"),
@@ -1328,7 +1336,7 @@ const AdminMembershipsPage = () => {
         title: t("خطأ في البيانات", "Validation Error"),
         description: t(
           "تاريخا البداية والنهاية مطلوبان",
-          "Start and end dates are required"
+          "Start and end dates are required",
         ),
         variant: "destructive",
       });
@@ -1349,13 +1357,13 @@ const AdminMembershipsPage = () => {
         title: t("تم بنجاح", "Success"),
         description: t(
           "تم إضافة العضوية بنجاح",
-          "Membership added successfully"
+          "Membership added successfully",
         ),
       });
       setIsAddOpen(false);
       fetchMemberships(1, searchQuery, statusFilter, typeFilter);
       setPage(1);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const errors = err.response?.data?.errors;
       const msg = errors
@@ -1374,16 +1382,24 @@ const AdminMembershipsPage = () => {
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
-      if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
-      if (typeFilter && typeFilter !== "all") params.append("membership_type", typeFilter);
+      if (statusFilter && statusFilter !== "all")
+        params.append("status", statusFilter);
+      if (typeFilter && typeFilter !== "all")
+        params.append("membership_type", typeFilter);
 
-      const response = await api.get(`/admin/memberships/export?${params.toString()}`, {
-        responseType: "blob",
-      });
+      const response = await api.get(
+        `/admin/memberships/export?${params.toString()}`,
+        {
+          responseType: "blob",
+        },
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `memberships_export_${new Date().toISOString().split("T")[0]}.xlsx`);
+      link.setAttribute(
+        "download",
+        `memberships_export_${new Date().toISOString().split("T")[0]}.xlsx`,
+      );
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -1423,7 +1439,10 @@ const AdminMembershipsPage = () => {
                 className="gap-2 border-primary text-primary hover:bg-primary/5"
               >
                 <Mail className="w-4 h-4" />
-                {t(`إرسال بريد (${selectedIds.length})`, `Email (${selectedIds.length})`)}
+                {t(
+                  `إرسال بريد (${selectedIds.length})`,
+                  `Email (${selectedIds.length})`,
+                )}
               </Button>
               <Button
                 variant="ghost"
@@ -1502,7 +1521,11 @@ const AdminMembershipsPage = () => {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" onClick={handleExport} className="gap-2 shrink-0">
+            <Button
+              variant="outline"
+              onClick={handleExport}
+              className="gap-2 shrink-0"
+            >
               <FileSpreadsheet className="w-4 h-4" />
               {t("تصدير إكسل", "Export Excel")}
             </Button>
@@ -1595,7 +1618,11 @@ const AdminMembershipsPage = () => {
           if (!open) setSelectedIds([]);
         }}
         endpoint="/admin/emails/send"
-        extraPayload={{ user_ids: memberships.filter(m => selectedIds.includes(m.id)).map(m => m.user_id) }}
+        extraPayload={{
+          user_ids: memberships
+            .filter((m) => selectedIds.includes(m.id))
+            .map((m) => m.user_id),
+        }}
         recipientLabel={t(`الأعضاء المحددون`, `Selected Members`)}
         recipientCount={selectedIds.length}
       />
