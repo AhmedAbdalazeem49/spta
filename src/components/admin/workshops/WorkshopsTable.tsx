@@ -74,7 +74,6 @@ export const WorkshopsTable = ({
                 <td className="p-4 font-medium text-sm max-w-[180px]">
                   <span
                     className="cursor-pointer hover:text-primary transition-colors line-clamp-1"
-                    onClick={() => onOpenView(w)}
                     title={w.title}
                   >
                     {w.title || "—"}
