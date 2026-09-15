@@ -52,7 +52,7 @@ const WorkshopsPage = () => {
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [isLoadingWorkshops, setIsLoadingWorkshops] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
+  const [activeTab, setActiveTab] = useState("available");
   const [registeredIds, setRegisteredIds] = useState<number[]>([]);
 
   // Modals
@@ -125,7 +125,10 @@ const WorkshopsPage = () => {
       w.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       w.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus = filterStatus === "all" || w.status === filterStatus;
+    const matchesStatus =
+      activeTab === "available"
+        ? w.status === "open"
+        : ["closed", "completed", "postponed"].includes(w.status);
 
     return matchesSearch && matchesStatus;
   });
@@ -260,39 +263,39 @@ const WorkshopsPage = () => {
               {/* Filters */}
               <Card data-aos="fade-up">
                 <CardContent className="p-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="relative flex-1">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex p-1 bg-muted rounded-xl w-full border border-border/50 shadow-inner">
+                      <button
+                        onClick={() => setActiveTab("available")}
+                        className={`flex-1 px-5 sm:px-8 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${
+                          activeTab === "available"
+                            ? "bg-background text-primary shadow-sm"
+                            : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                        }`}
+                      >
+                        {t("ورش العمل المتاحة", "Available Workshops")}
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("previous")}
+                        className={`flex-1 px-5 sm:px-8 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${
+                          activeTab === "previous"
+                            ? "bg-background text-primary shadow-sm"
+                            : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                        }`}
+                      >
+                        {t("ورش العمل السابقة", "Previous Workshops")}
+                      </button>
+                    </div>
+
+                    <div className="relative w-full">
                       <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
                         placeholder={t("بحث عن ورشة...", "Search workshops...")}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="ps-10"
+                        className="ps-10 h-11 bg-muted/30"
                       />
                     </div>
-                    <Select
-                      value={filterStatus}
-                      onValueChange={setFilterStatus}
-                    >
-                      <SelectTrigger className="w-full sm:w-[150px]">
-                        <SelectValue placeholder={t("الحالة", "Status")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{t("الكل", "All")}</SelectItem>
-                        <SelectItem value="open">
-                          {t("متاح", "Open")}
-                        </SelectItem>
-                        <SelectItem value="closed">
-                          {t("مغلق", "Closed")}
-                        </SelectItem>
-                        <SelectItem value="completed">
-                          {t("منتهي", "Completed")}
-                        </SelectItem>
-                        <SelectItem value="postponed">
-                          {t("مؤجل", "Postponed")}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
                 </CardContent>
               </Card>
