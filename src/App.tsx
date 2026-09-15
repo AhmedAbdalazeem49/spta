@@ -64,6 +64,7 @@ import PaymentPage from "./pages/PaymentPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
 import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
+import Conference2026Page from "./user/pages/Conference2026Page";
 import Membership from "./user/pages/Membership";
 import VerifyMembershipPage from "./pages/VerifyMembershipPage";
 import WhatsAppFloat from "./components/WhatsAppFloat";
@@ -120,6 +121,7 @@ const App = () => (
               <Route path="/workshops" element={<WorkshopsPage />} />
               {/* Conferences */}
               <Route path="/conferences" element={<ConferencesPage />} />
+              <Route path="/conference-2026" element={<Conference2026Page />} />
               {/* attendance Page */}
               <Route
                 path="/workshop/:id/attendance"
