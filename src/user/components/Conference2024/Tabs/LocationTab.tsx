@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Navigation, Car, Plane, Train, Compass } from "lucide-react";
 
+// Conference venue: Almoosa Health Group
+
 export const LocationTab = () => {
   const { language } = useLanguage();
   const [activeHotspot, setActiveHotspot] = useState<number | null>(null);
@@ -13,36 +15,36 @@ export const LocationTab = () => {
       nameAr: "المنطقة الشرقية",
       nameEn: "Eastern Province",
       icon: Train,
-      descAr: "عبر القطار أو رحلة طيران قصيرة إلى الرياض، ثم استخدام طرق النقل السريعة المتصلة بجامعة الملك سعود.",
-      descEn: "Via train or a short flight to Riyadh, then utilizing expressways directly to King Saud University.",
+      descAr: "تقع مجموعة الموسى الصحية في المنطقة الشرقية ذاتها. يمكنك الوصول بسهولة عبر الطرق السريعة الداخلية أو سيارات الأجرة.",
+      descEn: "Almoosa Health Group is located in the Eastern Province itself. Easily reachable via internal highways or ride-sharing services.",
       color: "from-blue-400 to-blue-600"
     },
     {
       id: 2,
-      nameAr: "القصيم",
-      nameEn: "Qassim",
-      icon: Car,
-      descAr: "طريق سريع مباشر (طريق القصيم - الرياض) يربطك بموقع المؤتمر بسهولة وسلاسة.",
-      descEn: "A direct highway (Qassim-Riyadh road) connecting you easily and smoothly to the venue.",
-      color: "from-emerald-400 to-emerald-600"
+      nameAr: "الرياض",
+      nameEn: "Riyadh",
+      icon: Plane,
+      descAr: "من مطار الملك خالد الدولي، خذ رحلة طيران مباشرة إلى مطار الأحساء، ثم توجه إلى مجموعة الموسى الصحية (30 دقيقة).",
+      descEn: "From King Khalid International Airport, fly directly to Al-Ahsa Airport, then head to Almoosa Health Group (~30 min drive).",
+      color: "from-purple-400 to-purple-600"
     },
     {
       id: 3,
-      nameAr: "الأحساء",
-      nameEn: "Al-Ahsa",
-      icon: Train,
-      descAr: "رحلة مريحة عبر قطار سار (SAR) أو القيادة عبر طريق الرياض السريع المباشر.",
-      descEn: "A comfortable trip via SAR train or driving through the direct Riyadh highway.",
-      color: "from-amber-400 to-amber-600"
+      nameAr: "الدمام والخبر",
+      nameEn: "Dammam & Khobar",
+      icon: Car,
+      descAr: "انطلق عبر طريق الدمام السريع المتجه جنوباً نحو الأحساء، تستغرق الرحلة حوالي ساعة ونصف بالسيارة.",
+      descEn: "Head south via the Dammam-Hofuf expressway toward Al-Ahsa. The drive takes approximately 1.5 hours.",
+      color: "from-emerald-400 to-emerald-600"
     },
     {
       id: 4,
       nameAr: "جدة ومكة المكرمة",
       nameEn: "Jeddah & Makkah",
       icon: Plane,
-      descAr: "رحلات طيران مجدولة على مدار الساعة لمطار الملك خالد الدولي بالرياض، وقطار الحرمين.",
-      descEn: "Scheduled flights around the clock to King Khalid International Airport, and Haramain Train.",
-      color: "from-purple-400 to-purple-600"
+      descAr: "رحلات طيران مجدولة من مطار الملك عبدالعزيز إلى مطار الأحساء الدولي، ثم توجه مباشرة إلى الموسى الصحية.",
+      descEn: "Scheduled flights from King Abdulaziz Airport to Al-Ahsa International Airport, then a direct transfer to Almoosa Health Group.",
+      color: "from-amber-400 to-amber-600"
     }
   ];
 
@@ -55,7 +57,7 @@ export const LocationTab = () => {
         </h3>
         <p className="text-gray-600 dark:text-gray-300 flex items-center justify-center gap-2 text-lg">
           <MapPin className="w-6 h-6 text-red-500" />
-          {language === 'ar' ? 'جامعة الملك سعود، الرياض، المملكة العربية السعودية' : 'King Saud University, Riyadh, Saudi Arabia'}
+          {language === 'ar' ? 'مجموعة الموسى الصحية، المنطقة الشرقية، المملكة العربية السعودية' : 'Almoosa Health Group, Eastern Province, Saudi Arabia'}
         </p>
       </div>
 
@@ -65,10 +67,10 @@ export const LocationTab = () => {
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="xl:col-span-2 h-[450px] xl:h-auto min-h-[450px] rounded-3xl overflow-hidden shadow-2xl relative border-4 border-white/50 dark:border-gray-800/80 group"
+          className="xl:col-span-2 min-h-[280px] sm:min-h-[350px] md:min-h-[450px] xl:h-auto rounded-3xl overflow-hidden shadow-2xl relative border-4 border-white/50 dark:border-gray-800/80 group"
         >
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3623.689626388484!2d46.621453275990234!3d24.723737250171804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f1707d7cfb395%3A0xc4eb7fa918b939ec!2sKing%20Saud%20University!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3584.2847632741517!2d49.55777677604073!3d25.644396977410754!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e35d3a4a4a4a4a5%3A0xa4a4a4a4a4a4a4a4!2sAlmoosa%20Health%20Group!5e0!3m2!1sen!2ssa!4v1700000000001!5m2!1sen!2ssa" 
             width="100%" 
             height="100%" 
             style={{ border: 0 }} 
@@ -81,7 +83,7 @@ export const LocationTab = () => {
           <div className="absolute inset-0 pointer-events-none ring-inset ring-1 ring-black/5 dark:ring-white/10 rounded-3xl"></div>
 
           <a 
-            href="https://maps.google.com/?q=King+Saud+University+Riyadh" 
+            href="https://maps.google.com/?q=Almoosa+Health+Group+Al+Ahsa+Saudi+Arabia" 
             target="_blank" 
             rel="noreferrer"
             className="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 bg-blue-600/90 backdrop-blur-md hover:bg-blue-700 text-white px-6 py-3 rounded-full font-bold shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-blue-600/40 transition-all hover:scale-105 flex items-center gap-2 whitespace-nowrap"

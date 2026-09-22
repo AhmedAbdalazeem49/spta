@@ -23,14 +23,14 @@ export const OrganizingCommitteeTab = () => {
         </p>
       </div>
       
-      <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {members.map((member, index) => (
           <motion.div
             key={member.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-blue-100 dark:hover:border-gray-700"
+            className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-gray-50 dark:bg-gray-800/50 p-4 sm:p-6 rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-blue-100 dark:hover:border-gray-700"
           >
             <div className="w-20 h-20 shrink-0 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-2xl rotate-3 flex items-center justify-center overflow-hidden shadow-sm">
                 <span className="text-xs text-gray-500 -rotate-3">Avatar</span>

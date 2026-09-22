@@ -66,7 +66,7 @@ export const CertificatePreviewTab = () => {
         </button>
       </div>
 
-      <div className="w-full xl:w-2/3 bg-gray-50 dark:bg-gray-800/30 rounded-[2.5rem] p-4 md:p-8 flex items-center justify-center min-h-[500px] border border-gray-100 dark:border-gray-700 overflow-hidden relative">
+      <div className="w-full xl:w-2/3 bg-gray-50 dark:bg-gray-800/30 rounded-[2.5rem] p-4 md:p-8 flex items-center justify-center min-h-[500px] border border-gray-100 dark:border-gray-700 overflow-x-auto relative">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
         
         <motion.div 

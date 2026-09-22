@@ -20,14 +20,14 @@ export const ScientificCommitteeTab = () => {
         </h3>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {members.map((member, index) => (
           <motion.div
             key={member.id}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
-            className="group relative bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all overflow-hidden"
+            className="group relative bg-white dark:bg-gray-800 rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-10 group-hover:opacity-100 transition-opacity"></div>
             <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 border-4 border-white dark:border-gray-800 shadow-md relative z-10 flex items-center justify-center overflow-hidden">

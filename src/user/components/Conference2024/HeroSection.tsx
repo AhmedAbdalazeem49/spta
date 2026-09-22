@@ -28,17 +28,17 @@ export const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm font-medium tracking-wide text-blue-200 mb-8 shadow-2xl"
+            className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm font-medium tracking-wide text-blue-200 mb-8 shadow-2xl"
           >
             <Sparkles className="w-4 h-4 text-blue-400" />
             {language === 'ar' ? 'الحدث الطبي الأبرز لهذا العام' : 'The Most Prominent Medical Event of the Year'}
           </motion.div>
           
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold mb-8 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 drop-shadow-sm">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold mb-8 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 drop-shadow-sm">
             {language === 'ar' ? 'المؤتمر السنوي 2026' : 'Annual Conference 2026'}
           </h1>
           
-          <p className="text-xl md:text-3xl text-gray-300/90 mb-14 max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-base sm:text-lg md:text-2xl text-gray-300/90 mb-14 max-w-3xl mx-auto font-light leading-relaxed">
             {language === 'ar' 
               ? 'تجمع استثنائي لنخبة من العقول والخبراء لرسم ملامح المستقبل الطبي.' 
               : 'An exceptional gathering of elite minds and experts to shape the medical future.'}
@@ -47,7 +47,7 @@ export const HeroSection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-12">
             <motion.div 
               whileHover={{ y: -5 }}
-              className="flex items-center gap-4 bg-white/5 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10 shadow-xl transition-all"
+              className="flex items-center gap-4 bg-white/5 backdrop-blur-md px-4 sm:px-6 md:px-8 py-4 rounded-2xl border border-white/10 shadow-xl transition-all"
             >
               <div className="p-3 bg-blue-500/20 rounded-xl text-blue-400">
                 <Calendar className="w-6 h-6" />
@@ -60,14 +60,14 @@ export const HeroSection = () => {
 
             <motion.div 
               whileHover={{ y: -5 }}
-              className="flex items-center gap-4 bg-white/5 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10 shadow-xl transition-all"
+              className="flex items-center gap-4 bg-white/5 backdrop-blur-md px-4 sm:px-6 md:px-8 py-4 rounded-2xl border border-white/10 shadow-xl transition-all"
             >
               <div className="p-3 bg-indigo-500/20 rounded-xl text-indigo-400">
                 <MapPin className="w-6 h-6" />
               </div>
               <div className="text-left rtl:text-right">
                 <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{language === 'ar' ? 'الموقع' : 'Location'}</p>
-                <span className="text-xl font-semibold text-white">{language === 'ar' ? 'جامعة الملك سعود' : 'King Saud University'}</span>
+                <span className="text-lg font-medium">{language === 'ar' ? 'مجموعة الموسى الصحية' : 'Almoosa Health Group'}</span>
               </div>
             </motion.div>
           </div>

@@ -1,140 +1,271 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { BookOpen, X } from "lucide-react";
+import { Clock, User, X, CheckCircle2 } from "lucide-react";
+
+const workshopsData = {
+  morning: [
+    {
+      id: "m1",
+      title: "Clinical Reasoning in Cervicothoracic Disorders",
+      speaker: "Dr. Terrence McGee",
+      time: "08:00 AM - 12:00 PM",
+      teaser: "Master advanced clinical reasoning frameworks for the cervical and thoracic spine.",
+      bio: "International manual therapy expert with 20+ years academic experience.",
+      objectives: [
+        "Apply clinical reasoning frameworks",
+        "Differentiate cervical and thoracic dysfunction sources",
+        "Demonstrate advanced manual therapy techniques",
+        "Integrate patient-centered assessment"
+      ]
+    },
+    {
+      id: "m2",
+      title: "Speaking Up in Elite Sport",
+      speaker: "Dr. Sian Knott",
+      time: "08:00 AM - 12:00 PM",
+      teaser: "Explore communication and psychological safety in high-performance environments.",
+      bio: "Sport psychologist working with Olympic athletes.",
+      objectives: [
+        "Understand communication dynamics in high-performance settings",
+        "Develop assertive strategies",
+        "Manage psychological safety",
+        "Apply evidence-based athlete wellbeing approaches"
+      ]
+    },
+    {
+      id: "m3",
+      title: "From Rehabilitation to Performance: Integrating OPT",
+      speaker: "Ms. Tahani AlMahdi",
+      time: "08:00 AM - 12:00 PM",
+      teaser: "Bridge the gap between late-stage rehab and return-to-sport performance.",
+      bio: "Saudi certified performance trainer specializing in return-to-sport.",
+      objectives: [
+        "Understand OPT model principles",
+        "Bridge rehab and sport performance",
+        "Design progressive return-to-sport programs",
+        "Integrate strength and conditioning"
+      ]
+    },
+    {
+      id: "m4",
+      title: "Physiotherapy in Chronic Overlapping Pain Conditions",
+      speaker: "Dr. Ali Alatar",
+      time: "08:00 AM - 12:00 PM",
+      teaser: "Develop comprehensive strategies for complex chronic pain patients.",
+      bio: "Pain medicine specialist with expertise in pain neuroscience.",
+      objectives: [
+        "Recognize chronic overlapping pain conditions",
+        "Apply pain neuroscience education",
+        "Select appropriate physiotherapy interventions",
+        "Develop patient-centered pain management plans"
+      ]
+    },
+    {
+      id: "m5",
+      title: "A Practical Approach to Acute Vertigo and BPPV",
+      speaker: "Dr. Doaa AlSharif",
+      time: "08:00 AM - 12:00 PM",
+      teaser: "Hands-on techniques for assessing and treating common vestibular disorders.",
+      bio: "Vestibular rehabilitation specialist with expertise in balance disorders.",
+      objectives: [
+        "Conduct systematic vestibular assessment",
+        "Differentiate BPPV variants",
+        "Perform Epley and Semont maneuvers",
+        "Develop vestibular rehabilitation programs"
+      ]
+    }
+  ],
+  afternoon: [
+    {
+      id: "a1",
+      title: "Aquatic Therapy Beyond the Pool",
+      speaker: "Mr. Mohamed Zedan",
+      time: "01:00 PM - 05:00 PM",
+      teaser: "Discover the therapeutic power of water for complex neurological rehabilitation.",
+      bio: "Pioneer in aquatic physiotherapy with 15 years clinical experience.",
+      objectives: [
+        "Understand physiological effects of water immersion",
+        "Apply Halliwick principles",
+        "Design aquatic therapy programs for neurological conditions",
+        "Explore technology in aquatic rehab"
+      ]
+    },
+    {
+      id: "a2",
+      title: "Using Musculoskeletal Ultrasound",
+      speaker: "Mr. Jaffar Alabdrabalrasol",
+      time: "01:00 PM - 05:00 PM",
+      teaser: "Integrate point-of-care diagnostic ultrasound into your routine practice.",
+      bio: "Saudi MSK ultrasound specialist with extensive diagnostic training.",
+      objectives: [
+        "Understand basic ultrasound physics",
+        "Identify MSK structures on ultrasound",
+        "Perform guided assessment of tendons and joints",
+        "Integrate ultrasound in routine assessment"
+      ]
+    },
+    {
+      id: "a3",
+      title: "From Physical Stimuli to Biological Adaptation",
+      speaker: "Dr. Philippe Germain",
+      time: "01:00 PM - 05:00 PM",
+      teaser: "The science of how the body adapts to precise mechanical loading.",
+      bio: "French researcher in exercise physiology and biological response to training.",
+      objectives: [
+        "Explain how physical stimuli trigger adaptation",
+        "Apply progressive overload safely",
+        "Understand hormonal and neural adaptations",
+        "Design evidence-based training protocols"
+      ]
+    },
+    {
+      id: "a4",
+      title: "Better Teams, Better Care",
+      speaker: "Ms. Halah Aldhuaian",
+      time: "01:00 PM - 05:00 PM",
+      teaser: "Transform interprofessional team dynamics for improved patient outcomes.",
+      bio: "Healthcare leadership consultant specializing in interprofessional collaboration.",
+      objectives: [
+        "Define effective interprofessional team dynamics",
+        "Apply conflict resolution strategies",
+        "Develop communication frameworks",
+        "Build psychological safety in healthcare"
+      ]
+    },
+    {
+      id: "a5",
+      title: "From Risk to Readiness",
+      speaker: "Dr. Mohammed Alshehri",
+      time: "01:00 PM - 05:00 PM",
+      teaser: "Data-driven injury prevention and athletic readiness screening.",
+      bio: "Sports physiotherapist and injury prevention expert with national-level experience.",
+      objectives: [
+        "Conduct functional movement assessments",
+        "Identify injury risk factors",
+        "Design individualized prevention programs",
+        "Apply data-driven readiness approaches"
+      ]
+    }
+  ]
+};
+
+type Workshop = typeof workshopsData.morning[0];
 
 export const WorkshopsTab = () => {
-  const { language } = useLanguage();
-  const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null);
-  
-  const workshops = [
-    {
-      id: 1,
-      title: language === 'ar' ? 'ورشة عمل الجراحة المتقدمة' : 'Advanced Surgery Workshop',
-      objective: language === 'ar' ? 'تعلم أحدث التقنيات في الجراحة الدقيقة والمناظير وتطبيقها عملياً.' : 'Learn and apply the latest techniques in microsurgery and laparoscopy.',
-      color: 'from-emerald-400 to-teal-600',
-      bgClass: 'bg-emerald-50 dark:bg-emerald-900/10',
-      time: "09:00 AM - 12:00 PM",
-      instructor: "Dr. Salem"
-    },
-    {
-      id: 2,
-      title: language === 'ar' ? 'الذكاء الاصطناعي في الطب' : 'AI in Medicine',
-      objective: language === 'ar' ? 'تطبيقات الذكاء الاصطناعي في التشخيص المبكر للأمراض وتحليل البيانات.' : 'AI applications in early disease diagnosis and data analysis.',
-      color: 'from-blue-400 to-indigo-600',
-      bgClass: 'bg-blue-50 dark:bg-blue-900/10',
-      time: "01:00 PM - 04:00 PM",
-      instructor: "Eng. Tariq"
-    },
-    {
-      id: 3,
-      title: language === 'ar' ? 'إدارة الأزمات الصحية' : 'Health Crisis Management',
-      objective: language === 'ar' ? 'استراتيجيات التعامل مع الأوبئة والطوارئ الطبية وتنظيم الفرق.' : 'Strategies for handling pandemics, medical emergencies, and team organization.',
-      color: 'from-orange-400 to-red-600',
-      bgClass: 'bg-orange-50 dark:bg-orange-900/10',
-      time: "09:00 AM - 02:00 PM",
-      instructor: "Dr. Maha"
-    }
-  ];
+  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(null);
 
-  return (
-    <div className="pb-10">
-      <div className="text-center mb-14">
-        <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-4">
-          {language === 'ar' ? 'ورش العمل المصاحبة' : 'Accompanying Workshops'}
-        </h3>
-        <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-          {language === 'ar' ? 'تطوير مهاراتك من خلال ورش عمل تفاعلية يقدمها نخبة من المختصين.' : 'Develop your skills through interactive workshops presented by elite specialists.'}
-        </p>
+  const renderWorkshopCard = (workshop: Workshop) => (
+    <motion.div
+      key={workshop.id}
+      whileHover={{ y: -5 }}
+      onClick={() => setSelectedWorkshop(workshop)}
+      className="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-100 dark:border-slate-700 cursor-pointer hover:shadow-xl transition-all group flex flex-col h-full relative overflow-hidden"
+    >
+      <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 group-hover:w-2 transition-all duration-300"></div>
+      
+      <div className="flex-1 pl-2">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2">{workshop.title}</h3>
+        <p className="text-slate-600 dark:text-slate-300 text-sm mb-6 line-clamp-2 italic">"{workshop.teaser}"</p>
+        
+        <div className="mt-auto space-y-2">
+          <div className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-200">
+            <User className="w-4 h-4 mr-2 text-blue-500" />
+            {workshop.speaker}
+          </div>
+          <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
+            <Clock className="w-4 h-4 mr-2 text-amber-500" />
+            {workshop.time}
+          </div>
+        </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {workshops.map((workshop, index) => (
-          <motion.div
-            key={workshop.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -10 }}
-            className="group rounded-[2rem] overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-black/50 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700/50 flex flex-col h-full"
-          >
-            <div className={`h-56 bg-gradient-to-br ${workshop.color} relative overflow-hidden flex items-center justify-center`}>
-              <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:opacity-0"></div>
-              <BookOpen className="w-20 h-20 text-white opacity-40 group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <div className="p-8 flex-1 flex flex-col">
-              <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
-                {workshop.title}
-              </h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-8 line-clamp-3 flex-1">
-                {workshop.objective}
-              </p>
-              <button 
-                onClick={() => setSelectedWorkshop(workshop)}
-                className="w-full py-4 px-4 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-2xl font-bold transition-all border border-gray-200 dark:border-gray-700 group-hover:border-blue-500/30 group-hover:text-blue-600 dark:group-hover:text-blue-400"
-              >
-                {language === 'ar' ? 'تفاصيل الورشة' : 'Workshop Details'}
-              </button>
-            </div>
-          </motion.div>
-        ))}
+      <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 text-center text-blue-600 dark:text-blue-400 text-sm font-bold group-hover:text-blue-700 dark:group-hover:text-blue-300">
+        View Details &rarr;
+      </div>
+    </motion.div>
+  );
+
+  return (
+    <div className="py-12">
+      <div className="mb-16">
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block">Morning Workshops (08:00 AM - 12:00 PM)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {workshopsData.morning.map(renderWorkshopCard)}
+        </div>
       </div>
 
+      <div>
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block">Afternoon Workshops (01:00 PM - 05:00 PM)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {workshopsData.afternoon.map(renderWorkshopCard)}
+        </div>
+      </div>
+
+      {/* MODAL */}
       <AnimatePresence>
         {selectedWorkshop && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
-            onClick={() => setSelectedWorkshop(null)}
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedWorkshop(null)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            ></motion.div>
+            
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-gray-900 rounded-[2.5rem] w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col md:flex-row"
+              className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-3xl mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl border border-slate-200 dark:border-slate-800"
             >
-              <div className={`md:w-1/3 bg-gradient-to-br ${selectedWorkshop.color} p-8 flex flex-col items-center justify-center text-white relative`}>
-                <BookOpen className="w-24 h-24 opacity-80 mb-4" />
-                <div className="absolute inset-0 bg-black/10"></div>
-              </div>
-              
-              <div className="p-8 md:p-10 flex-1 relative">
-                <button 
-                  onClick={() => setSelectedWorkshop(null)}
-                  className="absolute top-6 right-6 rtl:right-auto rtl:left-6 p-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
+              <button 
+                onClick={() => setSelectedWorkshop(null)}
+                className="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              >
+                <X className="w-6 h-6 text-slate-500" />
+              </button>
 
-                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-6 pr-8 rtl:pr-0 rtl:pl-8">
-                  {selectedWorkshop.title}
-                </h3>
+              <div className="p-5 sm:p-6 md:p-8">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-bold mb-6 flex items-center w-max">
+                  <Clock className="w-4 h-4 mr-2" />
+                  {selectedWorkshop.time}
+                </div>
                 
-                <div className="space-y-6">
-                  <div>
-                    <h5 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">{language === 'ar' ? 'أهداف الورشة' : 'Workshop Objectives'}</h5>
-                    <p className="text-gray-700 dark:text-gray-300 font-medium leading-relaxed">
-                      {selectedWorkshop.objective}
-                    </p>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                  {selectedWorkshop.title}
+                </h2>
+                
+                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 mb-8 border border-slate-100 dark:border-slate-700">
+                  <div className="flex items-center mb-2">
+                    <User className="w-5 h-5 text-blue-500 mr-3" />
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white">{selectedWorkshop.speaker}</h4>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <div>
-                      <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{language === 'ar' ? 'الوقت' : 'Time'}</h5>
-                      <p className="text-gray-900 dark:text-white font-semibold">{selectedWorkshop.time}</p>
-                    </div>
-                    <div>
-                      <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{language === 'ar' ? 'المقدم' : 'Instructor'}</h5>
-                      <p className="text-gray-900 dark:text-white font-semibold">{selectedWorkshop.instructor}</p>
-                    </div>
-                  </div>
+                  <p className="text-slate-600 dark:text-slate-300 ml-8">{selectedWorkshop.bio}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
+                    Learning Objectives
+                  </h4>
+                  <ul className="space-y-4">
+                    {selectedWorkshop.objectives.map((obj, i) => (
+                      <motion.li 
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        key={i} 
+                        className="flex items-start"
+                      >
+                        <CheckCircle2 className="w-6 h-6 text-green-500 mr-4 shrink-0 mt-0.5" />
+                        <span className="text-slate-700 dark:text-slate-200 text-lg">{obj}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
