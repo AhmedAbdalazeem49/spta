@@ -25,7 +25,7 @@ import {
   Handshake,
   Megaphone,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
@@ -35,6 +35,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setLanguage("ar");
+    return () => {
+      setLanguage("en");
+    };
+  }, [setLanguage]);
 
   const isSystemAdmin = user?.role === "system_admin";
 
