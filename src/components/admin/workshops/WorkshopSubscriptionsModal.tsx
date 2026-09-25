@@ -282,16 +282,12 @@ export const WorkshopSubscriptionsModal = ({
 
   // ─── BULK CERTIFICATE ────────────────────────────────────
   const handleBulkIssueCertificates = async () => {
-    const attended = subscribers.filter(
-      (s) => s.attendance === "attended" && !s.certificate_issued,
-    );
-
-    if (attended.length === 0) {
+    if (targetsWithoutCert.length === 0) {
       toast({
         title: t("لا يوجد", "Nothing to issue"),
         description: t(
-          "لا يوجد حاضرون بدون شهادة",
-          "All attended subscribers already have certificates",
+          "لا يوجد أشخاص بدون شهادة في الفرز الحالي",
+          "No users without certificates in the current filter",
         ),
       });
       return;
@@ -301,7 +297,7 @@ export const WorkshopSubscriptionsModal = ({
     let successCount = 0;
     let skipCount = 0;
 
-    for (const sub of attended) {
+    for (const sub of targetsWithoutCert) {
       try {
         await api.post("/admin/certificates", {
           type: "attendance",
@@ -423,6 +419,10 @@ export const WorkshopSubscriptionsModal = ({
     (s) => s.attendance === "attended",
   ).length;
 
+  const targetsWithoutCert = filteredSubscribers.filter(
+    (s) => !s.certificate_issued,
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="fixed w-screen h-screen max-w-none p-0 flex flex-col overflow-hidden bg-background">
@@ -484,7 +484,7 @@ export const WorkshopSubscriptionsModal = ({
               </Button>
               <Button
                 onClick={handleBulkIssueCertificates}
-                disabled={isGenerating}
+                disabled={isGenerating || targetsWithoutCert.length === 0}
                 className="gap-2"
               >
                 {isGenerating ? (
@@ -492,7 +492,7 @@ export const WorkshopSubscriptionsModal = ({
                 ) : (
                   <Medal className="w-4 h-4" />
                 )}
-                {t("إصدار للحاضرين", "Issue to Attended")}
+                {t(`إصدار للمحددين بالفرز (${targetsWithoutCert.length})`, `Issue to Filtered (${targetsWithoutCert.length})`)}
               </Button>
             </div>
           </div>
