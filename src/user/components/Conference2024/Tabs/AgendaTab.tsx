@@ -34,43 +34,72 @@ const TYPE_CONFIG: Record<SessionType, { color: string; bg: string; border: stri
 };
 
 const DAYS = [
-  { label: "Day 1 — Pre-Conference", date: "Nov 11, 2026", subtitle: "Workshops Day", icon: <BookOpen className="w-5 h-5" /> },
-  { label: "Day 2 — Main Conference", date: "Nov 12, 2026", subtitle: "Keynotes & Sessions", icon: <Mic2 className="w-5 h-5" /> },
-  { label: "Day 3 — Conference", date: "Nov 13, 2026", subtitle: "Panels & Closing", icon: <Trophy className="w-5 h-5" /> },
+  { label: "Day 1", date: "Nov 12, 2026", subtitle: "Conference Day 1", icon: <Mic2 className="w-5 h-5" /> },
+  { label: "Day 2", date: "Nov 13, 2026", subtitle: "Conference Day 2", icon: <Trophy className="w-5 h-5" /> },
 ];
 
 const SCHEDULE: Session[] = [
-  // DAY 1 — WORKSHOPS
-  { id: 1,  day: 1, time: "07:30", endTime: "08:00", type: "break",    title: "Registration & Morning Welcome", desc: "Participant check-in, badge collection, and welcome coffee." },
-  { id: 2,  day: 1, time: "08:00", endTime: "12:00", type: "workshop", title: "Clinical Reasoning in Cervicothoracic Disorders", speaker: "Dr. Terrence McGee", role: "International Manual Therapy Expert, Ireland", room: "Hall A", tags: ["Manual Therapy", "Clinical Reasoning"], desc: "A deep dive into applying clinical reasoning frameworks for cervicothoracic conditions, combining advanced assessment and manual therapy techniques." },
-  { id: 3,  day: 1, time: "08:00", endTime: "12:00", type: "workshop", title: "Speaking Up in Elite Sport", speaker: "Dr. Sian Knott", role: "Sport Psychologist, UK", room: "Hall B", tags: ["Sport Psychology", "Communication"], desc: "Understanding communication dynamics in high-performance settings and developing assertive strategies for athlete wellbeing." },
-  { id: 4,  day: 1, time: "08:00", endTime: "12:00", type: "workshop", title: "From Rehabilitation to Performance: Integrating OPT", speaker: "Ms. Tahani AlMahdi", role: "Performance Trainer & Physiotherapist, Saudi Arabia", room: "Hall C", tags: ["OPT", "Return to Sport"], desc: "Bridging the gap between clinical rehabilitation and athletic performance using the OPT model." },
-  { id: 5,  day: 1, time: "08:00", endTime: "12:00", type: "workshop", title: "Physiotherapy in Chronic Overlapping Pain Conditions", speaker: "Dr. Ali Alatar", role: "Pain Medicine Specialist, Saudi Arabia", room: "Hall D", tags: ["Chronic Pain", "Neuroscience"], desc: "Pain neuroscience education and tailored physiotherapy for patients with chronic overlapping pain conditions." },
-  { id: 6,  day: 1, time: "08:00", endTime: "12:00", type: "workshop", title: "A Practical Approach to Acute Vertigo and BPPV", speaker: "Dr. Doaa AlSharif", role: "Vestibular Rehabilitation Specialist, Saudi Arabia", room: "Hall E", tags: ["Vestibular", "BPPV"], desc: "Systematic vestibular assessment and hands-on practice with Epley and Semont repositioning maneuvers." },
-  { id: 7,  day: 1, time: "12:00", endTime: "13:00", type: "break",    title: "Lunch Break & Prayer", desc: "Midday break for lunch and prayer." },
-  { id: 8,  day: 1, time: "13:00", endTime: "17:00", type: "workshop", title: "Aquatic Therapy Beyond the Pool", speaker: "Mr. Mohamed Zedan", role: "Aquatic Physiotherapy Pioneer, Egypt", room: "Hall A", tags: ["Aquatic Therapy", "Neurology"], desc: "Exploring Halliwick principles and technology integration in aquatic rehabilitation for neurological conditions." },
-  { id: 9,  day: 1, time: "13:00", endTime: "17:00", type: "workshop", title: "Using Musculoskeletal Ultrasound", speaker: "Mr. Jaffar Alabdrabalrasol", role: "MSK Ultrasound Specialist, Saudi Arabia", room: "Hall B", tags: ["MSK", "Ultrasound"], desc: "Hands-on training in ultrasound image acquisition and guided assessment of tendons, muscles, and joints." },
-  { id: 10, day: 1, time: "13:00", endTime: "17:00", type: "workshop", title: "From Physical Stimuli to Biological Adaptation", speaker: "Dr. Philippe Germain", role: "Exercise Physiologist, France", room: "Hall C", tags: ["Exercise Science", "Adaptation"], desc: "Designing evidence-based progressive training protocols based on biological adaptation to physical stimuli." },
-  { id: 11, day: 1, time: "13:00", endTime: "17:00", type: "workshop", title: "Better Teams, Better Care", speaker: "Ms. Halah Aldhuaian", role: "Healthcare Leadership Consultant, Saudi Arabia", room: "Hall D", tags: ["Leadership", "Teamwork"], desc: "Building psychological safety and effective communication frameworks in interprofessional healthcare teams." },
-  { id: 12, day: 1, time: "13:00", endTime: "17:00", type: "workshop", title: "From Risk to Readiness", speaker: "Dr. Mohammed Alshehri", role: "Sports Physiotherapist, Saudi Arabia", room: "Hall E", tags: ["Sports PT", "Injury Prevention"], desc: "Data-driven functional readiness assessments and individualized injury prevention programs for athletes." },
+  // DAY 1
+  { id: 1, day: 1, time: "07:30", endTime: "08:00", type: "break", title: "Registration", desc: "Participant check-in and badge collection." },
+  { id: 2, day: 1, time: "08:00", endTime: "08:10", type: "ceremony", title: "Opening remarks", desc: "Welcome and opening remarks." },
+  
+  // Session 1
+  { id: 3, day: 1, time: "08:10", endTime: "08:40", type: "keynote", title: "Physiotherapy’s Role in Saudi Health System Transformation", speaker: "Dr. Faisal Aldahmashi OR Dr. Ahmad Nashry", role: "Session 1: Strategic Leadership & Health System Integration", room: "Moderator: Dr. Ahmad Alghamdi", desc: "" },
+  { id: 4, day: 1, time: "08:40", endTime: "09:45", type: "panel", title: "Focused symposium: Direct Access Implementation", speaker: "Dr. Asma Alrushud, Dr. Hani Alabbad, Dr. Hosam Alzahrani", desc: "Opening & Framing, Evidence Presentation, Saudi Experience Case Study, Implementation Framework." },
+  { id: 5, day: 1, time: "09:45", endTime: "10:00", type: "panel", title: "Q&A", desc: "" },
+  
+  { id: 6, day: 1, time: "10:00", endTime: "10:15", type: "break", title: "Break", desc: "" },
+  { id: 7, day: 1, time: "10:15", endTime: "11:00", type: "ceremony", title: "Opening ceremony", desc: "Official conference opening ceremony." },
+  
+  { id: 8, day: 1, time: "11:00", endTime: "11:40", type: "panel", title: "Panel (1): Rehabilitation Governance & National Standards: Building a Unified Physiotherapy Framework", speaker: "Dr. Hanan Alsaif, Mr. Talal Alghamdi, Dr. Noora Alshoweir", room: "Moderator: Dr. Mishal Aldaihan", desc: "" },
+  { id: 9, day: 1, time: "11:40", endTime: "11:50", type: "panel", title: "Q&A", desc: "" },
+  { id: 10, day: 1, time: "11:50", endTime: "13:00", type: "break", title: "Lunch", desc: "" },
 
-  // DAY 2 — MAIN CONFERENCE
-  { id: 13, day: 2, time: "08:00", endTime: "09:00", type: "break",    title: "Registration & Networking Breakfast", desc: "Conference registration, welcome coffee, and attendee networking." },
-  { id: 14, day: 2, time: "09:00", endTime: "10:00", type: "ceremony", title: "Grand Opening Ceremony", speaker: "Dr. Abdulfattah Saeed Alqahtani", role: "President, Saudi Physical Therapy Association", desc: "Official opening with SPTA leadership, VIP guests, and a welcome address setting the tone for the conference theme." },
-  { id: 15, day: 2, time: "10:00", endTime: "11:00", type: "keynote",  title: "Keynote: Leadership, Innovation & Value-Based Physiotherapy", speaker: "Dr. Terrence McGee", role: "International Manual Therapy Expert, Ireland", tags: ["Vision 2030", "Leadership"], desc: "The opening keynote exploring how physiotherapy leaders drive innovation and deliver value-based care within the Kingdom's evolving healthcare landscape." },
-  { id: 16, day: 2, time: "11:00", endTime: "11:30", type: "break",    title: "Coffee Break & Exhibition Visit", desc: "Refreshment break with opportunity to visit the sponsor exhibition booths." },
-  { id: 17, day: 2, time: "11:30", endTime: "13:00", type: "keynote",  title: "Keynote: Biological Adaptation to Physical Stimuli — A Clinical Perspective", speaker: "Dr. Philippe Germain", role: "Exercise Physiologist, France", tags: ["Exercise Science", "Evidence-Based"], desc: "An in-depth keynote on how physiological responses to physical stimuli can be leveraged for optimal patient rehabilitation outcomes." },
-  { id: 18, day: 2, time: "13:00", endTime: "14:00", type: "break",    title: "Lunch Break & Networking", desc: "Midday break for lunch, prayer, and professional networking." },
-  { id: 19, day: 2, time: "14:00", endTime: "15:30", type: "panel",    title: "Panel: Physiotherapy in Saudi Arabia — Present Landscape & Future Vision", speaker: "Multiple Speakers", role: "Panelists from SPTA & Almoosa Health Group", tags: ["Vision 2030", "Panel"], desc: "An interactive panel discussion featuring leading voices on the current state and future trajectory of physiotherapy practice in Saudi Arabia." },
-  { id: 20, day: 2, time: "15:30", endTime: "17:00", type: "keynote",  title: "Scientific Session: Evidence-Based Innovations in Physiotherapy", speaker: "Dr. Sian Knott", role: "Sport Psychologist, UK", tags: ["Evidence-Based", "Innovation"], desc: "Showcasing cutting-edge research and clinical innovations transforming physiotherapy practice globally." },
+  // Session 2
+  { id: 11, day: 1, time: "13:00", endTime: "13:30", type: "keynote", title: "Redefining Chronic Pain Care: Integrating Biopsychosocial & Value-Based Physiotherapy Models", speaker: "Prof. Lorimer Moseley", role: "Session 2: Advanced Musculoskeletal & Sports Rehabilitation", room: "Moderator: Dr. Abdulaziz Alomereni", desc: "" },
+  { id: 12, day: 1, time: "13:30", endTime: "13:50", type: "keynote", title: "Evidence-Based Return-to-Sport Decision-Making in Modern Rehabilitation", speaker: "Prof. Qassim Muaidi", desc: "Invited Lecture" },
+  { id: 13, day: 1, time: "13:50", endTime: "14:10", type: "keynote", title: "Speaking Up in Elite Sport - Barriers and Enablers Faced by Physiotherapists", speaker: "Dr. Sian Knott", desc: "Invited Lecture" },
+  { id: 14, day: 1, time: "14:10", endTime: "14:30", type: "keynote", title: "Integrating Evidence, Experience & Patient Context: Advanced Decision Making in Musculoskeletal Physiotherapy", speaker: "Prof. Ali Alshami", desc: "Invited Lecture" },
+  { id: 15, day: 1, time: "14:30", endTime: "14:40", type: "workshop", title: "Platform (1): Effects of Nigella sativa Supplementation with Combined Exercise...", speaker: "Dr. Hiedar Alyami", desc: "Platform presentation" },
+  { id: 16, day: 1, time: "14:40", endTime: "14:50", type: "workshop", title: "Platform (2): The Impact of Autonomic Nervous System Modulation...", speaker: "Dr. Hani Alkhawajah", desc: "Platform presentation" },
+  { id: 17, day: 1, time: "14:50", endTime: "15:00", type: "workshop", title: "Platform (3): Comparative Effectiveness of Cognitive Functional Therapy...", speaker: "Mr. Abdullah Alessa", desc: "Platform presentation" },
+  { id: 18, day: 1, time: "15:00", endTime: "15:10", type: "panel", title: "Q&A", desc: "" },
+  
+  { id: 19, day: 1, time: "15:10", endTime: "15:40", type: "break", title: "Break / Exhibition", desc: "" },
 
-  // DAY 3 — PANELS & CLOSING
-  { id: 21, day: 3, time: "09:00", endTime: "10:30", type: "keynote",  title: "Keynote: Sport Performance & Athlete Readiness", speaker: "Dr. Mohammed Alshehri", role: "Sports Physiotherapist, Saudi Arabia", tags: ["Sports PT", "Performance"], desc: "Strategies for evidence-based athlete readiness programs and data-driven injury prevention in elite sport." },
-  { id: 22, day: 3, time: "10:30", endTime: "11:00", type: "break",    title: "Coffee Break", desc: "Morning refreshments and exhibition networking." },
-  { id: 23, day: 3, time: "11:00", endTime: "12:30", type: "panel",    title: "Panel: Interprofessional Collaboration & Team Dynamics in Healthcare", speaker: "Ms. Halah Aldhuaian & Ms. Tahani AlMahdi", role: "Healthcare Leadership & Performance", tags: ["Collaboration", "Leadership"], desc: "Exploring how better team dynamics and interprofessional communication lead to superior patient outcomes." },
-  { id: 24, day: 3, time: "12:30", endTime: "14:00", type: "break",    title: "Lunch Break & Prayer", desc: "Final day lunch and prayer break." },
-  { id: 25, day: 3, time: "14:00", endTime: "15:30", type: "keynote",  title: "Keynote: Vestibular Rehabilitation & Chronic Pain — Innovations in Practice", speaker: "Dr. Doaa AlSharif & Dr. Ali Alatar", role: "Vestibular & Pain Specialists", tags: ["Vestibular", "Chronic Pain"], desc: "A combined session on latest clinical innovations in vestibular rehabilitation and chronic pain management." },
-  { id: 26, day: 3, time: "15:30", endTime: "16:30", type: "closing",  title: "Awards Ceremony & Closing", speaker: "Dr. Abdulfattah Saeed Alqahtani", role: "President, Saudi Physical Therapy Association", desc: "Certificate distribution, best presentation awards, sponsor acknowledgments, and closing remarks from SPTA leadership." },
+  // Session 3
+  { id: 20, day: 1, time: "15:40", endTime: "16:00", type: "keynote", title: "Redefining Cardiopulmonary & ICU Rehabilitation in Modern Healthcare", speaker: "Prof. Ali Albarrari", role: "Session 3: Advanced Rehabilitation Across Specialties", room: "Moderator: Dr. Batool Alhassan", desc: "Invited Lecture" },
+  { id: 21, day: 1, time: "16:00", endTime: "16:20", type: "keynote", title: "Reversing Frailty: Strategic Physiotherapy Interventions for Healthy Aging in Saudi Arabia", speaker: "Dr. Maha Almarwani", desc: "Invited Lecture" },
+  { id: 22, day: 1, time: "16:20", endTime: "16:40", type: "keynote", title: "Pelvic Health & Beyond: Evidence-Based Physiotherapy for Women", speaker: "Prof. Heba Embabi", desc: "Invited Lecture" },
+  { id: 23, day: 1, time: "16:40", endTime: "16:50", type: "workshop", title: "Platform (4): Effects of High-Intensity Interval Training...", speaker: "Mr. Mahdi Al Ghannam", desc: "Platform presentation" },
+  { id: 24, day: 1, time: "16:50", endTime: "17:00", type: "workshop", title: "Platform (5): Effect of Pulsed High-Intensity Laser Therapy...", speaker: "Ms. Saeeda Alhashmi Alamir", desc: "Platform presentation" },
+  { id: 25, day: 1, time: "17:00", endTime: "17:10", type: "workshop", title: "Platform (6): The Effect of Vitamin D Supplementation...", speaker: "Mr. Naif Bin-Talha", desc: "Platform presentation" },
+  { id: 26, day: 1, time: "17:10", endTime: "17:20", type: "panel", title: "Q&A", desc: "" },
+  { id: 27, day: 1, time: "17:20", endTime: "17:50", type: "panel", title: "Panel (2): Integrated & Interdisciplinary Models of Care", speaker: "Dr. Walid Ouanes, Dr. Tahany Alhamad, Dr. Mohammed Alhaizan, Dr. Faisal Al Mubarak, Ms. Lamia AlFaleh", room: "Moderator: Dr. Sara Almansouri", desc: "" },
+  { id: 28, day: 1, time: "17:50", endTime: "18:00", type: "panel", title: "Q&A", desc: "End of Day 1" },
+
+  // DAY 2
+  // Session 4
+  { id: 29, day: 2, time: "13:30", endTime: "14:00", type: "keynote", title: "Neuroplasticity in Action: Translating Brain Science into High-Impact Stroke Rehabilitation", speaker: "Dr. Turki Abualait", role: "Session 4: Neurological Rehabilitation Across the Lifespan", room: "Moderator: Dr. Sattam Almutairi", desc: "" },
+  { id: 30, day: 2, time: "14:00", endTime: "14:20", type: "keynote", title: "Optimizing Neurodevelopment: Advancing Pediatric Neurorehabilitation Through Early, Intensive & Family-Centered Care", speaker: "Dr. Veronika Vasilcova", desc: "Invited Lecture" },
+  { id: 31, day: 2, time: "14:20", endTime: "14:40", type: "keynote", title: "Rehabilitation Strategies for Neurodegenerative Disorders", speaker: "Dr. Miriam Rafferty", desc: "Virtual Lecture" },
+  { id: 32, day: 2, time: "14:40", endTime: "14:50", type: "workshop", title: "Platform (7): The effects of trunk rehabilitation...", speaker: "Ms. Shatha Mukhtar", desc: "Platform presentation" },
+  { id: 33, day: 2, time: "14:50", endTime: "15:00", type: "workshop", title: "Platform (8): Using Transcranial Direct Current Stimulation...", speaker: "Dr. Mohammed Alshehri", desc: "Platform presentation" },
+  { id: 34, day: 2, time: "15:00", endTime: "15:10", type: "workshop", title: "Platform (9): Effects of Thoracic Spinal Manipulation...", speaker: "Dr. Murdi Alanazi", desc: "Platform presentation" },
+  { id: 35, day: 2, time: "15:10", endTime: "15:20", type: "panel", title: "Q&A", desc: "" },
+  { id: 36, day: 2, time: "15:20", endTime: "15:50", type: "break", title: "Break / Exhibition", desc: "" },
+
+  // Session 5
+  { id: 37, day: 2, time: "15:50", endTime: "16:20", type: "keynote", title: "AI-Assisted Assessment and Treatment in Physiotherapy Practice", speaker: "Dr. Mashael Alsobhi", role: "Session 5: Digital Rehabilitation and Workforce Development", room: "Moderator: Dr. Hani Alkhawajah", desc: "" },
+  { id: 38, day: 2, time: "16:20", endTime: "16:40", type: "keynote", title: "Residency, Specialization, & Competency Frameworks", speaker: "Dr. Terrence McGee", desc: "Invited Lecture" },
+  { id: 39, day: 2, time: "16:40", endTime: "17:00", type: "keynote", title: "Challenges with Telehealth and How To Overcome Them", speaker: "Prof. Rana Hinman", desc: "Virtual Lecture" },
+  { id: 40, day: 2, time: "17:00", endTime: "17:10", type: "workshop", title: "Platform (10): Integrating AI and IoT-Enabled Assistive Technologies...", speaker: "Dr. Fayez Namnaqani", desc: "Platform presentation" },
+  { id: 41, day: 2, time: "17:10", endTime: "17:20", type: "workshop", title: "Platform (11): Bridging the Cognitive Gap...", speaker: "Ms. Noor Alzahri", desc: "Platform presentation" },
+  { id: 42, day: 2, time: "17:20", endTime: "17:30", type: "workshop", title: "Platform (12): A Virtual Reality Physiotherapy Toolkit...", speaker: "Dr. Alhanouf Almutairi", desc: "Platform presentation" },
+  { id: 43, day: 2, time: "17:30", endTime: "17:40", type: "panel", title: "Q&A", desc: "" },
+  { id: 44, day: 2, time: "17:40", endTime: "18:10", type: "panel", title: "Panel (3): The Future of Physiotherapy in Saudi Arabia: 2030 Vision Roadmap", speaker: "Dr. Abdulfattah Alqahtani, Dr. Terrence McGee, Ms. Manar Almkirsh, Dr. Ahamd Barhameen", room: "Moderator: Dr. Asma Alderaa", desc: "" },
+  { id: 45, day: 2, time: "18:10", endTime: "18:20", type: "panel", title: "Q&A", desc: "" },
+  { id: 46, day: 2, time: "18:20", endTime: "19:00", type: "closing", title: "Closing Remarks & Awards Ceremony", desc: "End of Day 2" }
 ];
 
 export const AgendaTab = () => {

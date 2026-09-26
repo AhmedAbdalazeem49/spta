@@ -202,14 +202,14 @@ export const WorkshopsTab = () => {
   return (
     <div className="py-12">
       <div className="mb-16">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block">Morning Workshops (08:00 AM - 12:00 PM)</h2>
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block">Morning Workshops - Saturday 14 November (08:00 AM - 12:00 PM)</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {workshopsData.morning.map(renderWorkshopCard)}
         </div>
       </div>
 
       <div>
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block">Afternoon Workshops (01:00 PM - 05:00 PM)</h2>
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block">Afternoon Workshops - Saturday 14 November (01:00 PM - 05:00 PM)</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {workshopsData.afternoon.map(renderWorkshopCard)}
         </div>

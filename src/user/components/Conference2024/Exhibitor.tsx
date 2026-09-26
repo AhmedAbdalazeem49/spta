@@ -16,7 +16,7 @@ export const Exhibitor = () => {
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-xs font-semibold tracking-wide text-gray-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
             <Sparkles className="h-3.5 w-3.5" />
-            Foundation Partner
+            Founding Partner
           </div>
         </motion.div>
 

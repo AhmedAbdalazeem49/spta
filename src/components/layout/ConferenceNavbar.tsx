@@ -37,7 +37,7 @@ const ConferenceNavbar = () => {
   const navItems = [
     { id: 'top', label: language === 'ar' ? 'الرئيسية' : 'Home' },
     { id: 'scientific', label: language === 'ar' ? 'اللجنة العلمية' : 'Scientific Committee' },
-    { id: 'speakers', label: language === 'ar' ? 'المتحدثون' : 'Speakers' },
+    // { id: 'speakers', label: language === 'ar' ? 'المتحدثون' : 'Speakers' },
     { id: 'agenda', label: language === 'ar' ? 'الأجندة' : 'Agenda' },
     { id: 'workshops', label: language === 'ar' ? 'ورش العمل' : 'Workshops' },
     { id: 'organizing', label: language === 'ar' ? 'اللجنة المنظمة' : 'Organizing Committee' },
