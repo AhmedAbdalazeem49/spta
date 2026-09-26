@@ -11,6 +11,7 @@ export type UserStatus = "pending" | "approved" | "rejected" | "active";
 
 interface User {
   id: number;
+  title?: string;
   name: string;
   name_ar?: string;
   email: string;
@@ -59,6 +60,7 @@ interface AuthContextType {
 }
 
 export interface RegisterData {
+  title?: string;
   name: string;
   name_ar: string;
   email: string;

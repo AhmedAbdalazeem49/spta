@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, User, X, CheckCircle2 } from "lucide-react";
+import { Clock, User, Users, X, CheckCircle2 } from "lucide-react";
 
 const workshopsData = {
   morning: [
@@ -64,9 +64,11 @@ const workshopsData = {
       id: "m5",
       title: "A Practical Approach to Acute Vertigo and BPPV",
       speaker: "Dr. Doaa AlSharif",
+      coSpeaker: "Mrs. Maryam ALShammari",
       time: "08:00 AM - 12:00 PM",
       teaser: "Hands-on techniques for assessing and treating common vestibular disorders.",
       bio: "Vestibular rehabilitation specialist with expertise in balance disorders.",
+      coBio: "Co-specialist in vestibular rehabilitation and clinical practice.",
       objectives: [
         "Conduct systematic vestibular assessment",
         "Differentiate BPPV variants",
@@ -136,9 +138,11 @@ const workshopsData = {
       id: "a5",
       title: "From Risk to Readiness",
       speaker: "Dr. Mohammed Alshehri",
+      coSpeaker: "Dr. Monira Aldhahi",
       time: "01:00 PM - 05:00 PM",
       teaser: "Data-driven injury prevention and athletic readiness screening.",
       bio: "Sports physiotherapist and injury prevention expert with national-level experience.",
+      coBio: "MSc, DPT, PhD (Hons), FHEA, AT-IBCT. Associate Professor of Rehabilitation Sciences and Consultant Physical Therapist at KAAUH. Head of CHRS Research Unit, College of Health and Rehabilitation Sciences, Princess Nourah bint Abdulrahman University. World Rugby Medical Educator.",
       objectives: [
         "Conduct functional movement assessments",
         "Identify injury risk factors",
@@ -149,7 +153,7 @@ const workshopsData = {
   ]
 };
 
-type Workshop = typeof workshopsData.morning[0];
+type Workshop = (typeof workshopsData.morning)[0];
 
 export const WorkshopsTab = () => {
   const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(null);
@@ -168,12 +172,22 @@ export const WorkshopsTab = () => {
         <p className="text-slate-600 dark:text-slate-300 text-sm mb-6 line-clamp-2 italic">"{workshop.teaser}"</p>
         
         <div className="mt-auto space-y-2">
+          {/* Main speaker */}
           <div className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-200">
-            <User className="w-4 h-4 mr-2 text-blue-500" />
+            <User className="w-4 h-4 mr-2 text-blue-500 shrink-0" />
             {workshop.speaker}
           </div>
+          {/* Co-speaker badge */}
+          {workshop.coSpeaker && (
+            <div className="flex items-center gap-2">
+              <span className="flex items-center text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700 rounded-full px-2.5 py-1">
+                <Users className="w-3 h-3 mr-1.5 shrink-0" />
+                Co-Speaker: {workshop.coSpeaker}
+              </span>
+            </div>
+          )}
           <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
-            <Clock className="w-4 h-4 mr-2 text-amber-500" />
+            <Clock className="w-4 h-4 mr-2 text-amber-500 shrink-0" />
             {workshop.time}
           </div>
         </div>
@@ -236,12 +250,33 @@ export const WorkshopsTab = () => {
                   {selectedWorkshop.title}
                 </h2>
                 
-                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 mb-8 border border-slate-100 dark:border-slate-700">
-                  <div className="flex items-center mb-2">
-                    <User className="w-5 h-5 text-blue-500 mr-3" />
-                    <h4 className="text-xl font-bold text-slate-900 dark:text-white">{selectedWorkshop.speaker}</h4>
+                {/* Speaker section */}
+                <div className={`grid gap-4 mb-8 ${selectedWorkshop.coSpeaker ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                  {/* Main Speaker */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-5 border border-blue-100 dark:border-blue-800/50">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shrink-0">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">Speaker</span>
+                    </div>
+                    <h4 className="text-lg font-black text-slate-900 dark:text-white mb-2">{selectedWorkshop.speaker}</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{selectedWorkshop.bio}</p>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-300 ml-8">{selectedWorkshop.bio}</p>
+
+                  {/* Co-Speaker (if exists) */}
+                  {selectedWorkshop.coSpeaker && (
+                    <div className="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-5 border border-purple-200 dark:border-purple-800/50">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center shrink-0">
+                          <Users className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-xs font-black uppercase tracking-widest text-purple-600 dark:text-purple-400">Co-Speaker</span>
+                      </div>
+                      <h4 className="text-lg font-black text-slate-900 dark:text-white mb-2">{selectedWorkshop.coSpeaker}</h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{selectedWorkshop.coBio}</p>
+                    </div>
+                  )}
                 </div>
 
                 <div>

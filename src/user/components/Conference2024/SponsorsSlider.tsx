@@ -105,7 +105,7 @@ export const SponsorsSlider = () => {
           viewport={{ once: true }}
           className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6"
         >
-          Our Partners & Sponsors
+          Sponsors
         </motion.h2>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}

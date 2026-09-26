@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import WorkshopsTab from "@/components/WorkshopsTab";
+import ConferenceRegistrationProfileTab from "@/components/ConferenceRegistrationProfileTab";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -31,7 +32,7 @@ import {
   User,
 } from "lucide-react";
 
-import { AlertCircle, Edit, Loader2, Save, XCircle } from "lucide-react";
+import { AlertCircle, Edit, Loader2, Save, XCircle, Ticket } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -207,6 +208,12 @@ const ProfilePage = () => {
       labelAr: "الشهادات",
       labelEn: "Certificates",
       icon: Award,
+    },
+    {
+      id: "conference",
+      labelAr: "المؤتمر",
+      labelEn: "Conference",
+      icon: Ticket,
     },
     { id: "edit", labelAr: "تعديل الملف", labelEn: "Edit Profile", icon: Edit },
   ];
@@ -719,6 +726,9 @@ const ProfilePage = () => {
 
             {/* Certificates Tab */}
             {activeTab === "certificates" && <CertificatesTab />}
+
+            {/* Conference Tab */}
+            {activeTab === "conference" && <ConferenceRegistrationProfileTab />}
 
             {/* Edit Profile Tab */}
             {activeTab === "edit" && (

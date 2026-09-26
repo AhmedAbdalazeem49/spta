@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Clock, User, X, Sun, Moon, Coffee, Mic2, Users,
-  BookOpen, Trophy, Star, Stethoscope, ChevronRight
+  BookOpen, Trophy, Star, Stethoscope, ChevronRight, Download, AlertCircle, MapPin
 } from "lucide-react";
 
 type SessionType = "ceremony" | "keynote" | "workshop" | "break" | "panel" | "closing";
+
+// ... (omitting unchanged for a moment, let's just do a big replace on the component)
 
 interface Session {
   id: number;
@@ -76,17 +78,86 @@ export const AgendaTab = () => {
   const [activeDay, setActiveDay] = useState(1);
   const [selected, setSelected] = useState<Session | null>(null);
 
+  // For real usage, you'd calculate current time. We'll mock it for demo if needed, 
+  // or just use new Date(). Let's use new Date() and compare with the days.
+  // Conference dates: Nov 11, Nov 12, Nov 13 (2026).
+  const now = new Date();
+  
+  // Find next event (just a basic logic, assuming dates are 2026-11-11 to 2026-11-13)
+  const getEventDateTime = (day: number, timeStr: string) => {
+    const dates = ["2026-11-11", "2026-11-12", "2026-11-13"];
+    return new Date(`${dates[day - 1]}T${timeStr}:00`);
+  };
+
+  let nextEvent = null;
+  let nextEventDay = 1;
+  for (const s of SCHEDULE) {
+    const start = getEventDateTime(s.day, s.time);
+    const end = getEventDateTime(s.day, s.endTime);
+    if (now < start) {
+      if (!nextEvent) {
+        nextEvent = s;
+        nextEventDay = s.day;
+      }
+    }
+  }
+
   const daySchedule = SCHEDULE.filter(s => s.day === activeDay);
+
+  const handleDownload = () => {
+    // Mock download
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = 'Agenda_SPTA_2026.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="w-full pb-10">
       {/* Header */}
-      <div className="text-center mb-10">
-        <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
-          {language === 'ar' ? 'جدول المؤتمر' : 'Conference Agenda'}
-        </h3>
-        <p className="text-blue-600 dark:text-blue-400 font-bold text-lg">November 11–13, 2026 · Almoosa Health Group</p>
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10 text-center md:text-start">
+        <div>
+          <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
+            {language === 'ar' ? 'جدول المؤتمر' : 'Conference Agenda'}
+          </h3>
+          <p className="text-blue-600 dark:text-blue-400 font-bold text-lg">November 11–13, 2026 · Almoosa Health Group</p>
+        </div>
+        <button 
+          onClick={handleDownload}
+          className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:text-blue-600 rounded-full font-bold transition-all shadow-sm"
+        >
+          <Download className="w-5 h-5" />
+          {language === 'ar' ? 'تحميل الأجندة' : 'Download Agenda'}
+        </button>
       </div>
+
+      {/* Next Event Banner */}
+      {nextEvent && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 mb-10 text-white shadow-xl shadow-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+              <Clock className="w-6 h-6 text-white animate-pulse" />
+            </div>
+            <div>
+              <p className="text-blue-100 font-semibold text-sm mb-1 uppercase tracking-wider">
+                {language === 'ar' ? 'الحدث التالي' : 'Next Event'}
+              </p>
+              <h4 className="text-xl font-bold">{nextEvent.title}</h4>
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="bg-white/20 px-4 py-2 rounded-lg backdrop-blur-sm border border-white/20 inline-block font-mono text-lg font-bold">
+              {nextEvent.time}
+            </div>
+            <p className="text-sm text-blue-200 mt-2 font-medium">Day {nextEvent.day}</p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Day Selector */}
       <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center mb-10">
@@ -121,79 +192,96 @@ export const AgendaTab = () => {
       </div>
 
       {/* Schedule */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeDay}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
-          className="space-y-3 w-full"
-        >
-          {daySchedule.map((item, index) => {
-            const cfg = TYPE_CONFIG[item.type];
-            const isBreak = item.type === "break";
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.04 }}
-                onClick={() => !isBreak && setSelected(item)}
-                className={`w-full flex gap-4 md:gap-6 items-stretch rounded-2xl border-2 overflow-hidden transition-all duration-200 ${
-                  isBreak
-                    ? `${cfg.bg} ${cfg.border} opacity-70`
-                    : `bg-white dark:bg-gray-800/80 border-gray-100 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-700 cursor-pointer hover:shadow-lg hover:shadow-blue-500/5 group`
-                }`}
-              >
-                {/* Time Column */}
-                <div className={`shrink-0 w-20 sm:w-24 md:w-32 flex flex-col items-center justify-center py-4 px-3 ${cfg.bg} border-r-2 ${cfg.border}`}>
-                  <span className={`text-sm font-black tabular-nums ${cfg.color}`}>{item.time}</span>
-                  <div className={`w-3 h-3 rounded-full my-2 border-2 ${cfg.border} ${cfg.bg}`} />
-                  <span className={`text-xs font-medium opacity-60 ${cfg.color}`}>{item.endTime}</span>
-                </div>
+      <div className="relative">
+        {/* Connecting Vertical Line */}
+        <div className="absolute left-[39px] sm:left-[47px] md:left-[63px] top-4 bottom-4 w-1 bg-gray-200 dark:bg-gray-800 rounded-full z-0 hidden sm:block" />
 
-                {/* Content */}
-                <div className="flex-1 py-4 pr-4 flex flex-col justify-center min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
-                      {cfg.icon} {cfg.label}
-                    </span>
-                    {item.room && (
-                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                        {item.room}
-                      </span>
-                    )}
-                    {item.tags?.map(tag => (
-                      <span key={tag} className="px-2 py-0.5 rounded-full text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <h4 className={`text-base md:text-lg font-extrabold text-gray-900 dark:text-white mb-1 leading-snug ${!isBreak ? "group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" : ""}`}>
-                    {item.title}
-                  </h4>
-
-                  {item.speaker && (
-                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
-                      <User className="w-3.5 h-3.5 shrink-0" />
-                      <span>{item.speaker}</span>
-                      {item.role && <span className="text-gray-400 dark:text-gray-500 hidden sm:inline">· {item.role}</span>}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeDay}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            className="space-y-4 w-full relative z-10"
+          >
+            {daySchedule.map((item, index) => {
+              const cfg = TYPE_CONFIG[item.type];
+              const isBreak = item.type === "break";
+              const isPast = now > getEventDateTime(item.day, item.endTime);
+              const isCurrent = now >= getEventDateTime(item.day, item.time) && now <= getEventDateTime(item.day, item.endTime);
+              
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.04 }}
+                  onClick={() => !isBreak && setSelected(item)}
+                  className={`w-full flex gap-4 md:gap-6 items-stretch rounded-2xl border-2 overflow-hidden transition-all duration-300 relative ${
+                    isPast ? 'opacity-50 grayscale-[50%]' : ''
+                  } ${
+                    isCurrent ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 
+                    isBreak
+                      ? `${cfg.bg} ${cfg.border} opacity-70`
+                      : `bg-white dark:bg-gray-800/80 border-gray-100 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-700 cursor-pointer hover:shadow-lg hover:shadow-blue-500/5 group`
+                  }`}
+                >
+                  {isCurrent && (
+                    <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl z-20 flex items-center gap-1 uppercase tracking-wider">
+                      <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" /> Live Now
                     </div>
                   )}
-                </div>
 
-                {/* Arrow */}
-                {!isBreak && (
-                  <div className="shrink-0 flex items-center pr-4">
-                    <ChevronRight className="w-5 h-5 text-gray-300 dark:text-gray-600 group-hover:text-blue-500 transition-colors" />
+                  {/* Time Column with visual node */}
+                  <div className={`relative shrink-0 w-20 sm:w-24 md:w-32 flex flex-col items-center justify-center py-4 px-3 ${cfg.bg} border-r-2 ${cfg.border} z-10`}>
+                    <span className={`text-sm font-black tabular-nums ${cfg.color}`}>{item.time}</span>
+                    <div className={`w-4 h-4 rounded-full my-2 border-[3px] shadow-sm z-10 ${isCurrent ? 'bg-blue-600 border-white' : `${cfg.border} ${cfg.bg}`}`} />
+                    <span className={`text-xs font-medium opacity-60 ${cfg.color}`}>{item.endTime}</span>
                   </div>
-                )}
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </AnimatePresence>
+
+                  {/* Content */}
+                  <div className="flex-1 py-4 pr-4 flex flex-col justify-center min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
+                        {cfg.icon} {cfg.label}
+                      </span>
+                      {item.room && (
+                        <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 flex items-center gap-1">
+                          <MapPin className="w-3 h-3" /> {item.room}
+                        </span>
+                      )}
+                      {item.tags?.map(tag => (
+                        <span key={tag} className="px-2 py-0.5 rounded-full text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <h4 className={`text-base md:text-lg font-extrabold text-gray-900 dark:text-white mb-1 leading-snug ${!isBreak ? "group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" : ""}`}>
+                      {item.title}
+                    </h4>
+
+                    {item.speaker && (
+                      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+                        <User className="w-3.5 h-3.5 shrink-0" />
+                        <span>{item.speaker}</span>
+                        {item.role && <span className="text-gray-400 dark:text-gray-500 hidden sm:inline">· {item.role}</span>}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Arrow */}
+                  {!isBreak && (
+                    <div className="shrink-0 flex items-center pr-4">
+                      <ChevronRight className={`w-5 h-5 transition-colors ${isCurrent ? 'text-blue-500' : 'text-gray-300 dark:text-gray-600 group-hover:text-blue-500'}`} />
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Detail Modal */}
       <AnimatePresence>

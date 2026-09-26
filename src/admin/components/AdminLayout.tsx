@@ -24,6 +24,7 @@ import {
   FileText,
   Handshake,
   Megaphone,
+  Star,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -114,6 +115,20 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       icon: FileText,
       labelAr: "الأخبار",
       labelEn: "News",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/conference-registrations",
+      icon: Ticket,
+      labelAr: "مؤتمر 2026",
+      labelEn: "Conference",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/conference-evaluations",
+      icon: Star,
+      labelAr: "تقييمات المؤتمر",
+      labelEn: "Conference Evaluations",
       systemAdminOnly: true,
     },
     // {

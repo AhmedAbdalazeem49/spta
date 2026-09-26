@@ -71,7 +71,10 @@ const LoginPage = () => {
         description: t("مرحباً بعودتك 👋", "Welcome back 👋"),
       });
 
-      const from = (location.state as any)?.from?.pathname || "/profile";
+      const fromState = (location.state as any)?.from;
+      const fromPath = fromState?.pathname || "/profile";
+      const fromHash = fromState?.hash || "";
+      const from = fromPath + fromHash;
 
       navigate(from, { replace: true });
     } catch (error: any) {

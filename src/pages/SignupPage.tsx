@@ -32,6 +32,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { PhoneInput } from "@/components/shared/PhoneInput";
 // ─── Types ───────────────────────────────────────────────
 type FormData = {
+  title: string;
   fullNameAr: string;
   fullNameEn: string;
   nationalId: string;
@@ -277,6 +278,7 @@ const SignupPage = () => {
   const [showCPw, setShowCPw] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
+    title: "",
     fullNameAr: "",
     fullNameEn: "",
     nationalId: "",
@@ -349,6 +351,7 @@ const SignupPage = () => {
     setIsSubmitting(true);
     try {
       await register({
+        title: formData.title || undefined,
         name: formData.fullNameEn,
         name_ar: formData.fullNameAr,
         email: formData.email,
@@ -514,6 +517,24 @@ const SignupPage = () => {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-5">
+                  <Field label="اللقب" labelEn="Title" error={undefined}>
+                    <div className="relative">
+                      <select
+                        value={formData.title}
+                        onChange={(e) => set("title", e.target.value)}
+                        className={`${inputBase} bg-white dark:bg-background`}
+                        dir="ltr"
+                      >
+                        <option value="">(None)</option>
+                        <option value="Prof">Prof</option>
+                        <option value="Dr">Dr</option>
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                      </select>
+                    </div>
+                  </Field>
+
                   <Field
                     label="الاسم الكامل بالعربي"
                     labelEn="Full Name (Arabic)"

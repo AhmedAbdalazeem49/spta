@@ -1,4 +1,4 @@
-import Layout from "@/components/layout/Layout";
+import ConferenceLayout from "@/components/layout/ConferenceLayout";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HeroSection } from "../components/Conference2024/HeroSection";
 import { StrategicPartner } from "../components/Conference2024/StrategicPartner";
@@ -19,25 +19,25 @@ const Conference2026Page = () => {
   }, []);
 
   return (
-    <Layout>
+    <ConferenceLayout>
       <HeroSection />
-      
+
       {/* Newly designed President's Word */}
       <PresidentWord2026 />
-      
+
+      <StrategicPartner />
+
       {/* Foundation / Institutional Partner moved up */}
       <Exhibitor />
-      
-      <StrategicPartner />
-      
+
       <SponsorsSlider />
 
       {/* <PricingSection /> */}
-      
+
       <InteractiveTabs />
 
       <ReviewsSection />
-    </Layout>
+    </ConferenceLayout>
   );
 };
 

@@ -366,7 +366,7 @@ export const ReviewsSection = () => {
                 {/* Animated checkmark */}
                 <motion.div
                   initial={{ scale: 0 }}
-                  animate={{ scale: [0, 1.2, 1] }}
+                  animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
                   className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-emerald-500/40"
                 >

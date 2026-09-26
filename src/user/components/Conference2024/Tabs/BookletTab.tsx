@@ -6,24 +6,24 @@ export const BookletTab = () => {
   const [activeTransport, setActiveTransport] = useState<string>("Air");
 
   const transportOptions = [
-    { id: "Air", icon: <Plane className="w-5 h-5" />, title: "By Air", desc: "King Khalid International Airport is just 35 minutes away from the venue via King Salman Road." },
-    { id: "Train", icon: <Train className="w-5 h-5" />, title: "By Train", desc: "Riyadh Railway Station provides easy access. Connect via local transit to the university campus." },
-    { id: "Car", icon: <Car className="w-5 h-5" />, title: "By Car", desc: "Ample free parking is available for attendees at the King Saud University conference center." },
-    { id: "Uber", icon: <Navigation className="w-5 h-5" />, title: "By Uber/Careem", desc: "Dedicated drop-off zones are marked at the main entrance for ride-sharing apps." },
+    { id: "Air", icon: <Plane className="w-5 h-5" />, title: "By Air", desc: "Al-Ahsa International Airport is easily accessible. Alternatively, King Fahd International Airport in Dammam is about a 90-minute drive." },
+    { id: "Train", icon: <Train className="w-5 h-5" />, title: "By Train", desc: "Al-Ahsa Railway Station connects major cities like Riyadh and Dammam directly to the region." },
+    { id: "Car", icon: <Car className="w-5 h-5" />, title: "By Car", desc: "Ample free parking is available for attendees at the Almoosa Rehabilitation Hospital." },
+    { id: "Uber", icon: <Navigation className="w-5 h-5" />, title: "By Uber/Careem", desc: "Dedicated drop-off zones are available at the main hospital entrance." },
   ];
 
   const hotels = [
-    { name: "The Ritz-Carlton", stars: 5, distance: "10 mins", price: "$$$$" },
-    { name: "Crowne Plaza RDC", stars: 4, distance: "5 mins", price: "$$$" },
-    { name: "Courtyard by Marriott", stars: 4, distance: "8 mins", price: "$$$" },
-    { name: "Radisson Blu", stars: 4, distance: "12 mins", price: "$$$" }
+    { name: "Al Ahsa InterContinental", stars: 5, distance: "10 mins", price: "$$$$" },
+    { name: "Somewhere Hotel Al Ahsa", stars: 5, distance: "8 mins", price: "$$$" },
+    { name: "Coral Al Ahsa Hotel", stars: 4, distance: "12 mins", price: "$$$" },
+    { name: "Al Muhaidib Residence", stars: 3, distance: "5 mins", price: "$$" }
   ];
 
   const attractions = [
-    { name: "Kingdom Centre Tower", desc: "Iconic skyscraper with a sky bridge offering panoramic city views.", img: "https://images.unsplash.com/photo-1588661642878-8316ec1a539b?auto=format&fit=crop&q=80&w=600" },
-    { name: "Al-Diriyah", desc: "The birthplace of the first Saudi state and a UNESCO World Heritage site.", img: "https://images.unsplash.com/photo-1616168579930-b986eaf7a58a?auto=format&fit=crop&q=80&w=600" },
-    { name: "National Museum", desc: "A journey through centuries of Arabian prehistory, history, and culture.", img: "https://images.unsplash.com/photo-1632349141042-3a56cf9e1d52?auto=format&fit=crop&q=80&w=600" },
-    { name: "Boulevard World", desc: "Premier entertainment zone featuring global cultures, rides, and dining.", img: "https://images.unsplash.com/photo-1631518174526-a07bf01b33fa?auto=format&fit=crop&q=80&w=600" }
+    { name: "Al Qarah Mountain", desc: "Explore the fascinating natural caves and stunning viewpoints of this iconic mountain.", img: "https://images.unsplash.com/photo-1629815414605-77983c2741d8?auto=format&fit=crop&q=80&w=600" },
+    { name: "Al-Ahsa Oasis", desc: "The largest oasis in the world and a UNESCO World Heritage site full of lush palm trees.", img: "https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?auto=format&fit=crop&q=80&w=600" },
+    { name: "Ibrahim Palace", desc: "A historic fort combining Islamic and military architecture from the Ottoman era.", img: "https://images.unsplash.com/photo-1572093551532-6b94be06225b?auto=format&fit=crop&q=80&w=600" },
+    { name: "Qaisariah Souq", desc: "One of the oldest traditional markets in the Kingdom, offering spices, crafts, and heritage.", img: "https://images.unsplash.com/photo-1632349141042-3a56cf9e1d52?auto=format&fit=crop&q=80&w=600" }
   ];
 
   return (
@@ -32,7 +32,7 @@ export const BookletTab = () => {
       {/* WELCOME HEADER */}
       <section className="relative rounded-3xl overflow-hidden bg-slate-900 shadow-2xl h-[400px] flex items-center justify-center">
         <div className="absolute inset-0 opacity-40 mix-blend-overlay">
-          <img src="https://images.unsplash.com/photo-1583091173669-e8555e5c70a8?auto=format&fit=crop&q=80&w=1600" alt="Riyadh skyline" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1610486001099-3665bc751d3b?auto=format&fit=crop&q=80&w=1600" alt="Eastern Province skyline" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/90"></div>
         <div className="relative z-10 text-center px-4">
@@ -42,7 +42,7 @@ export const BookletTab = () => {
             viewport={{ once: true }}
             className="text-5xl md:text-6xl font-serif font-bold text-white mb-4"
           >
-            Welcome to Riyadh
+            Welcome to Al-Ahsa
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 30 }}
@@ -51,29 +51,37 @@ export const BookletTab = () => {
             transition={{ delay: 0.1 }}
             className="text-xl md:text-2xl text-amber-400 font-light tracking-wide"
           >
-            Your ultimate guide to the conference city.
+            Your guide to the conference city & venue.
           </motion.p>
         </div>
       </section>
 
-      {/* VENUE & GETTING HERE */}
+      {/* VENUE MAP & GETTING HERE */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Venue Info */}
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-3xl p-4 sm:p-6 md:p-8 shadow-xl border border-slate-100 dark:border-slate-700"
+          className="bg-white dark:bg-slate-800 rounded-3xl p-4 sm:p-6 md:p-8 shadow-xl border border-slate-100 dark:border-slate-700 flex flex-col h-full"
         >
-          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6 shrink-0">
             <MapPin className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">The Venue</h2>
-          <h3 className="text-xl font-semibold text-amber-600 dark:text-amber-500 mb-2">King Saud University</h3>
-          <p className="text-slate-600 dark:text-slate-300 text-lg mb-6">Main Conference Hall, Riyadh, Saudi Arabia.</p>
-          <div className="h-64 rounded-2xl bg-slate-200 dark:bg-slate-700 w-full flex items-center justify-center overflow-hidden relative">
-            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=800" alt="University Venue" className="w-full h-full object-cover opacity-80" />
-            <div className="absolute inset-0 bg-blue-900/20"></div>
+          <h3 className="text-xl font-semibold text-amber-600 dark:text-amber-500 mb-2">Almoosa Rehabilitation Hospital</h3>
+          <p className="text-slate-600 dark:text-slate-300 text-lg mb-6">Al-Ahsa, Eastern Province, Saudi Arabia.</p>
+          <div className="flex-1 rounded-2xl bg-slate-200 dark:bg-slate-700 w-full overflow-hidden relative min-h-[300px]">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3576.840618037648!2d49.574676!3d25.4055268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e37c1d76378e9b1%3A0x6b40e797c27b031b!2sAlmoosa%20Rehabilitation%20Hospital!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen={true} 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 grayscale hover:grayscale-0 transition-all duration-700"
+            ></iframe>
           </div>
         </motion.div>
 
@@ -156,11 +164,11 @@ export const BookletTab = () => {
         </div>
       </section>
 
-      {/* EXPLORE RIYADH */}
+      {/* EXPLORE REGION */}
       <section>
         <div className="mb-10 flex items-center gap-4">
           <Compass className="w-8 h-8 text-amber-500" />
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Explore Riyadh</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Explore Al-Ahsa</h2>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -189,3 +197,4 @@ export const BookletTab = () => {
     </div>
   );
 };
+
