@@ -18,7 +18,7 @@ export const InteractiveTabs = () => {
     { id: 'agenda',      label: language === 'ar' ? 'الأجندة'          : 'Agenda',               component: AgendaTab },
     { id: 'workshops',   label: language === 'ar' ? 'ورش العمل'        : 'Workshops',            component: WorkshopsTab },
     { id: 'organizing',  label: language === 'ar' ? 'اللجنة المنظمة'   : 'Organizing Committee', component: OrganizingCommitteeTab },
-    { id: 'booklet',     label: language === 'ar' ? 'الكتيب والموقع'           : 'Booklet & Location',   component: BookletTab },
+    { id: 'booklet',     label: language === 'ar' ? 'الكتيب والموقع'           : 'Visitor Information',   component: BookletTab },
     { id: 'registration',label: language === 'ar' ? 'التسجيل'          : 'Registration',         component: RegistrationTab },
   ];
 

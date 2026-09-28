@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -179,7 +179,7 @@ export const ReviewsSection = () => {
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
+    <section id="reviews" className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
       {/* decorative blobs */}
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -428,3 +428,4 @@ export const ReviewsSection = () => {
     </section>
   );
 };
+

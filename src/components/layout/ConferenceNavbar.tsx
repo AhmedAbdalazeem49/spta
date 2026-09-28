@@ -9,11 +9,37 @@ import { motion, AnimatePresence } from "framer-motion";
 const ConferenceNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('top');
   const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+      
+      const sections = ['top', 'scientific', 'agenda', 'workshops', 'organizing', 'booklet', 'registration'];
+      let current = 'top';
+      
+      if (window.scrollY < 100) {
+        setActiveSection('top');
+        return;
+      }
+
+      for (const s of sections) {
+        if (s === 'top') continue;
+        const el = document.getElementById(s);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 4) {
+             current = s;
+             break; // Found the active one
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -41,7 +67,7 @@ const ConferenceNavbar = () => {
     { id: 'agenda', label: language === 'ar' ? 'الأجندة' : 'Agenda' },
     { id: 'workshops', label: language === 'ar' ? 'ورش العمل' : 'Workshops' },
     { id: 'organizing', label: language === 'ar' ? 'اللجنة المنظمة' : 'Organizing Committee' },
-    { id: 'booklet', label: language === 'ar' ? 'الكتيب والموقع' : 'Booklet & Location' },
+    { id: 'booklet', label: language === 'ar' ? 'الكتيب والموقع' : 'Visitors Information' },
     { id: 'registration', label: language === 'ar' ? 'التسجيل' : 'Registration' },
   ];
 
@@ -64,7 +90,11 @@ const ConferenceNavbar = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToTabs(item.id)}
-                className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-all"
+                className={`px-4 py-2 text-sm font-semibold rounded-full transition-all ${
+                  activeSection === item.id 
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30" 
+                    : "text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                }`}
               >
                 {item.label}
               </button>
@@ -97,7 +127,11 @@ const ConferenceNavbar = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToTabs(item.id)}
-                  className="px-4 py-3 text-right rtl:text-right ltr:text-left font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all"
+                  className={`px-4 py-3 text-right rtl:text-right ltr:text-left font-semibold rounded-xl transition-all ${
+                  activeSection === item.id 
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30" 
+                    : "text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                }`}
                 >
                   {item.label}
                 </button>

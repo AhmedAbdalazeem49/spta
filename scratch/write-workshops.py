@@ -1,6 +1,8 @@
-import React from "react";
+﻿import codecs
+
+content = '''import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Clock, User, CheckCircle2, List, Sun, Moon, Calendar, MapPin, Users } from "lucide-react";
+import { Clock, User, CheckCircle2, List, Sun, Moon, Calendar, MapPin, Briefcase } from "lucide-react";
 
 interface WorkshopAgenda {
   time: string;
@@ -32,7 +34,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Dr. Terrence McGee, PT, DScPT",
-        title: "Board-Certified Clinical Specialist in Orthopaedic Physical Therapy\nFellow, American Academy of Orthopaedic Manual Physical Therapists\nDirector of Strategic Operations, Assistant Professor\nDepartment of Physical Therapy, University of Delaware, USA"
+        title: "Board-Certified Clinical Specialist in Orthopaedic Physical Therapy\\nFellow, American Academy of Orthopaedic Manual Physical Therapists\\nDirector of Strategic Operations, Assistant Professor\\nDepartment of Physical Therapy, University of Delaware, USA"
       }
     ],
     objectives: [
@@ -61,7 +63,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Dr. Sian Knott, DAHP, PT",
-        title: "Lecturer in Physiotherapy\nSchool of Healthcare Sciences\nCardiff University, UK"
+        title: "Lecturer in Physiotherapy\\nSchool of Healthcare Sciences\\nCardiff University, UK"
       }
     ],
     objectives: [
@@ -99,7 +101,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Ms. Tahani AlMahdi, MSc, PT",
-        title: "Saudi Academy of Sports Sciences\nSaudi Arabia"
+        title: "Saudi Academy of Sports Sciences\\nSaudi Arabia"
       }
     ],
     objectives: [
@@ -130,7 +132,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Dr. Aly Alatar, PhD, PT",
-        title: "Consultant Physiotherapist and Pain Specialist\nFounder, Kinesia Clinic\nKuwait"
+        title: "Consultant Physiotherapist and Pain Specialist\\nFounder, Kinesia Clinic\\nKuwait"
       }
     ],
     objectives: [
@@ -161,11 +163,11 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Dr. Doaa AlSharif, PhD, PT, AVRT, CRCs, MSc",
-        title: "Assistant professor\nCollege of Applied Medical Sciences, Physical therapy Department\nTaif University, Saudi Arabia"
+        title: "Assistant professor\\nCollege of Applied Medical Sciences, Physical therapy Department\\nTaif University, Saudi Arabia"
       },
       {
         name: "Mrs. Maryam Alshammari, MSc, PT. AVPT",
-        title: "Cochlear Implant Department\nHafar Albaten Central Hospital"
+        title: "Cochlear Implant Department\\nHafar Albaten Central Hospital"
       }
     ],
     objectives: [
@@ -198,7 +200,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Mr. Mohamed Zedan, PT",
-        title: "Physiotherapist - Hydrotherapy Supervisor\nAlmoosa Rehabilitation Hospital\nSaudi Arabia"
+        title: "Physiotherapist - Hydrotherapy Supervisor\\nAlmoosa Rehabilitation Hospital\\nSaudi Arabia"
       }
     ],
     objectives: [
@@ -227,7 +229,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Mr. Jaffar Alabdrabalrasol, MSc, PT",
-        title: "Senior Physiotherapist\nDepartment of Physiotherapy\nQatif Central Hospital, Saudi Arabia"
+        title: "Senior Physiotherapist\\nDepartment of Physiotherapy\\nQatif Central Hospital, Saudi Arabia"
       }
     ],
     objectives: [
@@ -257,7 +259,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Dr. Philippe Germain, PhD",
-        title: "Associate Professor\nUniversity of Orléans, France"
+        title: "Associate Professor\\nUniversity of Orléans, France"
       }
     ],
     objectives: [
@@ -288,7 +290,7 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Ms. Halah Aldhuaian, MSc, PT",
-        title: "Senior Physiotherapist\nRiyadh First Health Cluster-Long Term Care Hospital\nSaudi Arabia"
+        title: "Senior Physiotherapist\\nRiyadh First Health Cluster-Long Term Care Hospital\\nSaudi Arabia"
       }
     ],
     objectives: [
@@ -319,11 +321,11 @@ const WORKSHOPS: Workshop[] = [
     speakers: [
       {
         name: "Dr. Mohammed Alshehri, PT, MSc, PhD",
-        title: "Associate professor, Physical Therapy Department\nJazan University, Saudi Arabia"
+        title: "Associate professor, Physical Therapy Department\\nJazan University, Saudi Arabia"
       },
       {
         name: "Dr. Monira Aldahi, MSc, DPT, PhD (Hons), FHEA, AT-IBCT",
-        title: "Associate Professor of Rehabilitation Sciences\nConsultant Physical Therapy at KAAUH\nHead of CHRS Research unit\nPrincess Nourah bint Abdulrahman University\nWorld Rugby Medical Educator"
+        title: "Associate Professor of Rehabilitation Sciences\\nConsultant Physical Therapy at KAAUH\\nHead of CHRS Research unit\\nPrincess Nourah bint Abdulrahman University\\nWorld Rugby Medical Educator"
       }
     ],
     objectives: [
@@ -504,3 +506,7 @@ export const WorkshopsTab = () => {
     </div>
   );
 };
+'''
+
+with codecs.open('src/user/components/Conference2024/Tabs/WorkshopsTab.tsx', 'w', 'utf-8') as f:
+    f.write(content)

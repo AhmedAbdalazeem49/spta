@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+﻿import codecs
+
+content = r'''import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Calendar, Building2, Globe, Mail, Phone,
@@ -249,7 +251,7 @@ export const BookletTab = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-4 p-4 rounded-xl border border-dashed hidden border-slate-300 dark:border-slate-700 text-center text-slate-500 dark:text-slate-400 text-sm">
+              <div className="mt-4 p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 text-center text-slate-500 dark:text-slate-400 text-sm">
                 <Map className="w-8 h-8 mx-auto mb-2 opacity-40" />
                 Floor map to be added shortly
               </div>
@@ -356,3 +358,7 @@ export const BookletTab = () => {
     </div>
   );
 };
+'''
+
+with open('src/user/components/Conference2024/Tabs/BookletTab.tsx', 'w', encoding='utf-8') as f:
+    f.write(content)
