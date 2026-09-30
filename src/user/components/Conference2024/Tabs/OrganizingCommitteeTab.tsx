@@ -28,9 +28,6 @@ export const OrganizingCommitteeTab = () => {
         <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
           {language === 'ar' ? 'اللجنة المنظمة' : 'Organizing Committee'}
         </h3>
-        <p className="text-gray-500">
-          {language === 'ar' ? 'الفريق الذي يقف خلف الكواليس لإنجاح المؤتمر' : 'The team behind the scenes making the conference a success'}
-        </p>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

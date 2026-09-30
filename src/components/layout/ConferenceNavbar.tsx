@@ -16,7 +16,7 @@ const ConferenceNavbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       
-      const sections = ['top', 'scientific', 'agenda', 'workshops', 'organizing', 'booklet', 'registration'];
+      const sections = ['top', 'scientific', 'speakers', 'agenda', 'workshops', 'organizing', 'booklet', 'registration'];
       let current = 'top';
       
       if (window.scrollY < 100) {
@@ -63,7 +63,7 @@ const ConferenceNavbar = () => {
   const navItems = [
     { id: 'top', label: language === 'ar' ? 'الرئيسية' : 'Home' },
     { id: 'scientific', label: language === 'ar' ? 'اللجنة العلمية' : 'Scientific Committee' },
-    // { id: 'speakers', label: language === 'ar' ? 'المتحدثون' : 'Speakers' },
+    { id: 'speakers', label: language === 'ar' ? 'المتحدثون' : 'Speakers' },
     { id: 'agenda', label: language === 'ar' ? 'الأجندة' : 'Agenda' },
     { id: 'workshops', label: language === 'ar' ? 'ورش العمل' : 'Workshops' },
     { id: 'organizing', label: language === 'ar' ? 'اللجنة المنظمة' : 'Organizing Committee' },
@@ -127,7 +127,7 @@ const ConferenceNavbar = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToTabs(item.id)}
-                  className={`px-4 py-3 text-right rtl:text-right ltr:text-left font-semibold rounded-xl transition-all ${
+                  className={`block w-full text-start px-4 py-3 rtl:text-right ltr:text-left font-semibold rounded-xl transition-all active:scale-95 ${
                   activeSection === item.id 
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30" 
                     : "text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30"

@@ -259,10 +259,6 @@ export const ScientificCommitteeTab = () => {
         <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
           Scientific Committee
         </h3>
-        <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
-          A distinguished panel of expert physiotherapists and healthcare professionals
-          leading the 6th Saudi International Physiotherapy Conference.
-        </p>
       </div>
 
       {/* Chair + Vice Chair — featured row */}

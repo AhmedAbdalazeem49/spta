@@ -2,7 +2,7 @@ import HeroBg from "@/assets/conference-hero.jpeg";
 import OnesImage from "@/assets/ones.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Sparkles } from "lucide-react";
+import { Calendar, MapPin, Sparkles, Award } from "lucide-react";
 
 export const HeroSection = () => {
   const { t, language } = useLanguage();

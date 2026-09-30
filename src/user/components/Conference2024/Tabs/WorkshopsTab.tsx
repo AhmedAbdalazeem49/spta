@@ -462,9 +462,6 @@ export const WorkshopsTab = () => {
         <p className="text-blue-600 dark:text-blue-400 font-bold text-xl mb-2 flex items-center justify-center md:justify-start gap-2">
           <Calendar className="w-5 h-5" /> Saturday 14 November 2026
         </p>
-        <p className="text-slate-600 dark:text-slate-300 font-medium max-w-3xl">
-          Morning workshops run from 08:00 to 12:00. Afternoon workshops run from 13:00 to 17:00. Every agenda below totals exactly four hours, including breaks.
-        </p>
       </div>
 
       {/* Morning Section */}

@@ -238,7 +238,7 @@ const speakersData = {
       credentials: "BSc PT, MSc, PhD",
       role: "Senior Staff Physiotherapist; Chairman of the Physical Therapy Department",
       department: "Department of Physical Therapy",
-      college: "King Fahad Hospital of the University, Alkhobar",
+      college: "King Fahad Hospital of the University",
       org: "Imam Abdulrahman Bin Faisal University",
       isFemale: false,
       photo: ImgHani,
@@ -389,7 +389,7 @@ export const SpeakersTab = () => {
   ];
 
   return (
-    <div className="py-4 md:py-8 w-full max-w-[1400px] mx-auto relative hidden">
+    <div className="py-4 md:py-8 w-full max-w-[1400px] mx-auto relative">
       {/* INTERNAL TABS - Improved contrast and active state */}
       <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
         {tabs.map((tab) => (

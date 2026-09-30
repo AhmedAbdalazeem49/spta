@@ -153,57 +153,6 @@ export const BookletTab = () => {
   return (
     <div className="w-full pb-16 space-y-8">
 
-      {/* ─── HERO BANNER ─── */}
-      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-8 md:p-12 text-white">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 20% 50%, #3b82f6 0%, transparent 60%), radial-gradient(circle at 80% 20%, #6366f1 0%, transparent 50%)" }} />
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-300 text-sm font-bold mb-4">
-            <Globe className="w-4 h-4" /> Visitor Information
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-2 leading-tight">
-            The 6th Saudi International Physiotherapy Conference
-          </h2>
-          <p className="text-blue-200 text-base md:text-lg font-medium mb-6 max-w-2xl">
-            Advancing Physiotherapy in Saudi Arabia: Leadership, Innovation & Value-Based Impact
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {[
-              { icon: <Calendar className="w-4 h-4" />, text: "12–14 November 2026" },
-              { icon: <MapPin className="w-4 h-4" />, text: "Almoosa Rehabilitation Hospital, Al Ahsa" },
-              { icon: <Building2 className="w-4 h-4" />, text: "Saudi Physical Therapy Association" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm font-semibold">
-                {item.icon} {item.text}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ─── QUICK INFO CARDS ─── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[
-          { icon: <Calendar className="w-6 h-6 text-blue-500" />, label: "Dates", value: "12–14 November 2026", bg: "bg-blue-50 dark:bg-blue-900/20" },
-          { icon: <MapPin className="w-6 h-6 text-rose-500" />, label: "Venue", value: "Almoosa Rehabilitation Hospital, Al Ahsa", bg: "bg-rose-50 dark:bg-rose-900/20" },
-          { icon: <Globe className="w-6 h-6 text-emerald-500" />, label: "Website", value: "spta.sa", bg: "bg-emerald-50 dark:bg-emerald-900/20", link: "https://spta.sa" },
-          { icon: <Building2 className="w-6 h-6 text-purple-500" />, label: "Organizer", value: "Saudi Physical Therapy Association", bg: "bg-purple-50 dark:bg-purple-900/20" },
-          { icon: <Star className="w-6 h-6 text-amber-500" />, label: "Strategic Partner", value: "Almoosa Health", bg: "bg-amber-50 dark:bg-amber-900/20" },
-          { icon: <Mail className="w-6 h-6 text-slate-500" />, label: "Contact", value: "spta@spta.sa", bg: "bg-slate-50 dark:bg-slate-800/50", link: "mailto:spta@spta.sa" },
-        ].map((card, i) => (
-          <motion.div key={i} whileHover={{ y: -3 }} className={`rounded-2xl ${card.bg} border border-slate-100 dark:border-slate-800 p-5 flex items-start gap-4`}>
-            <div className="shrink-0 mt-0.5">{card.icon}</div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">{card.label}</div>
-              {card.link ? (
-                <a href={card.link} className="font-bold text-slate-900 dark:text-white hover:underline break-all">{card.value}</a>
-              ) : (
-                <div className="font-bold text-slate-900 dark:text-white leading-snug">{card.value}</div>
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
       {/* ─── CME HOURS ─── */}
       <div className="rounded-3xl border-2 border-amber-200 dark:border-amber-800/50 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/10 p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
@@ -239,21 +188,6 @@ export const BookletTab = () => {
             <InfoRow label="Full Address" value="Dhahran Rd, Al Shuqaiq, Almutayrifi 36322, Al Ahsa, Eastern Province" />
             <InfoRow label="Google Maps" value={<MapLink href="https://maps.app.goo.gl/nusDsrQV47NfdskRA" label="Open in Maps" />} />
             <InfoRow label="Parking" value={<MapLink href="https://maps.app.goo.gl/38wAFss9FECWdHwN8" label="Parking Location" />} />
-            <div className="mt-4">
-              <p className="text-sm font-bold text-slate-600 dark:text-slate-400 mb-3">Venue Map Highlights:</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {venueItems.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3">
-                    <div className="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-black shrink-0 mt-0.5">{i + 1}</div>
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-sm leading-relaxed">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 p-4 rounded-xl border border-dashed hidden border-slate-300 dark:border-slate-700 text-center text-slate-500 dark:text-slate-400 text-sm">
-                <Map className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                Floor map to be added shortly
-              </div>
-            </div>
           </div>
         </AccordionItem>
 
@@ -334,7 +268,7 @@ export const BookletTab = () => {
         </AccordionItem>
 
         {/* Useful Info */}
-        <AccordionItem icon={<AlertCircle className="w-5 h-5" />} title="Useful Information for All Attendees" subtitle="Weather, dress code & language" accentColor="teal">
+        <AccordionItem icon={<AlertCircle className="w-5 h-5" />} title="More Information" subtitle="Weather, dress code & language" accentColor="teal">
           <div className="space-y-3">
             {[
               { icon: <Sun className="w-5 h-5" />, label: "Weather", text: "November is usually warm during the day and cooler in the evening. Bring light clothing, a light jacket, and comfortable shoes.", color: "amber" },

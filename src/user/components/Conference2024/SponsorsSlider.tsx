@@ -107,15 +107,6 @@ export const SponsorsSlider = () => {
         >
           Sponsors
         </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto"
-        >
-          We are proud to be supported by industry leaders who share our vision for advancing healthcare and physiotherapy excellence.
-        </motion.p>
       </div>
 
       <div className="flex flex-col">

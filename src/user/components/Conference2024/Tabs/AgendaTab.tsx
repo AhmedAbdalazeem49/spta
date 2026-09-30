@@ -642,10 +642,6 @@ export const AgendaTab = () => {
             November 12–13, 2026 | Sheikh Hussein bin Abdulrahman Al-Mousa
             Conference Hall - 15th floor
           </p>
-          <p className="text-slate-500 dark:text-slate-400 font-medium">
-            Advancing Physiotherapy in Saudi Arabia: Leadership, Innovation &
-            Value-Based Impact
-          </p>
         </div>
       </div>
 
@@ -783,11 +779,6 @@ export const AgendaTab = () => {
             <h4 className="text-3xl font-black text-blue-900 dark:text-blue-100 mb-4">
               End of Day 1
             </h4>
-            <p className="text-blue-700 dark:text-blue-300 mb-8 max-w-2xl mx-auto font-medium">
-              Thank you for joining us on the first day of the conference. We
-              look forward to seeing you tomorrow for more insightful sessions
-              and discussions.
-            </p>
             <button
               onClick={() => {
                 setActiveDay(2);
@@ -812,11 +803,6 @@ export const AgendaTab = () => {
             <h4 className="text-3xl font-black text-indigo-900 dark:text-indigo-100 mb-4">
               End of Conference
             </h4>
-            <p className="text-indigo-700 dark:text-indigo-300 mb-8 max-w-2xl mx-auto font-medium">
-              Thank you for being part of this remarkable event. We hope you
-              enjoyed the sessions. Please take a moment to evaluate your
-              experience to claim your certificate.
-            </p>
             <button
               onClick={handleScrollToReviews}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all shadow-lg shadow-indigo-600/30 hover:scale-105"
