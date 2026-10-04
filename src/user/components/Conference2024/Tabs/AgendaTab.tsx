@@ -13,7 +13,8 @@ import {
   User,
   Users,
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type ItemType =
   | "ceremony"
@@ -76,6 +77,7 @@ const TYPE_STYLES: Record<
     border: "border-purple-400 dark:border-purple-600",
     icon: <Trophy className="w-4 h-4" />,
     label: "Ceremony",
+
   },
   keynote: {
     color: "text-[#11517E] dark:text-[#6FC4BC]",
@@ -83,6 +85,7 @@ const TYPE_STYLES: Record<
     border: "border-[#11517E] dark:border-[#11517E]",
     icon: <Mic2 className="w-4 h-4" />,
     label: "Keynote",
+
   },
   "Focused Symposium": {
     color: "text-indigo-700 dark:text-indigo-300",
@@ -613,6 +616,7 @@ const AGENDA_DATA: AgendaDay[] = [
 export const AgendaTab = () => {
   const [activeDay, setActiveDay] = useState(1);
   const { language } = useLanguage();
+  const navigate = useNavigate();
 
   const currentDayData = AGENDA_DATA.find((d) => d.id === activeDay);
 
@@ -625,19 +629,13 @@ export const AgendaTab = () => {
   }, [activeDay]);
 
   const toggleSession = (id: string) => {
-    setExpandedSessions(prev => 
-      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
+    setExpandedSessions((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id],
     );
   };
 
   const handleScrollToReviews = () => {
-    const el = document.getElementById("reviews");
-    if (el) {
-      window.scrollTo({
-        top: el.getBoundingClientRect().top + window.pageYOffset - 100,
-        behavior: "smooth",
-      });
-    }
+    navigate("/conference-evaluations");
   };
 
   return (
@@ -651,7 +649,8 @@ export const AgendaTab = () => {
               : "Conference Scientific Agenda"}
           </h3>
           <p className="text-[#11517E] dark:text-[#6FC4BC] font-bold text-lg mb-1">
-            November 12-14, 2026 | Sheikh Hussein bin Abdulrahman Al-Mousa Conference Hall
+            November 12-14, 2026 | Sheikh Hussein bin Abdulrahman Al-Mousa
+            Conference Hall
           </p>
         </div>
       </div>
@@ -706,35 +705,46 @@ export const AgendaTab = () => {
                 <div
                   onClick={() => toggleSession(session.id)}
                   className={`relative p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer transition-all duration-300 group overflow-hidden ${
-                    isExpanded 
-                      ? "bg-white dark:bg-slate-900" 
+                    isExpanded
+                      ? "bg-white dark:bg-slate-900"
                       : "bg-gradient-to-r from-blue-100 via-indigo-100/80 to-blue-50 dark:from-slate-700 dark:via-blue-800/40 dark:to-slate-700 hover:from-blue-200 hover:via-indigo-200/80 hover:to-blue-100 dark:hover:from-slate-600 dark:hover:via-blue-700/40 dark:hover:to-slate-600"
                   }`}
                 >
                   {/* Decorative Active Indicator (Instead of arrows) */}
-                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 transition-all duration-300 ${
-                    isExpanded ? "bg-[#11517E] dark:bg-[#11517E] shadow-[0_0_15px_rgba(37,99,235,0.5)]" : "bg-transparent group-hover:bg-blue-300 dark:group-hover:bg-[#11517E]"
-                  }`} />
-                  
+                  <div
+                    className={`absolute left-0 top-0 bottom-0 w-1.5 transition-all duration-300 ${
+                      isExpanded
+                        ? "bg-[#11517E] dark:bg-[#11517E] shadow-[0_0_15px_rgba(37,99,235,0.5)]"
+                        : "bg-transparent group-hover:bg-blue-300 dark:group-hover:bg-[#11517E]"
+                    }`}
+                  />
+
                   <div className="pl-4">
-                    <h4 className={`text-xl md:text-2xl font-black mb-2 leading-tight transition-colors duration-300 ${
-                      isExpanded ? "text-[#11517E] dark:text-[#6FC4BC]" : "text-slate-900 dark:text-white group-hover:text-[#11517E] dark:group-hover:text-[#6FC4BC]"
-                    }`}>
+                    <h4
+                      className={`text-xl md:text-2xl font-black mb-2 leading-tight transition-colors duration-300 ${
+                        isExpanded
+                          ? "text-[#11517E] dark:text-[#6FC4BC]"
+                          : "text-slate-900 dark:text-white group-hover:text-[#11517E] dark:group-hover:text-[#6FC4BC]"
+                      }`}
+                    >
                       {session.title}
                     </h4>
                     {session.moderator && (
                       <p className="text-[#11517E]/80 dark:text-[#6FC4BC]/80 font-bold flex items-center gap-2">
-                        <User className="w-4 h-4" /> Moderator: {session.moderator}
+                        <User className="w-4 h-4" /> Moderator:{" "}
+                        {session.moderator}
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Visual state indicator (subtle glow / text change) */}
-                  <div className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 border ${
-                    isExpanded 
-                      ? "bg-[#e0f2f1] dark:bg-blue-900/40 text-[#11517E] dark:text-[#6FC4BC] border-[#11517E]/20 dark:border-[#11517E]/50" 
-                      : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 group-hover:border-[#6FC4BC]/50 dark:group-hover:text-[#11517E]"
-                  }`}>
+                  <div
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 border ${
+                      isExpanded
+                        ? "bg-[#e0f2f1] dark:bg-blue-900/40 text-[#11517E] dark:text-[#6FC4BC] border-[#11517E]/20 dark:border-[#11517E]/50"
+                        : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 group-hover:border-[#6FC4BC]/50 dark:group-hover:text-[#11517E]"
+                    }`}
+                  >
                     {isExpanded ? "Active Section" : "Click to View Details"}
                   </div>
                 </div>
@@ -755,7 +765,7 @@ export const AgendaTab = () => {
                       <div className="absolute top-10 bottom-10 left-[2.25rem] md:left-[9.5rem] w-[2px] bg-gradient-to-b from-transparent via-slate-200 dark:via-slate-700 to-transparent z-0" />
 
                       {session.items.map((item, idx) => {
-                        const cfg = TYPE_STYLES[item.type || ''];
+                        const cfg = TYPE_STYLES[item.type || ""];
                         const isBreak =
                           item.type === "break" ||
                           item.type === "lunch" ||
@@ -809,7 +819,9 @@ export const AgendaTab = () => {
                                         <div className="p-1.5 bg-[#f0f8f8] dark:bg-[#11517E]/30 rounded-lg text-[#11517E] shrink-0">
                                           <User className="w-4 h-4" />
                                         </div>
-                                        <span className="pt-1">{item.speaker}</span>
+                                        <span className="pt-1">
+                                          {item.speaker}
+                                        </span>
                                       </>
                                     ) : (
                                       <div className="w-full text-sm leading-relaxed">
@@ -843,7 +855,8 @@ export const AgendaTab = () => {
                 const el = document.getElementById("agenda-top");
                 if (el) {
                   window.scrollTo({
-                    top: el.getBoundingClientRect().top + window.pageYOffset - 100,
+                    top:
+                      el.getBoundingClientRect().top + window.pageYOffset - 100,
                     behavior: "smooth",
                   });
                 }

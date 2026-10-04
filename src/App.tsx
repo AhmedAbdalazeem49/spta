@@ -60,6 +60,7 @@ import VerifyOtpPage from "./pages/VerifyOtpPage";
 import CertificateVerifyPage from "./user/pages/CertificateVerifyPage";
 import ConferencesPage from "./user/pages/ConferencesPage";
 import Conference2026Page from "./user/pages/Conference2026Page";
+import ConferenceEvaluationPage from "./user/pages/ConferenceEvaluationPage";
 import Membership from "./user/pages/Membership";
 import VerifyMembershipPage from "./pages/VerifyMembershipPage";
 import WhatsAppFloat from "./components/WhatsAppFloat";
@@ -107,6 +108,7 @@ const App = () => (
               {/* Conferences */}
               <Route path="/conferences" element={<ConferencesPage />} />
               <Route path="/conference-2026" element={<Conference2026Page />} />
+              <Route path="/conference-evaluation" element={<ConferenceEvaluationPage />} />
               {/* attendance Page */}
               <Route
                 path="/workshop/:id/attendance"

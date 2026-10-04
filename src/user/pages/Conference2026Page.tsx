@@ -7,7 +7,6 @@ import { HeroSection } from "../components/Conference2024/HeroSection";
 import { InteractiveTabs } from "../components/Conference2024/InteractiveTabs";
 import { PresidentWord2026 } from "../components/Conference2024/PresidentWord2026";
 import { PricingSection } from "../components/Conference2024/PricingSection";
-import { ReviewsSection } from "../components/Conference2024/ReviewsSection";
 import { SponsorsSlider } from "../components/Conference2024/SponsorsSlider";
 import { StrategicPartner } from "../components/Conference2024/StrategicPartner";
 
@@ -34,7 +33,6 @@ const Conference2026Page = () => {
 
       <InteractiveTabs />
       <SponsorsSlider />
-      <ReviewsSection />
     </ConferenceLayout>
   );
 };
