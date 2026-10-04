@@ -108,7 +108,7 @@ export const CertificatePreviewTab = () => {
           <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">
             {language === 'ar' ? 'تقييم المؤتمر' : 'Conference Evaluation'}
           </h3>
-          <p className="text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/30 p-3 rounded-lg inline-block border border-blue-200 dark:border-blue-800">
+          <p className="text-[#11517E] font-bold bg-[#f0f8f8] dark:bg-[#11517E]/30 p-3 rounded-lg inline-block border border-[#11517E]/20 dark:border-blue-800">
             {language === 'ar' 
               ? 'التقييم مطلوب للحصول على شهادة حضور المؤتمر' 
               : 'Evaluation is required to obtain your attendance certificate'}
@@ -145,7 +145,7 @@ export const CertificatePreviewTab = () => {
             <textarea 
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:border-blue-500 outline-none min-h-[120px]"
+              className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:border-[#11517E] outline-none min-h-[120px]"
               placeholder={language === 'ar' ? 'اكتب أي ملاحظات أو اقتراحات هنا...' : 'Write any feedback or suggestions...'}
             />
           </div>
@@ -153,7 +153,7 @@ export const CertificatePreviewTab = () => {
           <button
             onClick={submitEvaluation}
             disabled={isSubmitting}
-            className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 text-lg"
+            className="w-full py-4 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 text-lg"
           >
             {isSubmitting ? (language === 'ar' ? 'جاري الإرسال...' : 'Submitting...') : (language === 'ar' ? 'إرسال التقييم' : 'Submit Evaluation')}
           </button>
@@ -219,13 +219,13 @@ export const CertificatePreviewTab = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={language === 'ar' ? 'أحمد محمد' : 'John Doe'}
-            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all dark:text-white font-medium" 
+            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-[#11517E]/20 focus:border-[#11517E] outline-none transition-all dark:text-white font-medium" 
           />
         </div>
 
         <button 
           onClick={() => setIsFullscreen(true)}
-          className="w-full mt-auto py-4 px-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-blue-600 dark:hover:bg-blue-500 rounded-2xl font-bold flex items-center justify-center gap-3 transition-colors shadow-lg"
+          className="w-full mt-auto py-4 px-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-[#11517E] dark:hover:bg-[#11517E] rounded-2xl font-bold flex items-center justify-center gap-3 transition-colors shadow-lg"
         >
           <Maximize2 className="w-5 h-5" />
           {language === 'ar' ? 'عرض في شاشة أكبر' : 'View in full screen'}

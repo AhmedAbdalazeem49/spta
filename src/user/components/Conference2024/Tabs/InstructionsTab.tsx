@@ -15,7 +15,7 @@ export const InstructionsTab = () => {
       border: 'border-rose-100 dark:border-rose-900/30'
     },
     {
-      icon: <UserCheck className="w-8 h-8 text-emerald-500" />,
+      icon: <UserCheck className="w-8 h-8 text-[#55AE47]" />,
       title: language === 'ar' ? 'الفئات المستهدفة' : 'Target Audience',
       desc: language === 'ar' ? 'التسجيل متاح للطلاب، الممارسين الصحيين، الأطباء، والباحثين في المجال الطبي.' : 'Registration is open for students, healthcare professionals, doctors, and medical researchers.',
       bg: 'bg-emerald-50 dark:bg-emerald-900/10',
@@ -29,10 +29,10 @@ export const InstructionsTab = () => {
       border: 'border-amber-100 dark:border-amber-900/30'
     },
     {
-      icon: <Tag className="w-8 h-8 text-indigo-500" />,
+      icon: <Tag className="w-8 h-8 text-[#6FC4BC]" />,
       title: language === 'ar' ? 'الرسوم والخصومات' : 'Fees & Discounts',
       desc: language === 'ar' ? 'يتوفر تسجيل مبكر وتسجيل متأخر. ورش العمل ليس عليها أي خصم إضافي (تعتبر إضافات منفصلة).' : 'Early bird and late bird stages available. Workshops have no additional discounts (Separate add-ons).',
-      bg: 'bg-indigo-50 dark:bg-indigo-900/10',
+      bg: 'bg-[#f0f8f8] dark:bg-indigo-900/10',
       border: 'border-indigo-100 dark:border-indigo-900/30'
     }
   ];

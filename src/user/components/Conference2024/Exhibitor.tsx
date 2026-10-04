@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { BrandPattern } from "./BrandPattern";
 import { Sparkles } from "lucide-react";
 import KingSaudUni from "@/assets/kingsaud.webp";
 

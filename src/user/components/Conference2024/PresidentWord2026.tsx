@@ -1,15 +1,19 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import { BrandPattern } from "./BrandPattern";
 import con1Image from "@/assets/dr.jpg";
 
 export const PresidentWord2026 = () => {
   return (
     <section className="relative py-12 sm:py-16 md:py-24 bg-slate-950 overflow-hidden">
+      <BrandPattern position="top-left" variant="primary" />
+      <BrandPattern position="bottom-right" variant="secondary" />
+      
       {/* Background ambient glows */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-600/10 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/20 rounded-full blur-[120px]"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#6FC4BC]/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#11517E]/20 rounded-full blur-[120px]"></div>
       </div>
 
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
@@ -24,8 +28,8 @@ export const PresidentWord2026 = () => {
             className="w-full lg:w-5/12 flex flex-col items-center"
           >
             <div className="relative group">
-              <div className="absolute inset-0 bg-amber-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
-              <div className="relative p-2 rounded-full border-2 border-amber-500/30 bg-slate-900/50 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-[#6FC4BC] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+              <div className="relative p-2 rounded-full border-2 border-[#6FC4BC]/30 bg-slate-900/50 backdrop-blur-sm">
                 <img
                   src={con1Image}
                   alt="Dr. Abdulfattah Saeed Alqahtani"
@@ -41,7 +45,7 @@ export const PresidentWord2026 = () => {
               <h3 className="text-3xl font-serif font-bold text-white tracking-wide">
                 Dr. Abdulfattah Saeed Alqahtani
               </h3>
-              <p className="text-amber-400 font-medium mt-2 text-lg uppercase tracking-widest">
+              <p className="text-[#6FC4BC] font-medium mt-2 text-lg uppercase tracking-widest">
                 President of Saudi Physical Therapy Association
               </p>
             </div>
@@ -55,15 +59,15 @@ export const PresidentWord2026 = () => {
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
             className="w-full lg:w-7/12 relative"
           >
-            <Quote className="absolute -top-10 -left-10 w-24 h-24 text-amber-500/10 rotate-180 z-0" />
+            <Quote className="absolute -top-10 -left-10 w-24 h-24 text-[#55AE47]/10 rotate-180 z-0" />
             
             <div className="relative z-10 space-y-6 text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed font-light">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight mb-8">
-                <span className="text-amber-500">Welcome to the 6th</span> Saudi International Physiotherapy Conference.
+                <span className="text-[#55AE47]">Welcome to the 6th</span> Saudi International Physiotherapy Conference.
               </h2>
               
               <p>
-                It is my great pleasure to welcome you, organized by the Saudi Physical Therapy Association in strategic partnership with Almoosa Health Group, under the theme <strong className="text-amber-400 font-semibold">Physiotherapy in Saudi Arabia: Leadership, Innovation and Value-Based Impact</strong>. This theme reflects our shared commitment to advancing the physiotherapy profession in line with Saudi Vision 2030.
+                It is my great pleasure to welcome you, organized by the Saudi Physical Therapy Association in strategic partnership with Almoosa Health Group, under the theme <strong className="text-[#6FC4BC] font-semibold">Physiotherapy in Saudi Arabia: Leadership, Innovation and Value-Based Impact</strong>. This theme reflects our shared commitment to advancing the physiotherapy profession in line with Saudi Vision 2030.
               </p>
               
               <p>

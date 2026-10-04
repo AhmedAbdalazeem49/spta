@@ -1,5 +1,15 @@
+import femaleAvatarImg from "@/assets/female-avatar.png";
 import { AnimatePresence, motion } from "framer-motion";
-import { Award, Eye, Mic, Star, User, Users, X } from "lucide-react";
+import {
+  ArrowRight,
+  Award,
+  Eye,
+  Mic,
+  Star,
+  User,
+  Users,
+  X,
+} from "lucide-react";
 import React, { useState } from "react";
 
 // Keynote Images
@@ -10,9 +20,11 @@ import ImgLorimer from "@/assets/keynote-speakers/LorimerMoseley2020ByCathLeo-21
 import ImgTurki from "@/assets/keynote-speakers/TA-Photo-BSL - Turki Abualait.jpg";
 
 // Invited Images
-import ImgAlbarrati from "@/assets/invited-speakers/Ali Albarrati.png";
+import ImgAlbarrati from "@/assets/invited-speakers/Ali Albarrati.jpeg";
 import ImgAlshami from "@/assets/invited-speakers/Dr Ali M Alshami.jpg";
+import ImgHaniAlaabad from "@/assets/invited-speakers/Hani AlAbbad.jpg";
 import ImgEmbaby from "@/assets/invited-speakers/heba embaby.jpg";
+import ImgHosamAlzahrani from "@/assets/invited-speakers/Hosam Alzahrani.jpg";
 import ImgRafferty from "@/assets/invited-speakers/MiriamRafferty_colorHighRes - Miriam Rafferty.jpg";
 import ImgMuaidi from "@/assets/invited-speakers/Prof. Qassim Muaidi.jpg";
 import ImgHinman from "@/assets/invited-speakers/Rana Hinman.jpg";
@@ -26,8 +38,9 @@ import ImgBarhameen from "@/assets/panalist/A B.jpg";
 import ImgFaisalMubarak from "@/assets/panalist/Faisal Mubarak M. Al Mubarak.jpeg";
 import ImgLamia from "@/assets/panalist/Lamia Alfaleh.jpeg";
 import ImgManar from "@/assets/panalist/manar almukairish.jpeg";
+import ImgTalal from "@/assets/panalist/Mr. Talal Alghamdi .jpeg";
 import ImgAlhaizan from "@/assets/panalist/Muhammad Al-Heizan.jpg";
-import ImgTahany from "@/assets/panalist/Tahany Alhamad.png";
+import ImgTahany from "@/assets/panalist/Tahany Alhamad.jpg";
 import ImgWalid from "@/assets/panalist/Walid Ouanes.jpeg";
 
 // Moderator Images
@@ -101,7 +114,7 @@ const speakersData = {
       title: "Dr.",
       name: "Maha Almarwani",
       bio: "Dr. Maha Almarwani is an Associate Professor in the Department of Health Rehabilitation Sciences, College of Applied Medical Sciences at King Saud University. Her research focuses on healthy aging, fall prevention, rehabilitation, physical activity, ageism, and geriatric physical therapy. She has led and collaborated on several national and international research projects related to geriatrics, physical therapy, and public health, including healthy aging initiatives in Saudi Arabia. Dr. Almarwani also serves as a research collaborator and academic supervisor for graduate students in rehabilitation sciences and aging research.",
-      photo: null,
+      photo: femaleAvatarImg,
     },
     {
       title: "Prof.",
@@ -133,6 +146,24 @@ const speakersData = {
       bio: "Rana is a research physiotherapist, Professor and academic at the Centre for Health, Exercise & Sports Medicine at the University of Melbourne. Her research focuses on clinical trials of non-drug non-surgical treatment strategies for osteoarthritis, in particular exercise, rehabilitation and biomechanical interventions. She has a strong interest in developing and implementing methods to increase access to care, including telerehabilitation and digital health strategies. Rana has published over >400 peer-reviewed papers, been awarded >$50M in research grant funds and is an Editorial Board member for Journal of Physiotherapy and an Academic Editor for PLOS Medicine.",
       photo: ImgHinman,
     },
+    {
+      title: "Dr.",
+      name: "Hosam Ahmed Alzahrani",
+      bio: "Dr. Hosam Alzahrani is an Associate Professor and Consultant of Musculoskeletal Physiotherapy at Taif University, Saudi Arabia. He is the Director of the Master of Musculoskeletal Physical Therapy Program and holds academic leadership roles in research, postgraduate studies, and programmatic accreditation. Dr. Alzahrani earned his PhD in Physiotherapy from the University of Sydney, where his doctoral work focused on the role of physical activity in low back pain prevention and management. He also holds a Master of Physical Therapy from Loma Linda University and a Bachelor of Science in Physical Therapy from King Saud University. His clinical and research interests include musculoskeletal rehabilitation, low back pain, physical activity, exercise-based interventions, and evidence-based physiotherapy practice. He also serves as an Associate Editor for the Journal of Aging and Physical Activity and BMC Sports Science, Medicine and Rehabilitation",
+      photo: ImgHosamAlzahrani,
+    },
+    {
+      title: "Dr.",
+      name: "Hani Mohammad Alabbad",
+      bio: "Dr. Hani is a consultant MSK physical therapist and is the MSK Physical Therapy Residency Program Director at King Fahad Medical City. He received his physical therapy bachelor degree in 2005 from King Faisal University (Dammam). In 2011, he completed his Masters of Musculoskeletal & Sports Physiotherapy from the University of South Australia. He has completed the one-year Global Clinical Scholars Research Training Program (GCSRT) from Harvard Medical School in 2016. He completed his PhD degree in 2022 from Curtin University, Australia. In addition to his clinical practice in the field of musculoskeletal and sport’s physical therapy, he has special interest in both clinical training and research with 8 published peer-reviewed articles.",
+      photo: ImgHaniAlaabad,
+    },
+    {
+      title: "Dr.",
+      name: "Asma Saad Al-Rashoud",
+      bio: "Dr Asma Alrushud is a Consultant in Physical Therapy and Associate Professor at King Saud University, Saudi Arabia. She holds a PhD in Physical Therapy from the University of Birmingham, UK. She has academic, clinical, teaching, and research experience in musculoskeletal rehabilitation and evidence-based physical therapy practice. Dr Alrushud has contributed to several research and academic initiatives through peer-reviewed publications, graduate supervision, conference participation, curriculum development, and community engagement activities. She also has leadership and administrative experience and currently serves as Assistant to the Vice Dean for Development and Quality at the College of Applied Medical Sciences and as a consultant for the accreditation of the MSc in physical therapy program at King Saud University.",
+      photo: femaleAvatarImg,
+    },
   ],
   panelists: [
     {
@@ -145,19 +176,13 @@ const speakersData = {
       title: "Dr.",
       name: "Hanan Sulaiman Alsaif",
       bio: "Dr. Hanan Suliman Al Saif is a dedicated Senior Musculoskeletal Physiotherapist and currently serves as Deputy Director of the Physical Therapy Department at King Fahad Military Medical Complex in Dhahran, Kingdom of Saudi Arabia. She also holds the position of Clinical Assistant Professor at Prince Sultan Military College.\nDr. Al Saif earned her Doctor of Philosophy (PhD) in Musculoskeletal Physiotherapy from the University of Manchester, United Kingdom (2023), following a Master's degree with merit from Manchester Metropolitan University. Her clinical career spans over 25 years at KFMMC, where she has also served as Acting Deputy Director of Physiotherapy.\nAn active researcher, Dr. Al Saif has published her work in BMC Musculoskeletal Disorders and Musculoskeletal Science & Practice on lumbar discectomy rehabilitation. She serves on the Research Ethics Committee at KFMMC. Her innovation 'Step Free' earned her a Silver Medal at the Geneva International Invention Exhibition (2026).",
-      photo: null,
-    },
-    {
-      title: "",
-      name: "Talal Alghamdi",
-      bio: "Biography and photo coming soon.",
-      photo: null,
+      photo: femaleAvatarImg,
     },
     {
       title: "Dr.",
-      name: "Noora Abdullah Alshoweir",
+      name: "Noorah A. Alshoweir",
       bio: "A Consultant Musculoskeletal Physiotherapist with over 30 years of clinical, educational, and leadership experience in the field of physical therapy. Throughout my career, I have demonstrated a strong commitment to advancing musculoskeletal rehabilitation, evidence-based practice, and the development of healthcare professionals.\nIn addition to my extensive clinical expertise, I served as the Chairman of the Physical Therapy Residency Program, where I lead curriculum development, quality improvement initiatives, competency-based education, and trainee assessment. I was actively involved in mentoring residents, promoting clinical excellence, and supporting the advancement of postgraduate physical therapy education.\nMy professional interest include musculoskeletal disorders, clinical reasoning, residency training, healthcare education, and the integration of best evidence into clinical practice. Through the leadership and dedication, I continue to contribute to the growth of the physical therapy profession and the delivery of high-quality patient care.",
-      photo: null,
+      photo: femaleAvatarImg,
     },
     {
       title: "Dr.",
@@ -194,6 +219,12 @@ const speakersData = {
       name: "Abdulfattah Saeed Alqahtani",
       bio: "Dr. Abdulfattah Alqahtani is a visionary healthcare leader, consultant, and academic with a distinguished focus on advancing cardiopulmonary and cardiac rehabilitation services, physical therapy practice, and healthcare governance. He currently serves as an Associate Professor and Consultant of Cardiopulmonary Rehabilitation, where his work is centered on translating evidence-based practice into high-impact clinical programs that improve functional capacity, quality of life, and long-term outcomes for patients with cardiovascular and pulmonary diseases.\nAs President of the Saudi Physical Therapy Association (SPTA), Dr. Alqahtani leads national initiatives aimed at elevating professional standards, strengthening governance structures, and advancing the role of physical therapy within the healthcare system. His leadership has focused on policy development, professional regulation, capacity building, and fostering collaboration across healthcare sectors to ensure safe, effective, and patient-centered rehabilitation services.",
       photo: ImgAlqahtani,
+    },
+    {
+      title: "Mr.",
+      name: "Talal Alghamdi ",
+      bio: "Talal Dakheelalah Alghamdi is Director General of Medical Rehabilitation and Long-Term Care at the Saudi Ministry of Health, with over 18 years of experience in rehabilitation, healthcare management, and strategic planning. He holds a Bachelor’s degree in Physical Therapy from King Saud University and an MSc in Trauma and Orthopaedics from the University of Salford, UK.",
+      photo: ImgTalal,
     },
     {
       title: "Ms.",
@@ -257,13 +288,13 @@ const speakersData = {
     {
       title: "Dr.",
       name: "Batool Al Hassan",
+      photo: femaleAvatarImg,
       credentials: "PharmD",
       role: "Group Inpatient Pharmacy Services Director; Chairman of the Pharmacy & Therapeutics Committee",
       department: "",
       college: "",
       org: "Almoosa Health Group",
       isFemale: true,
-      photo: null,
     },
     {
       title: "Dr.",
@@ -388,18 +419,32 @@ export const SpeakersTab = () => {
     },
   ];
 
+  const getActiveSpeakers = () => {
+    return speakersData[activeTab as keyof typeof speakersData] || [];
+  };
+
   return (
     <div className="py-4 md:py-8 w-full max-w-[1400px] mx-auto relative">
-      {/* INTERNAL TABS - Improved contrast and active state */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
+      {/* Section Title */}
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-md">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
+            Speakers
+          </span>
+        </h2>
+        <div className="w-24 h-1.5 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full"></div>
+      </div>
+
+      {/* INTERNAL TABS */}
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 ${
               activeTab === tab.id
-                ? "bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-105"
-                : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700"
+                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-[0_0_20px_rgba(245,158,11,0.3)] scale-105 border border-amber-400/50"
+                : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white border border-white/10"
             }`}
           >
             {tab.icon}
@@ -408,199 +453,35 @@ export const SpeakersTab = () => {
         ))}
       </div>
 
+      {/* SPEAKERS GRID */}
       <AnimatePresence mode="wait">
-        {/* KEYNOTE SPEAKERS - Big Featured Cards, Left/Right alternating */}
-        {activeTab === "keynote" && (
-          <motion.div
-            key="keynote"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col gap-12"
-          >
-            {speakersData.keynote.map((speaker, i) => (
-              <div
-                key={i}
-                className={`flex flex-col ${i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"} bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-2xl shadow-blue-900/5 dark:shadow-none border border-slate-100 dark:border-slate-800 group`}
-              >
-                <div className="lg:w-2/5 xl:w-1/3 relative min-h-[350px] lg:min-h-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {getActiveSpeakers().map((speaker: any, i: number) => (
+            <motion.div
+              key={speaker.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              onClick={() => setSelectedSpeaker(speaker)}
+              className="bg-slate-800/50 border border-slate-700/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl hover:bg-slate-800/80 transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
+            >
+              {/* Decorative background glow */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-amber-500/20 transition-colors" />
+
+              <div className="flex items-center gap-5 relative z-10 mb-5">
+                <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-600 group-hover:border-amber-400/50 transition-colors bg-slate-900">
                   {speaker.photo ? (
                     <img
                       src={speaker.photo}
                       alt={speaker.name}
-                      className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                    />
-                  ) : (
-                    <FallbackAvatar name={speaker.name} />
-                  )}
-                </div>
-
-                <div className="lg:w-3/5 xl:w-2/3 p-8 sm:p-10 lg:p-14 flex flex-col justify-center relative z-10">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold tracking-widest uppercase w-max mb-6">
-                    <Star className="w-3.5 h-3.5" />
-                    Keynote Speaker
-                  </div>
-
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
-                    {speaker.title && (
-                      <span className="block text-xl sm:text-2xl text-slate-500 dark:text-slate-400 font-bold mb-2">
-                        {speaker.title}
-                      </span>
-                    )}
-                    {speaker.name}
-                  </h3>
-
-                  <div className="w-16 h-1 bg-blue-500 rounded-full mb-8"></div>
-
-                  <div className="prose prose-lg prose-slate dark:prose-invert max-w-none line-clamp-4 text-slate-600 dark:text-slate-300">
-                    {speaker.bio}
-                  </div>
-
-                  <button
-                    onClick={() =>
-                      setSelectedSpeaker({ ...speaker, type: "Keynote" })
-                    }
-                    className="mt-8 flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 transition-colors w-max"
-                  >
-                    <Eye className="w-5 h-5" /> View Full Bio
-                  </button>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* INVITED EXPERTS - Vertical Cards Grid */}
-        {activeTab === "invited" && (
-          <motion.div
-            key="invited"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          >
-            {speakersData.invited.map((speaker, i) => (
-              <div
-                key={i}
-                className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 flex flex-col group relative"
-              >
-                <div className="h-64 sm:h-72 w-full overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
-                  {speaker.photo ? (
-                    <img
-                      src={speaker.photo}
-                      alt={speaker.name}
-                      className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
-                    />
-                  ) : (
-                    <FallbackAvatar name={speaker.name} />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h4 className="text-xl font-bold text-white leading-tight">
-                      {speaker.title && (
-                        <span className="block text-blue-300 text-sm font-semibold mb-0.5">
-                          {speaker.title}
-                        </span>
-                      )}
-                      {speaker.name}
-                    </h4>
-                  </div>
-                </div>
-
-                <div className="p-6 flex flex-col flex-1 bg-slate-50 dark:bg-slate-800/30">
-                  <div className="text-sm leading-relaxed text-slate-600 dark:text-slate-400 line-clamp-4 flex-1 mb-6">
-                    {speaker.bio}
-                  </div>
-                  <button
-                    onClick={() =>
-                      setSelectedSpeaker({ ...speaker, type: "Invited Expert" })
-                    }
-                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  >
-                    <Eye className="w-4 h-4" /> Full Bio
-                  </button>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* PANELISTS - Horizontal Detailed List */}
-        {activeTab === "panelists" && (
-          <motion.div
-            key="panelists"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col gap-4 max-w-4xl mx-auto"
-          >
-            {speakersData.panelists.map((speaker, i) => (
-              <div
-                key={i}
-                className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:shadow-md transition-shadow group"
-              >
-                <div className="flex items-center gap-5 w-full sm:w-auto">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 shadow-md bg-slate-200 dark:bg-slate-800 border-2 border-white dark:border-slate-800">
-                    {speaker.photo ? (
-                      <img
-                        src={speaker.photo}
-                        alt={speaker.name}
-                        className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <FallbackAvatar name={speaker.name} />
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold text-slate-900 dark:text-white leading-tight">
-                      {speaker.title && (
-                        <span className="inline-block text-amber-600 dark:text-amber-500 text-xs font-semibold mr-1">
-                          {speaker.title}
-                        </span>
-                      )}
-                      {speaker.name}
-                    </h4>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1 max-w-[250px] sm:max-w-xs">
-                      {speaker.bio}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() =>
-                    setSelectedSpeaker({ ...speaker, type: "Panelist" })
-                  }
-                  className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-blue-600 hover:text-white transition-colors w-full sm:w-auto justify-center"
-                >
-                  <Eye className="w-4 h-4" /> View Bio
-                </button>
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* MODERATORS - Minimalist Pill Grid */}
-        {activeTab === "moderators" && (
-          <motion.div
-            key="moderators"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto"
-          >
-            {speakersData.moderators.map((speaker, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-5 p-5 rounded-[2rem] bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 shadow-sm hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg transition-all duration-300 group"
-              >
-                <div className="w-20 h-20 rounded-full overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-700 ring-4 ring-white dark:ring-slate-900">
-                  {speaker.photo ? (
-                    <img
-                      src={speaker.photo}
-                      alt={speaker.name}
-                      className="w-full h-full object-cover object-top"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <FallbackAvatar
@@ -609,167 +490,171 @@ export const SpeakersTab = () => {
                     />
                   )}
                 </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-slate-900 dark:text-white text-lg leading-tight mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white leading-tight mb-1 group-hover:text-amber-400 transition-colors">
                     {speaker.title && (
-                      <span className="text-slate-500 dark:text-slate-400 text-sm mr-1">
-                        {speaker.title}
-                      </span>
+                      <span className="mr-1.5">{speaker.title}</span>
                     )}
                     {speaker.name}
-                  </h4>
-                  <p className="text-sm text-slate-700 dark:text-slate-200 font-semibold leading-snug mb-1">
-                    {speaker.role}
-                  </p>
-                  {speaker.department && (
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug mb-1">
-                      {speaker.department}
+                  </h3>
+                  {speaker.role ? (
+                    <p className="text-sm text-amber-400 font-semibold">
+                      {speaker.role}
+                    </p>
+                  ) : speaker.type ? (
+                    <p className="text-sm text-amber-400 font-semibold">
+                      {speaker.type}
+                    </p>
+                  ) : null}
+                  {speaker.affiliation && (
+                    <p className="text-xs text-slate-400 mt-1">
+                      {speaker.affiliation}
                     </p>
                   )}
-                  {speaker.college && (
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug mb-3">
-                      {speaker.college}
-                    </p>
-                  )}
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">
-                    <span className="text-left leading-tight break-words whitespace-normal">
-                      {speaker.org}
-                    </span>
-                  </div>
                 </div>
               </div>
-            ))}
-          </motion.div>
-        )}
+
+              <div className="flex-1">
+                <p className="text-sm text-slate-300 leading-relaxed line-clamp-3 relative z-10">
+                  {speaker.bio || ""}
+                </p>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-center justify-between relative z-10">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border bg-amber-500/10 text-amber-300 border-amber-500/20 uppercase tracking-wider">
+                  {tabs.find((t) => t.id === activeTab)?.label}
+                </div>
+                <span
+                  className={`text-xs font-bold text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform ${
+                    activeTab === "moderators" ? "hidden" : ""
+                  }`}
+                >
+                  Read Bio <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </AnimatePresence>
 
       {/* FULL BIO MODAL */}
       <AnimatePresence>
         {selectedSpeaker && (
-          <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedSpeaker(null)}
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4 sm:p-6"
+          >
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedSpeaker(null)}
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-slate-900 w-full max-w-3xl rounded-[2rem] shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh] border border-slate-800"
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-[2rem] shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]"
-              >
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedSpeaker(null)}
-                  className="absolute top-6 right-6 z-10 w-10 h-10 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
-                >
-                  <X className="w-5 h-5 text-slate-800 dark:text-white" />
-                </button>
+              <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-amber-500 to-orange-600 z-10"></div>
 
-                <div className="flex flex-col overflow-y-auto">
-                  {/* Image Container - Full display */}
-                  <div className="w-full relative bg-slate-100 dark:bg-slate-950 flex justify-center pt-8 pb-4">
+              <button
+                onClick={() => setSelectedSpeaker(null)}
+                className="absolute top-6 right-6 z-20 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+
+              <div className="flex flex-col overflow-y-auto">
+                <div className="w-full p-8 sm:p-10 flex flex-col md:flex-row gap-8">
+                  <div className="w-40 h-40 shrink-0 rounded-3xl overflow-hidden border-4 border-slate-800 bg-slate-950 mx-auto md:mx-0">
                     {selectedSpeaker.photo ? (
                       <img
                         src={selectedSpeaker.photo}
                         alt={selectedSpeaker.name}
-                        className="w-full h-auto max-h-[65vh] object-contain drop-shadow-xl"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-80 flex items-center justify-center">
-                        <FallbackAvatar
-                          name={selectedSpeaker.name}
-                          isFemale={selectedSpeaker.isFemale}
-                        />
-                      </div>
+                      <FallbackAvatar
+                        name={selectedSpeaker.name}
+                        isFemale={selectedSpeaker.isFemale}
+                      />
                     )}
                   </div>
 
-                  {/* Content Side (Bottom) */}
-                  <div className="w-full p-8 sm:p-10 flex flex-col bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-4 w-max shadow-sm">
-                      {selectedSpeaker.type}
+                  <div className="flex-1 text-center md:text-left">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold uppercase tracking-wider mb-4">
+                      {tabs.find((t) => t.id === activeTab)?.label}
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight mb-3">
+                    <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-2">
                       {selectedSpeaker.title && (
-                        <span className="text-amber-600 dark:text-amber-500 font-bold mr-2">
-                          {selectedSpeaker.title}
-                        </span>
+                        <span className="mr-2">{selectedSpeaker.title}</span>
                       )}
                       {selectedSpeaker.name}
                     </h2>
 
+                    {(selectedSpeaker.role ||
+                      selectedSpeaker.department ||
+                      selectedSpeaker.college) && (
+                      <div className="text-slate-300 font-medium mb-4">
+                        {selectedSpeaker.role && (
+                          <span className="block text-amber-400">
+                            {selectedSpeaker.role}
+                          </span>
+                        )}
+                        {selectedSpeaker.department && (
+                          <span className="block">
+                            {selectedSpeaker.department}
+                          </span>
+                        )}
+                        {selectedSpeaker.college && (
+                          <span className="block text-sm">
+                            {selectedSpeaker.college}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     {selectedSpeaker.credentials && (
-                      <div className="flex flex-wrap gap-2 mb-6">
+                      <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
                         {selectedSpeaker.credentials
                           .split(",")
                           .map((cred: string, idx: number) => (
                             <span
                               key={idx}
-                              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1 rounded-md text-sm font-bold shadow-sm"
+                              className="bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-md text-xs font-bold"
                             >
                               {cred.trim()}
                             </span>
                           ))}
                       </div>
                     )}
-
-                    {/* Optional Info display for moderators/panelists if selected from there */}
-                    {(selectedSpeaker.role ||
-                      selectedSpeaker.department ||
-                      selectedSpeaker.college ||
-                      selectedSpeaker.org) && (
-                      <div className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700">
-                        {selectedSpeaker.role && (
-                          <p className="font-bold text-slate-800 dark:text-slate-200 mb-2">
-                            {selectedSpeaker.role}
-                          </p>
-                        )}
-                        {selectedSpeaker.department && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
-                            {selectedSpeaker.department}
-                          </p>
-                        )}
-                        {selectedSpeaker.college && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
-                            {selectedSpeaker.college}
-                          </p>
-                        )}
-                        {selectedSpeaker.org && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-                            {selectedSpeaker.org}
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="prose prose-lg prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 mt-2">
-                      {selectedSpeaker.bio ? (
-                        selectedSpeaker.bio
-                          .split("\n")
-                          .map((paragraph: string, idx: number) => (
-                            <p
-                              key={idx}
-                              className="mb-4 last:mb-0 leading-relaxed"
-                            >
-                              {paragraph}
-                            </p>
-                          ))
-                      ) : (
-                        <p className="italic text-slate-400">
-                          Bio coming soon.
-                        </p>
-                      )}
-                    </div>
                   </div>
                 </div>
-              </motion.div>
+
+                <div className="px-8 sm:px-10 pb-10">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+                    Full Biography
+                  </h4>
+                  <div className="prose prose-lg prose-invert max-w-none text-slate-300">
+                    {selectedSpeaker.bio ? (
+                      selectedSpeaker.bio
+                        .split("\n")
+                        .map((paragraph: string, idx: number) => (
+                          <p
+                            key={idx}
+                            className="mb-4 last:mb-0 leading-relaxed text-sm sm:text-base"
+                          >
+                            {paragraph}
+                          </p>
+                        ))
+                    ) : (
+                      <p className="italic text-slate-500"></p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

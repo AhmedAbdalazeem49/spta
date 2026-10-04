@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import femaleAvatarImg from "@/assets/female-avatar.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Crown, Star, Users, BookOpen, Award } from "lucide-react";
 
@@ -11,6 +12,7 @@ import ImgAlomereni from "@/assets/scientific-commiette/abdulaziz alomereni.jpg"
 import ImgHaya from "@/assets/scientific-commiette/Haya Aldossary.png";
 import ImgAljehani from "@/assets/scientific-commiette/moeaied-eljehaney.jpeg";
 import ImgNoran from "@/assets/scientific-commiette/Noran Felemban.png";
+import ImgSuhail from "@/assets/scientific-commiette/Dr-Suhail.JPG";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type MemberRole = "chair" | "vice-chair" | "member" | "support";
@@ -102,6 +104,15 @@ const MEMBERS: Member[] = [
   },
   {
     id: 9,
+    name: "Dr. Suhail Esam Yaghmor",
+    title: "Dr.",
+    role: "member",
+    affiliation: "Almoosa Rehabilitation Hospital, Al-Ahsa",
+    photo: ImgSuhail,
+    bio: "Dr. Suhail Esam Yaghmor is a Consultant in Physical Medicine and Rehabilitation with extensive experience in rehabilitation medicine, healthcare leadership, and quality improvement. He completed his specialist training in Physical Medicine and Rehabilitation at Paris Descartes University in France and is licensed as a consultant by the Saudi Commission for Health Specialties. He has held several senior leadership positions, including Chief Medical Officer at Almoosa Rehabilitation Hospital and Medical Director at Cambridge Medical & Rehabilitation Hospital. He has also led healthcare teams through major accreditation programs, including CARF and CBAHI, and serves as a certified surveyor for the Saudi Commission for Health Specialties. Dr. Yaghmor is also involved in medical education, professional examinations, rehabilitation service development, and national professional organizations. His clinical interests include neurorehabilitation, musculoskeletal rehabilitation, spinal cord injury, and interventional rehabilitation medicine.",
+  },
+  {
+    id: 10,
     name: "Ms. Noran Abdulkhaliq Felemban",
     title: "Ms.",
     role: "support",
@@ -123,8 +134,8 @@ const ROLE_CONFIG = {
   },
   "vice-chair": {
     label: "Vice Chair",
-    bg: "from-blue-500 to-indigo-500",
-    badge: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700",
+    bg: "from-[#11517E] to-[#6FC4BC]",
+    badge: "bg-[#e0f2f1] dark:bg-[#11517E]/30 text-[#11517E] dark:text-[#6FC4BC] border-[#6FC4BC]/50 dark:border-[#11517E]",
     ring: "ring-4 ring-blue-400/50",
     icon: <Star className="w-3.5 h-3.5" />,
     order: 1,
@@ -139,7 +150,7 @@ const ROLE_CONFIG = {
   },
   "support": {
     label: "Coordination & Support",
-    bg: "from-emerald-500 to-teal-500",
+    bg: "from-[#55AE47] to-teal-500",
     badge: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700",
     ring: "ring-2 ring-emerald-300/50",
     icon: <Award className="w-3.5 h-3.5" />,
@@ -172,15 +183,11 @@ const Avatar = ({ member, size = "lg" }: { member: Member; size?: "sm" | "lg" })
   }
 
   // Female icon (no photo) — only Dr. Asma
+    // Female icon (no photo)
   if (member.isFemale) {
     return (
-      <div className={`${dim} rounded-full bg-gradient-to-br ${cfg.bg} flex items-center justify-center ${cfg.ring} shadow-xl overflow-hidden shrink-0`}>
-        <svg viewBox="0 0 100 100" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="100" r="60" fill="rgba(255,255,255,0.15)" />
-          <ellipse cx="50" cy="30" rx="20" ry="22" fill="rgba(255,255,255,0.9)" />
-          <path d="M 20 40 Q 50 65 80 40 Q 75 20 50 18 Q 25 20 20 40Z" fill="rgba(255,255,255,0.5)" />
-          <path d="M 25 75 Q 50 65 75 75 L 80 100 L 20 100Z" fill="rgba(255,255,255,0.85)" />
-        </svg>
+      <div className={`${dim} rounded-full flex items-center justify-center ${cfg.ring} shadow-xl overflow-hidden shrink-0 bg-[#eef8f7]`}>
+        <img src={femaleAvatarImg} alt="Female Avatar" className="w-full h-full object-cover" />
       </div>
     );
   }
@@ -244,7 +251,7 @@ export const ScientificCommitteeTab = () => {
           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
             {member.bio}
           </p>
-          <button className="mt-3 text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+          <button className="mt-3 text-xs font-bold text-[#11517E] dark:text-[#6FC4BC] flex items-center gap-1 group-hover:gap-2 transition-all">
             <BookOpen className="w-3.5 h-3.5" /> Full Bio
           </button>
         </div>
@@ -302,25 +309,25 @@ export const ScientificCommitteeTab = () => {
             transition={{ delay: 0.1 }}
             whileHover={{ y: -6 }}
             onClick={() => setSelected(viceChair)}
-            className="relative bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 border-2 border-blue-200 dark:border-blue-800/50 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all cursor-pointer overflow-hidden group"
+            className="relative bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 border-2 border-[#11517E]/20 dark:border-blue-800/50 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all cursor-pointer overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="flex items-center gap-5 relative z-10">
               <Avatar member={viceChair} size="lg" />
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700 mb-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border bg-[#e0f2f1] dark:bg-blue-900/40 text-[#11517E] dark:text-[#6FC4BC] border-[#6FC4BC]/50 dark:border-[#11517E] mb-3">
                   <Star className="w-3.5 h-3.5" /> Vice Chair
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight mb-1">
                   {viceChair.name}
                 </h3>
-                <p className="text-sm text-blue-700 dark:text-blue-400 font-semibold">{viceChair.affiliation}</p>
+                <p className="text-sm text-[#11517E] dark:text-[#6FC4BC] font-semibold">{viceChair.affiliation}</p>
               </div>
             </div>
             <p className="mt-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3 relative z-10">
               {viceChair.bio}
             </p>
-            <button className="mt-3 text-xs font-bold text-blue-700 dark:text-blue-400 flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">
+            <button className="mt-3 text-xs font-bold text-[#11517E] dark:text-[#6FC4BC] flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">
               <BookOpen className="w-3.5 h-3.5" /> Read Full Bio
             </button>
           </motion.div>

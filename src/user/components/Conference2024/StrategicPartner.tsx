@@ -11,7 +11,7 @@ export const StrategicPartner = () => {
     <section className="py-24 bg-gray-900 relative overflow-hidden flex items-center justify-center min-h-[50vh]">
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#11517E]/15 rounded-full blur-[120px]" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
@@ -22,11 +22,11 @@ export const StrategicPartner = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-sm font-bold tracking-widest uppercase mb-6">
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-[#11517E]/30 bg-[#11517E]/10 text-[#6FC4BC] text-sm font-bold tracking-widest uppercase mb-6">
             <Award className="w-4 h-4" />
             Strategic Partner
           </div>
-          <div className="w-20 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 mx-auto rounded-full" />
+          <div className="w-20 h-0.5 bg-gradient-to-r from-blue-400 to-[#6FC4BC] mx-auto rounded-full" />
         </motion.div>
 
         {/* Logo + Name card */}
@@ -37,7 +37,7 @@ export const StrategicPartner = () => {
             className="group relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl px-10 py-12 sm:px-20 sm:py-16 shadow-2xl shadow-blue-900/20 flex flex-col items-center gap-8 overflow-hidden transition-all duration-500"
           >
             {/* Hover shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#11517E]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
             {/* Logo circle */}
             <motion.div

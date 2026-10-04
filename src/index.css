@@ -62,6 +62,11 @@
 
 @layer base {
   :root {
+    /* Brand Identity Colors */
+    --brand-teal: #6FC4BC;
+    --brand-green: #55AE47;
+    --brand-blue: #11517E;
+
     /* Brand Color Palette - from SPTA logo */
     --mint: 162 55% 67%;
     --teal: 168 49% 47%;

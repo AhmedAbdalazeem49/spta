@@ -12,23 +12,16 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // Public pages
 import WorkshopAttendancePage from "./pages/WorkshopAttendancePage";
 import AboutPage from "./user/pages/AboutPage";
-import BookletsPage from "./user/pages/BookletsPage";
-import BrochuresPage from "./user/pages/BrochuresPage";
 import ContactPage from "./user/pages/ContactPage";
 import CopyrightPage from "./user/pages/CopyrightPage";
-import DatabasesPage from "./user/pages/DatabasesPage";
 import HomePage from "./user/pages/HomePage";
 import InternationalRelationsPage from "./user/pages/InternationalRelationsPage";
-import LibraryPage from "./user/pages/LibraryPage";
 import NewsPage from "./user/pages/NewsPage";
 import PoliciesPage from "./user/pages/PoliciesPage";
 import PreviousBoardsPage from "./user/pages/PreviousBoardsPage";
-import ResearchCenterPage from "./user/pages/ResearchCenterPage";
-import ResearchPage from "./user/pages/ResearchPage";
 import EmpiricalResearchPage from "./user/pages/EmpiricalResearchPage";
 import ScientificJournalPage from "./user/pages/ScientificJournalPage";
 import SpecializationsPage from "./user/pages/SpecializationsPage";
-import VideosPage from "./user/pages/VideosPage";
 import WhatIsPTPage from "./user/pages/WhatIsPTPage";
 
 // Auth pages
@@ -98,17 +91,7 @@ const App = () => (
               <Route path="/about/copyright" element={<CopyrightPage />} />
               <Route path="/about/policies" element={<PoliciesPage />} />
               <Route path="/about/*" element={<AboutPage />} />
-              {/* Research */}
-              <Route path="/research" element={<ResearchPage />} />
-              <Route path="/research/center" element={<ResearchCenterPage />} />
-              <Route path="/research/databases" element={<DatabasesPage />} />
               <Route path="/research/empirical" element={<EmpiricalResearchPage />} />
-              <Route path="/research/*" element={<ResearchPage />} />
-              {/* Library */}
-              <Route path="/library" element={<LibraryPage />} />
-              <Route path="/booklets" element={<BookletsPage />} />
-              <Route path="/brochures" element={<BrochuresPage />} />
-              <Route path="/videos" element={<VideosPage />} />
               <Route
                 path="/specializations"
                 element={<SpecializationsPage />}

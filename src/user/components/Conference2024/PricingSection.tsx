@@ -24,12 +24,12 @@ export const PricingSection = () => {
       whileHover={{ y: -10 }}
       className={`relative p-8 rounded-[2rem] border-2 transition-all duration-300 flex flex-col h-full bg-white dark:bg-gray-900 ${
         featured 
-          ? "border-blue-500 shadow-2xl shadow-blue-500/20" 
+          ? "border-[#11517E] shadow-2xl shadow-blue-500/20" 
           : "border-gray-200 dark:border-gray-800 shadow-xl"
       }`}
     >
       {featured && (
-        <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-full text-sm whitespace-nowrap shadow-lg">
+        <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] text-white font-bold rounded-full text-sm whitespace-nowrap shadow-lg">
           Most Popular
         </div>
       )}
@@ -37,11 +37,11 @@ export const PricingSection = () => {
       <div className="mb-6 flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-6">
         <div>
           <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">{title}</h3>
-          <span className={`px-3 py-1 text-xs font-bold rounded-full ${type === 'Conference' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`}>
+          <span className={`px-3 py-1 text-xs font-bold rounded-full ${type === 'Conference' ? 'bg-[#e0f2f1] text-[#11517E]' : 'bg-orange-100 text-orange-700'}`}>
             {type}
           </span>
         </div>
-        <Ticket className={`w-10 h-10 ${type === 'Conference' ? 'text-blue-500' : 'text-orange-500'} opacity-20`} />
+        <Ticket className={`w-10 h-10 ${type === 'Conference' ? 'text-[#11517E]' : 'text-orange-500'} opacity-20`} />
       </div>
 
       <div className="space-y-6 flex-1">
@@ -72,7 +72,7 @@ export const PricingSection = () => {
           <span className="text-gray-700 dark:text-gray-300 font-medium">{discount}</span>
         </div>
         <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+          <Info className="w-5 h-5 text-[#11517E] shrink-0 mt-0.5" />
           <span className="text-gray-600 dark:text-gray-400 text-sm">{notes}</span>
         </div>
       </div>

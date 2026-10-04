@@ -1,49 +1,50 @@
-﻿import re
+﻿import codecs
 
-with open('src/user/components/Conference2024/HeroSection.tsx', 'r', encoding='utf-8') as f:
+with codecs.open('src/user/components/Conference2024/HeroSection.tsx', 'r', 'utf-8') as f:
     content = f.read()
 
-# Replace the heading 'Annual Conference 2026'
-# It has this block:
-'''            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold mb-8 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 drop-shadow-sm">
-              {language === "ar"
-                ? "المؤتمر السنوي 2026"
-                : "Annual Conference 2026"}
-            </h1>
+content = content.replace('\r\n', '\n')
 
-            <p className="text-base sm:text-lg md:text-2xl text-gray-300/90 mb-14 max-w-3xl mx-auto font-light leading-relaxed">
-              {language === "ar"
-                ? "تجمع استثنائي لنخبة من العقول والخبراء لرسم معالم المستقبل الطبي."
-                : "An exceptional gathering of elite minds and experts to shape the medical future."}
-            </p>'''
+# 1. Import BrandPattern
+if 'import { BrandPattern }' not in content:
+    content = content.replace(
+        'import { Calendar, MapPin, Award } from "lucide-react";',
+        'import { Calendar, MapPin, Award } from "lucide-react";\nimport { BrandPattern } from "./BrandPattern";'
+    )
 
-new_heading = '''            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 drop-shadow-sm leading-tight">
-              {language === "ar"
-                ? "المؤتمر السعودي الدولي السادس للعلاج الطبيعي"
-                : "The 6th Saudi International Physiotherapy Conference"}
-            </h1>
+# 2. Update background styling
+old_bg = """      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-slate-900 to-black z-0" />
 
-            <p className="text-base sm:text-lg md:text-2xl text-amber-400 mb-12 max-w-4xl mx-auto font-bold leading-relaxed tracking-wide drop-shadow-md">
-              {language === "ar"
-                ? "الارتقاء بالعلاج الطبيعي في المملكة العربية السعودية: القيادة والابتكار والأثر القائم على القيمة"
-                : "Advancing Physiotherapy in Saudi Arabia: Leadership, Innovation & Value-Based Impact"}
-            </p>'''
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
 
-content = re.sub(
-    r'<h1 className="[^"]*font-extrabold[^"]*">.*?</h1>\s*<p className="[^"]*text-gray-300[^"]*">.*?</p>',
-    new_heading,
-    content,
-    flags=re.DOTALL
-)
+      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-indigo-600/10 rounded-full blur-[100px] mix-blend-screen pointer-events-none" />"""
 
-# Fix the dates and location
-content = content.replace('"November 15-17, 2026"', '"November 12-14, 2026"')
-content = content.replace('15 - 17 نوفمبر 2026', '12 - 14 نوفمبر 2026')
-content = content.replace('Almoosa Rehabilitation Hospital - Al-Ahsa City', 'Almoosa Health Group - Al-Ahsa')
-content = content.replace('مستشفى الموسى للتأهيل - مدينة الأحساء', 'مجموعة الموسى الصحية - الأحساء')
+new_bg = """      <BrandPattern position="top-left" variant="primary" />
+      <BrandPattern position="bottom-right" variant="secondary" />
 
-# Replace background image import and usage
-content = content.replace("import HeroImg from '@/assets/hero-1.jpg';", "import HeroImg from '@/assets/conference-hero.jpeg';")
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#11517E]/40 via-slate-900 to-[#0a1e35] z-0" />
 
-with open('src/user/components/Conference2024/HeroSection.tsx', 'w', encoding='utf-8') as f:
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#6FC4BC]/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+
+      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-[#55AE47]/15 rounded-full blur-[100px] mix-blend-screen pointer-events-none" />"""
+content = content.replace(old_bg, new_bg)
+
+# Update badge colors
+old_badge = 'border-white/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]'
+new_badge = 'border-white/10 shadow-[0_0_20px_rgba(111,196,188,0.3)]'
+content = content.replace(old_badge, new_badge)
+
+old_badge_inner = 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+new_badge_inner = 'bg-[#6FC4BC]/20 text-[#6FC4BC] border border-[#6FC4BC]/30'
+content = content.replace(old_badge_inner, new_badge_inner)
+
+# H1 gradient
+old_h1_grad = 'from-white via-blue-100 to-slate-400'
+new_h1_grad = 'from-white via-[#6FC4BC] to-[#55AE47]'
+content = content.replace(old_h1_grad, new_h1_grad)
+
+with codecs.open('src/user/components/Conference2024/HeroSection.tsx', 'w', 'utf-8') as f:
     f.write(content)
+print("Updated HeroSection")

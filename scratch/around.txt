@@ -1,0 +1,1 @@
+'lassName="w-full pb-16 space-y-8">\n\n\n      {/* ─── ACCORDION SECTIONS ─── */}\n      <div className="space-y-4">\n\n        {/* Venue */}\n        <AccordionItem icon={<Building2 className="w-5 h-5" />} title="Conference Venue" subtitle="Almoosa Rehabilitation Hospital, Al Ahsa" defaultOpen accentColor="blue">\n  '

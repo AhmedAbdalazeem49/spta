@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { BrandPattern } from "./BrandPattern";
 import { Award, Shield, Star } from "lucide-react";
 
 export const SponsorsSlider = () => {
@@ -21,7 +22,7 @@ export const SponsorsSlider = () => {
       border: "border-amber-400 dark:border-amber-500",
       text: "text-amber-700 dark:text-amber-400",
       glow: "hover:shadow-[0_0_50px_rgba(245,158,11,0.5)]",
-      badgeBg: "bg-amber-500 text-white",
+      badgeBg: "bg-[#6FC4BC] text-white",
       icon: <Award className="w-10 h-10 text-amber-500" />,
       width: "w-56 sm:w-72 md:w-80",
       height: "h-32 sm:h-40 md:h-48",

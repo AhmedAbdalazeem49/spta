@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+import { BrandPattern } from "./BrandPattern";
 import { AgendaTab } from "./Tabs/AgendaTab";
 import { ScientificCommitteeTab } from "./Tabs/ScientificCommitteeTab";
 import { OrganizingCommitteeTab } from "./Tabs/OrganizingCommitteeTab";
@@ -33,7 +34,7 @@ export const InteractiveTabs = () => {
               id={section.id} 
               className="scroll-mt-24 sm:scroll-mt-32 w-full"
             >
-              <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden p-6 md:p-10 w-full">
+              <div className={`${section.id === "speakers" ? "bg-[#020817] text-white border-blue-900/30" : "bg-white dark:bg-gray-900 text-slate-900 dark:text-white border-gray-100 dark:border-gray-800"} rounded-3xl shadow-xl border overflow-hidden p-6 md:p-10 w-full`}>
                 <Component />
               </div>
             </section>

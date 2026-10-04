@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -11,7 +11,10 @@ import {
   Building2,
   LayoutGrid,
   Heart,
+  Loader2
 } from "lucide-react";
+import api from "@/services/api";
+import { toast } from "sonner";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type CategoryKey = "overall" | "organization" | "speakers" | "venue" | "workshops";
@@ -32,7 +35,7 @@ const CATEGORIES: Category[] = [
     label: "Overall Experience",
     sublabel: "How was your overall impression?",
     icon: <Sparkles className="w-6 h-6" />,
-    gradient: "from-purple-500 to-indigo-600",
+    gradient: "from-purple-500 to-[#6FC4BC]",
     starColor: "text-purple-400 fill-purple-400",
   },
   {
@@ -40,8 +43,8 @@ const CATEGORIES: Category[] = [
     label: "Organization & Management",
     sublabel: "Scheduling, communication, logistics",
     icon: <LayoutGrid className="w-6 h-6" />,
-    gradient: "from-blue-500 to-cyan-500",
-    starColor: "text-blue-400 fill-blue-400",
+    gradient: "from-[#11517E] to-cyan-500",
+    starColor: "text-[#6FC4BC] fill-[#6FC4BC]",
   },
   {
     key: "speakers",
@@ -56,13 +59,13 @@ const CATEGORIES: Category[] = [
     label: "Venue & Facilities",
     sublabel: "Location, halls, comfort & amenities",
     icon: <Building2 className="w-6 h-6" />,
-    gradient: "from-emerald-500 to-teal-500",
+    gradient: "from-[#55AE47] to-teal-500",
     starColor: "text-emerald-400 fill-emerald-400",
   },
   {
     key: "workshops",
     label: "Workshops",
-    sublabel: "Hands-on learning & practical sessions",
+    sublabel: "Session - Speakers - Hands-on learning",
     icon: <Users className="w-6 h-6" />,
     gradient: "from-rose-500 to-pink-500",
     starColor: "text-rose-400 fill-rose-400",
@@ -170,11 +173,33 @@ export const ReviewsSection = () => {
 
   const canSubmit = ratings.overall > 0;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (canSubmit) {
-      setSubmitted(true);
-      setShowModal(true);
+    if (canSubmit && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        await api.post("/conference/evaluate", {
+          organization_score: ratings.organization || ratings.overall,
+          content_score: ratings.workshops || ratings.overall,
+          speakers_score: ratings.speakers || ratings.overall,
+          venue_score: ratings.venue || ratings.overall,
+          recommendation_score: ratings.overall,
+          feedback: feedback
+        });
+        setSubmitted(true);
+        setShowModal(true);
+      } catch (error: any) {
+        console.error(error);
+        if (error.response?.status === 401) {
+          toast.error("يرجى تسجيل الدخول أولاً لتقييم المؤتمر");
+        } else {
+          toast.error(error.response?.data?.message || "حدث خطأ أثناء إرسال التقييم");
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -182,7 +207,7 @@ export const ReviewsSection = () => {
     <section id="reviews" className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
       {/* decorative blobs */}
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#11517E]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 max-w-5xl relative z-10">
@@ -315,7 +340,7 @@ export const ReviewsSection = () => {
                 className="bg-white dark:bg-gray-900 rounded-2xl p-5 sm:p-8 border-2 border-gray-100 dark:border-gray-800 shadow-sm"
               >
                 <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-bold text-base mb-4">
-                  <MessageSquare className="w-5 h-5 text-blue-500" />
+                  <MessageSquare className="w-5 h-5 text-[#11517E]" />
                   Additional Comments{" "}
                   <span className="text-gray-400 font-normal text-sm">(optional)</span>
                 </label>
@@ -324,24 +349,33 @@ export const ReviewsSection = () => {
                   onChange={(e) => setFeedback(e.target.value)}
                   rows={4}
                   placeholder="Share your thoughts, suggestions, or highlight what you loved most about the conference..."
-                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-800/50 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm sm:text-base leading-relaxed"
+                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-800/50 focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-[#11517E]/20 focus:border-[#11517E] outline-none transition-all resize-none text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm sm:text-base leading-relaxed"
                 />
               </motion.div>
 
               {/* ── Submit ── */}
               <motion.button
-                whileHover={canSubmit ? { scale: 1.02, y: -2 } : {}}
-                whileTap={canSubmit ? { scale: 0.98 } : {}}
+                whileHover={canSubmit && !isSubmitting ? { scale: 1.02, y: -2 } : {}}
+                whileTap={canSubmit && !isSubmitting ? { scale: 0.98 } : {}}
                 type="submit"
-                disabled={!canSubmit}
+                disabled={!canSubmit || isSubmitting}
                 className={`w-full py-4 sm:py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all duration-300 ${
-                  canSubmit
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-xl shadow-blue-500/30 cursor-pointer"
+                  canSubmit && !isSubmitting
+                    ? "bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-indigo-700 text-white shadow-xl shadow-blue-500/30 cursor-pointer"
                     : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed"
                 }`}
               >
-                <Send className={`w-5 h-5 ${canSubmit ? "text-white" : ""}`} />
-                {canSubmit ? "Submit My Feedback" : "Please rate at least Overall Experience"}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className={`w-5 h-5 ${canSubmit ? "text-white" : ""}`} />
+                    {canSubmit ? "Submit My Feedback" : "Please rate at least Overall Experience"}
+                  </>
+                )}
               </motion.button>
 
               {!canSubmit && (
@@ -403,7 +437,7 @@ export const ReviewsSection = () => {
                   className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-lg mx-auto leading-relaxed"
                 >
                   Your feedback is invaluable. It helps the{" "}
-                  <span className="font-bold text-blue-600 dark:text-blue-400">
+                  <span className="font-bold text-[#11517E] dark:text-[#6FC4BC]">
                     Saudi Physical Therapy Association
                   </span>{" "}
                   deliver even better conferences in the future. We truly

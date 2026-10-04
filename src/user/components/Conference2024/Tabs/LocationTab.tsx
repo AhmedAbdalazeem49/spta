@@ -17,7 +17,7 @@ export const LocationTab = () => {
       icon: Train,
       descAr: "تقع مجموعة الموسى الصحية في المنطقة الشرقية ذاتها. يمكنك الوصول بسهولة عبر الطرق السريعة الداخلية أو سيارات الأجرة.",
       descEn: "Almoosa Health Group is located in the Eastern Province itself. Easily reachable via internal highways or ride-sharing services.",
-      color: "from-blue-400 to-blue-600"
+      color: "from-blue-400 to-[#11517E]"
     },
     {
       id: 2,
@@ -35,7 +35,7 @@ export const LocationTab = () => {
       icon: Car,
       descAr: "انطلق عبر طريق الدمام السريع المتجه جنوباً نحو الأحساء، تستغرق الرحلة حوالي ساعة ونصف بالسيارة.",
       descEn: "Head south via the Dammam-Hofuf expressway toward Al-Ahsa. The drive takes approximately 1.5 hours.",
-      color: "from-emerald-400 to-emerald-600"
+      color: "from-emerald-400 to-[#55AE47]"
     },
     {
       id: 4,
@@ -86,7 +86,7 @@ export const LocationTab = () => {
             href="https://maps.google.com/?q=Almoosa+Health+Group+Al+Ahsa+Saudi+Arabia" 
             target="_blank" 
             rel="noreferrer"
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 bg-blue-600/90 backdrop-blur-md hover:bg-blue-700 text-white px-6 py-3 rounded-full font-bold shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-blue-600/40 transition-all hover:scale-105 flex items-center gap-2 whitespace-nowrap"
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 bg-[#11517E]/90 backdrop-blur-md hover:bg-[#11517E] text-white px-6 py-3 rounded-full font-bold shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-blue-600/40 transition-all hover:scale-105 flex items-center gap-2 whitespace-nowrap"
           >
             <Navigation className="w-5 h-5 animate-bounce" />
             {language === 'ar' ? 'فتح في خرائط جوجل' : 'Open in Google Maps'}
@@ -101,7 +101,7 @@ export const LocationTab = () => {
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="p-3 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-xl shadow-inner">
-              <Compass className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+              <Compass className="w-7 h-7 text-[#11517E] dark:text-[#6FC4BC]" />
             </div>
             <h4 className="font-extrabold text-2xl text-gray-900 dark:text-white tracking-tight">
               {language === 'ar' ? 'الـ Hotspots (وجهات الوصول)' : 'Arrival Hotspots'}
@@ -126,8 +126,8 @@ export const LocationTab = () => {
                   onClick={() => setActiveHotspot(isActive ? null : spot.id)}
                   className={`cursor-pointer overflow-hidden rounded-2xl border-2 transition-all duration-300 ${
                     isActive 
-                      ? 'bg-white dark:bg-gray-800 border-blue-500/50 shadow-xl shadow-blue-500/10 scale-[1.02]' 
-                      : 'bg-white/60 dark:bg-gray-800/40 border-transparent hover:border-blue-200 dark:hover:border-blue-900/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                      ? 'bg-white dark:bg-gray-800 border-[#11517E]/50 shadow-xl shadow-blue-500/10 scale-[1.02]' 
+                      : 'bg-white/60 dark:bg-gray-800/40 border-transparent hover:border-[#11517E]/20 dark:hover:border-blue-900/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
                   }`}
                 >
                   <div className="p-4 flex items-center gap-4">
@@ -135,7 +135,7 @@ export const LocationTab = () => {
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h5 className={`font-bold text-lg transition-colors ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-gray-800 dark:text-gray-200'}`}>
+                      <h5 className={`font-bold text-lg transition-colors ${isActive ? 'text-[#11517E] dark:text-[#6FC4BC]' : 'text-gray-800 dark:text-gray-200'}`}>
                         {language === 'ar' ? spot.nameAr : spot.nameEn}
                       </h5>
                     </div>
