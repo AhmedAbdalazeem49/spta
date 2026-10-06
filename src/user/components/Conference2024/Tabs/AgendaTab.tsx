@@ -2,6 +2,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
+  Download,
+  CheckCircle,
   BookOpen,
   Clock,
   Coffee,
@@ -15,6 +17,8 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import agendaPdf from "@/assets/agenda.pdf";
 
 type ItemType =
   | "ceremony"
@@ -622,6 +626,7 @@ export const AgendaTab = () => {
 
   // Keep track of expanded sessions
   const [expandedSessions, setExpandedSessions] = useState<string[]>([]);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
 
   // When changing days, collapse all sessions
   useEffect(() => {
@@ -653,6 +658,22 @@ export const AgendaTab = () => {
             Conference Hall
           </p>
         </div>
+        <button
+          onClick={() => {
+            const link = document.createElement("a");
+            link.href = agendaPdf;
+            link.download = "Scientific Agenda.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setShowDownloadModal(true);
+            setTimeout(() => setShowDownloadModal(false), 3000);
+          }}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[#6FC4BC] text-white rounded-xl font-bold hover:bg-[#5dafa7] transition-all shadow-lg shadow-[#6FC4BC]/30 hover:scale-105"
+        >
+          <Download className="w-5 h-5" />
+          {language === "ar" ? "تحميل الجدول العلمي" : "Download Scientific Agenda"}
+        </button>
       </div>
 
       {/* Day Selector */}
@@ -882,6 +903,35 @@ export const AgendaTab = () => {
           </div>
         )}
       </div>
+      {/* Download Success Modal */}
+      <AnimatePresence>
+        {showDownloadModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#6FC4BC] to-emerald-400 z-10" />
+              <div className="w-20 h-20 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="w-10 h-10 text-green-500" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+                Download Successful!
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400">
+                The Scientific Agenda has been successfully downloaded to your device.
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

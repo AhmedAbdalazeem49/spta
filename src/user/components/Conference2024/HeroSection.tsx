@@ -1,7 +1,7 @@
 import OnesImage from "@/assets/ones.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Award } from "lucide-react";
+import { Award, Calendar, MapPin } from "lucide-react";
 import { BrandPattern } from "./BrandPattern";
 
 export const HeroSection = () => {
@@ -32,6 +32,14 @@ export const HeroSection = () => {
           transition={{ duration: 0.9, ease: "easeOut" }}
           className="w-full max-w-6xl mx-auto"
         >
+          {/* Conference Image */}
+          <div className="flex justify-center">
+            <img
+              src={OnesImage}
+              alt="Conference"
+              className="w-full max-w-3xl h-auto object-contain"
+            />
+          </div>
           {/* Conference Title */}
           <div className="text-center max-w-5xl mx-auto">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 drop-shadow-sm leading-[1.15]">
@@ -190,15 +198,6 @@ export const HeroSection = () => {
               </div>
             </div>
           </motion.div>
-
-          {/* Conference Image */}
-          <div className="flex justify-center">
-            <img
-              src={OnesImage}
-              alt="Conference"
-              className="w-full max-w-3xl h-auto object-contain"
-            />
-          </div>
         </motion.div>
       </div>
     </section>

@@ -844,7 +844,7 @@ export const RegistrationTab = () => {
                   <User className="w-5 h-5 text-[#11517E]" /> Conference Students
                 </h4>
                 <p className="text-base flex justify-between mb-1 text-slate-600 dark:text-slate-300">
-                  <span>Early Bird:</span>{" "}
+                  <span>Early Bird (Before 1 November):</span>{" "}
                   <span className="font-semibold text-slate-900 dark:text-white">
                     300 SAR
                   </span>

@@ -32,7 +32,7 @@ const Conference2026Page = () => {
       {/* <PricingSection /> */}
 
       <InteractiveTabs />
-      <SponsorsSlider />
+      {/* <SponsorsSlider /> */}
     </ConferenceLayout>
   );
 };

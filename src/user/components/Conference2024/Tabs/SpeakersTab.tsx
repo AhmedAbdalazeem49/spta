@@ -86,12 +86,12 @@ const speakersData = {
     },
   ],
   invited: [
-    {
-      title: "Prof.",
-      name: "Qassim Ibrahim Muaidi",
-      bio: "Prof. Qassim Ibrahim Muaidi is a Professor and Consultant Physical Therapist in Sports Medicine, and former Dean of the College of Applied Medical Sciences at Imam Abdulrahman Bin Faisal University. He previously served as President of the Saudi Federation of Sports Medicine, Board Member of the Asian Federation of Sports Medicine, and Member of the Development Commission at the International Federation of Sports Medicine. He holds a PhD in Sports Physiotherapy from the University of Sydney and has published over 80 scientific papers in sports medicine and rehabilitation.",
-      photo: ImgMuaidi,
-    },
+    // {
+    //   title: "Prof.",
+    //   name: "Qassim Ibrahim Muaidi",
+    //   bio: "Prof. Qassim Ibrahim Muaidi is a Professor and Consultant Physical Therapist in Sports Medicine, and former Dean of the College of Applied Medical Sciences at Imam Abdulrahman Bin Faisal University. He previously served as President of the Saudi Federation of Sports Medicine, Board Member of the Asian Federation of Sports Medicine, and Member of the Development Commission at the International Federation of Sports Medicine. He holds a PhD in Sports Physiotherapy from the University of Sydney and has published over 80 scientific papers in sports medicine and rehabilitation.",
+    //   photo: ImgMuaidi,
+    // },
     {
       title: "Dr.",
       name: "Sian Elin Harries (Knott)",
@@ -122,12 +122,12 @@ const speakersData = {
       bio: "Prof. Heba Mohamed Aly Sayed Embaby is a Professor of Women’s Health Physical Therapy at Cairo University and an Assistant Professor at King Abdulaziz University, Saudi Arabia. She obtained her B.Sc., M.Sc., and Ph.D. in Physical Therapy from Cairo University. With over 20 years of academic, clinical, and research experience, she has specialized in women’s health rehabilitation, obstetrics and gynecology, pelvic floor dysfunction, pregnancy-related disorders, and therapeutic exercise. Prof. Embaby has published numerous research articles in international peer-reviewed journals and has supervised undergraduate and postgraduate research projects. She has extensive experience in teaching, curriculum development, quality assurance, and clinical training. Her research focuses on evidence-based interventions that improve women’s health, functional outcomes, and quality of life. She actively contributes to academic committees and professional development initiatives in physical therapy education and practice.",
       photo: ImgEmbaby,
     },
-    {
-      title: "Dr.",
-      name: "Veronika Vasilcova",
-      bio: "Dr. Veronika Vasilcová is a successful graduate of the Masaryk University in Brno and University of Prešov.\nSince 2014, she has been working as a clinical specialist in physiotherapy at the King Abdullah Children's Specialized Hospital in Riyadh. She is the incharge of the outpatient department. She participates in the education of students, residents, new therapists and doctors in the practical and theoretical part of rehabilitation.",
-      photo: ImgVasilcova,
-    },
+    // {
+    //   title: "Dr.",
+    //   name: "Veronika Vasilcova",
+    //   bio: "Dr. Veronika Vasilcová is a successful graduate of the Masaryk University in Brno and University of Prešov.\nSince 2014, she has been working as a clinical specialist in physiotherapy at the King Abdullah Children's Specialized Hospital in Riyadh. She is the incharge of the outpatient department. She participates in the education of students, residents, new therapists and doctors in the practical and theoretical part of rehabilitation.",
+    //   photo: ImgVasilcova,
+    // },
     {
       title: "Dr.",
       name: "Miriam Rafferty",
@@ -245,7 +245,8 @@ const speakersData = {
       name: "Abdulaziz Alomereni",
       credentials: "PhD, PT",
       role: "Assistant Professor of Musculoskeletal Physical Therapy",
-      affiliation: "College of Applied Medical Sciences, Najran University, Saudi Arabia",
+      affiliation:
+        "College of Applied Medical Sciences, Najran University, Saudi Arabia",
       isFemale: false,
       photo: ImgAbdulaziz,
     },
@@ -254,7 +255,8 @@ const speakersData = {
       name: "Ahmad Alghamdi",
       credentials: "PhD, PT",
       role: "Assistant Professor, Chair of the Physical Therapy Department",
-      affiliation: "College of Applied Medical Sciences, Imam Abdulrahman Bin Faisal University, Saudi Arabia",
+      affiliation:
+        "College of Applied Medical Sciences, Imam Abdulrahman Bin Faisal University, Saudi Arabia",
       isFemale: false,
       photo: ImgAhmad,
     },
@@ -272,7 +274,8 @@ const speakersData = {
       name: "Sara Almansouri",
       credentials: "PhD",
       role: "Assistant Professor",
-      affiliation: "Faculty of Medical Rehabilitation Sciences, King Abdulaziz University, Saudi Arabia",
+      affiliation:
+        "Faculty of Medical Rehabilitation Sciences, King Abdulaziz University, Saudi Arabia",
       isFemale: true,
       photo: ImgSara,
     },
@@ -290,7 +293,8 @@ const speakersData = {
       name: "Mishal Aldaihan",
       credentials: "PT, DPT, MPT, Ph.D",
       role: "Associate Professor of Physical Therapy",
-      affiliation: "Department of Rehabilitation Health Sciences, College of Applied Medical Sciences, King Saud University, Saudi Arabia",
+      affiliation:
+        "Department of Rehabilitation Health Sciences, College of Applied Medical Sciences, King Saud University, Saudi Arabia",
       isFemale: false,
       photo: ImgMishal,
     },
@@ -299,7 +303,8 @@ const speakersData = {
       name: "Asma Alderaa",
       credentials: "BSc, MSc, Ph.D",
       role: "Assistant Professor and Consultant Physical Therapist",
-      affiliation: "Deaprtment of Rehabilitation Health Sciences, College of Applied Medical Sciences, King Saud University, Saudi Arabia",
+      affiliation:
+        "Deaprtment of Rehabilitation Health Sciences, College of Applied Medical Sciences, King Saud University, Saudi Arabia",
       isFemale: true,
       photo: ImgAsma,
     },
@@ -308,7 +313,8 @@ const speakersData = {
       name: "Sattam Almutairi",
       credentials: "PT, DPT, MPT, Ph.D",
       role: "Associate Professor and Consultant Physical Therapy",
-      affiliation: "Department of Physical Therapy, College of Applied Medical Science, Qassim University, Saudi Arabia",
+      affiliation:
+        "Department of Physical Therapy, College of Applied Medical Science, Qassim University, Saudi Arabia",
       isFemale: false,
       photo: ImgSattam,
     },
