@@ -374,7 +374,7 @@ const FallbackAvatar = ({
 
   return (
     <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center">
-      <span className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-400 dark:text-slate-500">
+      <span className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-500 dark:text-slate-500">
         {initials}
       </span>
     </div>
@@ -415,13 +415,11 @@ export const SpeakersTab = () => {
   return (
     <div className="py-4 md:py-8 w-full max-w-[1400px] mx-auto relative">
       {/* Section Title */}
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-md">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
-            Speakers
-          </span>
-        </h2>
-        <div className="w-24 h-1.5 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full"></div>
+      <div className="mb-10">
+        <h3 className="text-4xl font-black text-[#11517E] mb-3">
+          Speakers
+        </h3>
+        <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full"></div>
       </div>
 
       {/* INTERNAL TABS */}
@@ -432,8 +430,8 @@ export const SpeakersTab = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-[0_0_20px_rgba(245,158,11,0.3)] scale-105 border border-amber-400/50"
-                : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white border border-white/10"
+                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)] scale-105 border border-amber-400/50"
+                : "bg-white/5 text-slate-600 hover:bg-white/10 hover:text-slate-900 border border-white/10"
             }`}
           >
             {tab.icon}
@@ -459,7 +457,7 @@ export const SpeakersTab = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               onClick={() => setSelectedSpeaker(speaker)}
-              className="bg-slate-800/50 border border-slate-700/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl hover:bg-slate-800/80 transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
+              className="bg-slate-50/50 border border-slate-200/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl hover:bg-slate-50/80 transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
             >
               {/* Decorative background glow */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-amber-500/20 transition-colors" />
@@ -480,23 +478,23 @@ export const SpeakersTab = () => {
                   )}
                 </div>
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-white leading-tight mb-1 group-hover:text-amber-400 transition-colors">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight mb-1 group-hover:text-[#55AE47] transition-colors">
                     {speaker.title && (
                       <span className="mr-1.5">{speaker.title}</span>
                     )}
                     {speaker.name}
                   </h3>
                   {speaker.role ? (
-                    <p className="text-sm text-amber-400 font-semibold">
+                    <p className="text-sm text-[#55AE47] font-semibold">
                       {speaker.role}
                     </p>
                   ) : speaker.type ? (
-                    <p className="text-sm text-amber-400 font-semibold">
+                    <p className="text-sm text-[#55AE47] font-semibold">
                       {speaker.type}
                     </p>
                   ) : null}
                   {speaker.affiliation && (
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       {speaker.affiliation}
                     </p>
                   )}
@@ -504,17 +502,17 @@ export const SpeakersTab = () => {
               </div>
 
               <div className="flex-1">
-                <p className="text-sm text-slate-300 leading-relaxed line-clamp-3 relative z-10">
+                <p className="text-sm text-slate-600 leading-relaxed line-clamp-3 relative z-10">
                   {speaker.bio || ""}
                 </p>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-center justify-between relative z-10">
+              <div className="mt-4 pt-4 border-t border-slate-200/50 flex items-center justify-between relative z-10">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border bg-amber-500/10 text-amber-300 border-amber-500/20 uppercase tracking-wider">
                   {tabs.find((t) => t.id === activeTab)?.label}
                 </div>
                 <span
-                  className={`text-xs font-bold text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform`}
+                  className={`text-xs font-bold text-[#55AE47] flex items-center gap-1 group-hover:translate-x-1 transition-transform`}
                 >
                   Read Bio <ArrowRight className="w-3.5 h-3.5" />
                 </span>
@@ -547,7 +545,7 @@ export const SpeakersTab = () => {
                 onClick={() => setSelectedSpeaker(null)}
                 className="absolute top-6 right-6 z-20 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
               >
-                <X className="w-5 h-5 text-white" />
+                <X className="w-5 h-5 text-slate-900" />
               </button>
 
               <div className="flex flex-col overflow-y-auto">
@@ -568,11 +566,11 @@ export const SpeakersTab = () => {
                   </div>
 
                   <div className="flex-1 text-center md:text-left">
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold uppercase tracking-wider mb-4">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 text-[#55AE47] border border-amber-500/20 text-xs font-bold uppercase tracking-wider mb-4">
                       {tabs.find((t) => t.id === activeTab)?.label}
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-2">
+                    <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight mb-2">
                       {selectedSpeaker.title && (
                         <span className="mr-2">{selectedSpeaker.title}</span>
                       )}
@@ -584,9 +582,9 @@ export const SpeakersTab = () => {
                       selectedSpeaker.college ||
                       selectedSpeaker.affiliation ||
                       selectedSpeaker.org) && (
-                      <div className="text-slate-300 font-medium mb-4">
+                      <div className="text-slate-600 font-medium mb-4">
                         {selectedSpeaker.role && (
-                          <span className="block text-amber-400">
+                          <span className="block text-[#55AE47]">
                             {selectedSpeaker.role}
                           </span>
                         )}
@@ -601,12 +599,12 @@ export const SpeakersTab = () => {
                           </span>
                         )}
                         {selectedSpeaker.affiliation && (
-                          <span className="block text-sm text-slate-400 mt-1">
+                          <span className="block text-sm text-slate-500 mt-1">
                             {selectedSpeaker.affiliation}
                           </span>
                         )}
                         {selectedSpeaker.org && (
-                          <span className="block text-sm text-slate-400">
+                          <span className="block text-sm text-slate-500">
                             {selectedSpeaker.org}
                           </span>
                         )}
@@ -620,7 +618,7 @@ export const SpeakersTab = () => {
                           .map((cred: string, idx: number) => (
                             <span
                               key={idx}
-                              className="bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-md text-xs font-bold"
+                              className="bg-slate-50 border border-slate-200 text-slate-600 px-3 py-1 rounded-md text-xs font-bold"
                             >
                               {cred.trim()}
                             </span>
@@ -634,7 +632,7 @@ export const SpeakersTab = () => {
                   <h4 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
                     Full Biography
                   </h4>
-                  <div className="prose prose-lg prose-invert max-w-none text-slate-300">
+                  <div className="prose prose-lg prose-invert max-w-none text-slate-600">
                     {selectedSpeaker.bio ? (
                       selectedSpeaker.bio
                         .split("\n")

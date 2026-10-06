@@ -841,7 +841,8 @@ export const RegistrationTab = () => {
             <div className="space-y-4 relative z-10">
               <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700">
                 <h4 className="font-bold mb-3 text-lg text-slate-800 dark:text-white flex items-center gap-2">
-                  <User className="w-5 h-5 text-[#11517E]" /> Conference Students
+                  <User className="w-5 h-5 text-[#11517E]" /> Conference
+                  Students
                 </h4>
                 <p className="text-base flex justify-between mb-1 text-slate-600 dark:text-slate-300">
                   <span>Early Bird (Before 1 November):</span>{" "}
@@ -858,10 +859,11 @@ export const RegistrationTab = () => {
               </div>
               <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700">
                 <h4 className="font-bold mb-3 text-lg text-slate-800 dark:text-white flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-[#6FC4BC]" /> Conference Professionals
+                  <Briefcase className="w-5 h-5 text-[#6FC4BC]" /> Conference
+                  Professionals
                 </h4>
                 <p className="text-base flex justify-between mb-1 text-slate-600 dark:text-slate-300">
-                  <span>Early Bird:</span>{" "}
+                  <span>Early Bird (Before 1 November):</span>{" "}
                   <span className="font-semibold text-slate-900 dark:text-white">
                     600 SAR
                   </span>
@@ -1564,14 +1566,11 @@ export const RegistrationTab = () => {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200/80 dark:border-slate-800">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#11517E]/10 dark:bg-[#6FC4BC]/15 text-[#11517E] dark:text-[#6FC4BC] text-xs font-bold uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Official Registration</span>
-            </div>
-            <h3 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h3 className="text-4xl font-black text-[#11517E] mb-3">
               Conference Registration
             </h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+            <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full mb-2"></div>
+            <p className="text-slate-500 text-sm mt-1">
               Select your workshops and complete your registration
             </p>
           </div>

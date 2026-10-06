@@ -585,11 +585,12 @@ export const WorkshopsTab = () => {
   return (
     <div className="w-full pb-16">
       {/* Header */}
-      <div className="mb-12 text-center md:text-start">
-        <h3 className="text-4xl font-black text-gray-900 dark:text-white mb-4">
+      <div className="mb-10">
+        <h3 className="text-4xl font-black text-[#11517E] mb-3">
           {language === "ar" ? "ورش العمل" : "Workshops"}
         </h3>
-        <p className="text-[#11517E] dark:text-[#6FC4BC] font-bold text-xl mb-2 flex items-center justify-center md:justify-start gap-2">
+        <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full mb-3"></div>
+        <p className="text-[#11517E] font-bold text-xl flex items-center gap-2">
           <Calendar className="w-5 h-5" /> Saturday 14 November 2026
         </p>
       </div>

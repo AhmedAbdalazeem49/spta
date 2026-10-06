@@ -261,11 +261,12 @@ export const ScientificCommitteeTab = () => {
 
   return (
     <div className="pb-10 space-y-10 w-full">
-      {/* Header */}
-      <div className="text-center">
-        <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
+      {/* Section Title */}
+      <div className="mb-2">
+        <h3 className="text-4xl font-black text-[#11517E] mb-3">
           Scientific Committee
         </h3>
+        <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full"></div>
       </div>
 
       {/* Chair + Vice Chair — featured row */}

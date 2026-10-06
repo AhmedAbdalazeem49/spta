@@ -1,4 +1,4 @@
-﻿import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import React from "react";
 
 import { BrandPattern } from "./BrandPattern";
@@ -53,7 +53,7 @@ export const InteractiveTabs = () => {
 
   return (
     <div
-      className="bg-gray-50 dark:bg-gray-950 min-h-screen py-10"
+      className="bg-white min-h-screen py-10"
       id="tabs-section"
     >
       <div className="w-full px-4 sm:px-6 flex flex-col gap-12 sm:gap-16">
@@ -66,7 +66,7 @@ export const InteractiveTabs = () => {
               className="scroll-mt-24 sm:scroll-mt-32 w-full"
             >
               <div
-                className={`${section.id === "speakers" ? "bg-[#020817] text-white border-blue-900/30" : "bg-white dark:bg-gray-900 text-slate-900 dark:text-white border-gray-100 dark:border-gray-800"} rounded-3xl shadow-xl border overflow-hidden p-6 md:p-10 w-full`}
+                className="bg-white text-slate-900 border-gray-100 rounded-3xl shadow-xl border overflow-hidden p-6 md:p-10 w-full"
               >
                 <Component />
               </div>

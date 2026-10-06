@@ -648,12 +648,13 @@ export const AgendaTab = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 text-center md:text-start">
         <div>
-          <h3 className="text-4xl font-black text-gray-900 dark:text-white mb-3">
+          <h3 className="text-4xl font-black text-[#11517E] mb-3">
             {language === "ar"
               ? "الاجندة العلمية للمؤتمر"
               : "Conference Scientific Agenda"}
           </h3>
-          <p className="text-[#11517E] dark:text-[#6FC4BC] font-bold text-lg mb-1">
+          <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full mb-2"></div>
+          <p className="text-[#11517E] font-bold text-lg mb-1">
             November 12-14, 2026 | Sheikh Hussein bin Abdulrahman Al-Mousa
             Conference Hall
           </p>

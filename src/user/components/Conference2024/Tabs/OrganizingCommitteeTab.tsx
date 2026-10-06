@@ -100,10 +100,11 @@ export const OrganizingCommitteeTab = () => {
 
   return (
     <div>
-      <div className="text-center mb-10">
-        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+      <div className="mb-8">
+        <h3 className="text-4xl font-black text-[#11517E] mb-3">
           {language === "ar" ? "اللجنة المنظمة" : "Organizing Committee"}
         </h3>
+        <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full"></div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
