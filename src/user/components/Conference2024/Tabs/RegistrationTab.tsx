@@ -104,6 +104,7 @@ type FormData = {
   workplace: string;
   region: string;
   city: string;
+  userType: string;
   password: string;
   confirmPassword: string;
 };
@@ -146,8 +147,7 @@ const RULES = {
   },
   phone: (v: string) => {
     if (!v || !v.trim()) return "Phone number is required";
-    if (!/^\+?[0-9\s\-()]{7,20}$/.test(v))
-      return "Invalid phone number format";
+    if (!/^\+?[0-9\s\-()]{7,20}$/.test(v)) return "Invalid phone number format";
     return null;
   },
   specialization: (v: string) => {
@@ -176,7 +176,21 @@ const RULES = {
     }
     return null;
   },
-  classificationNumber: (_v: string) => null,
+  userType: (v: string) => {
+    if (!v) return "User type is required";
+    return null;
+  },
+  classificationNumber: (v: string, formData?: FormData) => {
+    if (formData?.userType === "student") return null;
+    if (
+      formData?.userType === "professional" &&
+      formData?.country === "Saudi Arabia"
+    ) {
+      if (!v.trim())
+        return "Classification number is required for Saudi professionals";
+    }
+    return null;
+  },
   password: (v: string) => {
     if (!v) return "Password is required";
     if (v.length < 8) return "Password must be at least 8 characters";
@@ -186,8 +200,7 @@ const RULES = {
   },
   confirmPassword: (v: string, formData?: FormData) => {
     if (!v) return "Confirm password is required";
-    if (formData && v !== formData.password)
-      return "Passwords do not match";
+    if (formData && v !== formData.password) return "Passwords do not match";
     return null;
   },
 };
@@ -222,7 +235,7 @@ const Field = ({
 }) => (
   <div className="group">
     <label className="block mb-1.5">
-      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+      <span className="text-sm font-semibold text-slate-800 ">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </span>
@@ -269,18 +282,20 @@ const SectionHeader = ({
 }) => (
   <div className="flex items-center gap-4 mb-6">
     <div className="relative">
-      <div className="w-10 h-10 rounded-2xl bg-[#e0f2f1] dark:bg-[#11517E]/30 flex items-center justify-center">
-        <Icon className="w-5 h-5 text-[#11517E] dark:text-[#6FC4BC]" />
+      <div className="w-10 h-10 rounded-2xl bg-[#e0f2f1] -[#11517E]/30 flex items-center justify-center">
+        <Icon className="w-5 h-5 text-[#11517E] -[#6FC4BC]" />
       </div>
       <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#11517E] text-white text-[10px] font-bold flex items-center justify-center">
         {step}
       </span>
     </div>
     <div>
-      <h3 className="font-bold text-base leading-tight text-slate-900 dark:text-white">
+      <h3 className="font-bold text-base leading-tight text-slate-900 ">
         {title}
       </h3>
-      {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
+      {subtitle && (
+        <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
+      )}
     </div>
   </div>
 );
@@ -310,29 +325,27 @@ const CustomSelect = ({
     <div className="relative" onClick={(e) => e.stopPropagation()}>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex justify-between items-center bg-white dark:bg-slate-900 shadow-sm ${isOpen ? "border-[#11517E] ring-4 ring-[#11517E]/10" : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"}`}
+        className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex justify-between items-center bg-white shadow-sm ${isOpen ? "border-[#11517E] ring-4 ring-[#11517E]/10" : "border-slate-200 hover:border-slate-300 :border-slate-600"}`}
       >
         {selectedOpt ? (
           <div className="flex flex-col gap-1 pr-6">
-            <span className="font-bold text-slate-900 dark:text-white line-clamp-1">
+            <span className="font-bold text-slate-900 line-clamp-1">
               {selectedOpt.title}
             </span>
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <span className="text-sm font-medium text-slate-500 flex items-center gap-2">
               <User className="w-3.5 h-3.5" /> {selectedOpt.speaker}
               {priceData?.workshop_price && (
-                <span className="text-[#11517E] dark:text-[#6FC4BC] font-bold ml-2">
+                <span className="text-[#11517E] -[#6FC4BC] font-bold ml-2">
                   (+{priceData.workshop_price} SAR)
                 </span>
               )}
             </span>
-            <span className="font-bold text-[12px] text-slate-900 dark:text-white">
+            <span className="font-bold text-[12px] text-slate-900 ">
               +4 CME Hours
             </span>
           </div>
         ) : (
-          <span className="text-slate-500 dark:text-slate-400 font-medium">
-            {placeholder}
-          </span>
+          <span className="text-slate-500 font-medium">{placeholder}</span>
         )}
 
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }}>
@@ -359,7 +372,7 @@ const CustomSelect = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden"
+            className="absolute z-50 top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden"
           >
             <div className="max-h-[300px] overflow-y-auto p-2 space-y-1">
               <div
@@ -367,7 +380,7 @@ const CustomSelect = ({
                   onChange("");
                   setIsOpen(false);
                 }}
-                className={`p-3 rounded-xl cursor-pointer transition-colors ${!value ? "bg-[#f0f8f8] dark:bg-[#11517E]/20 text-[#11517E] dark:text-[#6FC4BC]" : "hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"}`}
+                className={`p-3 rounded-xl cursor-pointer transition-colors ${!value ? "bg-[#f0f8f8] -[#11517E]/20 text-[#11517E] -[#6FC4BC]" : "hover:bg-slate-50 :bg-slate-800 text-slate-700 "}`}
               >
                 <span className="font-semibold">{placeholder}</span>
               </div>
@@ -379,28 +392,28 @@ const CustomSelect = ({
                     onChange(opt.id);
                     setIsOpen(false);
                   }}
-                  className={`p-3 rounded-xl cursor-pointer transition-colors border-2 ${value === opt.id ? "bg-[#f0f8f8] dark:bg-[#11517E]/20 border-[#11517E]/20 dark:border-blue-800" : "border-transparent hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                  className={`p-3 rounded-xl cursor-pointer transition-colors border-2 ${value === opt.id ? "bg-[#f0f8f8] -[#11517E]/20 border-[#11517E]/20 " : "border-transparent hover:bg-slate-50 :bg-slate-800"}`}
                 >
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex flex-col gap-1">
                       <span
-                        className={`font-bold text-sm ${value === opt.id ? "text-blue-900 dark:text-[#6FC4BC]" : "text-slate-900 dark:text-slate-100"}`}
+                        className={`font-bold text-sm ${value === opt.id ? "text-blue-900 -[#6FC4BC]" : "text-slate-900 "}`}
                       >
                         {opt.title}
                       </span>
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                      <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
                         <User className="w-3 h-3" /> {opt.speaker}
                       </span>
                     </div>
                     {priceData?.workshop_price && (
                       <>
-                        <div className="shrink-0 bg-[#e0f2f1] dark:bg-blue-900/40 text-[#11517E] dark:text-[#6FC4BC] text-xs font-bold px-2 py-1 rounded-lg">
+                        <div className="shrink-0 bg-[#e0f2f1] text-[#11517E] -[#6FC4BC] text-xs font-bold px-2 py-1 rounded-lg">
                           +{priceData.workshop_price} SAR
                         </div>
                       </>
                     )}
                   </div>
-                  <span className="font-bold text-[10px] text-slate-900 dark:text-white">
+                  <span className="font-bold text-[10px] text-slate-900 ">
                     +4 CME
                   </span>
                 </div>
@@ -477,6 +490,7 @@ export const RegistrationTab = () => {
     workplace: "",
     region: "",
     city: "",
+    userType: "",
     password: "",
     confirmPassword: "",
   });
@@ -644,7 +658,8 @@ export const RegistrationTab = () => {
         sub_specialization: formData.subSpecialization || null,
         employer: formData.workplace,
         region: isSaudi ? formData.region : "غير محدد",
-        city: isSaudi ? (formData.city || null) : "غير محدد",
+        city: isSaudi ? formData.city || null : "غير محدد",
+        user_type: formData.userType,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
@@ -819,7 +834,7 @@ export const RegistrationTab = () => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", bounce: 0.4, duration: 0.5 }}
-            className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl max-w-lg w-full relative overflow-hidden max-h-[90vh] overflow-y-auto"
+            className="bg-white p-8 rounded-[2rem] shadow-2xl max-w-lg w-full relative overflow-hidden max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute top-0 right-0 p-8 opacity-5 text-[#11517E] pointer-events-none">
@@ -832,75 +847,67 @@ export const RegistrationTab = () => {
               </h3>
               <button
                 onClick={() => setShowPricingModal(false)}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
+                className="p-2 hover:bg-slate-100 :bg-slate-800 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-6 h-6 text-slate-500" />
               </button>
             </div>
 
             <div className="space-y-4 relative z-10">
-              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700">
-                <h4 className="font-bold mb-3 text-lg text-slate-800 dark:text-white flex items-center gap-2">
+              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200/60 ">
+                <h4 className="font-bold mb-3 text-lg text-slate-800 flex items-center gap-2">
                   <User className="w-5 h-5 text-[#11517E]" /> Conference
                   Students
                 </h4>
-                <p className="text-base flex justify-between mb-1 text-slate-600 dark:text-slate-300">
+                <p className="text-base flex justify-between mb-1 text-slate-600 ">
                   <span>Early Bird (Before 1 November):</span>{" "}
-                  <span className="font-semibold text-slate-900 dark:text-white">
-                    300 SAR
-                  </span>
+                  <span className="font-semibold text-slate-900 ">300 SAR</span>
                 </p>
-                <p className="text-base flex justify-between text-slate-600 dark:text-slate-300">
+                <p className="text-base flex justify-between text-slate-600 ">
                   <span>Regular:</span>{" "}
-                  <span className="font-semibold text-slate-900 dark:text-white">
-                    350 SAR
-                  </span>
+                  <span className="font-semibold text-slate-900 ">350 SAR</span>
                 </p>
               </div>
-              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700">
-                <h4 className="font-bold mb-3 text-lg text-slate-800 dark:text-white flex items-center gap-2">
+              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200/60 ">
+                <h4 className="font-bold mb-3 text-lg text-slate-800 flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-[#6FC4BC]" /> Conference
                   Professionals
                 </h4>
-                <p className="text-base flex justify-between mb-1 text-slate-600 dark:text-slate-300">
+                <p className="text-base flex justify-between mb-1 text-slate-600 ">
                   <span>Early Bird (Before 1 November):</span>{" "}
-                  <span className="font-semibold text-slate-900 dark:text-white">
-                    600 SAR
-                  </span>
+                  <span className="font-semibold text-slate-900 ">600 SAR</span>
                 </p>
-                <p className="text-base flex justify-between text-slate-600 dark:text-slate-300">
+                <p className="text-base flex justify-between text-slate-600 ">
                   <span>Regular:</span>{" "}
-                  <span className="font-semibold text-slate-900 dark:text-white">
-                    650 SAR
-                  </span>
+                  <span className="font-semibold text-slate-900 ">650 SAR</span>
                 </p>
               </div>
               <motion.div
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
-                className="p-5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-bold text-center shadow-lg shadow-orange-500/20"
+                className="p-5 bg-gradient-to-r from-#55AE47] to-#55AE47] text-white rounded-2xl font-bold text-center shadow-lg shadow-#55AE47]/20"
               >
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Sparkles className="w-5 h-5 text-amber-200" />
                   <span className="text-lg">50% off for SPTA Members</span>
                 </div>
-                <span className="text-sm font-medium text-amber-100">
+                <span className="text-sm font-medium text-#55AE47]/10">
                   (Applied to Conference Registration Only)
                 </span>
               </motion.div>
-              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700">
-                <h4 className="font-bold mb-3 text-lg text-slate-800 dark:text-white flex items-center gap-2">
+              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200/60 ">
+                <h4 className="font-bold mb-3 text-lg text-slate-800 flex items-center gap-2">
                   <Stethoscope className="w-5 h-5 text-[#55AE47]" /> Workshops
                 </h4>
-                <p className="text-base flex justify-between mb-1 text-slate-600 dark:text-slate-300">
+                <p className="text-base flex justify-between mb-1 text-slate-600 ">
                   <span>Students:</span>{" "}
-                  <span className="font-semibold text-slate-900 dark:text-white">
+                  <span className="font-semibold text-slate-900 ">
                     200 SAR / workshop
                   </span>
                 </p>
-                <p className="text-base flex justify-between text-slate-600 dark:text-slate-300">
+                <p className="text-base flex justify-between text-slate-600 ">
                   <span>Professionals:</span>{" "}
-                  <span className="font-semibold text-slate-900 dark:text-white">
+                  <span className="font-semibold text-slate-900 ">
                     300 SAR / workshop
                   </span>
                 </p>
@@ -913,43 +920,52 @@ export const RegistrationTab = () => {
   );
 
   const renderGate = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col items-center justify-center p-8 max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 text-center mt-12"
-    >
-      <div className="w-20 h-20 bg-[#e0f2f1] dark:bg-[#11517E]/30 text-[#11517E] dark:text-[#6FC4BC] rounded-full flex items-center justify-center mb-6">
-        <Sparkles className="w-10 h-10" />
+    <>
+      {/* Section Title */}
+      <div className="mb-2">
+        <h3 className="text-4xl font-black text-[#11517E] mb-3">
+          Conference Registration
+        </h3>
+        <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full"></div>
       </div>
-      <h2 className="text-3xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#11517E] to-[#6FC4BC]">
-        6th Saudi International Physiotherapy Conference
-      </h2>
-      <p className="text-slate-600 dark:text-slate-400 mb-8 font-medium">
-        Please sign in to register for the conference.
-      </p>
-      <div className="flex flex-col w-full gap-4">
-        <button
-          onClick={() => setStep("login")}
-          className="w-full py-4 bg-[#11517E] hover:bg-[#0d3d5f] text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <LogIn className="w-5 h-5" /> Sign In
-        </button>
-        <button
-          onClick={() => setStep("signup")}
-          className="w-full py-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <UserPlus className="w-5 h-5" /> Create Account
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowPricingModal(true)}
-          className="w-full py-3.5 border border-[#11517E]/20 hover:border-[#11517E] bg-white dark:bg-slate-900 text-[#11517E] dark:text-[#6FC4BC] font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-sm hover:shadow cursor-pointer"
-        >
-          <Info className="w-4 h-4 text-[#6FC4BC]" /> View Pricing & Fees
-        </button>
-      </div>
-    </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="flex flex-col items-center justify-center p-8 max-w-lg mx-auto bg-white rounded-3xl shadow-2xl border border-slate-100 text-center mt-12"
+      >
+        <div className="w-20 h-20 bg-[#e0f2f1] -[#11517E]/30 text-[#11517E] -[#6FC4BC] rounded-full flex items-center justify-center mb-6">
+          <Sparkles className="w-10 h-10" />
+        </div>
+        <h2 className="text-3xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#11517E] to-[#6FC4BC]">
+          6th Saudi International Physiotherapy Conference
+        </h2>
+        <p className="text-slate-600 mb-8 font-medium">
+          sign in to register for the conference.
+        </p>
+        <div className="flex flex-col w-full gap-4">
+          <button
+            onClick={() => setStep("login")}
+            className="w-full py-4 bg-[#11517E] hover:bg-[#0d3d5f] text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <LogIn className="w-5 h-5" /> Sign In
+          </button>
+          <button
+            onClick={() => setStep("signup")}
+            className="w-full py-4 bg-slate-100 hover:bg-slate-200 :bg-slate-700 text-slate-800 font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <UserPlus className="w-5 h-5" /> Create Account
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowPricingModal(true)}
+            className="w-full py-3.5 border border-[#11517E]/20 hover:border-[#11517E] bg-white text-[#11517E] -[#6FC4BC] font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-sm hover:shadow cursor-pointer"
+          >
+            <Info className="w-4 h-4 text-[#6FC4BC]" /> View Pricing & Fees
+          </button>
+        </div>
+      </motion.div>
+    </>
   );
 
   const renderLogin = () => (
@@ -957,17 +973,17 @@ export const RegistrationTab = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="w-full max-w-md mx-auto mt-12 bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800"
+      className="w-full max-w-md mx-auto mt-12 bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 "
     >
       <button
         onClick={() => setStep("gate")}
-        className="mb-6 flex items-center text-sm text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
+        className="mb-6 flex items-center text-sm text-slate-500 hover:text-slate-800 :text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-1" /> Back
       </button>
 
       <div className="text-center mb-8">
-        <div className="w-16 h-16 bg-[#e0f2f1] dark:bg-[#11517E]/30 text-[#11517E] rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 bg-[#e0f2f1] -[#11517E]/30 text-[#11517E] rounded-full flex items-center justify-center mx-auto mb-4">
           <LogIn className="w-8 h-8" />
         </div>
         <h3 className="text-3xl font-extrabold">Welcome Back</h3>
@@ -988,7 +1004,7 @@ export const RegistrationTab = () => {
               required
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-[#11517E] outline-none transition-all"
+              className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#11517E] outline-none transition-all"
               placeholder="Enter your email"
             />
           </div>
@@ -1002,7 +1018,7 @@ export const RegistrationTab = () => {
               required
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-[#11517E] outline-none transition-all"
+              className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#11517E] outline-none transition-all"
               placeholder="Enter your password"
             />
           </div>
@@ -1010,7 +1026,7 @@ export const RegistrationTab = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-4 mt-6 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center"
+          className="w-full py-4 mt-6 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-#11517E] text-white font-bold rounded-xl transition-all shadow-lg shadow-#6FC4BC]/30 flex items-center justify-center"
         >
           {isSubmitting ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -1031,25 +1047,25 @@ export const RegistrationTab = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="w-full max-w-4xl mx-auto mt-12 bg-white dark:bg-slate-900 p-6 sm:p-10 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800"
+        className="w-full max-w-4xl mx-auto mt-12 bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-slate-100 "
       >
         <button
           onClick={() => setStep("gate")}
-          className="mb-6 flex items-center text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
+          className="mb-6 flex items-center text-sm font-semibold text-slate-500 hover:text-slate-800 :text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1.5" /> Back
         </button>
         <div className="text-center mb-8">
-          <h3 className="text-3xl font-extrabold text-[#11517E] dark:text-[#6FC4BC]">
+          <h3 className="text-3xl font-extrabold text-[#11517E] -[#6FC4BC]">
             Create Account
           </h3>
-          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
+          <p className="text-slate-500 mt-2 text-sm">
             Please fill in your details to create an account
           </p>
         </div>
         <form onSubmit={handleSignup} noValidate className="space-y-8">
           {/* Section 1: Personal Info */}
-          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
+          <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 sm:p-8">
             <SectionHeader
               icon={User}
               title="Personal Information"
@@ -1062,7 +1078,7 @@ export const RegistrationTab = () => {
                 <select
                   value={formData.title}
                   onChange={(e) => setF("title", e.target.value)}
-                  className={`${inputBase} bg-white dark:bg-slate-900`}
+                  className={`${inputBase} bg-white `}
                   dir="ltr"
                 >
                   <option value="">(None)</option>
@@ -1074,27 +1090,21 @@ export const RegistrationTab = () => {
                 </select>
               </Field>
 
-              <Field
-                label="Country"
-                required
-                error={errors.country}
-              >
+              <Field label="Country" required error={errors.country}>
                 <div className="relative">
                   <Globe className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                   <select
                     value={formData.country}
                     onChange={(e) => setF("country", e.target.value)}
                     onBlur={() => setTouched((p) => ({ ...p, country: true }))}
-                    className={`${inputBase} pr-10 bg-white dark:bg-slate-900 ${
+                    className={`${inputBase} pr-10 bg-white ${
                       errors.country ? "border-red-400 bg-red-50" : ""
                     }`}
                   >
                     <option value="">Select Country</option>
                     {COUNTRIES.map((c) => (
                       <option key={c} value={c}>
-                        {c === "Saudi Arabia"
-                          ? "Saudi Arabia (المملكة العربية السعودية)"
-                          : c}
+                        {c === "Saudi Arabia" ? "Saudi Arabia" : c}
                       </option>
                     ))}
                   </select>
@@ -1123,10 +1133,7 @@ export const RegistrationTab = () => {
                 </div>
               </Field>
 
-              <Field
-                label="Full Name (Arabic) (Optional)"
-                error={errors.fullNameAr}
-              >
+              <Field label="Full Name (Arabic)" error={errors.fullNameAr}>
                 <div className="relative">
                   <User className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -1176,18 +1183,16 @@ export const RegistrationTab = () => {
                     </div>
                   </Field>
 
-                  <Field
-                    label="Region"
-                    required
-                    error={errors.region}
-                  >
+                  <Field label="Region" required error={errors.region}>
                     <div className="relative">
                       <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                       <select
                         value={formData.region}
                         onChange={(e) => setF("region", e.target.value)}
-                        onBlur={() => setTouched((p) => ({ ...p, region: true }))}
-                        className={`${inputBase} pr-10 bg-white dark:bg-slate-900 ${
+                        onBlur={() =>
+                          setTouched((p) => ({ ...p, region: true }))
+                        }
+                        className={`${inputBase} pr-10 bg-white ${
                           errors.region ? "border-red-400 bg-red-50" : ""
                         }`}
                       >
@@ -1226,11 +1231,7 @@ export const RegistrationTab = () => {
                 </>
               )}
 
-              <Field
-                label="Email Address"
-                required
-                error={errors.email}
-              >
+              <Field label="Email Address" required error={errors.email}>
                 <div className="relative">
                   <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -1248,17 +1249,13 @@ export const RegistrationTab = () => {
               </Field>
 
               <div className={isSaudi ? "md:col-span-2" : ""}>
-                <Field
-                  label="Phone Number"
-                  required
-                  error={errors.phone}
-                >
+                <Field label="Phone Number" required error={errors.phone}>
                   <PhoneInput
                     value={formData.phone}
                     onChange={(value) => setF("phone", value)}
                     onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
                     error={errors.phone}
-                    inputBaseClass={`${inputBase} bg-white dark:bg-slate-900`}
+                    inputBaseClass={`${inputBase} bg-white `}
                   />
                 </Field>
               </div>
@@ -1266,7 +1263,7 @@ export const RegistrationTab = () => {
           </div>
 
           {/* Section 2: Professional Info */}
-          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
+          <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 sm:p-8">
             <SectionHeader
               icon={Stethoscope}
               title="Professional Information"
@@ -1274,6 +1271,21 @@ export const RegistrationTab = () => {
               step={2}
             />
             <div className="grid md:grid-cols-2 gap-5">
+              <Field label="User Type" required error={errors.userType}>
+                <select
+                  value={formData.userType}
+                  onChange={(e) => setF("userType", e.target.value)}
+                  onBlur={() => setTouched((p) => ({ ...p, userType: true }))}
+                  className={`${inputBase} bg-white ${
+                    errors.userType ? "border-red-400 bg-red-50" : ""
+                  }`}
+                >
+                  <option value="">Select User Type</option>
+                  <option value="student">Student</option>
+                  <option value="professional">Professional</option>
+                </select>
+              </Field>
+
               <Field
                 label="Workplace / Employer"
                 required
@@ -1331,28 +1343,39 @@ export const RegistrationTab = () => {
                 </div>
               </Field>
 
-              <Field
-                label="SCFHS Classification Number (Optional)"
-                error={errors.classificationNumber}
-              >
-                <div className="relative">
-                  <ShieldCheck className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    value={formData.classificationNumber}
-                    onChange={(e) =>
-                      setF("classificationNumber", e.target.value)
-                    }
-                    className={`${inputBase} pr-10`}
-                    placeholder="e.g. SCFHS Registration Number"
-                    dir="ltr"
-                  />
-                </div>
-              </Field>
+              {formData.userType !== "student" && (
+                <Field
+                  label={
+                    formData.userType === "professional" &&
+                    formData.country === "Saudi Arabia"
+                      ? "SCFHS Classification Number"
+                      : "SCFHS Classification Number (Optional)"
+                  }
+                  required={
+                    formData.userType === "professional" &&
+                    formData.country === "Saudi Arabia"
+                  }
+                  error={errors.classificationNumber}
+                >
+                  <div className="relative">
+                    <ShieldCheck className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <input
+                      value={formData.classificationNumber}
+                      onChange={(e) =>
+                        setF("classificationNumber", e.target.value)
+                      }
+                      className={`${inputBase} pr-10`}
+                      placeholder="e.g. SCFHS Registration Number"
+                      dir="ltr"
+                    />
+                  </div>
+                </Field>
+              )}
             </div>
           </div>
 
           {/* Section 3: Security Info */}
-          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
+          <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 sm:p-8">
             <SectionHeader
               icon={Lock}
               title="Security"
@@ -1361,11 +1384,7 @@ export const RegistrationTab = () => {
             />
             <div className="grid md:grid-cols-2 gap-5">
               <div>
-                <Field
-                  label="Password"
-                  required
-                  error={errors.password}
-                >
+                <Field label="Password" required error={errors.password}>
                   <div className="relative">
                     <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
@@ -1410,7 +1429,10 @@ export const RegistrationTab = () => {
                         />
                       ))}
                     </div>
-                    <p className="text-xs font-medium" style={{ color: pwStrength.color }}>
+                    <p
+                      className="text-xs font-medium"
+                      style={{ color: pwStrength.color }}
+                    >
                       Password strength: {pwStrength.label}
                     </p>
                   </div>
@@ -1474,15 +1496,15 @@ export const RegistrationTab = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="w-full max-w-md mx-auto mt-12 bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 text-center"
+      className="w-full max-w-md mx-auto mt-12 bg-white p-8 rounded-3xl shadow-xl border border-slate-100 text-center"
     >
       <button
         onClick={() => setStep("gate")}
-        className="mb-6 flex items-center text-sm text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
+        className="mb-6 flex items-center text-sm text-slate-500 hover:text-slate-800 :text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-1" /> Back
       </button>
-      <div className="w-16 h-16 bg-[#e0f2f1] dark:bg-[#11517E]/30 text-[#11517E] rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="w-16 h-16 bg-[#e0f2f1] -[#11517E]/30 text-[#11517E] rounded-full flex items-center justify-center mx-auto mb-4">
         <Mail className="w-8 h-8" />
       </div>
       <h3 className="text-2xl font-bold mb-2">Verify Email</h3>
@@ -1496,7 +1518,7 @@ export const RegistrationTab = () => {
           placeholder="Enter OTP"
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
-          className="w-full text-center text-2xl tracking-widest p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none focus:ring-2 focus:ring-[#11517E]"
+          className="w-full text-center text-2xl tracking-widest p-4 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-[#11517E]"
         />
         <button
           type="submit"
@@ -1536,12 +1558,9 @@ export const RegistrationTab = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white p-1"
+            className="mb-8 relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-r from-[#55AE47] to-[#55AE47] text-white p-1"
           >
-            <div className="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
-              <Sparkles className="w-24 h-24" />
-            </div>
-            <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-[22px] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="bg-gradient-to-br from-[#55AE47] to-[#55AE47] rounded-[22px] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
               <div>
                 <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 inline-block shadow-sm">
                   Special Offer
@@ -1549,14 +1568,14 @@ export const RegistrationTab = () => {
                 <h3 className="text-2xl md:text-3xl font-extrabold mb-2 leading-tight">
                   Unlock a 50% Discount!
                 </h3>
-                <p className="text-amber-50 text-base md:text-lg max-w-lg font-medium leading-relaxed">
+                <p className="text-white text-base md:text-lg max-w-lg font-medium leading-relaxed">
                   Become a Saudi Physical Therapy Association member today and
                   instantly save 50% on your conference registration fee.
                 </p>
               </div>
               <Link
                 to="/membership"
-                className="shrink-0 w-full md:w-auto text-center px-8 py-4 bg-white text-orange-600 font-extrabold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                className="shrink-0 w-full md:w-auto text-center px-8 py-4 bg-white text-[#55AE47] font-extrabold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 Join SPTA Now
               </Link>
@@ -1564,7 +1583,7 @@ export const RegistrationTab = () => {
           </motion.div>
         )}
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200/80 ">
           <div>
             <h3 className="text-4xl font-black text-[#11517E] mb-3">
               Conference Registration
@@ -1587,7 +1606,7 @@ export const RegistrationTab = () => {
         </div>
 
         {/* Section A: Conference */}
-        <div className="bg-gradient-to-br from-[#11517E] to-indigo-700 p-8 rounded-3xl shadow-xl text-white mb-8 relative overflow-hidden">
+        <div className=" bg-[#11517E]  p-8 rounded-3xl s text-white mb-8 relative overflow-hidden">
           <div className="relative z-10">
             <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold mb-4 inline-block backdrop-blur-sm">
               13 CME Hours
@@ -1623,7 +1642,7 @@ export const RegistrationTab = () => {
 
         <form
           onSubmit={handleRegisterSubmit}
-          className="space-y-8 bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 relative z-10"
+          className="space-y-8 bg-white p-8 rounded-3xl shadow-lg border border-slate-100 relative z-10"
         >
           {/* Section B: Workshops */}
           {hasRegistration && (
@@ -1645,7 +1664,7 @@ export const RegistrationTab = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2">
               Workshop Add-ons (Optional)
-              <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full ml-auto">
+              <span className="text-xs bg-#55AE47]/10 text-#55AE47] px-2 py-1 rounded-full ml-auto">
                 40 CME Hours
               </span>
             </h3>
@@ -1656,7 +1675,7 @@ export const RegistrationTab = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                <label className="block font-semibold mb-2 text-slate-700 ">
                   Morning Workshop (08:00–12:00)
                 </label>
                 <CustomSelect
@@ -1670,7 +1689,7 @@ export const RegistrationTab = () => {
                 />
               </div>
               <div>
-                <label className="block font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                <label className="block font-semibold mb-2 text-slate-700 ">
                   Afternoon Workshop (13:00–17:00)
                 </label>
                 <CustomSelect
@@ -1695,7 +1714,7 @@ export const RegistrationTab = () => {
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                 placeholder="Enter promo code"
-                className="flex-1 p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none uppercase"
+                className="flex-1 p-4 rounded-xl border-2 border-slate-200 bg-slate-50 outline-none uppercase"
               />
               <button
                 type="button"
@@ -1713,23 +1732,23 @@ export const RegistrationTab = () => {
           </div>
 
           {/* Section D: Summary */}
-          <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 ">
             <div className="flex justify-between items-center mb-4">
-              <h4 className="font-bold text-xl text-slate-800 dark:text-white">
+              <h4 className="font-bold text-xl text-slate-800 ">
                 Price Summary
               </h4>
               <button
                 type="button"
                 onClick={() => setShowPricingModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-700 text-[#11517E] dark:text-[#6FC4BC] font-bold text-sm rounded-lg shadow-sm border border-slate-200 dark:border-slate-600 hover:shadow-md hover:border-[#6FC4BC]/50 transition-all"
+                className="flex items-center gap-1.5 px-4 py-2 bg-white text-[#11517E] -[#6FC4BC] font-bold text-sm rounded-lg shadow-sm border border-slate-200 hover:shadow-md hover:border-[#6FC4BC]/50 transition-all"
               >
                 <Info className="w-4 h-4" /> View Pricing & Fees
               </button>
             </div>
-            <div className="space-y-2 text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b border-slate-200 dark:border-slate-700">
+            <div className="space-y-2 text-slate-600 mb-4 pb-4 border-b border-slate-200 ">
               <div className="flex justify-between text-base">
                 <span>Conference Ticket</span>
-                <span className="font-medium text-slate-900 dark:text-white">
+                <span className="font-medium text-slate-900 ">
                   {hasRegistration ? (
                     <span className="text-[#55AE47] font-bold flex items-center gap-1">
                       <Check className="w-4 h-4" /> Paid
@@ -1742,7 +1761,7 @@ export const RegistrationTab = () => {
               {selectedMorning && (
                 <div className="flex justify-between text-base">
                   <span>Morning Workshop</span>
-                  <span className="font-medium text-slate-900 dark:text-white">
+                  <span className="font-medium text-slate-900 ">
                     {existingWorkshops.includes(selectedMorning) ? (
                       <span className="text-[#55AE47] font-bold flex items-center gap-1">
                         <Check className="w-4 h-4" /> Paid
@@ -1756,7 +1775,7 @@ export const RegistrationTab = () => {
               {selectedEvening && (
                 <div className="flex justify-between text-base">
                   <span>Afternoon Workshop</span>
-                  <span className="font-medium text-slate-900 dark:text-white">
+                  <span className="font-medium text-slate-900 ">
                     {existingWorkshops.includes(selectedEvening) ? (
                       <span className="text-[#55AE47] font-bold flex items-center gap-1">
                         <Check className="w-4 h-4" /> Paid
@@ -1775,10 +1794,8 @@ export const RegistrationTab = () => {
               )}
             </div>
             <div className="flex justify-between items-end">
-              <span className="text-xl font-bold text-slate-800 dark:text-white">
-                Total
-              </span>
-              <span className="text-5xl font-black text-[#11517E] dark:text-[#6FC4BC] drop-shadow-sm">
+              <span className="text-xl font-bold text-slate-800 ">Total</span>
+              <span className="text-5xl font-black text-[#11517E] -[#6FC4BC] drop-shadow-sm">
                 {calculateTotal()} SAR
               </span>
             </div>
@@ -1789,8 +1806,8 @@ export const RegistrationTab = () => {
             <label
               className={`flex items-start sm:items-center gap-3.5 p-4 rounded-2xl border transition-all duration-200 cursor-pointer group mb-6 select-none ${
                 agreed
-                  ? "bg-[#11517E]/5 border-[#11517E] dark:bg-[#11517E]/20 dark:border-[#6FC4BC] shadow-sm"
-                  : "bg-slate-50/70 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:bg-slate-100/60 dark:hover:bg-slate-800/60 hover:border-slate-300 dark:hover:border-slate-700"
+                  ? "bg-[#11517E]/5 border-[#11517E] -[#11517E]/20 -[#6FC4BC] shadow-sm"
+                  : "bg-slate-50/70 border-slate-200 hover:bg-slate-100/60 :bg-slate-800/60 hover:border-slate-300 :border-slate-700"
               }`}
             >
               <div className="relative flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
@@ -1804,14 +1821,14 @@ export const RegistrationTab = () => {
                 <div
                   className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                     agreed
-                      ? "bg-[#11517E] border-[#11517E] dark:bg-[#6FC4BC] dark:border-[#6FC4BC] text-white shadow-md shadow-[#11517E]/30 scale-105"
-                      : "border-slate-400 dark:border-slate-500 bg-white dark:bg-slate-800 group-hover:border-[#11517E]"
+                      ? "bg-[#11517E] border-[#11517E] -[#6FC4BC] -[#6FC4BC] text-white shadow-md shadow-[#11517E]/30 scale-105"
+                      : "border-slate-400 bg-white group-hover:border-[#11517E]"
                   }`}
                 >
                   <Check
                     className={`w-4 h-4 transition-all duration-200 ${
                       agreed
-                        ? "opacity-100 scale-100 text-white dark:text-slate-900 stroke-[3]"
+                        ? "opacity-100 scale-100 text-white stroke-[3]"
                         : "opacity-0 scale-50"
                     }`}
                   />
@@ -1820,17 +1837,18 @@ export const RegistrationTab = () => {
               <span
                 className={`text-sm leading-relaxed transition-colors ${
                   agreed
-                    ? "font-bold text-[#11517E] dark:text-[#6FC4BC]"
-                    : "font-semibold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
+                    ? "font-bold text-[#11517E] -[#6FC4BC]"
+                    : "font-semibold text-slate-700 group-hover:text-slate-900 :text-white"
                 }`}
               >
-                التزام ان البيانات المرفقه صحيحه وتحت مسؤليتي (I confirm that all provided information is correct)
+                التزام ان البيانات المرفقه صحيحه وتحت مسؤليتي (I confirm that
+                all provided information is correct)
               </span>
             </label>
             <button
               type="submit"
               disabled={isSubmitting || !agreed}
-              className="w-full py-5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xl rounded-2xl shadow-[0_8px_30px_rgb(37,99,235,0.3)] hover:shadow-[0_8px_40px_rgb(37,99,235,0.4)] flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-1"
+              className="w-full py-5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-#11517E] text-white font-black text-xl rounded-2xl shadow-[0_8px_30px_rgb(37,99,235,0.3)] hover:shadow-[0_8px_40px_rgb(37,99,235,0.4)] flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-1"
             >
               {isSubmitting ? (
                 <Loader2 className="w-6 h-6 animate-spin" />
@@ -1856,7 +1874,7 @@ export const RegistrationTab = () => {
               <motion.div
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
-                className="bg-white dark:bg-slate-900 p-10 rounded-3xl shadow-2xl max-w-md w-full text-center"
+                className="bg-white p-10 rounded-3xl shadow-2xl max-w-md w-full text-center"
               >
                 <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Check className="w-12 h-12" />

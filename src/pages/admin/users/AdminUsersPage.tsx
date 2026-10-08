@@ -149,6 +149,7 @@ const AdminUsersPage = () => {
       region: u.region || "",
       city: u.city || "",
       classification_number: u.classification_number || "",
+      user_type: u.user_type || "student",
     });
     setIsEditOpen(true);
   };
@@ -170,6 +171,7 @@ const AdminUsersPage = () => {
       region: editForm.region,
       city: editForm.city,
       classification_number: editForm.classification_number,
+      user_type: editForm.user_type,
     };
 
     if (editForm.password.trim()) {
@@ -271,6 +273,7 @@ const AdminUsersPage = () => {
         region: addForm.region,
         city: addForm.city,
         classification_number: addForm.classification_number,
+        user_type: addForm.user_type,
         password: addForm.password,
         password_confirmation: addForm.password_confirmation,
       });

@@ -326,85 +326,67 @@ const WorkshopCard = ({
 }) => {
   const isMorning = workshop.timePeriod === "Morning";
 
-  // Morning: warm amber/orange palette
-  // Afternoon: deep navy/indigo/violet palette (much darker)
+  // Morning: Green brand palette (#55AE47)
+  // Afternoon: Teal/Blue brand palette (#6FC4BC / #11517E)
+  
   const collapsedBg = isMorning
-    ? "bg-gradient-to-r from-amber-100 via-orange-100/80 to-amber-50 dark:from-amber-900/40 dark:via-orange-900/30 dark:to-amber-900/40 hover:from-amber-200 hover:to-amber-100 dark:hover:from-amber-900/60 dark:hover:to-amber-900/50"
-    : "bg-gradient-to-r from-indigo-950/90 via-violet-950/80 to-slate-900/90 hover:from-indigo-950 hover:via-violet-950 hover:to-slate-950 border-indigo-800/40";
+    ? "bg-gradient-to-r from-[#55AE47]/10 via-[#55AE47]/5 to-transparent hover:from-[#55AE47]/15 hover:to-[#55AE47]/10 border border-[#55AE47]/20"
+    : "bg-gradient-to-r from-[#6FC4BC]/10 via-[#6FC4BC]/5 to-transparent hover:from-[#6FC4BC]/15 hover:to-[#6FC4BC]/10 border border-[#6FC4BC]/20";
 
-  const expandedBg = isMorning
-    ? "bg-white dark:bg-slate-900"
-    : "bg-slate-950 border-indigo-900/40";
+  const expandedBg = "bg-white border border-[#11517E]/10 shadow-lg";
 
   const accentLine = isMorning
-    ? "bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
-    : "bg-[#6FC4BC] shadow-[0_0_12px_rgba(99,102,241,0.5)]";
+    ? "bg-[#55AE47] shadow-[0_0_12px_rgba(85,174,71,0.5)]"
+    : "bg-[#6FC4BC] shadow-[0_0_12px_rgba(111,196,188,0.5)]";
 
   const accentLineCollapsed = isMorning
-    ? "group-hover:bg-amber-300 dark:group-hover:bg-amber-700"
-    : "group-hover:bg-indigo-700 dark:group-hover:bg-[#6FC4BC]";
+    ? "group-hover:bg-[#55AE47]"
+    : "group-hover:bg-[#6FC4BC]";
 
   const titleColor = isMorning
     ? isExpanded
-      ? "text-slate-900 dark:text-white"
-      : "text-amber-900 dark:text-amber-100 group-hover:text-amber-800 dark:group-hover:text-amber-200"
+      ? "text-[#11517E]"
+      : "text-[#11517E] group-hover:text-[#55AE47]"
     : isExpanded
-      ? "text-white"
-      : "text-indigo-100 group-hover:text-white";
+      ? "text-[#11517E]"
+      : "text-[#11517E] group-hover:text-[#6FC4BC]";
 
   const badgeBg = isMorning
-    ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-400/30"
-    : "bg-[#6FC4BC]/20 text-indigo-300 border border-[#6FC4BC]/30";
+    ? "bg-[#55AE47]/10 text-[#55AE47] border border-[#55AE47]/20"
+    : "bg-[#6FC4BC]/10 text-[#11517E] border border-[#6FC4BC]/20";
 
   const timeBadge = isMorning
-    ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
-    : "bg-indigo-900/50 text-indigo-300";
+    ? "bg-[#55AE47]/10 text-[#55AE47]"
+    : "bg-[#6FC4BC]/10 text-[#11517E]";
 
-  const objectiveDot = isMorning ? "bg-amber-500" : "bg-[#6FC4BC]";
+  const objectiveDot = isMorning ? "bg-[#55AE47]" : "bg-[#6FC4BC]";
 
   const speakerIconBg = isMorning
-    ? "bg-gradient-to-br from-amber-400 to-orange-500"
-    : "bg-gradient-to-br from-[#6FC4BC] to-[#55AE47]";
+    ? "bg-gradient-to-br from-[#55AE47] to-[#11517E]"
+    : "bg-gradient-to-br from-[#6FC4BC] to-[#11517E]";
 
-  const speakerNameColor = isMorning
-    ? "text-slate-900 dark:text-white"
-    : "text-white";
+  const speakerNameColor = "text-[#11517E]";
+  const speakerTitleColor = "text-slate-500";
+  const sectionTitleColor = "text-[#11517E]";
 
-  const speakerTitleColor = isMorning
-    ? "text-slate-600 dark:text-slate-400"
-    : "text-indigo-300";
-
-  const sectionTitleColor = isMorning
-    ? "text-slate-800 dark:text-slate-200"
-    : "text-slate-200";
-
-  const dividerColor = isMorning
-    ? "border-slate-200 dark:border-slate-700"
-    : "border-indigo-900/50";
-
-  const objectiveTextColor = isMorning
-    ? "text-slate-700 dark:text-slate-300"
-    : "text-indigo-100";
+  const dividerColor = "border-slate-100";
+  const objectiveTextColor = "text-slate-600";
 
   const statusBadge = isExpanded
     ? isMorning
-      ? "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-700/50"
-      : "bg-indigo-900/40 text-indigo-300 border-indigo-700/50"
+      ? "bg-[#55AE47]/10 text-[#55AE47] border-[#55AE47]/20"
+      : "bg-[#6FC4BC]/10 text-[#11517E] border-[#6FC4BC]/20"
     : isMorning
-      ? "bg-white dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-700 group-hover:border-amber-400"
-      : "bg-indigo-950/60 text-indigo-400 border-indigo-800 group-hover:text-indigo-300";
+      ? "bg-white text-[#55AE47] border-[#55AE47]/20 group-hover:border-[#55AE47]/40"
+      : "bg-white text-[#11517E] border-[#11517E]/20 group-hover:border-[#11517E]/40";
 
   return (
     <div
       className={`w-full rounded-2xl overflow-hidden border transition-all duration-300 ${
         isExpanded
-          ? isMorning
-            ? "border-amber-200 dark:border-amber-800/50"
-            : "border-indigo-800/50"
-          : isMorning
-            ? "border-amber-200/60 dark:border-amber-800/30"
-            : "border-indigo-800/40"
-      } shadow-sm hover:shadow-lg`}
+          ? "border-[#11517E]/15 shadow-md"
+          : "border-[#11517E]/10 shadow-sm hover:shadow-lg"
+      }`}
     >
       {/* ── Clickable Header ── */}
       <div
@@ -451,7 +433,7 @@ const WorkshopCard = ({
           {/* Speaker names preview (collapsed) */}
           {!isExpanded && (
             <p
-              className={`mt-2 text-xs font-medium truncate ${isMorning ? "text-amber-700/70 dark:text-amber-400/70" : "text-indigo-400/80"}`}
+              className={`mt-2 text-xs font-medium truncate ${isMorning ? "text-[#55AE47]/80" : "text-[#6FC4BC]/80"}`}
             >
               {workshop.speakers.map((s) => s.name).join(" • ")}
             </p>
@@ -476,9 +458,7 @@ const WorkshopCard = ({
             transition={{ duration: 0.38, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div
-              className={`p-5 md:p-8 flex flex-col lg:flex-row gap-8 ${isMorning ? "bg-white dark:bg-slate-900" : "bg-slate-950"}`}
-            >
+            <div className="p-5 md:p-8 flex flex-col lg:flex-row gap-8 bg-white">
               {/* Speakers */}
               <div className="lg:w-2/5 flex flex-col gap-8">
                 <div>
@@ -486,7 +466,7 @@ const WorkshopCard = ({
                     className={`flex items-center gap-2 text-base font-black mb-4 border-b pb-2 ${sectionTitleColor} ${dividerColor}`}
                   >
                     <Users
-                      className={`w-5 h-5 ${isMorning ? "text-amber-500" : "text-indigo-400"}`}
+                      className={`w-5 h-5 ${isMorning ? "text-[#55AE47]" : "text-[#6FC4BC]"}`}
                     />
                     {workshop.speakers.length > 1 ? "Speakers" : "Speaker"}
                   </h4>
@@ -531,7 +511,7 @@ const WorkshopCard = ({
                     className={`flex items-center gap-2 text-base font-black mb-4 border-b pb-2 ${sectionTitleColor} ${dividerColor}`}
                   >
                     <CheckCircle2
-                      className={`w-5 h-5 ${isMorning ? "text-amber-500" : "text-indigo-400"}`}
+                      className={`w-5 h-5 ${isMorning ? "text-[#55AE47]" : "text-[#6FC4BC]"}`}
                     />
                     Learning Objectives
                   </h4>
@@ -599,23 +579,23 @@ export const WorkshopsTab = () => {
       <div className="mb-6">
         <button
           onClick={() => setMorningOpen((prev) => !prev)}
-          className="w-full flex items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-amber-900/20 border border-amber-200 dark:border-amber-800/40 hover:from-amber-100 hover:to-orange-100 dark:hover:from-amber-900/50 transition-all duration-300 group shadow-sm hover:shadow-md cursor-pointer"
+          className="w-full flex items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#55AE47]/10 to-[#55AE47]/5 border border-[#55AE47]/20 hover:from-[#55AE47]/15 transition-all duration-300 group shadow-sm hover:shadow-md cursor-pointer"
         >
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-amber-100 dark:bg-amber-900/60 rounded-xl text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform duration-200">
+            <div className="p-3 bg-white border border-[#55AE47]/20 shadow-sm rounded-xl text-[#55AE47] group-hover:scale-110 transition-transform duration-200">
               <Sun className="w-6 h-6" />
             </div>
             <div className="text-left">
-              <h3 className="text-xl font-black text-slate-900 dark:text-white">
+              <h3 className="text-xl font-black text-[#11517E]">
                 Morning Sessions
               </h3>
-              <p className="text-amber-600 dark:text-amber-500 font-bold text-sm">
+              <p className="text-[#55AE47] font-bold text-sm">
                 08:00 AM – 12:00 PM &nbsp;·&nbsp; {morningWorkshops.length}{" "}
                 workshops
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold text-sm shrink-0">
+          <div className="flex items-center gap-2 text-[#55AE47] font-bold text-sm shrink-0">
             <span className="hidden sm:inline">
               {morningOpen ? "Collapse" : "Expand"}
             </span>
@@ -655,14 +635,14 @@ export const WorkshopsTab = () => {
       <div className="mb-8">
         <button
           onClick={() => setAfternoonOpen((prev) => !prev)}
-          className="w-full flex items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#11517E]/10 to-[#6FC4BC]/10 dark:from-indigo-950/60 dark:to-slate-900/60 border border-[#11517E]/20 dark:border-indigo-800/40 hover:from-[#11517E]/20 hover:to-[#6FC4BC]/20 dark:hover:from-indigo-950/80 transition-all duration-300 group shadow-sm hover:shadow-md cursor-pointer"
+          className="w-full flex items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#11517E]/10 to-[#6FC4BC]/10 border border-[#11517E]/20 hover:from-[#11517E]/15 transition-all duration-300 group shadow-sm hover:shadow-md cursor-pointer"
         >
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-[#11517E]/10 dark:bg-indigo-950/60 border border-[#11517E]/20 dark:border-indigo-800/50 rounded-xl text-[#11517E] dark:text-[#6FC4BC] group-hover:scale-110 transition-transform duration-200">
+            <div className="p-3 bg-white border border-[#11517E]/20 shadow-sm rounded-xl text-[#11517E] group-hover:scale-110 transition-transform duration-200">
               <Moon className="w-6 h-6" />
             </div>
             <div className="text-left">
-              <h3 className="text-xl font-black text-slate-900 dark:text-white">
+              <h3 className="text-xl font-black text-[#11517E]">
                 Afternoon Sessions
               </h3>
               <p className="text-[#6FC4BC] font-bold text-sm">
@@ -671,7 +651,7 @@ export const WorkshopsTab = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-[#11517E] dark:text-[#6FC4BC] font-bold text-sm shrink-0">
+          <div className="flex items-center gap-2 text-[#11517E] font-bold text-sm shrink-0">
             <span className="hidden sm:inline">
               {afternoonOpen ? "Collapse" : "Expand"}
             </span>

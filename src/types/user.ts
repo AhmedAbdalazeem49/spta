@@ -16,7 +16,7 @@ export interface UserItem {
   membership_type?: string;
   region?: string;
   city?: string;
-  classification_number?: string;
+  user_type?: string;
 
   email_verified_at?: string | null;
   created_at?: string;
@@ -52,6 +52,7 @@ export interface EditForm {
   region: string;
   city: string;
   classification_number: string;
+  user_type: string;
 }
 
 export interface AddForm {
@@ -69,6 +70,7 @@ export interface AddForm {
   region: string;
   city: string;
   classification_number: string;
+  user_type: string;
 }
 
 export const defaultAddForm: AddForm = {
@@ -86,4 +88,5 @@ export const defaultAddForm: AddForm = {
   region: "",
   city: "",
   classification_number: "",
+  user_type: "student",
 };

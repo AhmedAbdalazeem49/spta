@@ -69,74 +69,74 @@ const TYPE_STYLES: Record<
   }
 > = {
   registration: {
-    color: "text-slate-600 dark:text-slate-300",
-    bg: "bg-slate-50 dark:bg-slate-800/30",
-    border: "border-slate-300 dark:border-slate-700",
+    color: "text-slate-600 ",
+    bg: "bg-slate-50 ",
+    border: "border-slate-300 ",
     icon: <ShieldCheck className="w-4 h-4" />,
     label: "Registration",
   },
   ceremony: {
-    color: "text-purple-700 dark:text-purple-300",
-    bg: "bg-purple-50 dark:bg-purple-900/20",
-    border: "border-purple-400 dark:border-purple-600",
+    color: "text-purple-700 ",
+    bg: "bg-purple-50 ",
+    border: "border-purple-400 ",
     icon: <Trophy className="w-4 h-4" />,
     label: "Ceremony",
 
   },
   keynote: {
-    color: "text-[#11517E] dark:text-[#6FC4BC]",
-    bg: "bg-[#f0f8f8] dark:bg-[#11517E]/20",
-    border: "border-[#11517E] dark:border-[#11517E]",
+    color: "text-[#11517E] -[#6FC4BC]",
+    bg: "bg-[#f0f8f8] -[#11517E]/20",
+    border: "border-[#11517E] -[#11517E]",
     icon: <Mic2 className="w-4 h-4" />,
     label: "Keynote",
 
   },
   "Focused Symposium": {
-    color: "text-indigo-700 dark:text-indigo-300",
-    bg: "bg-[#f0f8f8] dark:bg-indigo-900/20",
-    border: "border-[#6FC4BC] dark:border-[#6FC4BC]",
+    color: "text-[#11517E] ",
+    bg: "bg-[#f0f8f8] ",
+    border: "border-[#6FC4BC] -[#6FC4BC]",
     icon: <BookOpen className="w-4 h-4" />,
     label: "Focused Symposium",
   },
   break: {
-    color: "text-amber-700 dark:text-amber-300",
-    bg: "bg-amber-50 dark:bg-amber-900/20",
-    border: "border-amber-400 dark:border-amber-600",
+    color: "text-[#55AE47] ",
+    bg: "bg-[#55AE47]/5 ",
+    border: "border-#55AE47] ",
     icon: <Coffee className="w-4 h-4" />,
     label: "Break",
   },
   panel: {
-    color: "text-rose-700 dark:text-rose-300",
-    bg: "bg-rose-50 dark:bg-rose-900/20",
-    border: "border-rose-500 dark:border-rose-600",
+    color: "text-rose-700 ",
+    bg: "bg-rose-50 ",
+    border: "border-rose-500 ",
     icon: <Users className="w-4 h-4" />,
     label: "Panel",
   },
   invited: {
-    color: "text-emerald-700 dark:text-emerald-300",
-    bg: "bg-emerald-50 dark:bg-emerald-900/20",
-    border: "border-emerald-500 dark:border-emerald-600",
+    color: "text-emerald-700 ",
+    bg: "bg-emerald-50 ",
+    border: "border-emerald-500 ",
     icon: <Star className="w-4 h-4" />,
     label: "Invited",
   },
   "platform presentation": {
-    color: "text-teal-700 dark:text-teal-300",
-    bg: "bg-teal-50 dark:bg-teal-900/20",
-    border: "border-teal-500 dark:border-teal-600",
+    color: "text-teal-700 ",
+    bg: "bg-teal-50 ",
+    border: "border-teal-500 ",
     icon: <PlayCircle className="w-4 h-4" />,
     label: "Platform Presentation",
   },
   qna: {
-    color: "text-orange-700 dark:text-orange-300",
-    bg: "bg-orange-50 dark:bg-orange-900/20",
-    border: "border-orange-400 dark:border-orange-600",
+    color: "text-[#55AE47] ",
+    bg: "bg-[#55AE47]/5 ",
+    border: "border-#55AE47] ",
     icon: <Users className="w-4 h-4" />,
     label: "Q&A",
   },
   closing: {
-    color: "text-slate-700 dark:text-slate-200",
-    bg: "bg-slate-100 dark:bg-slate-800/50",
-    border: "border-slate-500 dark:border-slate-600",
+    color: "text-slate-700 ",
+    bg: "bg-slate-100 ",
+    border: "border-slate-500 ",
     icon: <Star className="w-4 h-4" />,
     label: "Closing",
   },
@@ -190,7 +190,7 @@ const AGENDA_DATA: AgendaDay[] = [
                 <div className="font-bold mb-2">
                   Direct Access Implementation: Evidence & Saudi Experience
                 </div>
-                <ul className="text-sm font-normal space-y-1 text-slate-600 dark:text-slate-400">
+                <ul className="text-sm font-normal space-y-1 text-slate-600 ">
                   <li>▪ Opening & Framing</li>
                   <li>▪ Evidence Presentation</li>
                   <li>▪ Saudi Experience Case Study</li>
@@ -236,13 +236,13 @@ const AGENDA_DATA: AgendaDay[] = [
               "Rehabilitation Governance & National Standards: Building a Unified Physiotherapy Framework",
             speaker: (
               <div className="flex flex-col gap-2">
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="font-bold text-slate-800 ">
                   Moderator: Dr. Mishal Aldaihan
                 </span>
-                <span className="font-bold text-slate-700 dark:text-slate-300">
+                <span className="font-bold text-slate-700 ">
                   Panelists:
                 </span>
-                <ol className="text-sm space-y-1 list-decimal list-inside text-slate-600 dark:text-slate-400">
+                <ol className="text-sm space-y-1 list-decimal list-inside text-slate-600 ">
                   <li>Dr. Faisal Aldahmashi</li>
                   <li>Dr. Hanan Alsaif</li>
                   <li>Mr. Talal Alghamdi</li>
@@ -362,7 +362,7 @@ const AGENDA_DATA: AgendaDay[] = [
             time: "16:00–16:20",
             type: "invited",
             title:
-              "Reversing Frailty: Strategic Physiotherapy Interventions for Healthy Aging in Saudi Arabia",
+              "Preparing Physical Therapists for Older Adults: Development and Evaluation of an Arabic Educational Intervention on Ageism",
             speaker: "Dr. Maha Almarwani",
           },
           {
@@ -411,18 +411,17 @@ const AGENDA_DATA: AgendaDay[] = [
             title: "Integrated & Interdisciplinary Models of Care",
             speaker: (
               <div className="flex flex-col gap-2">
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="font-bold text-slate-800 ">
                   Moderator: Dr. Sara Almansouri
                 </span>
-                <span className="font-bold text-slate-700 dark:text-slate-300">
+                <span className="font-bold text-slate-700 ">
                   Panelists:
                 </span>
-                <ul className="text-sm space-y-1 list-none text-slate-600 dark:text-slate-400">
+                <ul className="text-sm space-y-1 list-none text-slate-600 ">
                   <li>1. Dr. Walid Ouanes</li>
                   <li>2. Dr. Tahany Alhamad</li>
                   <li>3. Dr. Mohammed Alhaizan</li>
                   <li>4. Dr. Faisal Al Mubarak</li>
-                  <li>5. Ms. Lamia AlFaleh</li>
                 </ul>
               </div>
             ),
@@ -582,13 +581,13 @@ const AGENDA_DATA: AgendaDay[] = [
               "The Future of Physiotherapy in Saudi Arabia: 2030 Vision Roadmap",
             speaker: (
               <div className="flex flex-col gap-2">
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="font-bold text-slate-800 ">
                   Moderator: Dr. Asma Alderaa
                 </span>
-                <span className="font-bold text-slate-700 dark:text-slate-300">
+                <span className="font-bold text-slate-700 ">
                   Panelists:
                 </span>
-                <ul className="text-sm space-y-1 list-none text-slate-600 dark:text-slate-400">
+                <ul className="text-sm space-y-1 list-none text-slate-600 ">
                   <li>1. Dr. Abdulfattah Alqahtani</li>
                   <li>2. Dr. Terrence McGee</li>
                   <li>3. Ms. Manar Almkirsh</li>
@@ -686,14 +685,14 @@ export const AgendaTab = () => {
             className={`relative overflow-hidden flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-bold flex-1 sm:flex-none ${
               activeDay === day.id
                 ? "bg-[#11517E] text-white shadow-xl shadow-blue-600/20 scale-105 border-[#11517E]"
-                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-[#f0f8f8] dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
+                : "bg-white text-slate-600 hover:bg-[#f0f8f8] :bg-slate-700 border border-slate-200 "
             }`}
           >
             <div
               className={`p-2 rounded-xl ${
                 activeDay === day.id
                   ? "bg-white/20 text-white"
-                  : "bg-[#f0f8f8] dark:bg-gray-700 text-[#11517E] dark:text-[#6FC4BC]"
+                  : "bg-[#f0f8f8] text-[#11517E] -[#6FC4BC]"
               }`}
             >
               {day.icon}
@@ -712,7 +711,7 @@ export const AgendaTab = () => {
       </div>
 
       {/* Sessions Container */}
-      <div className="bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+      <div className="bg-white border-2 border-slate-100 rounded-3xl overflow-hidden shadow-xl">
         {currentDayData?.sessions.map((session, sIdx) => {
           const hasTitle = !!session.title;
           const isExpanded = !hasTitle || expandedSessions.includes(session.id);
@@ -720,7 +719,7 @@ export const AgendaTab = () => {
           return (
             <div
               key={session.id}
-              className="border-b-2 border-slate-100 dark:border-slate-800 last:border-b-0"
+              className="border-b-2 border-slate-100 last:border-b-0"
             >
               {/* Session Header (if exists) */}
               {hasTitle && (
@@ -728,16 +727,16 @@ export const AgendaTab = () => {
                   onClick={() => toggleSession(session.id)}
                   className={`relative p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer transition-all duration-300 group overflow-hidden ${
                     isExpanded
-                      ? "bg-white dark:bg-slate-900"
-                      : "bg-gradient-to-r from-blue-100 via-indigo-100/80 to-blue-50 dark:from-slate-700 dark:via-blue-800/40 dark:to-slate-700 hover:from-blue-200 hover:via-indigo-200/80 hover:to-blue-100 dark:hover:from-slate-600 dark:hover:via-blue-700/40 dark:hover:to-slate-600"
+                      ? "bg-white "
+                      : "bg-gradient-to-r from-blue-100 via-#11517E]/10/80 to-blue-50 hover:from-blue-200 hover:via-#11517E]/20/80 hover:to-blue-100 :from-slate-600 :via-blue-700/40 :to-slate-600"
                   }`}
                 >
                   {/* Decorative Active Indicator (Instead of arrows) */}
                   <div
                     className={`absolute left-0 top-0 bottom-0 w-1.5 transition-all duration-300 ${
                       isExpanded
-                        ? "bg-[#11517E] dark:bg-[#11517E] shadow-[0_0_15px_rgba(37,99,235,0.5)]"
-                        : "bg-transparent group-hover:bg-blue-300 dark:group-hover:bg-[#11517E]"
+                        ? "bg-[#11517E] -[#11517E] shadow-[0_0_15px_rgba(37,99,235,0.5)]"
+                        : "bg-transparent group-hover:bg-blue-300 :bg-[#11517E]"
                     }`}
                   />
 
@@ -745,14 +744,14 @@ export const AgendaTab = () => {
                     <h4
                       className={`text-xl md:text-2xl font-black mb-2 leading-tight transition-colors duration-300 ${
                         isExpanded
-                          ? "text-[#11517E] dark:text-[#6FC4BC]"
-                          : "text-slate-900 dark:text-white group-hover:text-[#11517E] dark:group-hover:text-[#6FC4BC]"
+                          ? "text-[#11517E] -[#6FC4BC]"
+                          : "text-slate-900 group-hover:text-[#11517E] :text-[#6FC4BC]"
                       }`}
                     >
                       {session.title}
                     </h4>
                     {session.moderator && (
-                      <p className="text-[#11517E]/80 dark:text-[#6FC4BC]/80 font-bold flex items-center gap-2">
+                      <p className="text-[#11517E]/80 -[#6FC4BC]/80 font-bold flex items-center gap-2">
                         <User className="w-4 h-4" /> Moderator:{" "}
                         {session.moderator}
                       </p>
@@ -763,8 +762,8 @@ export const AgendaTab = () => {
                   <div
                     className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 border ${
                       isExpanded
-                        ? "bg-[#e0f2f1] dark:bg-blue-900/40 text-[#11517E] dark:text-[#6FC4BC] border-[#11517E]/20 dark:border-[#11517E]/50"
-                        : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 group-hover:border-[#6FC4BC]/50 dark:group-hover:text-[#11517E]"
+                        ? "bg-[#e0f2f1] text-[#11517E] -[#6FC4BC] border-[#11517E]/20 -[#11517E]/50"
+                        : "bg-white text-slate-500 border-slate-200 group-hover:border-[#6FC4BC]/50 :text-[#11517E]"
                     }`}
                   >
                     {isExpanded ? "Active Section" : "Click to View Details"}
@@ -782,9 +781,9 @@ export const AgendaTab = () => {
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="relative p-6 md:p-10 space-y-8 md:space-y-10 bg-white dark:bg-slate-900">
+                    <div className="relative p-6 md:p-10 space-y-8 md:space-y-10 bg-white ">
                       {/* Vertical Line */}
-                      <div className="absolute top-10 bottom-10 left-[2.25rem] md:left-[9.5rem] w-[2px] bg-gradient-to-b from-transparent via-slate-200 dark:via-slate-700 to-transparent z-0" />
+                      <div className="absolute top-10 bottom-10 left-[2.25rem] md:left-[9.5rem] w-[2px] bg-gradient-to-b from-transparent via-slate-200 to-transparent z-0" />
 
                       {session.items.map((item, idx) => {
                         const cfg = TYPE_STYLES[item.type || ""];
@@ -799,20 +798,20 @@ export const AgendaTab = () => {
                           >
                             {/* Time Column */}
                             <div className="md:w-28 shrink-0 flex items-start md:justify-end md:text-right pt-1 pl-12 md:pl-0">
-                              <div className="font-black text-lg md:text-base text-slate-700 dark:text-slate-300">
+                              <div className="font-black text-lg md:text-base text-slate-700 ">
                                 {item.time}
                               </div>
                             </div>
 
                             {/* Timeline Node */}
-                            <div className="absolute left-6 md:left-[9.5rem] top-2 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-white dark:border-slate-900 bg-[#11517E] shadow-sm transition-transform group-hover:scale-125 group-hover:bg-[#11517E] z-20" />
+                            <div className="absolute left-6 md:left-[9.5rem] top-2 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-white bg-[#11517E] shadow-sm transition-transform group-hover:scale-125 group-hover:bg-[#11517E] z-20" />
 
                             {/* Content Card */}
                             <div
                               className={`flex-1 rounded-2xl border transition-all duration-300 p-5 md:p-6 ${
                                 isBreak
-                                  ? "bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 opacity-90"
-                                  : "bg-white dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1"
+                                  ? "bg-slate-50 border-slate-100 opacity-90"
+                                  : "bg-white border-slate-200 hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1"
                               }`}
                             >
                               <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -826,7 +825,7 @@ export const AgendaTab = () => {
                               </div>
 
                               <div
-                                className={`text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-4 leading-relaxed ${
+                                className={`text-lg md:text-xl font-bold text-slate-900 mb-4 leading-relaxed ${
                                   isBreak ? "opacity-80" : ""
                                 }`}
                               >
@@ -834,11 +833,11 @@ export const AgendaTab = () => {
                               </div>
 
                               {item.speaker && item.speaker !== "—" && (
-                                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700/50">
-                                  <div className="text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-start gap-2">
+                                <div className="mt-4 pt-4 border-t border-slate-100 ">
+                                  <div className="text-sm font-semibold text-slate-600 flex items-start gap-2">
                                     {typeof item.speaker === "string" ? (
                                       <>
-                                        <div className="p-1.5 bg-[#f0f8f8] dark:bg-[#11517E]/30 rounded-lg text-[#11517E] shrink-0">
+                                        <div className="p-1.5 bg-[#f0f8f8] -[#11517E]/30 rounded-lg text-[#11517E] shrink-0">
                                           <User className="w-4 h-4" />
                                         </div>
                                         <span className="pt-1">
@@ -867,8 +866,8 @@ export const AgendaTab = () => {
 
         {/* End of Day Blocks */}
         {activeDay === 1 && (
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-8 md:p-12 text-center border-t border-blue-100 dark:border-blue-800/50">
-            <h4 className="text-3xl font-black text-blue-900 dark:text-blue-100 mb-4">
+          <div className="bg-gradient-to-br from-blue-50 to-#11517E]/5 p-8 md:p-12 text-center border-t border-blue-100 ">
+            <h4 className="text-3xl font-black text-blue-900 mb-4">
               End of Day 1
             </h4>
             <button
@@ -891,13 +890,13 @@ export const AgendaTab = () => {
         )}
 
         {activeDay === 2 && (
-          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-8 md:p-12 text-center border-t border-indigo-100 dark:border-indigo-800/50">
-            <h4 className="text-3xl font-black text-indigo-900 dark:text-indigo-100 mb-4">
+          <div className="bg-gradient-to-br from-#11517E]/5 to-purple-50 p-8 md:p-12 text-center border-t border-[#11517E]/10 ">
+            <h4 className="text-3xl font-black text-#11517E] mb-4">
               End of Conference
             </h4>
             <button
               onClick={handleScrollToReviews}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#6FC4BC] hover:bg-indigo-700 text-white font-bold transition-all shadow-lg shadow-indigo-600/30 hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#6FC4BC] hover:bg-#11517E] text-white font-bold transition-all shadow-lg shadow-#11517E]/30 hover:scale-105"
             >
               Evaluate the Conference <Star className="w-5 h-5 fill-current" />
             </button>
@@ -917,16 +916,16 @@ export const AgendaTab = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden"
+              className="bg-white border border-slate-200 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden"
             >
               <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#6FC4BC] to-emerald-400 z-10" />
-              <div className="w-20 h-20 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle className="w-10 h-10 text-green-500" />
               </div>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+              <h3 className="text-2xl font-black text-slate-900 mb-2">
                 Download Successful!
               </h3>
-              <p className="text-slate-500 dark:text-slate-400">
+              <p className="text-slate-500 ">
                 The Scientific Agenda has been successfully downloaded to your device.
               </p>
             </motion.div>

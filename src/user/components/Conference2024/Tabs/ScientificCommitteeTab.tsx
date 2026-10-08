@@ -127,7 +127,7 @@ const ROLE_CONFIG = {
   "chair": {
     label: "Committee Chair",
     bg: "from-amber-500 to-yellow-400",
-    badge: "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700",
+    badge: "bg-[#55AE47]/10 text-amber-800 border-amber-300 ",
     ring: "ring-4 ring-amber-400/50",
     icon: <Crown className="w-3.5 h-3.5" />,
     order: 0,
@@ -135,7 +135,7 @@ const ROLE_CONFIG = {
   "vice-chair": {
     label: "Vice Chair",
     bg: "from-[#11517E] to-[#6FC4BC]",
-    badge: "bg-[#e0f2f1] dark:bg-[#11517E]/30 text-[#11517E] dark:text-[#6FC4BC] border-[#6FC4BC]/50 dark:border-[#11517E]",
+    badge: "bg-[#e0f2f1] -[#11517E]/30 text-[#11517E] -[#6FC4BC] border-[#6FC4BC]/50 -[#11517E]",
     ring: "ring-4 ring-blue-400/50",
     icon: <Star className="w-3.5 h-3.5" />,
     order: 1,
@@ -143,15 +143,15 @@ const ROLE_CONFIG = {
   "member": {
     label: "Member",
     bg: "from-slate-500 to-gray-600",
-    badge: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700",
-    ring: "ring-2 ring-gray-200 dark:ring-gray-700",
+    badge: "bg-gray-100 text-gray-700 border-gray-200 ",
+    ring: "ring-2 ring-gray-200 ",
     icon: <Users className="w-3.5 h-3.5" />,
     order: 2,
   },
   "support": {
     label: "Coordination & Support",
     bg: "from-[#55AE47] to-teal-500",
-    badge: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700",
+    badge: "bg-emerald-100 text-emerald-800 border-emerald-300 ",
     ring: "ring-2 ring-emerald-300/50",
     icon: <Award className="w-3.5 h-3.5" />,
     order: 3,
@@ -222,7 +222,7 @@ export const ScientificCommitteeTab = () => {
         viewport={{ once: true }}
         whileHover={{ y: -4, scale: 1.01 }}
         onClick={() => setSelected(member)}
-        className={`relative bg-white dark:bg-gray-900 rounded-2xl border-2 border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all cursor-pointer overflow-hidden group ${
+        className={`relative bg-white rounded-2xl border-2 border-gray-100 shadow-sm hover:shadow-xl transition-all cursor-pointer overflow-hidden group ${
           featured ? "sm:col-span-2 lg:col-span-1" : ""
         }`}
       >
@@ -237,10 +237,10 @@ export const ScientificCommitteeTab = () => {
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border mb-2 ${cfg.badge}`}>
               {cfg.icon} {cfg.label}
             </span>
-            <h4 className="font-black text-gray-900 dark:text-white text-sm sm:text-base leading-tight mb-0.5">
+            <h4 className="font-black text-gray-900 text-sm sm:text-base leading-tight mb-0.5">
               {member.name}
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium leading-snug line-clamp-2">
+            <p className="text-xs text-gray-500 font-medium leading-snug line-clamp-2">
               {member.affiliation}
             </p>
           </div>
@@ -248,10 +248,10 @@ export const ScientificCommitteeTab = () => {
 
         {/* Bio teaser */}
         <div className="px-5 sm:px-6 pb-5">
-          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
+          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">
             {member.bio}
           </p>
-          <button className="mt-3 text-xs font-bold text-[#11517E] dark:text-[#6FC4BC] flex items-center gap-1 group-hover:gap-2 transition-all">
+          <button className="mt-3 text-xs font-bold text-[#11517E] -[#6FC4BC] flex items-center gap-1 group-hover:gap-2 transition-all">
             <BookOpen className="w-3.5 h-3.5" /> Full Bio
           </button>
         </div>
@@ -278,25 +278,25 @@ export const ScientificCommitteeTab = () => {
             viewport={{ once: true }}
             whileHover={{ y: -6 }}
             onClick={() => setSelected(chair)}
-            className="relative bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20 border-2 border-amber-200 dark:border-amber-800/50 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all cursor-pointer overflow-hidden group"
+            className="relative bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all cursor-pointer overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-amber-400/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="flex items-center gap-5 relative z-10">
               <Avatar member={chair} size="lg" />
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700 mb-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border bg-[#55AE47]/10 text-amber-800 border-amber-300 mb-3">
                   <Crown className="w-3.5 h-3.5" /> Committee Chair
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight mb-1">
+                <h3 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight mb-1">
                   {chair.name}
                 </h3>
-                <p className="text-sm text-amber-700 dark:text-amber-400 font-semibold">{chair.affiliation}</p>
+                <p className="text-sm text-[#55AE47] font-semibold">{chair.affiliation}</p>
               </div>
             </div>
-            <p className="mt-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3 relative z-10">
+            <p className="mt-4 text-sm text-gray-700 leading-relaxed line-clamp-3 relative z-10">
               {chair.bio}
             </p>
-            <button className="mt-3 text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">
+            <button className="mt-3 text-xs font-bold text-[#55AE47] flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">
               <BookOpen className="w-3.5 h-3.5" /> Read Full Bio
             </button>
           </motion.div>
@@ -310,25 +310,25 @@ export const ScientificCommitteeTab = () => {
             transition={{ delay: 0.1 }}
             whileHover={{ y: -6 }}
             onClick={() => setSelected(viceChair)}
-            className="relative bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 border-2 border-[#11517E]/20 dark:border-blue-800/50 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all cursor-pointer overflow-hidden group"
+            className="relative bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-[#11517E]/20 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all cursor-pointer overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="flex items-center gap-5 relative z-10">
               <Avatar member={viceChair} size="lg" />
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border bg-[#e0f2f1] dark:bg-blue-900/40 text-[#11517E] dark:text-[#6FC4BC] border-[#6FC4BC]/50 dark:border-[#11517E] mb-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border bg-[#e0f2f1] text-[#11517E] -[#6FC4BC] border-[#6FC4BC]/50 -[#11517E] mb-3">
                   <Star className="w-3.5 h-3.5" /> Vice Chair
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight mb-1">
+                <h3 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight mb-1">
                   {viceChair.name}
                 </h3>
-                <p className="text-sm text-[#11517E] dark:text-[#6FC4BC] font-semibold">{viceChair.affiliation}</p>
+                <p className="text-sm text-[#11517E] -[#6FC4BC] font-semibold">{viceChair.affiliation}</p>
               </div>
             </div>
-            <p className="mt-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3 relative z-10">
+            <p className="mt-4 text-sm text-gray-700 leading-relaxed line-clamp-3 relative z-10">
               {viceChair.bio}
             </p>
-            <button className="mt-3 text-xs font-bold text-[#11517E] dark:text-[#6FC4BC] flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">
+            <button className="mt-3 text-xs font-bold text-[#11517E] -[#6FC4BC] flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">
               <BookOpen className="w-3.5 h-3.5" /> Read Full Bio
             </button>
           </motion.div>
@@ -337,11 +337,11 @@ export const ScientificCommitteeTab = () => {
 
       {/* Divider */}
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-        <span className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+        <div className="flex-1 h-px bg-gray-200 " />
+        <span className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
           <Users className="w-4 h-4" /> Committee Members
         </span>
-        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
+        <div className="flex-1 h-px bg-gray-200 " />
       </div>
 
       {/* Members Grid */}
@@ -357,11 +357,11 @@ export const ScientificCommitteeTab = () => {
       {support.length > 0 && (
         <>
           <div className="flex items-center gap-4">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-            <span className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+            <div className="flex-1 h-px bg-gray-200 " />
+            <span className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
               <Award className="w-4 h-4" /> Coordination & Support
             </span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
+            <div className="flex-1 h-px bg-gray-200 " />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {support.map((m) => (
@@ -387,7 +387,7 @@ export const ScientificCommitteeTab = () => {
               exit={{ scale: 0.88, y: 30, opacity: 0 }}
               transition={{ type: "spring", stiffness: 280, damping: 26 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden max-h-[90vh] flex flex-col mx-2"
+              className="bg-white rounded-3xl w-full max-w-xl shadow-2xl border border-gray-100 overflow-hidden max-h-[90vh] flex flex-col mx-2"
             >
               {/* Modal top gradient header */}
               <div className={`h-2 w-full bg-gradient-to-r ${ROLE_CONFIG[selected.role].bg} shrink-0`} />
@@ -398,9 +398,9 @@ export const ScientificCommitteeTab = () => {
                   {/* Close button */}
                   <button
                     onClick={() => setSelected(null)}
-                    className="absolute top-5 right-5 p-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-10"
+                    className="absolute top-5 right-5 p-2 bg-gray-100 rounded-full hover:bg-gray-200 :bg-gray-700 transition-colors z-10"
                   >
-                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                    <X className="w-5 h-5 text-gray-600 " />
                   </button>
 
                   {/* Profile header */}
@@ -410,7 +410,7 @@ export const ScientificCommitteeTab = () => {
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border mb-3 ${ROLE_CONFIG[selected.role].badge}`}>
                         {ROLE_CONFIG[selected.role].icon} {ROLE_CONFIG[selected.role].label}
                       </span>
-                      <h3 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight mb-1">
+                      <h3 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight mb-1">
                         {selected.name}
                       </h3>
                       <p className={`text-sm font-semibold`}
@@ -425,10 +425,10 @@ export const ScientificCommitteeTab = () => {
 
                   {/* Full Bio */}
                   <div>
-                    <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3 flex items-center gap-2">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
                       <BookOpen className="w-3.5 h-3.5" /> Full Biography
                     </h4>
-                    <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line">
                       {selected.bio}
                     </p>
                   </div>

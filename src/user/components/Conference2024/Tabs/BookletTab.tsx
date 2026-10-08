@@ -50,21 +50,19 @@ const AccordionItem = ({
 }: AccordionItemProps) => {
   const [open, setOpen] = useState(defaultOpen);
   const colorMap: Record<string, string> = {
-    blue: "border-[#11517E] bg-[#f0f8f8] dark:bg-[#11517E]/20 text-[#11517E] dark:text-[#6FC4BC]",
-    green:
-      "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
-    amber:
-      "border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300",
-    purple:
-      "border-purple-500 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300",
-    rose: "border-rose-500 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300",
-    teal: "border-teal-500 bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300",
+    blue: "border-[#11517E] bg-[#11517E]/5 text-[#11517E]",
+    green: "border-[#55AE47] bg-[#55AE47]/5 text-[#55AE47]",
+    amber: "border-[#55AE47] bg-[#55AE47]/5 text-[#55AE47]",
+    purple: "border-[#6FC4BC] bg-[#6FC4BC]/5 text-[#6FC4BC]",
+    rose: "border-[#11517E] bg-[#11517E]/5 text-[#11517E]",
+    teal: "border-[#6FC4BC] bg-[#6FC4BC]/5 text-[#6FC4BC]",
+    indigo: "border-[#11517E] bg-[#11517E]/5 text-[#11517E]",
   };
   const accent = colorMap[accentColor] || colorMap["blue"];
 
   return (
     <div
-      className={`rounded-2xl border-2 overflow-hidden transition-shadow ${open ? "shadow-md" : "shadow-sm"} ${accent.split(" ")[0]} bg-white dark:bg-slate-900`}
+      className={`rounded-2xl border-2 overflow-hidden transition-shadow ${open ? "shadow-md" : "shadow-sm"} ${accent.split(" ")[0]} bg-white`}
     >
       <button
         onClick={() => setOpen(!open)}
@@ -72,11 +70,11 @@ const AccordionItem = ({
       >
         <div className={`p-2.5 rounded-xl shrink-0 ${accent}`}>{icon}</div>
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-slate-900 dark:text-white text-lg leading-tight">
+          <div className="font-bold text-[#11517E] text-lg leading-tight">
             {title}
           </div>
           {subtitle && (
-            <div className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <div className="text-sm text-[#11517E]/60 mt-0.5">
               {subtitle}
             </div>
           )}
@@ -84,7 +82,7 @@ const AccordionItem = ({
         <motion.div
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="shrink-0 text-slate-400"
+          className="shrink-0 text-[#6FC4BC]"
         >
           <ChevronDown className="w-5 h-5" />
         </motion.div>
@@ -99,7 +97,7 @@ const AccordionItem = ({
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 border-t border-slate-100 dark:border-slate-800 pt-4">
+            <div className="px-5 pb-5 border-t border-slate-100  pt-4">
               {children}
             </div>
           </motion.div>
@@ -114,11 +112,11 @@ interface InfoRowProps {
   value: React.ReactNode;
 }
 const InfoRow = ({ label, value }: InfoRowProps) => (
-  <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 py-3 border-b border-slate-100 dark:border-slate-800 last:border-0">
-    <span className="text-sm font-bold text-slate-500 dark:text-slate-400 sm:w-40 shrink-0">
+  <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 py-3 border-b border-[#11517E]/8 last:border-0">
+    <span className="text-sm font-bold text-[#11517E]/60 sm:w-40 shrink-0">
       {label}
     </span>
-    <span className="text-slate-800 dark:text-slate-200 font-medium flex-1">
+    <span className="text-slate-700 font-medium flex-1">
       {value}
     </span>
   </div>
@@ -129,7 +127,7 @@ const MapLink = ({ href, label }: { href: string; label: string }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-flex items-center gap-1.5 text-[#11517E] dark:text-[#6FC4BC] font-semibold hover:underline text-sm"
+    className="inline-flex items-center gap-1.5 text-[#11517E] font-semibold hover:underline text-sm"
   >
     <MapPin className="w-3.5 h-3.5 shrink-0" />
     {label}
@@ -252,24 +250,20 @@ export const BookletTab = () => {
   ];
 
   const colorMap: Record<string, string> = {
-    blue: "bg-[#e0f2f1] dark:bg-[#11517E]/30 text-[#11517E] dark:text-[#6FC4BC]",
-    indigo:
-      "bg-indigo-100 dark:bg-indigo-900/30 text-[#6FC4BC] dark:text-indigo-400",
-    green:
-      "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400",
-    amber:
-      "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400",
-    rose: "bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400",
-    purple:
-      "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400",
-    teal: "bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400",
+    blue: "bg-[#11517E]/10 text-[#11517E]",
+    indigo: "bg-[#11517E]/10 text-[#11517E]",
+    green: "bg-[#55AE47]/10 text-[#55AE47]",
+    amber: "bg-[#55AE47]/10 text-[#55AE47]",
+    rose: "bg-[#11517E]/10 text-[#11517E]",
+    purple: "bg-[#6FC4BC]/10 text-[#6FC4BC]",
+    teal: "bg-[#6FC4BC]/10 text-[#6FC4BC]",
   };
 
   return (
     <div className="w-full pb-16 space-y-8">
       {/* Section Title */}
       <div className="mb-2">
-        <h3 className="text-4xl font-black text-gray-900 dark:text-white mb-3">
+        <h3 className="text-4xl font-black text-[#11517E] mb-3">
           Visitor Information
         </h3>
         <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full"></div>
@@ -315,7 +309,7 @@ export const BookletTab = () => {
           accentColor="green"
         >
           <div className="space-y-4">
-            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p className="text-slate-700 leading-relaxed">
               Al Ahsa is a historic oasis in Saudi Arabia's Eastern Province. It
               is known for its palm groves, traditional markets, historic
               buildings, and Al Qarah Mountain. Al Ahsa Oasis has been a{" "}
@@ -350,10 +344,10 @@ export const BookletTab = () => {
                   {opt.icon}
                 </div>
                 <div>
-                  <div className="font-bold text-slate-900 dark:text-white mb-1">
+                  <div className="font-bold text-slate-900  mb-1">
                     {opt.label}
                   </div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <div className="text-sm text-slate-600 leading-relaxed">
                     {opt.desc}
                   </div>
                   {opt.link && (
@@ -372,9 +366,9 @@ export const BookletTab = () => {
                 </div>
               </div>
             ))}
-            <div className="flex items-start gap-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
+            <div className="flex items-start gap-3 bg-slate-50 /50 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
               <Car className="w-5 h-5 text-slate-500 mt-0.5 shrink-0" />
-              <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+              <span className="text-sm text-slate-600 font-medium">
                 <strong className="text-slate-800 dark:text-slate-200">
                   Within Al Ahsa:
                 </strong>{" "}
@@ -401,10 +395,10 @@ export const BookletTab = () => {
                   <Hotel className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-slate-900 dark:text-white">
+                  <div className="font-bold text-slate-900 ">
                     {hotel.name}
                   </div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 mb-2">
+                  <div className="text-sm text-slate-500 mt-0.5 mb-2">
                     {hotel.area}
                   </div>
                   <div className="flex items-center gap-3 flex-wrap">
@@ -435,7 +429,7 @@ export const BookletTab = () => {
             {places.map((place, i) => (
               <div
                 key={i}
-                className={`rounded-xl p-4 border ${colorMap[place.color] ? "border-current/10" : ""} bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700`}
+                className={`rounded-xl p-4 border ${colorMap[place.color] ? "border-current/10" : ""} bg-slate-50 /50 border-slate-100 dark:border-slate-700`}
               >
                 <div className="flex items-start gap-3">
                   <div
@@ -444,10 +438,10 @@ export const BookletTab = () => {
                     {place.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-slate-900 dark:text-white text-sm">
+                    <div className="font-bold text-slate-900  text-sm">
                       {place.name}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                    <div className="text-xs text-slate-500 mt-1 leading-relaxed">
                       {place.desc}
                     </div>
                     {place.link && (
@@ -499,7 +493,7 @@ export const BookletTab = () => {
             ].map((item, i) => (
               <div
                 key={i}
-                className={`flex items-start gap-4 rounded-xl p-4 border bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700`}
+                className={`flex items-start gap-4 rounded-xl p-4 border bg-slate-50 /50 border-slate-100 dark:border-slate-700`}
               >
                 <div
                   className={`p-2.5 rounded-xl shrink-0 ${colorMap[item.color] || colorMap["blue"]}`}
@@ -507,10 +501,10 @@ export const BookletTab = () => {
                   {item.icon}
                 </div>
                 <div>
-                  <div className="font-bold text-slate-900 dark:text-white mb-1">
+                  <div className="font-bold text-slate-900  mb-1">
                     {item.label}
                   </div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <div className="text-sm text-slate-600 leading-relaxed">
                     {item.text}
                   </div>
                 </div>

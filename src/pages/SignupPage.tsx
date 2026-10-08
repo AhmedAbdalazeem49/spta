@@ -44,6 +44,7 @@ type FormData = {
   workplace: string;
   region: string;
   city: string;
+  userType: string;
   password: string;
   confirmPassword: string;
 };
@@ -109,7 +110,18 @@ const RULES = {
     if (v.length > 255) return "النص طويل جداً";
     return null;
   },
-  classificationNumber: (_v: string) => null,
+  userType: (v: string) => {
+    if (!v) return "الرجاء تحديد نوع المستخدم";
+    return null;
+  },
+  classificationNumber: (v: string, formData?: FormData) => {
+    if (formData?.userType === "student") return null; // hidden for student
+    // For SignupPage, it's implied it's Saudi Arabia since regions are Saudi.
+    if (formData?.userType === "professional") {
+      if (!v.trim()) return "رقم التصنيف مطلوب للممارس الصحي";
+    }
+    return null;
+  },
   password: (v: string) => {
     if (!v) return "كلمة المرور مطلوبة";
     if (v.length < 8) return "كلمة المرور يجب أن تكون 8 أحرف على الأقل";
@@ -290,6 +302,7 @@ const SignupPage = () => {
     workplace: "",
     region: "",
     city: "",
+    userType: "",
     password: "",
     confirmPassword: "",
   });
@@ -363,6 +376,7 @@ const SignupPage = () => {
         employer: formData.workplace,
         region: formData.region,
         city: formData.city || null,
+        user_type: formData.userType,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
@@ -748,6 +762,28 @@ const SignupPage = () => {
 
                 <div className="grid md:grid-cols-2 gap-5">
                   <Field
+                    label="نوع المستخدم"
+                    labelEn="User Type"
+                    required
+                    error={errors.userType}
+                  >
+                    <select
+                      value={formData.userType}
+                      onChange={(e) => set("userType", e.target.value)}
+                      onBlur={() => setTouched((p) => ({ ...p, userType: true }))}
+                      className={`${inputBase} bg-white dark:bg-background ${
+                        errors.userType
+                          ? "border-red-400 bg-red-50/30 focus:ring-red-200 focus:border-red-400"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <option value="">اختر النوع / Select Type</option>
+                      <option value="student">طالب / Student</option>
+                      <option value="professional">ممارس صحي / Professional</option>
+                    </select>
+                  </Field>
+
+                  <Field
                     label="جهة العمل"
                     labelEn="Workplace / Employer"
                     required
@@ -814,10 +850,13 @@ const SignupPage = () => {
                     </div>
                   </Field>
 
+                  {formData.userType !== 'student' && (
                   <Field
                     label="رقم التصنيف"
                     labelEn="Classification Number"
-                    hint="اختياري — للممارسين الصحيين المسجلين في الهيئة السعودية"
+                    hint="للممارسين الصحيين - أدخل رقم التصنيف"
+                    error={errors.classificationNumber}
+                    required={formData.userType === 'professional'}
                   >
                     <div className="relative">
                       <ShieldCheck className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -826,12 +865,17 @@ const SignupPage = () => {
                         onChange={(e) =>
                           set("classificationNumber", e.target.value)
                         }
-                        className={`${inputBase} pr-10 border-border hover:border-primary/50`}
+                        className={`${inputBase} pr-10 ${
+                          errors.classificationNumber
+                            ? "border-red-400 bg-red-50/30 focus:ring-red-200 focus:border-red-400"
+                            : "border-border hover:border-primary/50"
+                        }`}
                         placeholder="e.g. 123456"
                         dir="ltr"
                       />
                     </div>
                   </Field>
+                  )}
                 </div>
               </div>
 

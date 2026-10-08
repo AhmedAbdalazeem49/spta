@@ -17,6 +17,7 @@ export default {
         sans: ['LamaSans', 'Inter', 'system-ui', 'sans-serif'],
         arabic: ['LamaSans', 'Noto Kufi Arabic', 'Cairo', 'sans-serif'],
         display: ['LamaSans', 'Inter', 'sans-serif'],
+        franklin: ['FranklinGothic', 'LamaSans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

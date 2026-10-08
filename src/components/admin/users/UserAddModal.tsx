@@ -427,6 +427,35 @@ export const UserAddModal = ({
                     )}
                 </div>
               </div>
+              
+              {/* User Type Select */}
+              <div className="space-y-1.5 mt-2">
+                <Label>{t("نوع المستخدم", "User Type")}</Label>
+                <div className="relative">
+                  <Select
+                    value={addForm.user_type}
+                    onValueChange={(val) =>
+                      setAddForm({ ...addForm, user_type: val })
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">
+                        <div className="flex items-center gap-2">
+                          <span>{t("طالب", "Student")}</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="professional">
+                        <div className="flex items-center gap-2">
+                          <span>{t("ممارس صحي", "Professional")}</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
               {/* Role Select */}
               <div className="space-y-1.5 mt-2">

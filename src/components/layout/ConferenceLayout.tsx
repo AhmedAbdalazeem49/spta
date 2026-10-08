@@ -19,7 +19,7 @@ const ConferenceLayout: React.FC<LayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-franklin">
       <ConferenceNavbar />
       <main className="flex-1">{children}</main>
       <Footer />

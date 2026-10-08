@@ -105,20 +105,20 @@ export const CertificatePreviewTab = () => {
     return (
       <div className="max-w-2xl mx-auto pb-10">
         <div className="text-center mb-8">
-          <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">
+          <h3 className="text-3xl font-extrabold text-gray-900 mb-3">
             {language === 'ar' ? 'تقييم المؤتمر' : 'Conference Evaluation'}
           </h3>
-          <p className="text-[#11517E] font-bold bg-[#f0f8f8] dark:bg-[#11517E]/30 p-3 rounded-lg inline-block border border-[#11517E]/20 dark:border-blue-800">
+          <p className="text-[#11517E] font-bold bg-[#f0f8f8] -[#11517E]/30 p-3 rounded-lg inline-block border border-[#11517E]/20 ">
             {language === 'ar' 
               ? 'التقييم مطلوب للحصول على شهادة حضور المؤتمر' 
               : 'Evaluation is required to obtain your attendance certificate'}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 space-y-8">
+        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
           {ratingFields.map((field) => (
             <div key={field.key} className="space-y-3">
-              <label className="text-lg font-bold text-gray-800 dark:text-gray-200">
+              <label className="text-lg font-bold text-gray-800 ">
                 {language === 'ar' ? field.labelAr : field.labelEn}
               </label>
               <div className="flex gap-2">
@@ -130,7 +130,7 @@ export const CertificatePreviewTab = () => {
                     className="focus:outline-none transition-transform hover:scale-110"
                   >
                     <Star 
-                      className={`w-8 h-8 ${(scores as any)[field.key] >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300 dark:text-gray-600"}`} 
+                      className={`w-8 h-8 ${(scores as any)[field.key] >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300 "}`} 
                     />
                   </button>
                 ))}
@@ -139,13 +139,13 @@ export const CertificatePreviewTab = () => {
           ))}
           
           <div className="space-y-3">
-            <label className="text-lg font-bold text-gray-800 dark:text-gray-200">
+            <label className="text-lg font-bold text-gray-800 ">
               {language === 'ar' ? 'ملاحظات إضافية (اختياري)' : 'Additional Feedback (Optional)'}
             </label>
             <textarea 
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:border-[#11517E] outline-none min-h-[120px]"
+              className="w-full p-4 rounded-xl border-2 border-gray-200 bg-gray-50 focus:border-[#11517E] outline-none min-h-[120px]"
               placeholder={language === 'ar' ? 'اكتب أي ملاحظات أو اقتراحات هنا...' : 'Write any feedback or suggestions...'}
             />
           </div>
@@ -153,7 +153,7 @@ export const CertificatePreviewTab = () => {
           <button
             onClick={submitEvaluation}
             disabled={isSubmitting}
-            className="w-full py-4 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 text-lg"
+            className="w-full py-4 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-blue-700 hover:to-#11517E] text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 text-lg"
           >
             {isSubmitting ? (language === 'ar' ? 'جاري الإرسال...' : 'Submitting...') : (language === 'ar' ? 'إرسال التقييم' : 'Submit Evaluation')}
           </button>
@@ -171,12 +171,12 @@ export const CertificatePreviewTab = () => {
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
-                className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative"
+                className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative"
               >
-                <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-5 text-green-500">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5 text-green-500">
                   <CheckCircle className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2 dark:text-white">
+                <h3 className="text-2xl font-bold mb-2 ">
                   {language === 'ar' ? 'شكراً لتقييمك!' : 'Thank you!'}
                 </h3>
                 <p className="text-gray-500 mb-6">
@@ -184,7 +184,7 @@ export const CertificatePreviewTab = () => {
                 </p>
                 <button
                   onClick={() => setShowSuccessModal(false)}
-                  className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-bold hover:bg-gray-800 transition-colors"
+                  className="w-full py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors"
                 >
                   {language === 'ar' ? 'عرض الشهادة' : 'View Certificate'}
                 </button>
@@ -201,7 +201,7 @@ export const CertificatePreviewTab = () => {
     <div className="flex flex-col xl:flex-row gap-10 h-full pb-10">
       <div className="w-full xl:w-1/3 flex flex-col gap-6">
         <div>
-          <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">
+          <h3 className="text-3xl font-extrabold text-gray-900 mb-3">
             {language === 'ar' ? 'معاينة الشهادة' : 'Certificate Preview'}
           </h3>
           <p className="text-gray-500 font-medium flex items-center gap-2">
@@ -211,7 +211,7 @@ export const CertificatePreviewTab = () => {
         </div>
         
         <div className="space-y-3">
-          <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 rtl:mr-1">
+          <label className="text-sm font-bold text-gray-700 ml-1 rtl:mr-1">
             {language === 'ar' ? 'الاسم الكامل' : 'Full Name'}
           </label>
           <input 
@@ -219,21 +219,21 @@ export const CertificatePreviewTab = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={language === 'ar' ? 'أحمد محمد' : 'John Doe'}
-            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-[#11517E]/20 focus:border-[#11517E] outline-none transition-all dark:text-white font-medium" 
+            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-100 bg-gray-50/50 focus:bg-white :bg-gray-900 focus:ring-4 focus:ring-[#11517E]/20 focus:border-[#11517E] outline-none transition-all font-medium" 
           />
         </div>
 
         <button 
           onClick={() => setIsFullscreen(true)}
-          className="w-full mt-auto py-4 px-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-[#11517E] dark:hover:bg-[#11517E] rounded-2xl font-bold flex items-center justify-center gap-3 transition-colors shadow-lg"
+          className="w-full mt-auto py-4 px-4 bg-gray-900 text-white hover:bg-[#11517E] :bg-[#11517E] rounded-2xl font-bold flex items-center justify-center gap-3 transition-colors shadow-lg"
         >
           <Maximize2 className="w-5 h-5" />
           {language === 'ar' ? 'عرض في شاشة أكبر' : 'View in full screen'}
         </button>
       </div>
 
-      <div className="w-full xl:w-2/3 bg-gray-50 dark:bg-gray-800/30 rounded-[2.5rem] p-4 md:p-8 flex items-center justify-center min-h-[500px] border border-gray-100 dark:border-gray-700 overflow-x-auto relative">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+      <div className="w-full xl:w-2/3 bg-gray-50 rounded-[2.5rem] p-4 md:p-8 flex items-center justify-center min-h-[500px] border border-gray-100 overflow-x-auto relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_1px,transparent_1px)] -[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
         
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}

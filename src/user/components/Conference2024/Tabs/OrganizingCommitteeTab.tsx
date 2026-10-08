@@ -9,7 +9,7 @@ import imgAbdulrahman from "@/assets/organization-committe/Mr. Abdulrahman Alkus
 import imgAlghanim from "@/assets/organization-committe/Mr. Ahmed Alghanim.jpg";
 import imgMohammadAlIbrahim from "@/assets/organization-committe/Mr. Mohammad AlIbrahim.jpg";
 import imgDalia from "@/assets/organization-committe/Ms. Dalia Binshaye.jpg";
-import imgSarah from "@/assets/organization-committe/Ms. Sarah Alwuthayh.jpg";
+// import imgSarah from "@/assets/organization-committe/Ms. Sarah Alwuthayh.jpg";
 import imgShouq from "@/assets/organization-committe/Ms. Shouq Alharbi.jpg";
 import imgSujud from "@/assets/organization-committe/Ms. Sujud Al-Thanayyan.jpg";
 import imgHiader from "@/assets/organization-committe/hiader-elyame.jpeg";
@@ -75,13 +75,13 @@ export const OrganizingCommitteeTab = () => {
       isFemale: true,
       image: null,
     },
-    {
-      id: 9,
-      name: "Ms. Sarah Alwuthayh",
-      role: "Media Team",
-      initials: "SA",
-      image: imgSarah,
-    },
+    // {
+    //   id: 9,
+    //   name: "Ms. Sarah Alwuthayh",
+    //   role: "Media Team",
+    //   initials: "SA",
+    //   image: imgSarah,
+    // },
     {
       id: 10,
       name: "Dr. Abdullah Alfarhan",
@@ -114,9 +114,9 @@ export const OrganizingCommitteeTab = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex flex-col items-center bg-gray-50 dark:bg-gray-800/50 p-6 sm:p-8 rounded-3xl hover:bg-[#f0f8f8] dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-blue-100 dark:hover:border-gray-700 shadow-sm"
+            className="flex flex-col items-center bg-gray-50 p-6 sm:p-8 rounded-3xl hover:bg-[#f0f8f8] :bg-gray-800 transition-colors border border-transparent hover:border-blue-100 :border-gray-700 shadow-sm"
           >
-            <div className="w-24 h-24 mb-4 bg-gradient-to-br from-[#11517E] to-[#6FC4BC] rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-white dark:border-gray-800">
+            <div className="w-24 h-24 mb-4 bg-gradient-to-br from-[#11517E] to-[#6FC4BC] rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-white ">
               {member.image ? (
                 <img
                   src={member.image}
@@ -131,10 +131,10 @@ export const OrganizingCommitteeTab = () => {
                 </span>
               )}
             </div>
-            <h4 className="font-bold text-base text-gray-800 dark:text-white text-center">
+            <h4 className="font-bold text-base text-gray-800 text-center">
               {member.name}
             </h4>
-            <p className="text-sm text-[#11517E] dark:text-[#6FC4BC] font-medium text-center mt-1">
+            <p className="text-sm text-[#11517E] -[#6FC4BC] font-medium text-center mt-1">
               {member.role}
             </p>
           </motion.div>

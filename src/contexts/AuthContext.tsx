@@ -71,6 +71,7 @@ export interface RegisterData {
   sub_specialization?: string;
   employer?: string;
   promo_code?: string;
+  region?:string;
   password: string;
   password_confirmation: string;
 }

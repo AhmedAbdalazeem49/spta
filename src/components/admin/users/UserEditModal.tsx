@@ -223,6 +223,37 @@ export const UserEditModal = ({
             />
           </div>
 
+          {/* User Type Select */}
+          <div className="sm:col-span-2">
+            <div className="space-y-1.5">
+              <Label>{t("نوع المستخدم", "User Type")}</Label>
+              <div className="relative">
+                <Select
+                  value={editForm.user_type}
+                  onValueChange={(val) =>
+                    setEditForm({ ...editForm, user_type: val })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="student">
+                      <div className="flex items-center gap-2">
+                        <span>{t("طالب", "Student")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="professional">
+                      <div className="flex items-center gap-2">
+                        <span>{t("ممارس صحي", "Professional")}</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
           {/* Role Select */}
           <div className="sm:col-span-2">
             <div className="space-y-1.5">
