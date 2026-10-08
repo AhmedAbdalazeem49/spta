@@ -533,6 +533,7 @@ export const RegistrationTab = () => {
   const [promoDiscount, setPromoDiscount] = useState<{
     type: string;
     value: number;
+    applies_to: string;
   } | null>(null);
   const [isValidatingPromo, setIsValidatingPromo] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -729,12 +730,13 @@ export const RegistrationTab = () => {
     try {
       const res = await api.post("/promo-codes/validate", {
         code: promoCode,
-        applies_to: "conference",
+        applies_to: ["conference", "workshop"],
       });
       if (res.data.valid) {
         setPromoDiscount({
-          type: res.data.type,
-          value: res.data.discount_percentage,
+          type: res.data.data.type,
+          value: res.data.data.discount_percentage,
+          applies_to: res.data.data.applies_to,
         });
         toast.success("Promo code applied!");
       } else {
@@ -757,17 +759,30 @@ export const RegistrationTab = () => {
 
   const calculateTotal = () => {
     if (!priceData) return 0;
-    let total = hasRegistration ? 0 : priceData.conference_price || 0;
+    
+    let confTotal = hasRegistration ? 0 : priceData.conference_price || 0;
+    let workshopTotal = 0;
+    
     if (selectedMorning && !existingWorkshops.includes(selectedMorning))
-      total += priceData.workshop_price || 0;
+      workshopTotal += priceData.workshop_price || 0;
     if (selectedEvening && !existingWorkshops.includes(selectedEvening))
-      total += priceData.workshop_price || 0;
+      workshopTotal += priceData.workshop_price || 0;
+
+    let total = confTotal + workshopTotal;
 
     if (promoDiscount) {
-      if (promoDiscount.type === "free") total = 0;
-      else if (promoDiscount.type === "discount")
-        total -= total * (promoDiscount.value / 100);
+      let discountAmount = 0;
+      if (promoDiscount.applies_to === "all") {
+        discountAmount = promoDiscount.type === "free" ? total : total * (promoDiscount.value / 100);
+      } else if (promoDiscount.applies_to === "conference") {
+        discountAmount = promoDiscount.type === "free" ? confTotal : confTotal * (promoDiscount.value / 100);
+      } else if (promoDiscount.applies_to === "workshop") {
+        discountAmount = promoDiscount.type === "free" ? workshopTotal : workshopTotal * (promoDiscount.value / 100);
+      }
+      
+      total -= discountAmount;
     }
+    
     return Math.max(0, total);
   };
 
@@ -885,13 +900,13 @@ export const RegistrationTab = () => {
               <motion.div
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
-                className="p-5 bg-gradient-to-r from-#55AE47] to-#55AE47] text-white rounded-2xl font-bold text-center shadow-lg shadow-#55AE47]/20"
+                className="p-5 bg-gradient-to-r from-[#55AE47] to-[#55AE47] text-white rounded-2xl font-bold text-center shadow-lg shadow-[#55AE47]/20"
               >
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Sparkles className="w-5 h-5 text-amber-200" />
                   <span className="text-lg">50% off for SPTA Members</span>
                 </div>
-                <span className="text-sm font-medium text-#55AE47]/10">
+                <span className="text-sm font-medium text-white">
                   (Applied to Conference Registration Only)
                 </span>
               </motion.div>
@@ -1133,7 +1148,7 @@ export const RegistrationTab = () => {
                 </div>
               </Field>
 
-              <Field label="Full Name (Arabic)" error={errors.fullNameAr}>
+              <Field label="Full Name (Arabic)" error={errors.fullNameAr} required>
                 <div className="relative">
                   <User className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -1145,7 +1160,7 @@ export const RegistrationTab = () => {
                     className={`${inputBase} pr-10 ${
                       errors.fullNameAr ? "border-red-400 bg-red-50" : ""
                     }`}
-                    placeholder="Full name in Arabic (optional)"
+                    placeholder="Full name in Arabic"
                     dir="rtl"
                   />
                 </div>
@@ -1545,6 +1560,52 @@ export const RegistrationTab = () => {
   const renderRegister = () => {
     const isNotMember =
       priceData?.is_member === false || user?.is_member === false;
+    const hasRegistration = priceData?.my_registration?.status === "paid";
+    const existingWorkshops = priceData?.my_registration?.selected_workshops || [];
+
+    if (hasRegistration && existingWorkshops.length >= 2) {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="w-full max-w-3xl mx-auto mt-8 pb-16 text-center"
+        >
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+            <div className="bg-gradient-to-br from-[#11517E] to-[#6FC4BC] py-16 px-8 relative overflow-hidden">
+               <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+               <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl relative z-10 backdrop-blur-sm border border-white/20">
+                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                   <Check className="w-8 h-8 text-[#55AE47]" strokeWidth={3} />
+                 </div>
+               </div>
+               <h2 className="text-3xl md:text-4xl font-black text-white relative z-10 mb-4 drop-shadow-md">
+                 Registration Complete!
+               </h2>
+               <p className="text-white/90 mt-4 text-lg max-w-lg mx-auto relative z-10 font-medium">
+                 You are fully registered for the conference and both your morning and afternoon workshops are successfully booked.
+               </p>
+               <p className="text-white/80 mt-2 text-base max-w-lg mx-auto relative z-10">
+                 We look forward to welcoming you to Al-Ahsa!
+               </p>
+            </div>
+            
+            <div className="p-10 bg-slate-50">
+               <p className="text-slate-600 mb-8 text-lg font-medium">
+                 You can view your ticket, invoice, and update your information directly from your personal profile.
+               </p>
+               
+               <Link 
+                 to="/profile" 
+                 className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#11517E] hover:bg-[#6FC4BC] text-white rounded-xl font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg shadow-md"
+               >
+                 <User className="w-6 h-6" /> Go to My Profile
+               </Link>
+            </div>
+          </div>
+        </motion.div>
+      );
+    }
 
     return (
       <motion.div

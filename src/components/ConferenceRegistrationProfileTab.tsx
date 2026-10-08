@@ -27,7 +27,7 @@ export default function ConferenceRegistrationProfileTab() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-32">
-        <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#11517E]" />
       </div>
     );
   }
@@ -37,19 +37,19 @@ export default function ConferenceRegistrationProfileTab() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-slate-900 rounded-[2rem] p-10 border border-slate-100 dark:border-slate-800 shadow-2xl text-center relative overflow-hidden"
+        className="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-2xl text-center relative overflow-hidden"
       >
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-500" />
-        <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC]" />
+        <div className="w-24 h-24 bg-[#11517E]/5 text-[#11517E] rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
           <Ticket className="w-12 h-12" />
         </div>
-        <h3 className="text-3xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-500 dark:from-white dark:to-slate-400">
+        <h3 className="text-3xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-500 ">
           {t("لست مسجلاً بعد", "Not registered yet")}
         </h3>
-        <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto text-lg">
+        <p className="text-slate-500 mb-8 max-w-md mx-auto text-lg">
           {t("لم تقم بالتسجيل في مؤتمر 2026 بعد.", "You have not registered for the 2026 conference yet.")}
         </p>
-        <Link to="/conference-2026" className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold px-8 py-4 rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <Link to="/conference-2026" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] text-white font-bold px-8 py-4 rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
           {t("سجل الآن", "Register Now")} <ExternalLink className="w-5 h-5" />
         </Link>
       </motion.div>
@@ -70,18 +70,18 @@ export default function ConferenceRegistrationProfileTab() {
   };
 
   const workshops = registration.selected_workshops || [];
-  const cmeHours = 13 + (workshops.length * 20);
+  const cmeHours = 13 + (workshops.length * 4);
 
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden relative"
+      className="bg-white rounded-[2rem] border border-slate-100 shadow-2xl overflow-hidden relative"
     >
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 md:p-12 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#11517E] to-[#6FC4BC] p-8 md:p-12 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-400 opacity-20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-[#6FC4BC] opacity-20 rounded-full blur-3xl"></div>
         
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
@@ -93,15 +93,15 @@ export default function ConferenceRegistrationProfileTab() {
                 <Calendar className="w-3.5 h-3.5" /> 12-14 Nov 2026
               </span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-2 leading-tight">6th Saudi International Physiotherapy Conference</h2>
-            <div className="flex items-center gap-2 text-blue-100 mt-4">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-2 leading-tight">the 6th Saudi International Physiotherapy Conference</h2>
+            <div className="flex items-center gap-2 text-white/80 mt-4">
               <MapPin className="w-4 h-4" />
               <span>Almoosa Rehabilitation Hospital, Al Ahsa</span>
             </div>
           </div>
           <div className="shrink-0 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-md text-center">
             <div className="text-5xl font-black mb-1">{cmeHours}</div>
-            <div className="text-sm font-medium text-blue-100 uppercase tracking-widest">Total CME Hours</div>
+            <div className="text-sm font-medium text-white/80 uppercase tracking-widest">Total CME Hours</div>
           </div>
         </div>
       </div>
@@ -110,25 +110,25 @@ export default function ConferenceRegistrationProfileTab() {
         
         {/* Status Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-5">
-            <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${registration.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}`}>
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex items-center gap-5">
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${registration.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-[#55AE47]/20 text-[#55AE47]'}`}>
               {registration.status === 'paid' ? <CheckCircle className="w-7 h-7" /> : <Clock className="w-7 h-7" />}
             </div>
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">{t("حالة الدفع", "Payment Status")}</p>
-              <p className={`text-xl font-bold ${registration.status === 'paid' ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>
+              <p className="text-sm text-slate-500 font-medium mb-1">{t("حالة الدفع", "Payment Status")}</p>
+              <p className={`text-xl font-bold ${registration.status === 'paid' ? 'text-green-600 ' : 'text-[#55AE47] '}`}>
                 {registration.status === 'paid' ? t("تم الدفع بنجاح", "Paid Successfully") : t("قيد الانتظار", "Pending Payment")}
               </p>
             </div>
           </div>
           
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-5">
-            <div className="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex items-center gap-5">
+            <div className="w-14 h-14 rounded-full bg-[#11517E]/10 text-[#11517E] flex items-center justify-center shrink-0">
               <CreditCard className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">{t("المبلغ الإجمالي", "Total Amount")}</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">
+              <p className="text-sm text-slate-500 font-medium mb-1">{t("المبلغ الإجمالي", "Total Amount")}</p>
+              <p className="text-2xl font-bold text-slate-900 ">
                 {registration.amount} <span className="text-sm font-medium text-slate-500">SAR</span>
               </p>
             </div>
@@ -138,10 +138,10 @@ export default function ConferenceRegistrationProfileTab() {
         {/* Workshops Section */}
         <div>
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#11517E]/10 text-[#11517E] rounded-xl flex items-center justify-center">
               <Activity className="w-5 h-5" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+            <h3 className="text-2xl font-bold text-slate-900 ">
               {t("ورش العمل المسجلة", "Registered Workshops")}
             </h3>
           </div>
@@ -159,45 +159,45 @@ export default function ConferenceRegistrationProfileTab() {
                     key={w}
                     className={`relative overflow-hidden rounded-2xl border-2 p-6 shadow-sm hover:shadow-lg transition-all duration-300 group ${
                       isMorning
-                        ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/40'
-                        : 'bg-indigo-50 dark:bg-indigo-900/10 border-indigo-200 dark:border-indigo-800/40'
+                        ? 'bg-[#55AE47]/10 border-[#55AE47]/20 '
+                        : 'bg-[#6FC4BC]/10 border-[#6FC4BC]/20 '
                     }`}
                   >
                     {/* Background glow */}
-                    <div className={`absolute -top-6 -right-6 w-24 h-24 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity ${isMorning ? 'bg-amber-300' : 'bg-indigo-400'}`} />
+                    <div className={`absolute -top-6 -right-6 w-24 h-24 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity ${isMorning ? 'bg-[#55AE47]' : 'bg-[#6FC4BC]'}`} />
 
                     {/* Top badges */}
                     <div className="flex items-center justify-between mb-4">
                       <span className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${
                         isMorning
-                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-800/30 dark:text-amber-300'
-                          : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-800/30 dark:text-indigo-300'
+                          ? 'bg-[#55AE47]/20 text-[#55AE47] '
+                          : 'bg-[#11517E]/10 text-[#11517E] '
                       }`}>
                         <Clock className="w-3 h-3" />
                         {info?.slot ?? w}
                       </span>
-                      <span className="flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 px-2.5 py-1 rounded-full">
-                        <Award className="w-3 h-3" /> +20 CME
+                      <span className="flex items-center gap-1 text-xs font-bold text-[#11517E] bg-[#6FC4BC]/20 px-2.5 py-1 rounded-full">
+                        <Award className="w-3 h-3" /> 4 CME
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h4 className={`font-extrabold text-base mb-2 leading-snug ${isMorning ? 'text-amber-900 dark:text-amber-200' : 'text-indigo-900 dark:text-indigo-200'}`}>
+                    <h4 className={`font-extrabold text-base mb-2 leading-snug ${isMorning ? 'text-[#11517E] ' : 'text-[#11517E] '}`}>
                       {info?.title ?? `Workshop ${w.toUpperCase()}`}
                     </h4>
 
                     {/* Speaker */}
                     <div className="flex items-center gap-2 mt-3">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-black text-white ${isMorning ? 'bg-amber-500' : 'bg-indigo-500'}`}>
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-black text-white ${isMorning ? 'bg-[#55AE47]/100' : 'bg-[#6FC4BC]/100'}`}>
                         {info?.speaker?.[0] ?? '?'}
                       </div>
-                      <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
+                      <span className="text-sm font-semibold text-slate-600 ">
                         {info?.speaker ?? 'Speaker'}
                       </span>
                     </div>
 
                     {/* Time label */}
-                    <div className={`mt-4 pt-3 border-t text-xs font-bold uppercase tracking-wider ${isMorning ? 'border-amber-200/60 text-amber-600 dark:text-amber-400' : 'border-indigo-200/60 text-indigo-600 dark:text-indigo-400'}`}>
+                    <div className={`mt-4 pt-3 border-t text-xs font-bold uppercase tracking-wider ${isMorning ? 'border-[#55AE47]/20/60 text-[#55AE47] ' : 'border-[#6FC4BC]/20/60 text-[#11517E] '}`}>
                       {isMorning ? '☀ Morning Session — Saturday, 14 Nov' : '🌙 Afternoon Session — Saturday, 14 Nov'}
                     </div>
                   </motion.div>
@@ -205,26 +205,26 @@ export default function ConferenceRegistrationProfileTab() {
               })}
             </div>
                       ) : (
-              <div className="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/40 dark:to-blue-900/40 rounded-3xl p-8 border border-blue-100 dark:border-blue-800/50 text-center flex flex-col items-center justify-center">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="relative overflow-hidden bg-gradient-to-br from-[#11517E]/5 to-[#6FC4BC]/5 rounded-3xl p-8 border border-[#11517E]/10 text-center flex flex-col items-center justify-center">
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#6FC4BC]/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#6FC4BC]/10 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-full shadow-sm mb-4 relative z-10">
-                  <Sparkles className="w-8 h-8 text-blue-500" />
+                <div className="bg-white p-4 rounded-full shadow-sm mb-4 relative z-10">
+                  <Sparkles className="w-8 h-8 text-[#11517E]" />
                 </div>
                 
-                <h4 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2 relative z-10">
+                <h4 className="text-xl md:text-2xl font-black text-slate-800 mb-2 relative z-10">
                   {t("عزز تجربتك في المؤتمر!", "Enhance Your Conference Experience!")}
                 </h4>
                 
-                <p className="text-slate-600 dark:text-slate-300 max-w-lg mx-auto mb-6 relative z-10">
+                <p className="text-slate-600 max-w-lg mx-auto mb-6 relative z-10">
                   {t(
                     "لم تقم بالتسجيل في أي ورش عمل بعد. أضف ورش عمل متخصصة الآن واحصل على المزيد من الساعات المعتمدة (CME).", 
                     "You haven't registered for any workshops yet. Add specialized workshops now to gain more CME hours and practical skills."
                   )}
                 </p>
 
-                <Link to="/conference-2026?tab=workshops" className="relative z-10 group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 hover:-translate-y-1">
+                <Link to="/conference-2026?tab=workshops" className="relative z-10 group inline-flex items-center gap-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] text-white font-bold px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-[#11517E]/30 transition-all duration-300 hover:-translate-y-1">
                   {t("استعرض ورش العمل", "Explore Workshops")}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -233,8 +233,8 @@ export default function ConferenceRegistrationProfileTab() {
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-center">
-          <Link to="/conference-2026" className="group flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-full font-bold hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <div className="pt-8 border-t border-slate-100 flex justify-center">
+          <Link to="/conference-2026" className="group flex items-center gap-3 bg-[#11517E] text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition-all duration-300 hover:scale-105">
             {t("زيارة صفحة المؤتمر", "Visit Full Conference Page")} 
             <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>

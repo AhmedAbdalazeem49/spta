@@ -586,7 +586,7 @@ export const SpeakersTab = () => {
                       selectedSpeaker.org) && (
                       <div className="font-medium mb-4 space-y-0.5">
                         {selectedSpeaker.role && (
-                          <span className="block text-[#55AE47] font-semibold">
+                          <span className="block text-slate-700 font-semibold">
                             {selectedSpeaker.role}
                           </span>
                         )}
@@ -613,7 +613,7 @@ export const SpeakersTab = () => {
                       </div>
                     )}
 
-                    {/* Credentials */}
+                    {/* Credentials
                     {selectedSpeaker.credentials && (
                       <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-2">
                         {selectedSpeaker.credentials
@@ -627,37 +627,39 @@ export const SpeakersTab = () => {
                             </span>
                           ))}
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
 
-                {/* Bio section */}
-                <div className="px-8 sm:px-10 py-8">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-1 h-5 bg-[#55AE47] rounded-full"></div>
-                    <h4 className="text-xs font-black uppercase tracking-widest text-[#11517E]">
-                      Full Biography
-                    </h4>
+                {/* Bio section — hidden for Moderators */}
+                {activeTab !== "moderators" && (
+                  <div className="px-8 sm:px-10 py-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-1 h-5 bg-[#55AE47] rounded-full"></div>
+                      <h4 className="text-xs font-black uppercase tracking-widest text-[#11517E]">
+                        Full Biography
+                      </h4>
+                    </div>
+                    <div className="text-slate-600 leading-relaxed">
+                      {selectedSpeaker.bio ? (
+                        selectedSpeaker.bio
+                          .split("\n")
+                          .map((paragraph: string, idx: number) => (
+                            <p
+                              key={idx}
+                              className="mb-4 last:mb-0 leading-relaxed text-sm sm:text-base"
+                            >
+                              {paragraph}
+                            </p>
+                          ))
+                      ) : (
+                        <p className="italic text-slate-400">
+                          No biography available.
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-slate-600 leading-relaxed">
-                    {selectedSpeaker.bio ? (
-                      selectedSpeaker.bio
-                        .split("\n")
-                        .map((paragraph: string, idx: number) => (
-                          <p
-                            key={idx}
-                            className="mb-4 last:mb-0 leading-relaxed text-sm sm:text-base"
-                          >
-                            {paragraph}
-                          </p>
-                        ))
-                    ) : (
-                      <p className="italic text-slate-400">
-                        No biography available.
-                      </p>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
             </motion.div>
           </motion.div>
