@@ -24,7 +24,7 @@ const ConferenceSubmissionBanner = () => {
         {/* Banner Image */}
         <img
           src={ConferenceBanner}
-          alt="6th Saudi International Physiotherapy Conference"
+          alt="the 6th Saudi International Physiotherapy Conference"
           className="w-full object-cover"
         />
 

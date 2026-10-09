@@ -1,12 +1,13 @@
+import agendaPdf from "@/assets/agenda.pdf";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
-  Download,
-  CheckCircle,
   BookOpen,
+  CheckCircle,
   Clock,
   Coffee,
+  Download,
   Mic2,
   PlayCircle,
   ShieldCheck,
@@ -18,7 +19,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import agendaPdf from "@/assets/agenda.pdf";
 
 type ItemType =
   | "ceremony"
@@ -81,7 +81,6 @@ const TYPE_STYLES: Record<
     border: "border-purple-400 ",
     icon: <Trophy className="w-4 h-4" />,
     label: "Ceremony",
-
   },
   keynote: {
     color: "text-[#11517E] -[#6FC4BC]",
@@ -89,7 +88,6 @@ const TYPE_STYLES: Record<
     border: "border-[#11517E] -[#11517E]",
     icon: <Mic2 className="w-4 h-4" />,
     label: "Keynote",
-
   },
   "Focused Symposium": {
     color: "text-[#11517E] ",
@@ -239,9 +237,7 @@ const AGENDA_DATA: AgendaDay[] = [
                 <span className="font-bold text-slate-800 ">
                   Moderator: Dr. Mishal Aldaihan
                 </span>
-                <span className="font-bold text-slate-700 ">
-                  Panelists:
-                </span>
+                <span className="font-bold text-slate-700 ">Panelists:</span>
                 <ol className="text-sm space-y-1 list-decimal list-inside text-slate-600 ">
                   <li>Dr. Faisal Aldahmashi</li>
                   <li>Dr. Hanan Alsaif</li>
@@ -414,9 +410,7 @@ const AGENDA_DATA: AgendaDay[] = [
                 <span className="font-bold text-slate-800 ">
                   Moderator: Dr. Sara Almansouri
                 </span>
-                <span className="font-bold text-slate-700 ">
-                  Panelists:
-                </span>
+                <span className="font-bold text-slate-700 ">Panelists:</span>
                 <ul className="text-sm space-y-1 list-none text-slate-600 ">
                   <li>1. Dr. Walid Ouanes</li>
                   <li>2. Dr. Tahany Alhamad</li>
@@ -584,9 +578,7 @@ const AGENDA_DATA: AgendaDay[] = [
                 <span className="font-bold text-slate-800 ">
                   Moderator: Dr. Asma Alderaa
                 </span>
-                <span className="font-bold text-slate-700 ">
-                  Panelists:
-                </span>
+                <span className="font-bold text-slate-700 ">Panelists:</span>
                 <ul className="text-sm space-y-1 list-none text-slate-600 ">
                   <li>1. Dr. Abdulfattah Alqahtani</li>
                   <li>2. Dr. Terrence McGee</li>
@@ -654,8 +646,7 @@ export const AgendaTab = () => {
           </h3>
           <div className="w-20 h-1.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] rounded-full mb-2"></div>
           <p className="text-[#11517E] font-bold text-lg mb-1">
-            November 12-14, 2026 | Sheikh Hussein bin Abdulrahman Al-Mousa
-            Conference Hall
+            November 12-14, 2026 | Conference Hall
           </p>
         </div>
         <button
@@ -672,7 +663,9 @@ export const AgendaTab = () => {
           className="inline-flex items-center gap-2 px-6 py-3 bg-[#6FC4BC] text-white rounded-xl font-bold hover:bg-[#5dafa7] transition-all shadow-lg shadow-[#6FC4BC]/30 hover:scale-105"
         >
           <Download className="w-5 h-5" />
-          {language === "ar" ? "تحميل الجدول العلمي" : "Download Scientific Agenda"}
+          {language === "ar"
+            ? "تحميل الجدول العلمي"
+            : "Download Scientific Agenda"}
         </button>
       </div>
 
@@ -926,7 +919,8 @@ export const AgendaTab = () => {
                 Download Successful!
               </h3>
               <p className="text-slate-500 ">
-                The Scientific Agenda has been successfully downloaded to your device.
+                The Scientific Agenda has been successfully downloaded to your
+                device.
               </p>
             </motion.div>
           </motion.div>

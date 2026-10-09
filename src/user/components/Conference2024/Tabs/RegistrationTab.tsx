@@ -953,7 +953,7 @@ export const RegistrationTab = () => {
           <Sparkles className="w-10 h-10" />
         </div>
         <h2 className="text-3xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#11517E] to-[#6FC4BC]">
-          6th Saudi International Physiotherapy Conference
+         the 6th Saudi International Physiotherapy Conference
         </h2>
         <p className="text-slate-600 mb-8 font-medium">
           sign in to register for the conference.
@@ -1673,7 +1673,7 @@ export const RegistrationTab = () => {
               13 CME Hours
             </span>
             <h2 className="text-3xl font-extrabold mb-2">
-              6th Saudi International Physiotherapy Conference
+            the 6th Saudi International Physiotherapy Conference
             </h2>
             <p className="text-blue-100 mb-6 text-lg">
               12–13 November 2026 • Almoosa Rehabilitation Hospital, Al Ahsa
