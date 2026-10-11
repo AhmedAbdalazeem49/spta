@@ -216,17 +216,6 @@ export default function SpecializationItems() {
                 </p>
               </div>
 
-              {/* Button */}
-              <Link to="/membership">
-                <Button className="w-full mt-auto group-hover:scale-[1.02] transition-all">
-                  {t("انضم الآن", "Join Now")}
-                  <ChevronRight
-                    className={`w-4 h-4 ml-2 ${
-                      isRTL ? "rotate-180 ml-0 mr-2" : ""
-                    }`}
-                  />
-                </Button>
-              </Link>
             </motion.div>
           ))}
         </div>

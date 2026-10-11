@@ -550,11 +550,11 @@ export const RegistrationTab = () => {
       title: "Clinical Reasoning in Cervicothoracic Disorders",
       speaker: "Dr. Terrence McGee",
     },
-    {
-      id: "m2",
-      title: "Speaking Up in Elite Sport",
-      speaker: "Dr. Sian Knott",
-    },
+    // {
+    //   id: "m2",
+    //   title: "Speaking Up in Elite Sport",
+    //   speaker: "Dr. Sian Knott",
+    // },
     {
       id: "m3",
       title: "From Rehabilitation to Performance (OPT)",
@@ -751,16 +751,18 @@ export const RegistrationTab = () => {
     }
   };
 
-  const hasRegistration = !!priceData?.my_registration;
-  const existingWorkshops =
-    priceData?.my_registration?.selected_workshops || [];
+  const isPaidRegistration = priceData?.my_registration?.status === "paid";
+  const isPendingRegistration = priceData?.my_registration?.status === "pending";
+  const existingWorkshops = isPaidRegistration
+    ? priceData?.my_registration?.selected_workshops || []
+    : [];
   const hasMorning = existingWorkshops.some((w: string) => w.startsWith("m"));
   const hasEvening = existingWorkshops.some((w: string) => w.startsWith("e"));
 
   const calculateTotal = () => {
     if (!priceData) return 0;
     
-    let confTotal = hasRegistration ? 0 : priceData.conference_price || 0;
+    let confTotal = isPaidRegistration ? 0 : priceData.conference_price || 0;
     let workshopTotal = 0;
     
     if (selectedMorning && !existingWorkshops.includes(selectedMorning))
@@ -1706,7 +1708,7 @@ export const RegistrationTab = () => {
           className="space-y-8 bg-white p-8 rounded-3xl shadow-lg border border-slate-100 relative z-10"
         >
           {/* Section B: Workshops */}
-          {hasRegistration && (
+          {isPaidRegistration && (
             <div className="mb-6 bg-gradient-to-r from-[#55AE47] to-[#55AE47] text-white rounded-3xl p-6 shadow-lg flex items-center gap-4">
               <div className="p-3 bg-white/20 rounded-2xl">
                 <Check className="w-8 h-8 text-white" />
@@ -1718,6 +1720,21 @@ export const RegistrationTab = () => {
                 <p className="opacity-90">
                   Your conference registration is confirmed. You can add
                   optional workshops below.
+                </p>
+              </div>
+            </div>
+          )}
+          {isPendingRegistration && (
+            <div className="mb-6 bg-amber-500/10 border border-amber-500/30 text-amber-900 rounded-3xl p-6 shadow-sm flex items-center gap-4">
+              <div className="p-3 bg-amber-500/20 text-amber-700 rounded-2xl">
+                <AlertCircle className="w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">
+                  لديك تسجيل سابق غير مكتمل الدفع
+                </h3>
+                <p className="opacity-90 text-sm mt-1">
+                  يمكنك تعديل اختيار الورش أو كود الخصم وإعادة إتمام عملية الدفع مباشرة.
                 </p>
               </div>
             </div>
@@ -1810,7 +1827,7 @@ export const RegistrationTab = () => {
               <div className="flex justify-between text-base">
                 <span>Conference Ticket</span>
                 <span className="font-medium text-slate-900 ">
-                  {hasRegistration ? (
+                  {isPaidRegistration ? (
                     <span className="text-[#55AE47] font-bold flex items-center gap-1">
                       <Check className="w-4 h-4" /> Paid
                     </span>

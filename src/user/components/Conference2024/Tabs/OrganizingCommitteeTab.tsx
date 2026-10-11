@@ -41,7 +41,7 @@ export const OrganizingCommitteeTab = () => {
     },
     {
       id: 4,
-      name: "Dr. Hiadr Elyame",
+      name: "Dr. Hiedar Alyami",
       role: "Poster Presentation Lead",
       initials: "PPL",
       image: imgHiader,
