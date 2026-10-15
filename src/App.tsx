@@ -280,7 +280,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             {/* <Chatbot /> */}
-            {/* <WhatsAppFloat /> */}
+            <WhatsAppFloat />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

@@ -324,7 +324,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
           >
             {certTitle}
           </h2>
-
           {/* Decorative thin line under title */}
           <div className="flex items-center gap-2 w-40">
             <div className="flex-1 h-px" style={{ background: GREEN_BAR }} />
@@ -334,12 +333,10 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
             />
             <div className="flex-1 h-px" style={{ background: GREEN_BAR }} />
           </div>
-
           {/* Sub-text */}
           <p className="text-xs italic" style={{ color: TEXT_MUTED }}>
             {subText}
           </p>
-
           {/* Recipient name */}
           <h1
             className="text-3xl sm:text-4xl font-extrabold tracking-wide font-serif"
@@ -349,30 +346,36 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               ? organizationName || recipientName
               : recipientName}
           </h1>
-
           {/* Body text */}
           <p className="text-xs" style={{ color: TEXT_MUTED }}>
             {bodyText}
           </p>
-
           {/* Event title */}
           <div className="max-w-xl">
             <h3
               className="text-lg sm:text-xl font-bold leading-snug"
-              style={{ color: BLUE_MID }}
+              style={{
+                color: BLUE_MID,
+                direction: /[\u0600-\u06FF]/.test(eventTitle) ? "rtl" : "ltr",
+                unicodeBidi: "isolate",
+              }}
             >
               {eventTitle}
             </h3>
+
             {eventTitleAr && (
               <h3
                 className="text-base font-semibold mt-0.5"
-                style={{ color: TEXT_BODY }}
+                style={{
+                  color: TEXT_BODY,
+                  direction: "rtl",
+                  unicodeBidi: "isolate",
+                }}
               >
                 {eventTitleAr}
               </h3>
             )}
           </div>
-
           {/* Contribution description */}
           {contributionDesc && (
             <p
@@ -382,7 +385,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               "{contributionDesc}"
             </p>
           )}
-
           {/* Meta: speaker / venue / duration */}
           <div
             className="flex flex-wrap justify-center items-center gap-4 text-xs font-medium"
@@ -405,18 +407,18 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               </span>
             )}
             {showDurationAndHours && (
-              <span className="font-semibold" style={{ color: BLUE_MID }}>
+              <span
+                className="font-semibold inline-flex"
+                style={{ color: BLUE_MID, direction: "ltr", gap: "4px" }}
+              >
                 {durationDays > 0 && (
                   <>
-                    {durationDays === 1
-                      ? t("Day ", "Day ")
-                      : t("Days ", "Days ")}
-                    {durationDays}
-                    {/* {" · "} */}
+                    <span>{durationDays}</span>
+                    <span>
+                      {durationDays === 1 ? t("Day", "Day") : t("Days", "Days")}
+                    </span>
                   </>
                 )}
-                {/* {t("Training Hours ", "Training Hours ")} */}
-                {/* {calculatedHours} */}
               </span>
             )}
             {type === "completion" && completionStatus && (
@@ -433,7 +435,6 @@ const CertificateTemplate: React.FC<Props> = ({ cert, template }) => {
               </div>
             )}
           </div>
-
           {/* Dates */}
           <div
             className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-mono tracking-wide"

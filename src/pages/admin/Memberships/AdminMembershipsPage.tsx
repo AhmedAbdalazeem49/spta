@@ -1013,17 +1013,17 @@ const MembershipsTable = ({
                     </div>
                   </td>
 
-                  {/* Status */}
-                  <td className="p-4 whitespace-nowrap">
-                    <StatusBadge status={m.status} t={t} />
-                  </td>
-
                   <td className="p-4 whitespace-nowrap">
                     <span className="font-mono text-md">
                       {m.user.classification_number
                         ? m.user.classification_number
                         : "-"}
                     </span>
+                  </td>
+
+                  {/* Status */}
+                  <td className="p-4 whitespace-nowrap">
+                    <StatusBadge status={m.status} t={t} />
                   </td>
 
                   {/* Actions */}

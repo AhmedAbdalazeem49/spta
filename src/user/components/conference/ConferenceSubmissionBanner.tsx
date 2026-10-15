@@ -1,126 +1,62 @@
+import ConferenceLogo from "@/assets/ones.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  CalendarDays,
-  FileText,
-  Presentation,
-} from "lucide-react";
-
-import ConferenceBanner from "@/assets/conference-6-spta-logo.webp";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ConferenceSubmissionBanner = () => {
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (
-    <section className="container mx-auto px-4 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 25 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="overflow-hidden rounded-[32px] border border-white/10 bg-white shadow-xl"
-      >
-        {/* Banner Image */}
-        <img
-          src={ConferenceBanner}
-          alt="the 6th Saudi International Physiotherapy Conference"
-          className="w-full object-cover"
+    <section className="container mx-auto px-4 py-12 md:py-16">
+      <div className="relative overflow-hidden rounded-[32px] border border-[#6FC4BC]/30 bg-gradient-to-br from-[#11517E] via-[#0E446B] to-[#0A3352] shadow-2xl shadow-[#11517E]/20 text-white">
+        {/* Decorative glowing gradient orbs */}
+        <div
+          className="absolute inset-0 opacity-5 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
+            backgroundSize: "28px 28px",
+          }}
         />
 
-        <div className="p-8 md:p-14">
-          <span className="inline-flex rounded-full bg-accent/10 px-4 py-2 text-sm font-semibold text-accent">
-            {t(
-              "المؤتمر السعودي الدولي السادس للعلاج الطبيعي",
-              "The 6th Saudi International Physiotherapy Conference",
-            )}
-          </span>
-
-          <h2 className="mt-6 text-4xl md:text-5xl font-bold leading-tight">
-            {t(
-              "شارك خبرتك وساهم في تطوير مستقبل العلاج الطبيعي",
-              "Share Your Expertise & Shape the Future of Physiotherapy",
-            )}
-          </h2>
-
-          <p className="mt-6  text-lg leading-8 text-muted-foreground">
-            {t(
-              "تدعو الجمعية السعودية للعلاج الطبيعي الباحثين والأكاديميين والممارسين الصحيين للمشاركة في المؤتمر السعودي الدولي السادس للعلاج الطبيعي من خلال تقديم الملخصات العلمية أو مقترحات ورش العمل. تمثل هذه الفرصة منصة علمية متميزة لتبادل المعرفة، واستعراض أحدث الأبحاث، ومناقشة أفضل الممارسات مع نخبة من الخبراء والمتخصصين من داخل المملكة وخارجها.",
-              "The Saudi Physical Therapy Association invites researchers, clinicians, educators, and healthcare professionals to participate in the 6th Saudi International Physiotherapy Conference by submitting scientific abstracts or workshop proposals. This prestigious conference provides a unique platform to showcase research, exchange knowledge, discuss clinical innovations, and connect with leading national and international experts in physiotherapy and rehabilitation.",
-            )}
-          </p>
-
-          {/* Highlights */}
-
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            <div className="rounded-2xl border bg-muted/30 p-6">
-              <Presentation className="mb-4 h-8 w-8 text-accent" />
-              <h3 className="font-semibold">
-                {t("ورش العمل", "Workshop Proposals")}
-              </h3>
-
-              <p className="mt-2 text-sm text-muted-foreground">
-                {t(
-                  "شارك بورشة عمل تفاعلية يقودها خبراء ومتخصصون.",
-                  "Deliver an engaging educational workshop led by experts.",
+        <div className="relative z-10 grid grid-cols-1  gap-8 md:gap-12 items-center p-6 sm:p-10 md:p-14">
+          {/* Image / Visual Column */}
+          <div className="flex justify-center items-center">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-full rounded-2xl  p-6 sm:p-8 shadow-2xl border border-white/40 backdrop-blur-sm group"
+            >
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#11517E]/5 via-[#6FC4BC]/10 to-[#55AE47]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <img
+                src={ConferenceLogo}
+                alt={t(
+                  "المؤتمر السعودي الدولي السادس للعلاج الطبيعي",
+                  "The 6th Saudi International Physiotherapy Conference",
                 )}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border bg-muted/30 p-6">
-              <FileText className="mb-4 h-8 w-8 text-accent" />
-              <h3 className="font-semibold">
-                {t("الملخصات العلمية", "Scientific Abstracts")}
-              </h3>
-
-              <p className="mt-2 text-sm text-muted-foreground">
-                {t(
-                  "اعرض نتائج أبحاثك أمام نخبة من المختصين.",
-                  "Present your latest research to an international audience.",
-                )}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border bg-muted/30 p-6">
-              <CalendarDays className="mb-4 h-8 w-8 text-accent" />
-              <h3 className="font-semibold">
-                {t("مؤتمر دولي", "International Conference")}
-              </h3>
-
-              <p className="mt-2 text-sm text-muted-foreground">
-                {t(
-                  "فرصة للتواصل العلمي وبناء شراكات مهنية.",
-                  "Network with world-class professionals and institutions.",
-                )}
-              </p>
-            </div>
+                className="w-full h-auto max-h-64 sm:max-h-80 object-contain mx-auto relative z-10 drop-shadow-md"
+              />
+            </motion.div>
           </div>
-
-          {/* Buttons */}
-
-          <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-            <a
-              href="https://sptaworkshop-mckvddhf.manus.space/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-7 py-4 font-semibold text-accent-foreground transition hover:scale-[1.02]"
-            >
-              {t("تقديم ورش العمل", "Workshop Submission")}
-              <ArrowUpRight size={18} />
-            </a>
-
-            <a
-              href="https://sptaconf-rtge7wgu.manus.space/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border px-7 py-4 font-semibold transition hover:bg-muted"
-            >
-              {t("تقديم الملخصات", "Abstract Submission")}
-              <ArrowUpRight size={18} />
-            </a>
+          {/* Content Column */}
+          <div className="space-y-6 text-center lg:text-start">
+            {/* Call to Action Button */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <Link
+                to="/conference-2026"
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#55AE47] to-[#6FC4BC] text-white font-black text-base sm:text-lg shadow-xl shadow-[#55AE47]/25 hover:shadow-2xl hover:shadow-[#6FC4BC]/30 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
+              >
+                <span>
+                  {t("استكشف المؤتمر وسجّل الآن", "Explore Conference")}
+                </span>
+                <ArrowIcon className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:rtl:-translate-x-1" />
+              </Link>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

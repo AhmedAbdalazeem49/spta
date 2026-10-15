@@ -545,11 +545,11 @@ export const RegistrationTab = () => {
 
   // Workshops
   const morningWorkshops = [
-    {
-      id: "m1",
-      title: "Clinical Reasoning in Cervicothoracic Disorders",
-      speaker: "Dr. Terrence McGee",
-    },
+    // {
+    //   id: "m1",
+    //   title: "Clinical Reasoning in Cervicothoracic Disorders",
+    //   speaker: "Dr. Terrence McGee",
+    // },
     // {
     //   id: "m2",
     //   title: "Speaking Up in Elite Sport",
