@@ -143,6 +143,31 @@ export default function AdminConferenceRegistrationsPage() {
     }
   };
 
+  const toggleWorkshopAttendance = async (reg: any, workshopCode: string) => {
+    const currentAttended: string[] = reg.attended_workshops || [];
+    const isCurrentlyAttended = currentAttended.includes(workshopCode);
+    const updated = isCurrentlyAttended
+      ? currentAttended.filter(w => w !== workshopCode)
+      : [...currentAttended, workshopCode];
+
+    const key = `${reg.id}_ws_${workshopCode}`;
+    setUpdatingCell(key);
+
+    try {
+      await api.patch(`/admin/conference-registrations/${reg.id}/status`, {
+        attended_workshops: updated
+      });
+      setRegistrations(prev =>
+        prev.map(r => r.id === reg.id ? { ...r, attended_workshops: updated } : r)
+      );
+      toast.success("Workshop attendance updated");
+    } catch {
+      toast.error("Update failed");
+    } finally {
+      setUpdatingCell(null);
+    }
+  };
+
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     setIsDeleting(true);
@@ -334,17 +359,34 @@ export default function AdminConferenceRegistrationsPage() {
 
                   {/* Workshops */}
                   <td className="px-5 py-4">
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
+                    <div className="flex flex-wrap gap-1.5 max-w-[240px]">
                       {(r.selected_workshops || []).length > 0
-                        ? (r.selected_workshops as string[]).map(w => (
-                          <span key={w} className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                            w.startsWith("m")
-                              ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
-                              : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300"
-                          }`}>
-                            {WORKSHOP_LABELS[w] ?? w}
-                          </span>
-                        ))
+                        ? (r.selected_workshops as string[]).map(w => {
+                            const isAttended = (r.attended_workshops || []).includes(w) || (r.is_attended && !(r.attended_workshops && r.attended_workshops.length > 0));
+                            const isCellUpdating = updatingCell === `${r.id}_ws_${w}`;
+
+                            return (
+                              <button
+                                key={w}
+                                type="button"
+                                disabled={isCellUpdating}
+                                onClick={() => toggleWorkshopAttendance(r, w)}
+                                title={isAttended ? "Click to toggle: Attended" : "Click to toggle: Absent"}
+                                className={`text-xs font-bold px-2.5 py-1 rounded-xl transition-all duration-200 border flex items-center gap-1 hover:scale-105 active:scale-95 ${
+                                  isAttended
+                                    ? "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-300"
+                                    : "bg-slate-100 text-slate-500 border-slate-200 opacity-60 hover:opacity-100 dark:bg-slate-800 dark:text-slate-400"
+                                }`}
+                              >
+                                {isCellUpdating ? (
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                ) : (
+                                  <span>{isAttended ? "✓" : "○"}</span>
+                                )}
+                                <span>{WORKSHOP_LABELS[w] ?? w}</span>
+                              </button>
+                            );
+                          })
                         : <span className="text-xs text-slate-400 italic">Conference only</span>
                       }
                     </div>

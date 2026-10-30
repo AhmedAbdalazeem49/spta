@@ -85,7 +85,7 @@ export const OrganizingCommitteeTab = () => {
     {
       id: 10,
       name: "Dr. Abdullah Alfarhan",
-      role: "Speaker & Guest Coordinator",
+      role: "Guest Coordinator",
       initials: "AA",
       image: imgAlfarhan,
     },
