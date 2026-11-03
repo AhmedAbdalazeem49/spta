@@ -25,6 +25,8 @@ import {
   Handshake,
   Megaphone,
   Star,
+  UserCheck,
+  BookOpen,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -129,6 +131,20 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       icon: Star,
       labelAr: "تقييمات المؤتمر",
       labelEn: "Conference Evaluations",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/conference-attendance",
+      icon: UserCheck,
+      labelAr: "حضور المؤتمر",
+      labelEn: "Conference Attendance",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/conference-workshop-attendance",
+      icon: BookOpen,
+      labelAr: "حضور ورش المؤتمر",
+      labelEn: "Workshop Attendance",
       systemAdminOnly: true,
     },
     // {

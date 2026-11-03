@@ -49,6 +49,8 @@ import AdminAdvertisementsPage from "./pages/admin/advertisements/AdminAdvertise
 import AdminNewsPage from "./pages/admin/news/AdminNewsPage";
 import AdminConferenceRegistrationsPage from "./pages/admin/conference/AdminConferenceRegistrationsPage";
 import { AdminConferenceEvaluationsPage } from "./pages/admin/conference/AdminConferenceEvaluationsPage";
+import AdminConferenceAttendancePage from "./pages/admin/conference/AdminConferenceAttendancePage";
+import AdminWorkshopAttendancePage from "./pages/admin/conference/AdminWorkshopAttendancePage";
 // Public workshops page (user-facing)
 import WorkshopsPage from "./pages/WorkshopsPage";
 
@@ -273,6 +275,26 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminConferenceEvaluationsPage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/conference-attendance"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminConferenceAttendancePage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/conference-workshop-attendance"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminWorkshopAttendancePage />
                     </AdminLayout>
                   </AdminRoute>
                 }

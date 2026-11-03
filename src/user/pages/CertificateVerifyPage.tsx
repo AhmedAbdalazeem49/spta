@@ -57,7 +57,7 @@ const CertificateVerifyPage = () => {
   // CONTACT LINKS
   // =========================
   const whatsappLink = `https://wa.me/966500000000?text=Certificate%20verification%20issue:%20${serial_number}`;
-  const emailLink = `mailto:support@spta.org?subject=Certificate Verification Issue&body=Serial: ${serial_number}`;
+  const emailLink = `mailto:spta@spta.sa?subject=Certificate Verification Issue&body=Serial: ${serial_number}`;
 
   const isValid = !!data; // ✅ FIXED LOGIC
 

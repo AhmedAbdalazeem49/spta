@@ -877,7 +877,7 @@ export const RegistrationTab = () => {
                   Students
                 </h4>
                 <p className="text-base flex justify-between mb-1 text-slate-600 ">
-                  <span>Early Bird (Before 1 November):</span>{" "}
+                  <span>Early Bird (Before 3 November):</span>{" "}
                   <span className="font-semibold text-slate-900 ">300 SAR</span>
                 </p>
                 <p className="text-base flex justify-between text-slate-600 ">
@@ -891,7 +891,7 @@ export const RegistrationTab = () => {
                   Professionals
                 </h4>
                 <p className="text-base flex justify-between mb-1 text-slate-600 ">
-                  <span>Early Bird (Before 1 November):</span>{" "}
+                  <span>Early Bird (Before 3 November):</span>{" "}
                   <span className="font-semibold text-slate-900 ">600 SAR</span>
                 </p>
                 <p className="text-base flex justify-between text-slate-600 ">

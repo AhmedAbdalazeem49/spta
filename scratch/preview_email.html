@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPTA26 – بطاقة حضور المؤتمر</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f1f5f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrapper {
+            max-width: 620px;
+            margin: 28px auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(17, 81, 126, 0.12);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #11517E 0%, #0d3d5f 60%, #164e63 100%);
+            padding: 40px 32px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            color: #e0f2fe;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 7px 18px;
+            border-radius: 9999px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .header h1 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .header .subtitle {
+            margin: 0;
+            font-size: 13px;
+            color: #bae6fd;
+            font-weight: 500;
+        }
+
+        /* QR Section */
+        .qr-section {
+            background: #ffffff;
+            padding: 36px 32px 28px;
+            text-align: center;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .qr-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #11517E;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 18px;
+        }
+
+        .qr-card {
+            display: inline-block;
+            background: #f8fafc;
+            padding: 22px;
+            border-radius: 20px;
+            border: 2px solid #6FC4BC;
+            box-shadow: 0 6px 20px rgba(17, 81, 126, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .qr-card img {
+            display: block;
+            margin: 0 auto;
+            width: 230px;
+            height: 230px;
+        }
+
+        .unique-code-container {
+            margin-top: 14px;
+        }
+
+        .unique-code-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .unique-code-badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: #11517E;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            padding: 8px 24px;
+            border-radius: 12px;
+            border: 2px dashed #93c5fd;
+        }
+
+        .scan-instruction {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 12px;
+            line-height: 1.6;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Content Body */
+        .body {
+            padding: 32px;
+        }
+
+        .greeting {
+            font-size: 17px;
+            font-weight: 800;
+            color: #11517E;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        /* Info Card */
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #1e293b;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 18px 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13.5px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .info-val {
+            font-weight: 700;
+            color: #0f172a;
+            text-align: left;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #86efac;
+        }
+
+        .badge-cme {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #7dd3fc;
+        }
+
+        /* Tips */
+        .tips-box {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-right: 4px solid #f59e0b;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 26px 32px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer a {
+            color: #6FC4BC;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <div class="header">
+            <h1>The 6th Saudi International Physiotherapy Conference</h1>
+            <p class="subtitle">12 – 13 November 2026 | Al-Ahsa, Saudi Arabia</p>
+        </div>
+
+        <!-- QR Code Attendance Box -->
+        <div class="qr-section">
+            <div class="qr-title">Conference Attendance QR</div>
+            <div class="qr-card">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAETCAIAAACay3XvAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEYUlEQVR4nO3dwY3UQBBAURYRAaGRECIhQiMFcyCAht+jou15L4DdHltfdSm1P67r+gT8o8//+wBwS8qBQjlQKAcK5UChHCiUA4VyoFAOFMqBQjlQKAcK5UChHCiUA4VyoFAOFMqBQjlQKAcK5UDxZf9PfP32ff+PnO/Xzx+bf2HgQd3ikCfYf1BmDhTKgUI5UCgHCuVAoRwolAOFcqBQDhTKgeIF2zdL+5sOA95k62Sft/mHmQOFcqBQDhTKgUI5UCgHCuVAoRwolAOFcqCY2L5ZusWlMEvLX/EmF9M8420umTlQKAcK5UChHCiUA4VyoFAOFMqBQjlQKAeKI7Zv3sQtdmf4S2YOFMqBQjlQKAcK5UChHCiUA4VyoFAOFMqBwvbNnIG7bwbu3+EPMwcK5UChHCiUA4VyoFAOFMqBQjlQKAcK5UBxxPbNm6yE7N99s3xQJ1yv8yZv08yBQjlQKAcK5UChHCiUA4VyoFAOFMqBQjlQTGzfnLAScoJb7M4s3eKQA8wcKJQDhXKgUA4UyoFCOVAoBwrlQKEcKJQDxQu2b97krpMTDGy+eJt/ycyBQjlQKAcK5UChHCiUA4VyoFAOFMqBQjlQvGD7ZrkS8ow7X5a/YmBvZeBJPuNdDDBzoFAOFMqBQjlQKAcK5UChHCiUA4VyoFAOFBN337zJjS37P/OEX7H/Ngd+xQlnMHOgUA4UyoFCOVAoBwrlQKEcKJQDhXKgUA4UL9i+GXDCQsfS/iEHzrC/t3KL9ZwBZg4UyoFCOVAoBwrlQKEcKJQDhXKgUA4UyoHiHts3+27xeawTvl21dMLHrU7Y3zFzoFAOFMqBQjlQKAcK5UChHCiUA4VyoFAOFEds3wxsvgz8ixMO+Yy7bwYWnfaZOVAoBwrlQKEcKJQDhXKgUA4UyoFCOVAoB4qP67r+9xkeYuCLS7dYSzlhuWbgchwzBwrlQKEcKJQDhXKgUA4UyoFCOVAoBwrlQPGCu29usRKyb+BSmP0z3OLemWdsIZk5UCgHCuVAoRwolAOFcqBQDhTKgUI5UCgHiokvTw1cRLJv4MtT+5svJ3wea8DALUL7zBwolAOFcqBQDhTKgUI5UCgHCuVAoRwolAPFxPbN0i3uWznBwN03SydsAJ2wnmPmQKEcKJQDhXKgUA4UyoFCOVAoBwrlQKEcKI7YvuFG9hdbnrEJZeZAoRwolAOFcqBQDhTKgUI5UCgHCuVAoRwobN/MGfg01S0uxznhkPvMHCiUA4VyoFAOFMqBQjlQKAcK5UChHCiUA8UR2zcnLFPs218qGdg6GXjUJ7zNgSdp5kChHCiUA4VyoFAOFMqBQjlQKAcK5UChHCg+ruva/BPLTYdnOOFimqVbHHLphP2dJTMHCuVAoRwolAOFcqBQDhTKgUI5UCgHCuVA8YLtG3hDZg4UyoFCOVAoBwrlQKEcKJQDhXKgUA4UyoFCOVAoBwrlQKEcKJQDhXKgUA4UyoFCOVAoBwrlQPEbYlTxsYio+jIAAAAASUVORK5CYII=" alt="Attendance QR Code" />
+            </div>
+
+            <div class="unique-code-container">
+                <div class="unique-code-label">Unique Code</div>
+                <div class="unique-code-badge">SPTA26-5</div>
+            </div>
+
+            <p class="scan-instruction">
+                يرجى إبراز هذا الرمز عند بوابات الدخول لمسحه عبر أجهزة التحضير الذكية في اليومين الأول والثاني.<br>
+                في حال تعطل جهاز المسح الضوئي، يمكن لموظف الاستقبال إدخال الكود  أعلاه يدوياً.
+            </p>
+        </div>
+
+        <!-- Body -->
+        <div class="body">
+            <!-- Instructions -->
+            <div class="tips-box">
+                💡 <strong>ملاحظة هامة:</strong> الحضور اليومي وتسجيل الدخول عبر الباركود شرط أساسي لاحتساب الساعات التعليمية واعتماد الشهادة الرسمية للمؤتمر بعد انتهاء الفعاليات.
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -313,6 +313,7 @@ export default function AdminConferenceRegistrationsPage() {
                 <th className="px-5 py-3.5 text-center font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">
                   <div className="flex items-center gap-2 justify-center"><Award className="w-4 h-4" /> Certificate</div>
                 </th>
+                <th className="px-5 py-3.5 text-center font-semibold text-slate-600 dark:text-slate-300">Revision</th>
                 <th className="px-5 py-3.5 text-center font-semibold text-slate-600 dark:text-slate-300">Action</th>
               </tr>
             </thead>
@@ -425,6 +426,18 @@ export default function AdminConferenceRegistrationsPage() {
                       falseColor="bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
                       onClick={() => toggleField(r.id, "certificate_issued", r.certificate_issued)}
                       loading={updatingCell === `${r.id}_certificate_issued`}
+                    />
+                  </td>
+
+                  {/* Reviewed */}
+                  <td className="px-5 py-4 text-center">
+                    <StatusPill
+                      value={r.has_reviewed}
+                      trueLabel="Reviewed" falseLabel="No"
+                      trueColor="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                      falseColor="bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                      onClick={() => toggleField(r.id, "has_reviewed", r.has_reviewed)}
+                      loading={updatingCell === `${r.id}_has_reviewed`}
                     />
                   </td>
 
