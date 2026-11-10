@@ -19,10 +19,12 @@ import {
   FileCheck,
   Download,
   AlertCircle,
+  ArrowRightLeft,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { WorkshopEvaluationModal } from "@/components/conference/WorkshopEvaluationModal";
 import { CertificatePreviewModal } from "@/components/admin/certificates/CertificatePreviewModal";
+import { ChangeWorkshopModal } from "@/components/conference/ChangeWorkshopModal";
 
 export default function ConferenceRegistrationProfileTab() {
   const { t } = useLanguage();
@@ -33,6 +35,9 @@ export default function ConferenceRegistrationProfileTab() {
   // Evaluation & Certificate Modals
   const [activeWorkshopForEval, setActiveWorkshopForEval] = useState<any | null>(null);
   const [previewCert, setPreviewCert] = useState<any | null>(null);
+
+  // Change Workshop Modal
+  const [workshopToChange, setWorkshopToChange] = useState<string | null>(null);
 
   const fetchRegData = async () => {
     try {
@@ -311,21 +316,36 @@ export default function ConferenceRegistrationProfileTab() {
 
                     <div>
                       {/* Top badges */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span
-                          className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${
-                            isMorning
-                              ? "bg-[#55AE47]/20 text-[#11517E]"
-                              : "bg-[#6FC4BC]/20 text-[#11517E]"
-                          }`}
-                        >
-                          <Clock className="w-3.5 h-3.5" />
-                          {info?.slot ?? w}
-                        </span>
+                      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${
+                              isMorning
+                                ? "bg-[#55AE47]/20 text-[#11517E]"
+                                : "bg-[#6FC4BC]/20 text-[#11517E]"
+                            }`}
+                          >
+                            <Clock className="w-3.5 h-3.5" />
+                            {info?.slot ?? w}
+                          </span>
 
-                        <span className="flex items-center gap-1 text-xs font-bold text-[#11517E] bg-white px-2.5 py-1 rounded-full shadow-sm border border-slate-200">
-                          <Award className="w-3 h-3 text-amber-500" /> 4 CME Hours
-                        </span>
+                          <span className="flex items-center gap-1 text-xs font-bold text-[#11517E] bg-white px-2.5 py-1 rounded-full shadow-sm border border-slate-200">
+                            <Award className="w-3 h-3 text-amber-500" /> 4 CME Hours
+                          </span>
+                        </div>
+
+                        {/* Change Workshop Button (available if not evaluated yet) */}
+                        {/* {!hasEvaluated && (
+                          <button
+                            type="button"
+                            onClick={() => setWorkshopToChange(w)}
+                            className="inline-flex items-center gap-1.5 text-xs font-extrabold px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 text-[#11517E] border-2 border-[#11517E]/20 hover:border-[#11517E] shadow-sm hover:shadow transition-all hover:scale-105 active:scale-95"
+                            title={t("تغيير ورشة العمل الحالية", "Change this workshop")}
+                          >
+                            <ArrowRightLeft className="w-3.5 h-3.5 text-[#55AE47]" />
+                            <span>{t("تغيير الورشة", "Change Workshop")}</span>
+                          </button>
+                        )} */}
                       </div>
 
                       {/* Title */}
@@ -481,6 +501,20 @@ export default function ConferenceRegistrationProfileTab() {
             if (!open) setPreviewCert(null);
           }}
           certificate={previewCert}
+        />
+      )}
+
+      {/* Change Workshop Modal */}
+      {workshopToChange && (
+        <ChangeWorkshopModal
+          isOpen={!!workshopToChange}
+          currentWorkshopCode={workshopToChange}
+          userRegisteredWorkshops={workshops}
+          onClose={() => setWorkshopToChange(null)}
+          onSuccess={() => {
+            fetchRegData();
+            setWorkshopToChange(null);
+          }}
         />
       )}
     </motion.div>

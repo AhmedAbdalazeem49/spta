@@ -27,6 +27,7 @@ import {
   Star,
   UserCheck,
   BookOpen,
+  ArrowRightLeft,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -145,6 +146,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       icon: BookOpen,
       labelAr: "حضور ورش المؤتمر",
       labelEn: "Workshop Attendance",
+      systemAdminOnly: true,
+    },
+    {
+      path: "/admin/conference-change-workshops",
+      icon: ArrowRightLeft,
+      labelAr: "تغيير ورش المشتركين",
+      labelEn: "Change Workshops",
       systemAdminOnly: true,
     },
     // {

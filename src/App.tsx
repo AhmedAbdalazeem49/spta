@@ -51,6 +51,7 @@ import AdminConferenceRegistrationsPage from "./pages/admin/conference/AdminConf
 import { AdminConferenceEvaluationsPage } from "./pages/admin/conference/AdminConferenceEvaluationsPage";
 import AdminConferenceAttendancePage from "./pages/admin/conference/AdminConferenceAttendancePage";
 import AdminWorkshopAttendancePage from "./pages/admin/conference/AdminWorkshopAttendancePage";
+import AdminChangeWorkshopsPage from "./pages/admin/conference/AdminChangeWorkshopsPage";
 // Public workshops page (user-facing)
 import WorkshopsPage from "./pages/WorkshopsPage";
 
@@ -295,6 +296,16 @@ const App = () => (
                   <AdminRoute>
                     <AdminLayout>
                       <AdminWorkshopAttendancePage />
+                    </AdminLayout>
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/conference-change-workshops"
+                element={
+                  <AdminRoute>
+                    <AdminLayout>
+                      <AdminChangeWorkshopsPage />
                     </AdminLayout>
                   </AdminRoute>
                 }
