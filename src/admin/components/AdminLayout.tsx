@@ -155,13 +155,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       labelEn: "Change Workshops",
       systemAdminOnly: true,
     },
-    // {
-    //   path: "/admin/emails",
-    //   icon: Mail,
-    //   labelAr: "حملات البريد",
-    //   labelEn: "Email Campaigns",
-    //   systemAdminOnly: true,
-    // },
+    {
+      path: "/admin/emails",
+      icon: Mail,
+      labelAr: "حملات البريد",
+      labelEn: "Email Campaigns",
+      systemAdminOnly: true,
+    },
   ].filter((item) => !item.systemAdminOnly || isSystemAdmin);
 
   const isActive = (path: string) => {

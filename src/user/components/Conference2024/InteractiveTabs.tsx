@@ -3,17 +3,24 @@ import React from "react";
 
 import { BrandPattern } from "./BrandPattern";
 import { AgendaTab } from "./Tabs/AgendaTab";
+import { ScientificPostersSection } from "./Tabs/ScientificPostersSection";
 import { BookletTab } from "./Tabs/BookletTab";
 import { OrganizingCommitteeTab } from "./Tabs/OrganizingCommitteeTab";
 import { RegistrationTab } from "./Tabs/RegistrationTab";
 import { ScientificCommitteeTab } from "./Tabs/ScientificCommitteeTab";
 import { SpeakersTab } from "./Tabs/SpeakersTab";
 import { WorkshopsTab } from "./Tabs/WorkshopsTab";
+import { ConferenceCertificateSection } from "./Tabs/ConferenceCertificateSection";
 
 export const InteractiveTabs = () => {
   const { language } = useLanguage();
 
   const sections = [
+    {
+      id: "certificate",
+      label: language === "ar" ? "شهادة الحضور" : "Attendance Certificate",
+      component: ConferenceCertificateSection,
+    },
     {
       id: "scientific",
       label: language === "ar" ? "اللجنة العلمية" : "Scientific Committee",
@@ -28,6 +35,14 @@ export const InteractiveTabs = () => {
       id: "agenda",
       label: language === "ar" ? "الأجندة" : "Agenda",
       component: AgendaTab,
+    },
+    {
+      id: "scientific-posters",
+      label:
+        language === "ar"
+          ? "الملصقات العلمية"
+          : "Scientific Posters",
+      component: ScientificPostersSection,
     },
     {
       id: "workshops",

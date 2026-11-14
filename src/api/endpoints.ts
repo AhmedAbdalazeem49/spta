@@ -38,6 +38,9 @@ export const CONFERENCE_ENDPOINTS = {
   list: "/conferences",
   detail: (id: string | number) => `/conferences/${id}`,
   register: (id: string | number) => `/conferences/${id}/register`,
+  certificateStatus: "/conference/certificate/status",
+  certificateGenerate: "/conference/certificate/generate",
+  certificateDownload: "/conference/certificate/download",
 } as const;
 
 export const WORKSHOP_ENDPOINTS = {

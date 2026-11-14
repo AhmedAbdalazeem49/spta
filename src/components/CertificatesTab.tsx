@@ -1,6 +1,7 @@
 import CertificateTemplate, {
   CertTemplate,
 } from "@/components/CertificateTemplate";
+import { ConferenceCertificateCard } from "@/components/ConferenceCertificateCard";
 import { CertificatePreviewModal } from "@/components/admin/certificates/CertificatePreviewModal";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,6 +12,7 @@ import {
   downloadElementAsPdf,
 } from "@/lib/certificate-export";
 import api from "@/services/api";
+import { attendanceCertificateService } from "@/services/attendanceCertificateService";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
@@ -117,6 +119,28 @@ const CertificatesTab = () => {
   // ── Actions ──────────────────────────────────────────────────────────────────
 
   const handleDownload = async (cert: Certificate) => {
+    // conference_workshop certs are server-generated PDFs — download directly from API
+    if (cert.type === "conference_workshop") {
+      setBusyId(String(cert.id));
+      try {
+        await attendanceCertificateService.downloadWorkshopCertificate(
+          cert.id,
+          cert.payload?.participant?.name ?? cert.recipient_name ?? undefined,
+          cert.payload?.event?.title ?? cert.workshop_title ?? undefined,
+        );
+      } catch {
+        toast({
+          title: "Download Failed",
+          description: "Could not download the workshop certificate from the server.",
+          variant: "destructive",
+        });
+      } finally {
+        setBusyId(null);
+      }
+      return;
+    }
+
+    // Legacy HTML-rendered certificates
     const el = certRefs.current[String(cert.id)];
     if (!el) return;
 
@@ -173,8 +197,10 @@ const CertificatesTab = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.35 }}
-      className="space-y-6"
+      className="space-y-8"
     >
+      {/* ───────────────── Main Conference Attendance Certificate ───────────────── */}
+      <ConferenceCertificateCard onRefreshParent={fetchCertificates} />
       {/* ───────────────── Loading State ───────────────── */}
       {isLoading && (
         <div className="grid sm:grid-cols-2 xl:grid-cols-2 gap-7">
@@ -332,18 +358,35 @@ const CertificatesTab = () => {
                     <div className="p-5 space-y-5 border-t bg-card mt-2">
                       {/* ───────────────── Action Buttons ───────────────── */}
                       <div className="flex items-center gap-2">
-                        <Button
-                          onClick={() => {
-                            setSelectedCert(cert);
-                            setIsPreviewOpen(true);
-                          }}
-                          variant="default"
-                          size="sm"
-                          className="flex-1 h-10 rounded-xl gap-2 font-medium"
-                        >
-                          <Download className="w-4 h-4" />
-                          {t("معاينة وتحميل", "View & Download")}
-                        </Button>
+                        {cert.type === "conference_workshop" ? (
+                          <Button
+                            onClick={() => handleDownload(cert)}
+                            disabled={isBusy}
+                            variant="default"
+                            size="sm"
+                            className="flex-1 h-10 rounded-xl gap-2 font-medium bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-[#0E446B] hover:to-[#55AE47] text-white"
+                          >
+                            {isBusy ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Download className="w-4 h-4" />
+                            )}
+                            {t("تحميل الشهادة الرسمية", "Download Official Certificate")}
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => {
+                              setSelectedCert(cert);
+                              setIsPreviewOpen(true);
+                            }}
+                            variant="default"
+                            size="sm"
+                            className="flex-1 h-10 rounded-xl gap-2 font-medium"
+                          >
+                            <Download className="w-4 h-4" />
+                            {t("معاينة وتحميل", "View & Download")}
+                          </Button>
+                        )}
 
                         <Button
                           onClick={() => handleCopyLink(cert)}

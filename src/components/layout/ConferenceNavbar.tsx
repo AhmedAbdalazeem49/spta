@@ -16,7 +16,17 @@ const ConferenceNavbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       
-      const sections = ['top', 'scientific', 'speakers', 'agenda', 'workshops', 'organizing', 'booklet', 'registration'];
+      const sections = [
+        'top',
+        'scientific',
+        'speakers',
+        'agenda',
+        'scientific-posters',
+        'workshops',
+        'organizing',
+        'booklet',
+        'registration',
+      ];
       let current = 'top';
       
       if (window.scrollY < 100) {
@@ -61,14 +71,30 @@ const ConferenceNavbar = () => {
   };
 
   const navItems = [
-    { id: 'top', label: language === 'ar' ? 'الرئيسية' : 'Home' },
-    { id: 'scientific', label: language === 'ar' ? 'اللجنة العلمية' : 'Scientific Committee' },
-    { id: 'speakers', label: language === 'ar' ? 'المتحدثون' : 'Speakers' },
-    { id: 'agenda', label: language === 'ar' ? 'الأجندة' : 'Agenda' },
-    { id: 'workshops', label: language === 'ar' ? 'ورش العمل' : 'Workshops' },
-    { id: 'organizing', label: language === 'ar' ? 'اللجنة المنظمة' : 'Organizing Committee' },
-    { id: 'booklet', label: language === 'ar' ? 'الكتيب والموقع' : 'Visitors Information' },
-    { id: 'registration', label: language === 'ar' ? 'التسجيل' : 'Registration' },
+    { id: "top", label: language === "ar" ? "الرئيسية" : "Home" },
+    {
+      id: "scientific",
+      label: language === "ar" ? "اللجنة العلمية" : "Scientific Committee",
+    },
+    { id: "speakers", label: language === "ar" ? "المتحدثون" : "Speakers" },
+    { id: "agenda", label: language === "ar" ? "الأجندة" : "Agenda" },
+    {
+      id: "scientific-posters",
+      label: language === "ar" ? "الملصقات العلمية" : "Posters Sessions",
+    },
+    { id: "workshops", label: language === "ar" ? "ورش العمل" : "Workshops" },
+    {
+      id: "organizing",
+      label: language === "ar" ? "اللجنة المنظمة" : "Organizing Committee",
+    },
+    {
+      id: "booklet",
+      label: language === "ar" ? "الكتيب والموقع" : "Visitors Information",
+    },
+    {
+      id: "registration",
+      label: language === "ar" ? "التسجيل" : "Registration",
+    },
   ];
 
   return (

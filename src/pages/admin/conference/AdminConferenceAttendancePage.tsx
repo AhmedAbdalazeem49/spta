@@ -5,11 +5,14 @@ import {
   BarChart3,
   Calendar,
   CheckCircle2,
+  FileSpreadsheet,
+  FileText,
   Loader2,
   Mail,
   QrCode,
   Search,
   Send,
+  Sparkles,
   Star,
   UserCheck,
   Users,
@@ -36,6 +39,7 @@ interface Participant {
   day1_attended_at: string | null;
   day2_attended_at: string | null;
   qr_sent: boolean;
+  welcome_email_sent?: boolean;
   has_reviewed: boolean;
   amount: string;
   created_at: string;
@@ -49,6 +53,7 @@ interface Stats {
   day1_count: number;
   day2_count: number;
   qr_sent_count: number;
+  welcome_sent_count?: number;
   reviewed_count: number;
 }
 
@@ -365,6 +370,281 @@ function SendQrModal({
   );
 }
 
+/* ─────────── Send Welcome & Agenda Modal ─────────── */
+function SendWelcomeAgendaModal({
+  registrations,
+  onClose,
+  onSuccess,
+}: {
+  registrations: Participant[];
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<number[]>([]);
+  const [confirming, setConfirming] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const candidates = useMemo(() => {
+    const base = showAll
+      ? registrations
+      : registrations.filter((r) => !r.welcome_email_sent);
+    if (!search.trim()) return base;
+    const q = search.toLowerCase();
+    return base.filter(
+      (r) =>
+        r.user?.name.toLowerCase().includes(q) ||
+        r.user?.email.toLowerCase().includes(q) ||
+        r.unique_code.toLowerCase().includes(q),
+    );
+  }, [registrations, showAll, search]);
+
+  const toggleAll = () =>
+    setSelected(
+      selected.length === candidates.length ? [] : candidates.map((r) => r.id),
+    );
+
+  const doSend = async () => {
+    setSending(true);
+    try {
+      const res = await api.post("/admin/conference/send-welcome-agenda", {
+        registration_ids: selected,
+      });
+      toast.success(
+        res.data?.message || `تم جدولة إرسال ${selected.length} إيميل ترحيبي بنجاح`,
+      );
+      onSuccess();
+      onClose();
+    } catch {
+      toast.error("فشل الإرسال، يرجى المحاولة مجدداً");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.93, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.93, y: 20 }}
+        className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
+      >
+        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-teal-500 to-[#11517E]" />
+        
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b dark:border-slate-700">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="font-black text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                إرسال إيميل الترحيب والأجندة والبوسترات
+              </h2>
+              <p className="text-xs text-slate-500">
+                مرفق معه: Scientific Agenda.pdf + Posters.pdf (بفارق 30 ثانية)
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Content Info Box */}
+        <div className="mx-6 mt-3 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs space-y-2">
+          <div className="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+            <FileText className="w-4 h-4 text-emerald-600" />
+            عنوان الإيميل: <span className="text-[#11517E] dark:text-teal-400 font-mono font-bold">Welcome to the 6th Saudi International Physiotherapy Conference</span>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap text-slate-600 dark:text-slate-300">
+            <span className="font-semibold text-slate-500">المرفقات الرسمية:</span>
+            <span className="inline-flex items-center gap-1 bg-white dark:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-600 font-medium">
+              📎 Scientific Agenda.pdf
+            </span>
+            <span className="inline-flex items-center gap-1 bg-white dark:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-600 font-medium">
+              📊 Posters.pdf
+            </span>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="px-6 py-3 border-b dark:border-slate-700 flex items-center gap-3 flex-wrap">
+          <div className="relative flex-1 min-w-[180px]">
+            <Search className="absolute right-3 top-2.5 w-4 h-4 text-slate-400" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="بحث بالاسم أو الإيميل..."
+              className="w-full pr-9 pl-3 py-2 text-sm rounded-xl border dark:border-slate-600 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-400 outline-none"
+            />
+          </div>
+          <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={showAll}
+              onChange={(e) => setShowAll(e.target.checked)}
+              className="w-4 h-4 accent-emerald-600"
+            />
+            <span className="text-slate-600 dark:text-slate-300">
+              عرض من استلموا الإيميل أيضاً
+            </span>
+          </label>
+        </div>
+
+        {/* List */}
+        <div className="flex-1 overflow-y-auto px-6 py-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-slate-500">
+              {candidates.length} مشترك | محدد: {selected.length}
+            </span>
+            <button
+              onClick={toggleAll}
+              className="text-xs font-bold text-emerald-600 hover:underline"
+            >
+              {selected.length === candidates.length
+                ? "إلغاء التحديد الكل"
+                : "تحديد الكل"}
+            </button>
+          </div>
+          <div className="space-y-2">
+            {candidates.map((r) => (
+              <label
+                key={r.id}
+                className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all
+                  ${
+                    selected.includes(r.id)
+                      ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30"
+                      : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
+                  }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={selected.includes(r.id)}
+                  onChange={(e) =>
+                    setSelected(
+                      e.target.checked
+                        ? [...selected, r.id]
+                        : selected.filter((x) => x !== r.id),
+                    )
+                  }
+                  className="w-4 h-4 accent-emerald-600"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-sm text-slate-800 dark:text-white truncate">
+                    {r.user?.name}
+                  </div>
+                  <div className="text-xs text-slate-500 truncate">
+                    {r.user?.email}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="font-mono text-xs bg-slate-100 dark:bg-slate-700 text-[#11517E] px-2 py-0.5 rounded-md">
+                    {r.unique_code}
+                  </span>
+                  {r.welcome_email_sent && (
+                    <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">
+                      ✓ مُرسل ترحيبي
+                    </span>
+                  )}
+                </div>
+              </label>
+            ))}
+            {candidates.length === 0 && (
+              <div className="text-center py-12 text-slate-400">
+                <Mail className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p className="font-semibold">لا توجد نتائج</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t dark:border-slate-700 flex items-center justify-between gap-3">
+          <button
+            onClick={onClose}
+            className="px-5 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            إلغاء
+          </button>
+          <button
+            disabled={selected.length === 0}
+            onClick={() => setConfirming(true)}
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold disabled:opacity-40 hover:shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+          >
+            <Send className="w-4 h-4" />
+            إرسال إيميل الترحيب ({selected.length})
+          </button>
+        </div>
+
+        {/* Confirm Modal */}
+        <AnimatePresence>
+          {confirming && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm rounded-3xl flex items-center justify-center p-8 z-10"
+            >
+              <div className="text-center max-w-sm">
+                <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <Mail className="w-10 h-10 text-emerald-600" />
+                </div>
+                <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2">
+                  تأكيد إرسال الإيميل الترحيبي
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">
+                  سيتم إرسال <strong>{selected.length} إيميل</strong> ترحيبي رسمي مع إرفاق:
+                </p>
+                <div className="text-xs bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl mb-3 text-slate-700 dark:text-slate-300 font-medium space-y-1">
+                  <div>📄 Scientific Agenda.pdf</div>
+                  <div>📊 Posters.pdf (Poster Presentation Schedule)</div>
+                </div>
+                <p className="text-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl px-4 py-2 text-sm mb-6 font-semibold border border-emerald-200 dark:border-emerald-800">
+                  ⏱️ فارق 30 ثانية بين كل إيميل وآخر لضمان وصول الرسائل بسلاسة.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setConfirming(false)}
+                    disabled={sending}
+                    className="flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                  >
+                    رجوع
+                  </button>
+                  <button
+                    onClick={doSend}
+                    disabled={sending}
+                    className="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-60"
+                  >
+                    {sending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                    {sending ? "جارٍ الجدولة..." : "تأكيد وبدء الإرسال"}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  );
+}
+
 /* ─────────── Main Page ─────────── */
 export default function AdminConferenceAttendancePage() {
   const [loading, setLoading] = useState(true);
@@ -376,7 +656,9 @@ export default function AdminConferenceAttendancePage() {
   );
   const [dayFilter, setDayFilter] = useState<"all" | "day1" | "day2">("all");
   const [qrFilter, setQrFilter] = useState<"all" | "sent" | "not_sent">("all");
+  const [welcomeFilter, setWelcomeFilter] = useState<"all" | "sent" | "not_sent">("all");
   const [sendModal, setSendModal] = useState(false);
+  const [sendWelcomeModal, setSendWelcomeModal] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -411,9 +693,11 @@ export default function AdminConferenceAttendancePage() {
       if (dayFilter === "day2" && !r.day2_attended_at) return false;
       if (qrFilter === "sent" && !r.qr_sent) return false;
       if (qrFilter === "not_sent" && r.qr_sent) return false;
+      if (welcomeFilter === "sent" && !r.welcome_email_sent) return false;
+      if (welcomeFilter === "not_sent" && r.welcome_email_sent) return false;
       return true;
     });
-  }, [registrations, search, attendedFilter, dayFilter, qrFilter]);
+  }, [registrations, search, attendedFilter, dayFilter, qrFilter, welcomeFilter]);
 
   if (loading)
     return (
@@ -440,13 +724,22 @@ export default function AdminConferenceAttendancePage() {
             المؤتمر السعودي الدولي السادس للعلاج الطبيعي – 12/13 نوفمبر 2026
           </p>
         </div>
-        <button
-          onClick={() => setSendModal(true)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#11517E] to-[#6FC4BC] text-white font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
-        >
-          <Mail className="w-4 h-4" />
-          إرسال بطاقات QR المؤتمر
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setSendWelcomeModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
+          >
+            <Sparkles className="w-4 h-4" />
+            إرسال إيميل الترحيب والأجندة
+          </button>
+          <button
+            onClick={() => setSendModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#11517E] to-[#6FC4BC] text-white font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
+          >
+            <Mail className="w-4 h-4" />
+            إرسال بطاقات QR المؤتمر
+          </button>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -482,6 +775,12 @@ export default function AdminConferenceAttendancePage() {
             label="تم إرسال QR"
             value={stats.qr_sent_count}
             gradient="bg-gradient-to-br from-purple-600 to-purple-800"
+          />
+          <StatCard
+            icon={<FileText className="w-5 h-5" />}
+            label="إيميل الترحيب والأجندة"
+            value={stats.welcome_sent_count ?? 0}
+            gradient="bg-gradient-to-br from-emerald-600 to-teal-700"
           />
           <StatCard
             icon={<Star className="w-5 h-5" />}
@@ -566,8 +865,17 @@ export default function AdminConferenceAttendancePage() {
             set: setQrFilter,
             opts: [
               ["all", "QR: الكل"],
-              ["sent", "تم الإرسال"],
-              ["not_sent", "لم يُرسل"],
+              ["sent", "تم إرسال QR"],
+              ["not_sent", "لم يُرسل QR"],
+            ],
+          },
+          {
+            val: welcomeFilter,
+            set: setWelcomeFilter,
+            opts: [
+              ["all", "الترحيب: الكل"],
+              ["sent", "تم إرسال الترحيب"],
+              ["not_sent", "لم يُرسل الترحيب"],
             ],
           },
         ].map(({ val, set, opts }, i) => (
@@ -604,6 +912,7 @@ export default function AdminConferenceAttendancePage() {
                   "اليوم 1",
                   "اليوم 2",
                   "QR",
+                  "إيميل الترحيب",
                   "قيّم",
                 ].map((h) => (
                   <th
@@ -618,7 +927,7 @@ export default function AdminConferenceAttendancePage() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-16 text-center text-slate-400">
+                  <td colSpan={10} className="py-16 text-center text-slate-400">
                     <UserX className="w-12 h-12 mx-auto mb-3 opacity-30" />
                     <p className="font-semibold">لا توجد نتائج مطابقة</p>
                   </td>
@@ -693,6 +1002,13 @@ export default function AdminConferenceAttendancePage() {
                     </td>
                     <td className="px-4 py-3 text-center">
                       <BoolPill
+                        value={Boolean(r.welcome_email_sent)}
+                        trueLabel="مُرسل"
+                        falseLabel="لم يُرسل"
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <BoolPill
                         value={r.has_reviewed}
                         trueLabel="قيّم"
                         falseLabel="لم يقيّم"
@@ -712,6 +1028,17 @@ export default function AdminConferenceAttendancePage() {
           <SendQrModal
             registrations={registrations}
             onClose={() => setSendModal(false)}
+            onSuccess={fetchData}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Send Welcome & Agenda Modal */}
+      <AnimatePresence>
+        {sendWelcomeModal && (
+          <SendWelcomeAgendaModal
+            registrations={registrations}
+            onClose={() => setSendWelcomeModal(false)}
             onSuccess={fetchData}
           />
         )}

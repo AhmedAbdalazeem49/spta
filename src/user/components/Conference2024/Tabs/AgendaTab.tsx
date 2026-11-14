@@ -351,7 +351,7 @@ const AGENDA_DATA: AgendaDay[] = [
             type: "invited",
             title:
               "Redefining Cardiopulmonary & ICU Rehabilitation in Modern Healthcare",
-            speaker: "Prof. Ali Albarrari",
+            speaker: "Prof. Ali Albarati",
           },
           {
             id: "21",
@@ -489,7 +489,7 @@ const AGENDA_DATA: AgendaDay[] = [
             time: "15:00–15:10",
             type: "platform presentation",
             title:
-              "Effects of Thoracic Spinal Manipulation with Trigger Point Therapy on Inflammatory Cytokines in Individuals with Relapsing-Remitting Multiple Sclerosis: A Pilot Randomized Controlled Trial",
+              "Integrating AI and IoT-Enabled Assistive Technologies in Post-Stroke Neurorehabilitation: A Value-Based Framework",
             speaker: "Dr. Fayez Namnaqani",
           },
           {

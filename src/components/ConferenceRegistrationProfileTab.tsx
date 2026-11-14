@@ -25,6 +25,8 @@ import { Link } from "react-router-dom";
 import { WorkshopEvaluationModal } from "@/components/conference/WorkshopEvaluationModal";
 import { CertificatePreviewModal } from "@/components/admin/certificates/CertificatePreviewModal";
 import { ChangeWorkshopModal } from "@/components/conference/ChangeWorkshopModal";
+import { ConferenceCertificateCard } from "@/components/ConferenceCertificateCard";
+import { attendanceCertificateService } from "@/services/attendanceCertificateService";
 
 export default function ConferenceRegistrationProfileTab() {
   const { t } = useLanguage();
@@ -264,6 +266,9 @@ export default function ConferenceRegistrationProfileTab() {
           </div>
         </div>
 
+        {/* Conference Main Attendance Certificate */}
+        <ConferenceCertificateCard onRefreshParent={fetchRegData} />
+
         {/* Workshops Section with Evaluation & Certificates */}
         <div>
           <div className="flex items-center justify-between gap-4 mb-6">
@@ -393,10 +398,16 @@ export default function ConferenceRegistrationProfileTab() {
                         {hasEvaluated && certificate ? (
                           <button
                             type="button"
-                            onClick={() => setPreviewCert(certificate)}
+                            onClick={() => {
+                              attendanceCertificateService.downloadWorkshopCertificate(
+                                certificate.id,
+                                registration.user?.name,
+                                info?.title
+                              );
+                            }}
                             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-[#0E446B] hover:to-[#55AE47] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all hover:scale-105"
                           >
-                            <Award className="w-4 h-4" />
+                            <Download className="w-4 h-4" />
                             <span>{t("تحميل الشهادة", "Download Certificate")}</span>
                           </button>
                         ) : isAttended ? (
