@@ -3,21 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
   Star,
-  Award,
-  CheckCircle2,
   Sparkles,
   Loader2,
-  AlertCircle,
-  FileText,
   User,
-  ArrowRight,
-  ArrowLeft,
-  Download,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import api from "@/services/api";
 import { toast } from "sonner";
-import { CertificatePreviewModal } from "@/components/admin/certificates/CertificatePreviewModal";
 
 interface WorkshopEvaluationModalProps {
   isOpen: boolean;
@@ -63,8 +55,6 @@ export const WorkshopEvaluationModal: React.FC<WorkshopEvaluationModalProps> = (
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [issuedCert, setIssuedCert] = useState<any | null>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   if (!isOpen) return null;
 
@@ -164,8 +154,8 @@ export const WorkshopEvaluationModal: React.FC<WorkshopEvaluationModalProps> = (
         )
       );
 
-      setIssuedCert(data?.certificate);
       onSuccess(data?.certificate);
+      onClose();
     } catch (err: any) {
       console.error(err);
       const msg =
@@ -249,58 +239,6 @@ export const WorkshopEvaluationModal: React.FC<WorkshopEvaluationModalProps> = (
 
           {/* Modal Body */}
           <div className="p-6 sm:p-8 overflow-y-auto space-y-8 flex-1">
-            {issuedCert ? (
-              /* Success & Certificate Screen */
-              <div className="py-8 text-center space-y-6">
-                <div className="w-20 h-20 bg-emerald-100 text-[#55AE47] rounded-full flex items-center justify-center mx-auto shadow-inner">
-                  <CheckCircle2 className="w-10 h-10" />
-                </div>
-                <div>
-                  <h4 className="text-2xl font-black text-slate-800 mb-2">
-                    {t("شكراً لتقييمك!", "Thank you for your feedback!")}
-                  </h4>
-                  <p className="text-slate-600 max-w-md mx-auto text-sm sm:text-base">
-                    {t(
-                      "تم تسجيل تقييمك للورشة بنجاح، وتم إصدار شهادة الحضور المعتمدة الخاصة بك فوراً.",
-                      "Your evaluation has been successfully recorded, and your accredited certificate has been issued instantly."
-                    )}
-                  </p>
-                </div>
-
-                <div className="p-5 bg-gradient-to-br from-[#11517E]/5 to-[#6FC4BC]/5 rounded-2xl border border-[#11517E]/10 max-w-md mx-auto text-start">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      {t("رقم الشهادة", "Certificate Serial")}
-                    </span>
-                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-black rounded-md">
-                      VERIFIED
-                    </span>
-                  </div>
-                  <p className="font-mono font-bold text-[#11517E] text-base">
-                    {issuedCert.serial_number}
-                  </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowPreviewModal(true)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] text-white font-bold rounded-xl shadow-lg shadow-[#11517E]/20 hover:scale-105 transition-all"
-                  >
-                    <Award className="w-5 h-5" />
-                    <span>{t("عرض وتحميل الشهادة", "View & Download Certificate")}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="w-full sm:w-auto px-6 py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
-                  >
-                    {t("إغلاق", "Close")}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              /* Evaluation Form */
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Scale Guide */}
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
@@ -447,19 +385,10 @@ export const WorkshopEvaluationModal: React.FC<WorkshopEvaluationModalProps> = (
                   </button>
                 </div>
               </form>
-            )}
+            
           </div>
         </motion.div>
       </div>
-
-      {/* Certificate Preview Modal */}
-      {issuedCert && (
-        <CertificatePreviewModal
-          isOpen={showPreviewModal}
-          onOpenChange={setShowPreviewModal}
-          certificate={issuedCert}
-        />
-      )}
     </AnimatePresence>
   );
 };

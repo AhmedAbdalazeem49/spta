@@ -495,11 +495,8 @@ export default function ConferenceRegistrationProfileTab() {
           isOpen={!!activeWorkshopForEval}
           workshop={activeWorkshopForEval}
           onClose={() => setActiveWorkshopForEval(null)}
-          onSuccess={(cert) => {
+          onSuccess={() => {
             fetchRegData();
-            if (cert) {
-              setPreviewCert(cert);
-            }
           }}
         />
       )}

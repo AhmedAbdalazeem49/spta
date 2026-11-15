@@ -67,7 +67,7 @@ import ConferenceEvaluationPage from "./user/pages/ConferenceEvaluationPage";
 import Membership from "./user/pages/Membership";
 import VerifyMembershipPage from "./pages/VerifyMembershipPage";
 import WhatsAppFloat from "./components/WhatsAppFloat";
-import ConferencePromoModal from "./components/ConferencePromoModal";
+// import ConferencePromoModal from "./components/ConferencePromoModal";
 
 const queryClient = new QueryClient();
 
@@ -80,7 +80,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
-            <ConferencePromoModal />
+            {/* <ConferencePromoModal /> */}
             <Routes>
               <Route path="/" element={<HomePage />} />
               {/* About */}
