@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2, Search, Users, QrCode, CheckCircle2, XCircle,
-  Send, X, AlertTriangle, UserCheck, Mail, BookOpen, Sun, Sunset
+  Send, X, AlertTriangle, UserCheck, Mail, BookOpen, Sun, Sunset,
+  FileSpreadsheet, Download
 } from "lucide-react";
 
 /* ─────────── Types ─────────── */
@@ -239,6 +240,39 @@ export default function AdminWorkshopAttendancePage() {
   const [search, setSearch] = useState("");
   const [sendModal, setSendModal] = useState(false);
   const [registrationsForModal, setRegistrationsForModal] = useState<RegForModal[]>([]);
+  const [exportLoading, setExportLoading] = useState(false);
+
+  const handleExportWorkshopExcel = async (code: string, workshopTitle: string, filterType: "all" | "attended" | "absent" = "all") => {
+    setExportLoading(true);
+    try {
+      const res = await api.get(`/admin/conference/workshops/${code}/export-attendance?filter=${filterType}`, {
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const filterLabel = filterType === "attended" ? "Attended" : filterType === "absent" ? "Absent" : "All";
+      // Full title formatted cleanly in English
+      const safeTitle = (workshopTitle || "Workshop")
+        .replace(/[^A-Za-z0-9_-]/g, "_")
+        .replace(/_+/g, "_")
+        .replace(/^_|_$/g, "");
+      a.download = `${safeTitle}_${filterLabel}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
+      toast.success("تم تصدير ملف إكسيل الورشة بنجاح");
+    } catch (err) {
+      console.error(err);
+      toast.error("فشل تصدير ملف الإكسيل للورشة");
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -389,11 +423,38 @@ export default function AdminWorkshopAttendancePage() {
                 </div>
               </div>
             </div>
-            <div className="px-6 py-3 border-b dark:border-slate-700">
-              <div className="relative max-w-xs">
+            <div className="px-6 py-3 border-b dark:border-slate-700 flex items-center justify-between flex-wrap gap-3">
+              <div className="relative max-w-xs flex-1">
                 <Search className="absolute right-3 top-2.5 w-4 h-4 text-slate-400" />
                 <input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث في المشاركين..."
                   className="w-full pr-9 pl-3 py-2 text-sm rounded-xl border dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-teal-400 outline-none" />
+              </div>
+
+              {/* Workshop Excel Export Controls */}
+              <div className="flex items-center bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600 p-1 shadow-sm">
+                <button
+                  onClick={() => handleExportWorkshopExcel(activeWs.code, activeWs.title, "all")}
+                  disabled={exportLoading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
+                  title="تصدير جميع المسجلين في هذه الورشة"
+                >
+                  {exportLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-[#0e7490]" />
+                  ) : (
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                  )}
+                  <span>تصدير ملف الورشة (Excel)</span>
+                </button>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <button
+                  onClick={() => handleExportWorkshopExcel(activeWs.code, activeWs.title, "attended")}
+                  disabled={exportLoading}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors disabled:opacity-50"
+                  title="تصدير الحاضرين في هذه الورشة فقط"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>الحاضرون فقط</span>
+                </button>
               </div>
             </div>
             <div className="overflow-x-auto">

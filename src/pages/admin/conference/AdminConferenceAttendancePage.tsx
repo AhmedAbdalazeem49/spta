@@ -5,6 +5,7 @@ import {
   BarChart3,
   Calendar,
   CheckCircle2,
+  Download,
   FileSpreadsheet,
   FileText,
   Loader2,
@@ -659,6 +660,34 @@ export default function AdminConferenceAttendancePage() {
   const [welcomeFilter, setWelcomeFilter] = useState<"all" | "sent" | "not_sent">("all");
   const [sendModal, setSendModal] = useState(false);
   const [sendWelcomeModal, setSendWelcomeModal] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+
+  const handleExportExcel = async (filterType: "all" | "attended" | "absent" = "all") => {
+    setExportLoading(true);
+    try {
+      const res = await api.get(`/admin/conference/export-attendance?filter=${filterType}`, {
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const filterLabel = filterType === "attended" ? "Attended" : filterType === "absent" ? "Absent" : "All";
+      a.download = `SPTA_Conference_2026_Attendance_${filterLabel}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
+      toast.success("تم تصدير ملف الإكسيل بنجاح");
+    } catch (err) {
+      console.error(err);
+      toast.error("فشل تصدير ملف الإكسيل");
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -724,7 +753,33 @@ export default function AdminConferenceAttendancePage() {
             المؤتمر السعودي الدولي السادس للعلاج الطبيعي – 12/13 نوفمبر 2026
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-1 shadow-sm">
+            <button
+              onClick={() => handleExportExcel("all")}
+              disabled={exportLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+              title="تصدير كشف كامل بجميع المسجلين"
+            >
+              {exportLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-[#11517E]" />
+              ) : (
+                <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              )}
+              <span>تصدير الكل (Excel)</span>
+            </button>
+            <span className="text-slate-300 dark:text-slate-600">|</span>
+            <button
+              onClick={() => handleExportExcel("attended")}
+              disabled={exportLoading}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors disabled:opacity-50"
+              title="تصدير الحاضرين فقط لهيئة التخصصات الصحية"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>الحاضرون فقط</span>
+            </button>
+          </div>
+
           <button
             onClick={() => setSendWelcomeModal(true)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
