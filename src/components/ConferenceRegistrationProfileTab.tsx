@@ -41,6 +41,9 @@ export default function ConferenceRegistrationProfileTab() {
   // Change Workshop Modal
   const [workshopToChange, setWorkshopToChange] = useState<string | null>(null);
 
+  // Workshop Certificate Download Loading state (tracks certificate id or code)
+  const [downloadingCertId, setDownloadingCertId] = useState<number | string | null>(null);
+
   const fetchRegData = async () => {
     try {
       const [regRes, evalRes] = await Promise.all([
@@ -198,7 +201,7 @@ export default function ConferenceRegistrationProfileTab() {
                 <Calendar className="w-3.5 h-3.5" /> 12-14 Nov 2026
               </span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-2 leading-tight">
+            <h2 className="text-2xl md:text-4xl font-extrabold mb-2 leading-tight">
               the 6th Saudi International Physiotherapy Conference
             </h2>
             <div className="flex items-center gap-2 text-white/80 mt-4">
@@ -398,17 +401,31 @@ export default function ConferenceRegistrationProfileTab() {
                         {hasEvaluated && certificate ? (
                           <button
                             type="button"
-                            onClick={() => {
-                              attendanceCertificateService.downloadWorkshopCertificate(
-                                certificate.id,
-                                registration.user?.name,
-                                info?.title
-                              );
+                            disabled={downloadingCertId === certificate.id}
+                            onClick={async () => {
+                              try {
+                                setDownloadingCertId(certificate.id);
+                                await attendanceCertificateService.downloadWorkshopCertificate(
+                                  certificate.id,
+                                  registration.user?.name,
+                                  info?.title
+                                );
+                              } finally {
+                                setDownloadingCertId(null);
+                              }
                             }}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-[#0E446B] hover:to-[#55AE47] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all hover:scale-105"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#11517E] to-[#6FC4BC] hover:from-[#0E446B] hover:to-[#55AE47] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                           >
-                            <Download className="w-4 h-4" />
-                            <span>{t("تحميل الشهادة", "Download Certificate")}</span>
+                            {downloadingCertId === certificate.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Download className="w-4 h-4" />
+                            )}
+                            <span>
+                              {downloadingCertId === certificate.id
+                                ? t("جارٍ التحميل...", "Downloading...")
+                                : t("تحميل الشهادة", "Download Certificate")}
+                            </span>
                           </button>
                         ) : isAttended ? (
                           <button

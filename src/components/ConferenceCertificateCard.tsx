@@ -168,9 +168,7 @@ export const ConferenceCertificateCard: React.FC<{
 
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#11517E] to-[#6FC4BC] text-white flex items-center justify-center shrink-0 shadow-lg shadow-[#11517E]/20">
-            <Award className="w-8 h-8" />
-          </div>
+          
 
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -221,28 +219,32 @@ export const ConferenceCertificateCard: React.FC<{
               <Button
                 onClick={handleDownload}
                 disabled={actionLoading !== null}
-                className="bg-[#11517E] hover:bg-[#0d3f63] text-white font-bold px-6 py-2.5 rounded-xl shadow-md gap-2"
+                className="bg-[#11517E] hover:bg-[#0d3f63] text-white font-bold px-6 py-2.5 rounded-xl shadow-md gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {actionLoading === "download" ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Download className="w-4 h-4" />
                 )}
-                {t("تحميل PDF", "Download PDF")}
+                {actionLoading === "download"
+                  ? t("جارٍ التحميل...", "Downloading...")
+                  : t("تحميل PDF", "Download PDF")}
               </Button>
 
               <Button
                 onClick={handlePrint}
                 disabled={actionLoading !== null}
                 variant="outline"
-                className="border-slate-300 hover:bg-slate-100 font-bold px-5 py-2.5 rounded-xl gap-2 text-slate-700"
+                className="border-slate-300 hover:bg-slate-100 font-bold px-5 py-2.5 rounded-xl gap-2 text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {actionLoading === "print" ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Printer className="w-4 h-4" />
                 )}
-                {t("طباعة", "Print")}
+                {actionLoading === "print"
+                  ? t("جارٍ التجهيز...", "Preparing...")
+                  : t("طباعة", "Print")}
               </Button>
             </div>
           ) : needsEvaluation ? (
